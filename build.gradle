@@ -34,6 +34,7 @@ dependencies {
     // apache commons-collections library
     implementation 'org.apache.commons:commons-collections4:4.2'  // 1. collections
     implementation 'org.apache.commons:commons-lang3:3.17.0' // 2. Lang
+
     // for base64
     implementation 'commons-codec:commons-codec:1.5'
     // lombok
