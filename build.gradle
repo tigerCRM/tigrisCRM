@@ -1,0 +1,61 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.5'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    // apache commons-collections library
+    implementation 'org.apache.commons:commons-collections4:4.2'  // 1. collections
+    implementation 'org.apache.commons:commons-lang3:3.17.0' // 2. Lang
+    // for base64
+    implementation 'commons-codec:commons-codec:1.5'
+    // lombok
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    // mariaDB
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.3.3'
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:3.3.3'
+    // json
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
+    // jsp(jstl) for SpringBoot 3.x
+    implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+//    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
+//    implementation 'javax.servlet:javax.servlet-api:4.0.1' // Servlet API 의존성 추가
+//    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api' //스프링부트 3.0 이상
+//    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1' //스프링부트 3.0 이상
+//    implementation 'org.springframework:spring-webmvc:6.1.14' // Spring Web MVC 추가 (타임리프 쓰려면 주석해야함)
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

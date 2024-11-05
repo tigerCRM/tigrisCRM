@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tigrison.repository.mapper.StorageMapper">
+
+    <sql id="storageColumns">
+           A.STORAGE_ID
+         , A.USER_ID
+         , A.USER_NAME
+         , A.ORG_NAME
+         , A.JOB_GRADE
+         , A.TITLE
+         , A.CONTENTS
+         , A.FILE_ID
+         , A.DELETE_YN
+         , A.CREATE_DT
+         , A.CREATE_ID
+         , A.UPDATE_DT
+         , A.UPDATE_ID
+     </sql>
+
+    <select id="getStorageList" parameterType="StorageSearchDto" resultType="TStorage">
+    	/* storageMapper.getStorageList */
+		SELECT
+			<include refid="storageColumns" />
+		FROM
+			T_STORAGE A
+		WHERE 1=1
+			AND A.DELETE_YN = 'N'
+
+			/* 검색 필터 */
+			<if test="@com.tigrison.core.util.StringUtils@isNotEmpty(searchKeyword)">
+				<choose>
+					<when test="searchType == 'TITLEANDCONTENTS'">
+						AND (
+								A.TITLE 	LIKE CONCAT('%',#{searchKeyword},'%')
+							OR  A.CONTENTS 	LIKE CONCAT('%',#{searchKeyword},'%')
+						)
+					</when>
+					<when test="searchType == 'ORGNAME'">
+						AND (
+								A.ORG_NAME 	LIKE CONCAT('%',#{searchKeyword},'%')
+						)
+					</when>
+					<when test="searchType == 'USERNAME'">
+						AND (
+								A.USER_NAME LIKE CONCAT('%',#{searchKeyword},'%')
+						)
+					</when>
+				</choose>
+			</if>
+
+			/* 날짜 필터 */
+			<if test="filterStartDt != null and filterEndDt != null">
+		    	AND A.CREATE_DT BETWEEN #{filterStartDt} AND DATE_ADD(#{filterEndDt}, INTERVAL 1 DAY)
+			</if>
+		ORDER BY
+			A.CREATE_DT DESC
+		LIMIT ${limitStart}, ${recordCountPerPage}
+    </select>
+
+    <select id="getStorageListCount" parameterType="StorageSearchDto" resultType="int">
+    	/* storageMapper.getStorageListCount */
+		SELECT
+			COUNT(*)
+		FROM
+			T_STORAGE A
+		WHERE 1=1
+			AND A.DELETE_YN = 'N'
+
+			/* 검색 필터 */
+			<if test="@com.tigrison.core.util.StringUtils@isNotEmpty(searchKeyword)">
+				<choose>
+					<when test="searchType == 'TITLEANDCONTENTS'">
+						AND (
+								A.TITLE 	LIKE CONCAT('%',#{searchKeyword},'%')
+							OR  A.CONTENTS 	LIKE CONCAT('%',#{searchKeyword},'%')
+						)
+					</when>
+					<when test="searchType == 'ORGNAME'">
+						AND (
+								A.ORG_NAME 	LIKE CONCAT('%',#{searchKeyword},'%')
+						)
+					</when>
+					<when test="searchType == 'USERNAME'">
+						AND (
+								A.USER_NAME LIKE CONCAT('%',#{searchKeyword},'%')
+						)
+					</when>
+				</choose>
+			</if>
+
+			/* 날짜 필터 */
+			<if test="filterStartDt != null and filterEndDt != null">
+		    	AND A.CREATE_DT BETWEEN #{filterStartDt} AND DATE_ADD(#{filterEndDt}, INTERVAL 1 DAY)
+			</if>
+    </select>
+
+    <insert id="insert" parameterType="TStorage">
+    	/* storageMapper.insert */
+		INSERT INTO
+			T_STORAGE
+		(
+			 STORAGE_ID
+			,USER_ID
+			,USER_NAME
+			,ORG_NAME
+			,JOB_GRADE
+			,TITLE
+			,CONTENTS
+			,FILE_ID
+			,USER_AGENT
+			,DELETE_YN
+			,CREATE_DT
+			,CREATE_ID
+			,UPDATE_DT
+			,UPDATE_ID
+		)
+		VALUES
+		(
+			 #{storageId}
+			,#{userId}
+			,#{userName}
+			,#{orgName}
+			,#{jobGrade}
+			,#{title}
+			,#{contents}
+			,#{fileId}
+			,#{userAgent}
+			,#{deleteYn}
+			,#{createDt}
+			,#{createId}
+			,#{updateDt}
+			,#{updateId}
+		)
+    </insert>
+
+    <select id="getStorageDetail" parameterType="StorageSearchDto" resultType="TStorage">
+    	/* storageMapper.getStorageDetail */
+		SELECT
+			<include refid="storageColumns" />
+		FROM
+			T_STORAGE A
+		WHERE 1=1
+			AND A.DELETE_YN 	='N'
+			AND A.STORAGE_ID 	= #{storageId}
+    </select>
+
+    <update id="update" parameterType="TStorage">
+		/* storageMapper.update */
+		UPDATE
+			T_STORAGE
+		SET
+			 TITLE 		= #{title}
+			,CONTENTS 	= #{contents}
+			,FILE_ID 	= #{fileId}
+			,UPDATE_DT 	= #{updateDt}
+			,UPDATE_ID 	= #{updateId}
+		WHERE 1=1
+			AND STORAGE_ID = #{storageId}
+	</update>
+
+    <update id="delete" parameterType="TStorage">
+		/* storageMapper.delete */
+		UPDATE
+			T_STORAGE
+		SET
+			 DELETE_YN 	= 'Y'
+			,UPDATE_DT 	= #{updateDt}
+			,UPDATE_ID 	= #{updateId}
+		WHERE 1=1
+			AND STORAGE_ID = #{storageId}
+	</update>
+
+</mapper>

@@ -1,0 +1,12 @@
+body { background-color: var(--background-light); }
+
+#intro { padding: 80px 0; }
+#intro > h2 { margin: 40px 0 80px 0; text-align: center; font-size: 40px; font-weight: 600; }
+
+.intro-menu--list { display: flex; gap: 32px 24px; justify-content: center; flex-wrap: wrap; }
+.intro-menu--list li { flex: 0 0 280px; height: 180px; border-radius: 24px; background-color: var(--background-medium); box-shadow: 0 10px 20px 0 rgba(11, 19, 42, 0.16); transition: .3s ease; }
+.intro-menu--list li > a { position: relative; display: block; height: 100%; padding: 48px 32px 24px; color: var(--black); text-align: center; }
+.intro-menu--list li > a .menu--name { font-size: 28px; font-weight: 600; }
+.intro-menu--list li > a .menu--link { position: absolute; bottom: 20px; width: calc(100% - 64px); height: 44px; border-radius: 32px; background-color: #fff; line-height: 44px; font-size: 18px; font-weight: 600; }
+.intro-menu--list li:hover { background-color: var(--red-main); }
+.intro-menu--list li:hover > a .menu--name { color: #fff; }

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="PagingRnum">
+
+	<sql databaseId="mysql" id="prefix">
+	SELECT AAA.*
+	  FROM (
+			SELECT AA.*, @RNUM := @RNUM + 1 AS RNUM
+	 		  FROM (
+	</sql>
+
+	<sql databaseId="oracle" id="prefix">
+	SELECT AAA.*
+	  FROM (
+			SELECT AA.*, ROW_NUMBER() OVER(${param}) AS RNUM
+	 		  FROM (
+	</sql>
+
+	<sql databaseId="sqlserver" id="prefix">
+	SELECT AAA.*
+	  FROM (
+			SELECT AA.*, ROW_NUMBER() OVER(${param}) AS RNUM
+	 		  FROM (
+	</sql>
+
+	<sql databaseId="mysql" id="middlefix">
+	, (SELECT @RNUM := 0 ) R
+	</sql>
+
+	<sql databaseId="oracle" id="middlefix">
+	</sql>
+	<sql databaseId="sqlserver" id="middlefix">
+	</sql>
+
+
+	<sql databaseId="mysql" id="postfix">
+				${param}
+				) AA
+			) AAA
+	  WHERE AAA.RNUM &gt; ${rowStart} AND AAA.RNUM &lt;= ${rowStart}+${rowCount}
+	</sql>
+
+	<sql databaseId="oracle" id="postfix">
+				) AA
+			) AAA
+	  WHERE AAA.RNUM &gt; ${rowStart} AND AAA.RNUM &lt;= ${rowStart}+${rowCount}
+	</sql>
+	<sql databaseId="sqlserver" id="postfix">
+				) AA
+			) AAA
+	  WHERE AAA.RNUM &gt; ${rowStart} AND AAA.RNUM &lt;= ${rowStart}+${rowCount}
+	</sql>
+
+
+	<sql databaseId="mysql" id="postfix_order">
+
+			) AA ${param}
+		) AAA
+		WHERE AAA.RNUM &gt; ${rowStart} AND AAA.RNUM &lt;= ${rowStart}+${rowCount}
+	</sql>
+
+	<sql databaseId="oracle" id="postfix_order">
+			) AA
+		) AAA
+		WHERE AAA.RNUM &gt; ${rowStart} AND AAA.RNUM &lt;= ${rowStart}+${rowCount}
+	</sql>
+	<sql databaseId="sqlserver" id="postfix_order">
+			) AA
+		) AAA
+		WHERE AAA.RNUM &gt; ${rowStart} AND AAA.RNUM &lt;= ${rowStart}+${rowCount}
+	</sql>
+
+</mapper>

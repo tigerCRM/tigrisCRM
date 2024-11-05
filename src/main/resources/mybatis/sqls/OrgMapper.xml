@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tigrison.repository.mapper.OrgMapper">
+
+	<insert id="insertOrg" parameterType="TOrg">
+		/* orgMapper.insertOrg */
+		INSERT INTO
+			T_ORG
+		(
+			 ORG_ID
+			,SITE_ID
+			,ORG_CODE
+			,UP_ORG_CODE
+			,ORG_SEQ
+			,ORG_NAME
+			,STA_YMD
+			,END_YMD
+			,DEPTH_LEVEL
+			,CORP_ID
+			,CHIEF_STAFF_NO
+			,CHIEF_STAFF_NM
+			,CHART_YN
+			,CREATE_DT
+			,CREATE_ID
+			,UPDATE_DT
+			,UPDATE_ID
+		)
+		VALUES
+		(
+			 #{orgId}
+			,#{siteId}
+			,#{orgCode}
+			,#{upOrgCode}
+			,#{orgSeq}
+			,#{orgName}
+			,#{staYmd}
+			,#{endYmd}
+			,#{depthLevel}
+			,#{corpId}
+			,#{chiefStaffNo}
+			,#{chiefStaffNm}
+			,#{chartYn}
+			,#{createDt}
+			,#{createId}
+			,#{updateDt}
+			,#{updateId}
+		)
+	</insert>
+
+	<select id="selectDeletedOrgList" parameterType="java.util.HashMap" resultType="TOrg">
+		/* orgMapper.selectDeletedOrgList */
+		SELECT
+			 ORG_ID
+			,SITE_ID
+			,ORG_CODE
+			,UP_ORG_CODE
+			,ORG_SEQ
+			,ORG_NAME
+			,STA_YMD
+			,END_YMD
+			,DEPTH_LEVEL
+			,CORP_ID
+			,CHIEF_STAFF_NO
+			,CHIEF_STAFF_NM
+			,CHART_YN
+			,CREATE_DT
+			,CREATE_ID
+			,UPDATE_DT
+			,UPDATE_ID
+		FROM
+			T_ORG
+		WHERE 1=1
+			AND ORG_CODE NOT IN
+			<foreach collection="allOrgCodeList" item="item" index="index" separator="," open="(" close=")">
+				 #{item}
+			</foreach>
+	</select>
+
+	<update id="updateOrg" parameterType="TOrg">
+		/* orgMapper.updateOrg */
+		UPDATE
+			T_ORG
+		SET
+			 SITE_ID 		= #{siteId}
+			,UP_ORG_CODE 	= #{upOrgCode}
+			,ORG_SEQ 		= #{orgSeq}
+			,ORG_NAME 		= #{orgName}
+			,STA_YMD 		= #{staYmd}
+			,END_YMD 		= #{endYmd}
+			,DEPTH_LEVEL 	= #{depthLevel}
+			,CORP_ID 		= #{corpId}
+			,CHIEF_STAFF_NO = #{chiefStaffNo}
+			,CHIEF_STAFF_NM = #{chiefStaffNm}
+			,CHART_YN 		= #{chartYn}
+			,UPDATE_DT 		= #{updateDt}
+			,UPDATE_ID 		= #{updateId}
+		WHERE 1=1
+			AND ORG_CODE 	= #{orgCode}
+			AND DELETE_YN 	= 'N'
+	</update>
+
+	<update id="deleteOrg" parameterType="TOrg">
+		/* orgMapper.deleteOrg */
+		UPDATE
+			T_ORG
+		SET
+			 DELETE_YN = 'Y'
+			,UPDATE_DT = NOW()
+			,UPDATE_ID = 'admin'
+		WHERE 1=1
+			AND DELETE_YN 	= 'N'
+			AND ORG_CODE 	= #{orgCode}
+			AND ORG_CODE 	!= '9999999'
+	</update>
+
+	<select id="selectUseOrgList" resultType="TigrisMap">
+		/* orgMapper.selectUseOrgList */
+		SELECT
+			 A.ORG_ID
+			,A.ORG_CODE
+			,A.ORG_NAME
+			,A.UP_ORG_CODE
+			,( SELECT ORG_ID FROM T_ORG WHERE ORG_CODE = A.UP_ORG_CODE ) AS UP_ORG_ID
+			,( SELECT COUNT(*) FROM T_ORG S WHERE S.UP_ORG_CODE = A.ORG_CODE AND S.DELETE_YN = 'N' ) AS CHILD_CNT
+		FROM
+			T_ORG A
+		WHERE 1=1
+			AND A.DELETE_YN = 'N'
+		ORDER BY
+			UP_ORG_CODE ASC
+	</select>
+
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tigrison.repository.mapper.MailHistoryMapper">
+
+    <sql id="mailHistoryColumns">
+           MAIL_HISTORY_ID
+         , FEED_ID
+         , USER_ID
+         , SENDER_EMAIL
+         , RECEIVER_NAME
+         , RECEIVER_EMAIL
+         , TITLE
+         , CONTENTS
+         , LINK_URL
+         , CREATE_DT
+         , CREATE_ID
+         , UPDATE_DT
+         , UPDATE_ID
+     </sql>
+
+     <insert id="insertMailHistory" parameterType="TMailHistory">
+     	/*mailHistoryMapper.insertMailHistory*/
+		INSERT INTO
+			T_MAIL_HISTORY
+		(
+			<include refid="mailHistoryColumns" />
+		)
+		VALUES
+		(
+			 #{mailHistoryId}
+			,#{feedId}
+			,#{userId}
+			,#{senderEmail}
+			,#{receiverName}
+			,#{receiverEmail}
+			,#{title}
+			,#{contents}
+			,#{linkUrl}
+			,#{createDt}
+			,#{createId}
+			,#{updateDt}
+			,#{updateId}
+		)
+     </insert>
+
+
+</mapper>

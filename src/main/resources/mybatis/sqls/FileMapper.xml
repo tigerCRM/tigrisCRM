@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tigrison.repository.mapper.FileMapper">
+
+    <sql id="fileColumns">
+           A.FILE_ID
+         , A.SEQ
+         , A.FILE_PATH
+         , A.FILE_NAME
+         , A.ORIGIN_FILE_NAME
+         , A.FILE_SIZE
+         , A.FILE_EXT
+         , A.MIME_TYPE
+         , A.PREVIEW_YN
+         , A.DELETE_YN
+         , A.CREATE_DT
+         , A.CREATE_ID
+     </sql>
+
+    <select id="selectFile" parameterType="TFile" resultType="TFile">
+    	/* fileMapper.selectFile */
+        SELECT
+            <include refid="fileColumns" />
+        FROM
+        	T_FILE A
+        WHERE 1=1
+        	AND A.DELETE_YN = 'N'
+        	AND A.FILE_ID 	= #{fileId}
+        	AND A.SEQ 		= #{seq}
+    </select>
+
+    <select id="selectMaxSeq" parameterType="String" resultType="Integer">
+    	/* fileMapper.selectMaxSeq */
+		SELECT MAX(SEQ) FROM T_FILE WHERE FILE_ID = #{fileId}
+	</select>
+
+	<insert id="insertFileMaster" parameterType="TFile">
+		/* fileMapper.insertFileMaster */
+		INSERT INTO
+			T_FILE_INFO
+		(
+			 FILE_ID
+			,FILE_PATH
+			,CREATE_DT
+			,CREATE_ID
+			,UPDATE_DT
+			,UPDATE_ID
+		)
+		VALUES
+		(
+			 #{fileId}
+			,#{filePath}
+			,#{createDt}
+			,#{createId}
+			,#{updateDt}
+			,#{updateId}
+		)
+	</insert>
+
+	<insert id="insertFileDetail" parameterType="TFile">
+		/* fileMapper.insertFileDetail */
+		INSERT INTO
+			T_FILE
+		(
+			 FILE_ID
+			,SEQ
+			,FILE_PATH
+			,FILE_NAME
+			,ORIGIN_FILE_NAME
+			,FILE_SIZE
+			,FILE_EXT
+			,MIME_TYPE
+			,PREVIEW_YN
+			,DELETE_YN
+			,CREATE_DT
+			,CREATE_ID
+			,UPDATE_DT
+			,UPDATE_ID
+		)
+		VALUES
+		(
+			 #{fileId}
+			,#{seq}
+			,#{filePath}
+			,#{fileName}
+			,#{originFileName}
+			,#{fileSize}
+			,#{fileExt}
+			,#{mimeType}
+			,#{previewYn}
+			,#{deleteYn}
+			,#{createDt}
+			,#{createId}
+			,#{updateDt}
+			,#{updateId}
+		)
+	</insert>
+
+	<select id="getRequestFileList" parameterType="TFeed" resultType="TFile">
+		/* fileMapper.getRequestFileList */
+		SELECT
+			<include refid="fileColumns" />
+		FROM
+			T_FILE A INNER JOIN T_FILE_INFO B
+		ON A.FILE_ID = B.FILE_ID
+		WHERE 1=1
+			AND A.FILE_ID 	= #{requestFileId}
+			AND A.DELETE_YN = 'N'
+		ORDER BY
+			A.SEQ ASC
+	</select>
+
+	<select id="getReviewFileList" parameterType="TFeed" resultType="TFile">
+		/* fileMapper.getReviewFileList */
+		SELECT
+			<include refid="fileColumns" />
+		FROM
+			T_FILE A INNER JOIN T_FILE_INFO B
+		ON A.FILE_ID = B.FILE_ID
+		WHERE 1=1
+			AND A.FILE_ID 	= #{reviewFileId}
+			AND A.DELETE_YN = 'N'
+		ORDER BY
+			A.SEQ ASC
+	</select>
+
+	<update id="remove" parameterType="TFile">
+		/* fileMapper.remove */
+		UPDATE
+			T_FILE
+		SET
+			 DELETE_YN = 'Y'
+			,UPDATE_DT = #{updateDt}
+			,UPDATE_ID = #{updateId}
+		WHERE 1=1
+			AND FILE_ID = #{fileId}
+			AND SEQ 	= #{seq}
+	</update>
+
+	<select id="getReplyFileList" parameterType="TFeed" resultType="TFile">
+		/* fileMapper.getReplyFileList */
+		SELECT
+			*
+		FROM
+			T_FILE_INFO A INNER JOIN T_FILE B
+		ON A.FILE_ID = B.FILE_ID
+		WHERE 1=1
+			AND A.FILE_ID 	= #{replyFileId}
+			AND B.DELETE_YN = 'N'
+		ORDER BY
+			B.SEQ ASC
+	</select>
+
+	<select id="getStorageFileList" parameterType="TFeed" resultType="TFile">
+		/* fileMapper.getStorageFileList */
+		SELECT
+			*
+		FROM
+			T_FILE_INFO A INNER JOIN T_FILE B
+		ON A.FILE_ID = B.FILE_ID
+		WHERE 1=1
+			AND A.FILE_ID 	= #{fileId}
+			AND B.DELETE_YN = 'N'
+		ORDER BY
+			B.SEQ ASC
+	</select>
+
+</mapper>

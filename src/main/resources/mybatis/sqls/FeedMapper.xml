@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tigrison.repository.mapper.FeedMapper">
+
+    <sql id="feedColumns">
+           A.FEED_ID
+         , A.UP_FEED_ID
+         , A.COMMUNITY_ID
+         , A.COMMUNITY_NAME
+         , A.USER_ID
+         , A.USER_NAME
+         , A.ORG_NAME
+         , A.JOBGRADE
+         , A.POSITION
+         , A.TEAM_LEADER_ID
+         , A.TITLE
+         , A.CONTRACT_PARTNER
+         , A.REQUEST_CONTENTS
+         , A.REVIEW_CONTENTS
+         , A.REQUEST_DATE
+         , A.REVIEW_DATE
+         , A.REQUEST_FILE_ID
+         , A.REVIEW_FILE_ID
+         , A.FEED_STATE
+         , A.REPLY_YN
+         , A.USER_AGENT
+         , A.DELETE_YN
+         , A.CREATE_DT
+         , A.CREATE_ID
+         , A.UPDATE_DT
+         , A.UPDATE_ID
+     </sql>
+
+    <sql id="replyColumns">
+		 A.FEED_ID
+		,A.UP_FEED_ID
+		,A.COMMUNITY_ID
+		,A.USER_ID
+		,A.USER_NAME
+		,A.ORG_NAME
+		,A.JOBGRADE
+		,A.REPLY_CONTENTS
+		,A.REPLY_FILE_ID
+		,A.REPLY_YN
+		,A.DELETE_YN
+		,A.CREATE_DT
+		,A.CREATE_ID
+		,A.UPDATE_DT
+		,A.UPDATE_ID
+     </sql>
+
+    <select id="getFeeds" parameterType="FeedSearchDto" resultType="TFeed">
+    	/* feedMapper.getFeeds */
+		SELECT
+			<include refid="feedColumns" />
+		FROM
+			T_FEED A
+		WHERE 1=1
+			AND A.REPLY_YN 	= 'N'
+			AND A.DELETE_YN = 'N'
+
+			/* 커뮤니티 필터 */
+			<if test="@com.tigrison.core.util.StringUtils@isNotEmpty(communityId)">
+				AND A.COMMUNITY_ID = #{communityId}
+			</if>
+
+			/* 검색 필터 */
+			<if test="@com.tigrison.core.util.StringUtils@isNotEmpty(searchKeyword)">
+				<choose>
+					<when test="searchType == 'TITLEANDCONTENTS'">
+						AND (
+								A.TITLE 			LIKE CONCAT('%',#{searchKeyword},'%')
+							OR  A.REQUEST_CONTENTS 	LIKE CONCAT('%',#{searchKeyword},'%')
+							OR  A.REVIEW_CONTENTS 	LIKE CONCAT('%',#{searchKeyword},'%')
+						)
+					</when>
+					<when test="searchType == 'CONTRACT_PARTNER'">
+						AND (
+								A.CONTRACT_PARTNER 	LIKE CONCAT('%',#{searchKeyword},'%')
+						)
+					</when>
+					<when test="searchType == 'ORGNAME'">
+						AND (
+								A.ORG_NAME 			LIKE CONCAT('%',#{searchKeyword},'%')
+						)
+					</when>
+					<when test="searchType == 'USERNAME'">
+						AND (
+								A.USER_NAME 		LIKE CONCAT('%',#{searchKeyword},'%')
+						)
+					</when>
+				</choose>
+			</if>
+
+			/* 권한 필터 */
+			<if test="@com.tigrison.core.util.StringUtils@isNotEmpty(orgCode)">
+				<!-- 법무팀은 모든 게시글 열람가능, 법무팀이 아닌 경우 아래 분기에 따라 처리 -->
+				<if test="orgCode != legalOrgCode">
+					<choose>
+						<!-- 무료법률상담은 작성자만 열람 가능 -->
+						<when test="communityId == '6d6d590fadeeb64d7e1c1b34151f3400'">
+							AND A.USER_ID = #{userId}
+						</when>
+						<!-- 작성자 및 작성자의 팀장만 열람 가능 -->
+						<otherwise>
+							AND ( A.USER_ID = #{userId} OR A.TEAM_LEADER_ID = #{userId} )
+						</otherwise>
+					</choose>
+				</if>
+			</if>
+
+			/* 날짜 필터 */
+			<if test="filterStartDt != null and filterEndDt != null">
+		    	AND A.CREATE_DT BETWEEN #{filterStartDt} AND DATE_ADD(#{filterEndDt}, INTERVAL 1 DAY)
+			</if>
+		ORDER BY
+			A.CREATE_DT DESC
+		LIMIT ${limitStart}, ${recordCountPerPage}
+    </select>
+
+    <select id="getFeedsCount" parameterType="FeedSearchDto" resultType="int">
+    	/* feedMapper.getFeedsCount */
+		SELECT
+			COUNT(*)
+		FROM
+			T_FEED A
+		WHERE 1=1
+			AND A.REPLY_YN 	= 'N'
+			AND A.DELETE_YN = 'N'
+
+			/* 커뮤니티 필터 */
+			<if test="@com.tigrison.core.util.StringUtils@isNotEmpty(communityId)">
+				AND A.COMMUNITY_ID = #{communityId}
+			</if>
+
+			/* 검색 필터 */
+			<if test="@com.tigrison.core.util.StringUtils@isNotEmpty(searchKeyword)">
+				<choose>
+					<when test="searchType == 'TITLEANDCONTENTS'">
+						AND (
+								A.TITLE 			LIKE CONCAT('%',#{searchKeyword},'%')
+							OR  A.REQUEST_CONTENTS 	LIKE CONCAT('%',#{searchKeyword},'%')
+							OR  A.REVIEW_CONTENTS 	LIKE CONCAT('%',#{searchKeyword},'%')
+						)
+					</when>
+					<when test="searchType == 'ORGNAME'">
+						AND (
+								A.ORG_NAME 			LIKE CONCAT('%',#{searchKeyword},'%')
+						)
+					</when>
+					<when test="searchType == 'USERNAME'">
+						AND (
+								A.USER_NAME 		LIKE CONCAT('%',#{searchKeyword},'%')
+						)
+					</when>
+				</choose>
+			</if>
+
+			/* 권한 필터 */
+			<if test="@com.tigrison.core.util.StringUtils@isNotEmpty(orgCode)">
+				<if test="orgCode != legalOrgCode">
+					<if test="userId != teamLeaderId">
+						AND A.USER_ID = #{userId}
+					</if>
+					<if test="userId == teamLeaderId">
+						AND A.TEAM_LEADER_ID = #{teamLeaderId}
+					</if>
+				</if>
+				<if test="orgCode == legalOrgCode">
+					AND A.FEED_STATE != 'WAITING_FOR_APPROVAL'
+				</if>
+			</if>
+
+			/* 날짜 필터 */
+			<if test="filterStartDt != null and filterEndDt != null">
+		    	AND A.CREATE_DT BETWEEN #{filterStartDt} AND DATE_ADD(#{filterEndDt}, INTERVAL 1 DAY)
+			</if>
+    </select>
+
+    <insert id="insert" parameterType="TFeed">
+    	/* feedMapper.insert */
+		INSERT INTO
+			T_FEED
+		(
+			 FEED_ID
+			,UP_FEED_ID
+			,COMMUNITY_ID
+			,COMMUNITY_NAME
+			,USER_ID
+			,USER_NAME
+			,ORG_NAME
+			,JOBGRADE
+			,POSITION
+			,TEAM_LEADER_ID
+			,TITLE
+			,CONTRACT_PARTNER
+			,REQUEST_CONTENTS
+			,REVIEW_CONTENTS
+			,REPLY_CONTENTS
+			,REQUEST_DATE
+			,REVIEW_DATE
+			,REQUEST_FILE_ID
+			,REVIEW_FILE_ID
+			,FEED_STATE
+			,REPLY_YN
+			,USER_AGENT
+			,DELETE_YN
+			,CREATE_DT
+			,CREATE_ID
+			,UPDATE_DT
+			,UPDATE_ID
+		)
+		VALUES
+		(
+			 #{feedId}
+			,#{upFeedId}
+			,#{communityId}
+			,#{communityName}
+			,#{userId}
+			,#{userName}
+			,#{orgName}
+			,#{jobgrade}
+			,#{position}
+			,#{teamLeaderId}
+			,#{title}
+			,#{contractPartner}
+			,#{requestContents}
+			,#{reviewContents}
+			,#{replyContents}
+			,#{requestDate}
+			,#{reviewDate}
+			,#{requestFileId}
+			,#{reviewFileId}
+			,#{feedState}
+			,#{replyYn}
+			,#{userAgent}
+			,#{deleteYn}
+			,#{createDt}
+			,#{createId}
+			,#{updateDt}
+			,#{updateId}
+		)
+    </insert>
+
+    <select id="getFeedDetail" parameterType="FeedSearchDto" resultType="TFeed">
+    	/* feedMapper.getFeedDetail */
+		SELECT
+			 <include refid="feedColumns" />
+			,B.USER_NAME AS TEAM_LEADER_NM
+			,IFNULL((SELECT USER_NAME FROM t_user WHERE USER_ID = A.REVIEWER_ID), '법무담당자') AS REVIEWER_NAME
+		FROM
+			T_FEED A LEFT JOIN T_USER B
+		ON A.TEAM_LEADER_ID = B.USER_ID
+		WHERE 1=1
+			AND A.REPLY_YN 	= 'N'
+			AND A.DELETE_YN = 'N'
+			AND A.FEED_ID 	= #{feedId}
+    </select>
+
+	<insert id="insertFeedHistory" parameterType="TFeedHistory">
+		/* feedMapper.insertFeedHistory */
+		INSERT INTO
+			T_FEED_HISTORY
+		(
+			 FEED_HISTORY_ID
+			,FEED_ID
+			,USER_ID
+			,HISTORY_TYPE
+			,PREV_STATE
+			,NEXT_STATE
+			,COMMENT
+			,CREATE_DT
+			,CREATE_ID
+			,UPDATE_DT
+			,UPDATE_ID
+		)
+		VALUES
+		(
+			 #{feedHistoryId}
+			,#{feedId}
+			,#{userId}
+			,#{historyType}
+			,#{prevState}
+			,#{nextState}
+			,#{comment}
+			,#{createDt}
+			,#{createId}
+			,#{updateDt}
+			,#{updateId}
+		)
+	</insert>
+
+	<select id="getFeedHistory" parameterType="String" resultType="FeedHistoryDto">
+		/* feedMapper.getFeedHistory */
+		SELECT
+			 A.FEED_HISTORY_ID
+			,A.FEED_ID
+			,A.USER_ID
+			,A.HISTORY_TYPE
+			,A.PREV_STATE
+			,A.NEXT_STATE
+			,A.COMMENT
+			,A.CREATE_DT
+			,A.CREATE_ID
+			,A.UPDATE_DT
+			,A.UPDATE_ID
+			,B.USER_NAME
+			,B.JOB_GRADE
+		FROM
+			T_FEED_HISTORY A INNER JOIN T_USER B
+		ON A.USER_ID = B.USER_ID
+		WHERE 1=1
+			AND A.FEED_ID = #{feedId}
+		ORDER BY
+			A.CREATE_DT DESC
+	</select>
+
+	<update id="udpateFeedState" parameterType="TFeed">
+		/* feedMapper.udpateFeedState */
+		UPDATE
+			T_FEED
+		SET
+			 FEED_STATE = #{feedState}
+			,UPDATE_DT 	= #{updateDt}
+			,UPDATE_ID 	= #{updateId}
+		WHERE 1=1
+			AND FEED_ID = #{feedId}
+	</update>
+
+	<update id="update" parameterType="TFeed">
+		/* feedMapper.update */
+		UPDATE
+			T_FEED
+		SET
+			 TITLE 				= #{title}
+			,CONTRACT_PARTNER 	= #{contractPartner}
+			,REVIEW_DATE 		= #{reviewDate}
+			,REQUEST_CONTENTS 	= #{requestContents}
+			,REQUEST_FILE_ID 	= #{requestFileId}
+			,UPDATE_DT 			= #{updateDt}
+			,UPDATE_ID 			= #{updateId}
+		WHERE 1=1
+			AND FEED_ID = #{feedId}
+	</update>
+
+	<update id="updateReview" parameterType="TFeed">
+		/* feedMapper.updateReview */
+		UPDATE
+			T_FEED
+		SET
+			 REVIEW_CONTENTS 	= #{reviewContents}
+			,REVIEW_FILE_ID 	= #{reviewFileId}
+			,FEED_STATE 		= #{feedState}
+			,UPDATE_DT 			= #{updateDt}
+			,UPDATE_ID 			= #{updateId}
+			,REVIEWER_ID 		= #{updateId}
+		WHERE 1=1
+			AND FEED_ID = #{feedId}
+	</update>
+
+	<insert id="createReply" parameterType="TFeed">
+		/* feedMapper.createReply */
+		INSERT INTO
+			T_FEED
+		(
+			 FEED_ID
+			,UP_FEED_ID
+			,COMMUNITY_ID
+			,COMMUNITY_NAME
+			,USER_ID
+			,USER_NAME
+			,ORG_NAME
+			,JOBGRADE
+			,REPLY_CONTENTS
+			,REPLY_FILE_ID
+			,REPLY_YN
+			,USER_AGENT
+			,DELETE_YN
+			,CREATE_DT
+			,CREATE_ID
+			,UPDATE_DT
+			,UPDATE_ID
+		)
+		SELECT
+			 #{feedId}
+			,#{upFeedId}
+			,#{communityId}
+			,COMMUNITY_NAME
+			,#{userId}
+			,#{userName}
+			,#{orgName}
+			,#{jobgrade}
+			,#{replyContents}
+			,#{replyFileId}
+			,#{replyYn}
+			,#{userAgent}
+			,#{deleteYn}
+			,#{createDt}
+			,#{createId}
+			,#{updateDt}
+			,#{updateId}
+		FROM
+			T_FEED
+		WHERE 1=1
+			AND FEED_ID = #{upFeedId}
+	</insert>
+
+	<select id="getReplyList" parameterType="TFeed" resultType="TFeed">
+		/* feedMapper.getReplyList */
+		SELECT
+			<include refid="replyColumns" />
+		FROM
+			T_FEED A
+		WHERE 1=1
+			AND A.REPLY_YN 		= 'Y'
+			AND A.DELETE_YN 	= 'N'
+			AND A.UP_FEED_ID 	= #{feedId}
+		ORDER BY
+			A.CREATE_DT ASC
+	</select>
+
+	<update id="deleteReply" parameterType="TFeed">
+		/* feedMapper.deleteReply */
+		UPDATE
+			T_FEED
+		SET
+			DELETE_YN = 'Y'
+		WHERE 1=1
+			AND FEED_ID = #{feedId}
+	</update>
+
+	<select id="getReplyInfo" parameterType="TFeed" resultType="TFeed">
+		/* feedMapper.getReplyInfo */
+		SELECT
+			<include refid="replyColumns" />
+		FROM
+			T_FEED A
+		WHERE 1=1
+			AND A.FEED_ID = #{feedId}
+	</select>
+
+	<update id="updateReply" parameterType="TFeed">
+		/* feedMapper.updateReply */
+		UPDATE
+			T_FEED
+		SET
+			 REPLY_CONTENTS = #{replyContents}
+			,REPLY_FILE_ID 	= #{replyFileId}
+			,UPDATE_DT 		= #{updateDt}
+			,UPDATE_ID 		= #{updateId}
+		WHERE 1=1
+			AND FEED_ID = #{feedId}
+	</update>
+
+	<update id="updateReviewCompleteDate" parameterType="TFeed">
+		/* feedMapper.updateReviewCompleteDate */
+		UPDATE
+			T_FEED
+		SET
+			REVIEW_COMPLETE_DATE = NOW()
+		WHERE 1=1
+			AND FEED_ID = #{feedId}
+	</update>
+
+	<insert id="insertPrintHistory" parameterType="TPrintHistory">
+		/* feedMapper.insertPrintHistory */
+		INSERT INTO
+			T_PRINT_HISTORY
+		(
+			 PRINT_HISTORY_ID
+			,USER_ID
+			,FEED_ID
+			,DOWNLOAD_DT
+			,USER_AGENT
+			,CREATE_DT
+			,CREATE_ID
+		)
+		VALUES
+		(
+			 #{printHistoryId}
+			,#{userId}
+			,#{feedId}
+			,#{createDt}
+			,#{userAgent}
+			,#{createDt}
+			,#{createId}
+		)
+	</insert>
+
+	<select id="getFeedInfoForMail" parameterType="TFeed" resultType="FeedInfoDto">
+		/* feedMapper.getFeedInfoForMail */
+		SELECT
+			 FEED_ID
+			,COMMUNITY_NAME
+			,TITLE
+			,ORG_NAME
+			,USER_NAME
+			,JOBGRADE
+		FROM
+			T_FEED
+		WHERE 1=1
+			AND FEED_ID = #{feedId}
+	</select>
+
+	<update id="deleteFeed" parameterType="FeedDeleteDto">
+		/* feedMapper.deleteFeed */
+		UPDATE
+			T_FEED
+		SET
+			 DELETE_YN = #{deleteYn}
+			,UPDATE_DT = #{updateDt}
+			,UPDATE_ID = #{userId}
+		WHERE 1=1
+			AND FEED_ID = #{feedId}
+	</update>
+
+</mapper>

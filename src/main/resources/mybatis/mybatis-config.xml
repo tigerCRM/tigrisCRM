@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<settings>
+
+		<setting name="mapUnderscoreToCamelCase" value="true" />
+		<setting name="jdbcTypeForNull" value="VARCHAR" />
+
+	</settings>
+
+
+
+	<typeAliases>
+		<typeAlias type="com.example.crm.core.util.TigrisMap" alias="TigrisMap" />
+		<package name="com.example.crm.repository.domain" />
+		<package name="com.example.crm.repository.dto" />
+	</typeAliases>
+
+	<mappers>
+		<mapper resource="path/to/UserMapper.xml"/>
+		<package name="com.example.crm.repository.mapper.UserMapper"/>
+	</mappers>
+
+</configuration>

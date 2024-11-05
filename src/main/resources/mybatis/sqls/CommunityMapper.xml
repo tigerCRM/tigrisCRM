@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tigrison.repository.mapper.CommunityMapper">
+
+    <sql id="feedColumns">
+           A.COMMUNITY_ID
+         , A.COMMUNITY_NAME
+         , A.DELETE_YN
+         , A.STORAGE_YN
+         , A.CREATE_DT
+         , A.CREATE_ID
+         , A.UPDATE_DT
+         , A.UPDATE_ID
+         , A.FORM
+         , A.SIGNATURE_YN
+     </sql>
+
+    <select id="getCommunityList" parameterType="CommunityDto" resultType="TCommunity">
+    	/* communityMapper.getCommunityList */
+		SELECT
+			<include refid="feedColumns" />
+		FROM
+			T_COMMUNITY A
+		WHERE 1=1
+			AND A.DELETE_YN = 'N'
+		ORDER BY
+			A.CREATE_DT ASC
+    </select>
+
+    <select id="getCommunityInfo" parameterType="CommunityDto" resultType="TCommunity">
+    	/* communityMapper.getCommunityInfo */
+		SELECT
+			<include refid="feedColumns" />
+		FROM
+			T_COMMUNITY A
+		WHERE 1=1
+			AND A.DELETE_YN 	= 'N'
+			AND A.COMMUNITY_ID 	= #{communityId}
+    </select>
+
+    <insert id="create" parameterType="TCommunity">
+    	/* communityMapper.create */
+    	INSERT INTO
+    		T_COMMUNITY
+    	(
+    		 COMMUNITY_ID
+    		,COMMUNITY_NAME
+    		,DELETE_YN
+    		,STORAGE_YN
+    		,CREATE_DT
+    		,CREATE_ID
+    		,UPDATE_DT
+    		,UPDATE_ID
+    		,FORM
+    		,SIGNATURE_YN
+    	)
+    	VALUES
+    	(
+    		 #{communityId}
+    		,#{communityName}
+    		,#{deleteYn}
+    		,#{storageYn}
+    		,#{createDt}
+    		,#{createId}
+    		,#{updateDt}
+    		,#{updateId}
+    		,#{form}
+    		,#{signatureYn}
+    	)
+    </insert>
+
+</mapper>

@@ -1,0 +1,220 @@
+/* Plupload custom css ------------------------------------------------------------------- */
+.plupload_file_preview input[type="checkbox"] {
+    display: block;
+}
+
+.plupload_wrapper{
+    /*margin-left: -31px;*/
+    border: 1px solid #e1e4eb;
+    background-color: #FFF;
+}
+
+.plupload_wrapper * {
+}
+.plupload_button {
+	display: -moz-inline-box; /* FF < 3*/
+	display: inline-block;
+	font-size: 11px;
+    font-family: 'Noto Sans KR D';
+	text-decoration: none;
+    color: #666;
+    background-color: #e9f2fa;
+    /*border: 1px solid #bababa;*/
+    padding: 2px 8px 3px 8px;
+	margin-right: 4px;
+    /*background: #f3f3f3 url('../img/buttons.png') no-repeat 0 center;*/
+	outline: 0;
+
+    /* Optional rounded corners for browsers that support it */
+    -moz-border-radius: 3px;
+    -khtml-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.plupload_button:hover {
+	color: #000;
+	text-decoration: none;
+}
+
+.plupload_disabled, a.plupload_disabled:hover {
+    color: #737373;
+    border-color: #c5c5c5;
+	background-color: #F1F1F1;
+    /*background: #ededed url('../img/buttons-disabled.png') no-repeat 0 center;*/
+	cursor: default;
+}
+
+.plupload_add {
+	background-position: -181px center;
+}
+
+.plupload_wrapper {
+	font: normal 12px Noto Sans KR L;
+}
+
+.plupload_container {
+	padding: 0;
+	background: url('../img/transp50.png');
+	/*-moz-border-radius: 5px;*/
+}
+
+.plupload_container input {
+	border: 1px solid #DDD;
+	font: normal 11px Verdana,sans-serif;
+	width: 98%;
+}
+
+.plupload_header {}
+.plupload_header_content {
+}
+.plupload_header_title {
+}
+.plupload_header_text {
+	padding-left: 13px;
+    height: 22px;
+    color: #e2ecf6 !important;
+    line-height: 22px;
+    background-color: #4890d2;
+    font-family: 'Noto Sans KR L';
+}
+
+.plupload_filelist {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.plupload_scroll .plupload_filelist {
+	height: 110px;
+	background: #FFF;
+	overflow-y: auto;
+	color: #666;
+    font-size: 11px;
+    font-family: 'Noto Sans KR D';
+}
+
+.plupload_filelist li {
+	padding: 6px 8px;
+}
+
+.plupload_filelist_header, .plupload_filelist_footer {
+	background: #FFF;
+	padding: 8px 8px;
+	color: #b7b7b7;
+}
+.plupload_filelist_header {
+	overflow: hidden;
+    height: 27px;
+    border-bottom: 1px solid #e9f2fa;
+	padding-bottom: 0;
+}
+
+.plupload_filelist_footer {border-top: 1px solid #FFF; height: 40px; line-height: 20px; vertical-align: middle;}
+.plupload_file_name {float: left; overflow: hidden}
+.plupload_file_status {color: #777;}
+.plupload_file_status span {color: #b7b7b7;}
+.plupload_file_size, .plupload_file_status, .plupload_progress {
+	float: right;
+	width: 80px;
+}
+.plupload_file_size, .plupload_file_status, .plupload_file_action {text-align: right;}
+
+.plupload_filelist .plupload_file_name {
+	width: 185px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.plupload_file_action {
+	float: right;
+	width: 16px;
+	height: 16px;
+	margin-left: 15px;
+}
+
+.plupload_file_action * {
+	display: none;
+	width: 16px;
+	height: 16px;
+}
+
+li.plupload_uploading {background: #ECF3DC url('../img/backgrounds.gif') repeat-x 0 -238px;}
+li.plupload_done {color:#AAA}
+
+li.plupload_delete a {
+	background: url('../img/delete.gif');
+}
+
+li.plupload_failed a {
+	background: url('../img/error.gif');
+	cursor: default;
+}
+
+li.plupload_done a {
+	background: url('../img/done.gif');
+	cursor: default;
+}
+
+/* Add file checkbox preview field by julee 2015-06-22 */
+li.plupload_modify {color:#AAA}
+
+li.plupload_modify a {
+	background: url('../img/delete.gif');
+}
+
+.plupload_progress, .plupload_upload_status {
+	display: none;
+}
+
+.plupload_progress_container {
+	margin-top: 3px;
+	border: 1px solid #CCC;
+	background: #FFF;
+	padding: 1px;
+}
+.plupload_progress_bar {
+	width: 0px;
+	height: 7px;
+	background: #CDEB8B;
+}
+
+.plupload_scroll .plupload_filelist_header .plupload_file_action, .plupload_scroll .plupload_filelist_footer .plupload_file_action {
+	margin-right: 17px;
+}
+
+/* Floats */
+
+.plupload_clear,.plupload_clearer {clear: both;}
+.plupload_clearer, .plupload_progress_bar {
+	display: block;
+	font-size: 0;
+	line-height: 0;
+}
+
+li.plupload_droptext {
+	background: transparent;
+	text-align: center;
+	vertical-align: middle;
+	border: 0;
+	line-height: 90px;
+}
+
+.plupload_start {
+	display: none;
+}
+
+.plupload_file_preview {
+	float: left;
+	width: 20px;
+	padding-top: 3px;
+}
+
+.plupload_file_preview input {
+	padding: 0;
+	margin: 0;
+}
+
+.moxie-shim input[type=file] {
+	cursor: pointer;
+}
