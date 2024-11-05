@@ -54,6 +54,7 @@ dependencies {
 //    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1' //스프링부트 3.0 이상
 //    implementation 'org.springframework:spring-webmvc:6.1.14' // Spring Web MVC 추가 (타임리프 쓰려면 주석해야함)
 
+
 }
 
 tasks.named('test') {
