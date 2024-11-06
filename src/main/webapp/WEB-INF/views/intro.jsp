@@ -9,7 +9,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width">
+    <meta name="viewport" content="initial-scal:qqe=1.0, user-scalable=no, maximum-scale=1, width=device-width">
     <title>씨젠의료재단 법무시스템</title>
 
     <link rel="stylesheet" type="text/css" href="/assets/css/common.css" />
@@ -20,7 +20,7 @@
     <script>
     	$(document).ready(function(){
     		var menuCount = $(".intro-menu--list li").size();
-			// 메뉴 갯수가 4개 이하이면 가운데 정렬, 5개 이상이면 왼쪽으로 정렬
+			// 메뉴 갯수가 4개 이하이면 가운데 정렬, 5개 이상이면 왼쪽으로 정렬 yesoltest
     		if(menuCount <= 4) { $(".intro-menu--list").css("justify-content", "center"); }
     		else { $(".intro-menu--list").css("justify-content", "flex-start"); }
     	});
