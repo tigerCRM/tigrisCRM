@@ -26,7 +26,7 @@ nohup java -jar /opt/crmProject/crm-0.0.1-SNAPSHOT.jar > /opt/crmProject/applica
   - 로컬/개발 서버 접속 방법
 
         http://localhost:8080/?userEmpNo=1Zknall4JttgJGDZOAshmg==
-        http://192.168.0.240:8080/?userEmpNo=1Zknall4JttgJGDZOAshmg==  ㅋ
+        http://192.168.0.240:8080/?userEmpNo=1Zknall4JttgJGDZOAshmg==
 
 
   <br/><br/>
