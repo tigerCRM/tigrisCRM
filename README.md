@@ -23,24 +23,28 @@ nohup java -jar /opt/crmProject/crm-0.0.1-SNAPSHOT.jar > /opt/crmProject/applica
 
         http://localhost:8080/?userEmpNo=1Zknall4JttgJGDZOAshmg==
 
+  <br/><br/>
+
+  
   - 개발서버 접속 방법
 
         http://192.168.0.240:8080/?userEmpNo=1Zknall4JttgJGDZOAshmg==
 
+
+  <br/><br/>
+
+
   - 개발서버 로그 확인
 
         tail -f  /opt/crmProject/application.log
+  
+  
+  <br/><br/>
 
-<br />
+  
 
 # 개발기간
 ........................
 
-<br />
 
-# tigris-crm 서비스 개발
-........................
-
-<br />
-
-test
+<br/><br/>
