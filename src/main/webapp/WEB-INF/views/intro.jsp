@@ -34,6 +34,7 @@
         <article id="intro">
             <h1 class="intro--logo"></h1>
             <!--2024-11-06 예솔 commit test-->
+            <!--2024-11-06 예솔 branch 만듬-->
             <h2>씨젠의료재단의 법무시스템을 소개합니다</h2>
             <section class="intro-menu">
                 <div class="container">
