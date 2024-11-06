@@ -56,16 +56,10 @@ public class MainController
 		}
 
 		// intro 화면에서 새로고침 한 경우
-//		UserSearchDto cookieInfo = userService.getCookie(request);
-//		if( (cookieInfo != null) && (email.equals("") && userEmpNo.equals("")))
-//		{
-//			// 게시판 리스트
-//			List<TCommunity> communityList = communityService.getCommunityList(new CommunityDto());
-//
-//			model.addAttribute("communityList", communityList);
-//
-//			return "/intro";
-//		}
+		UserSearchDto cookieInfo = userService.getCookie(request);
+		if( (cookieInfo != null) && (email.equals("") && userEmpNo.equals("")))	{
+			return "/intro";
+		}
 
 		if(!email.equals("") && userEmpNo.equals("")) {
 			try
@@ -73,8 +67,7 @@ public class MainController
 				AES128Utils aes128Utils = new AES128Utils(config.getAes128SecretKey());
 				userEmpNoStr = aes128Utils.decrypt(userEmpNo);
 			}
-			catch (UnsupportedEncodingException | GeneralSecurityException e)
-			{
+			catch (UnsupportedEncodingException | GeneralSecurityException e) {
 				e.printStackTrace();
 				LOGGER.info("*****************************************");
 				LOGGER.info("  Decrypt Fail.. [aes128] ");
@@ -86,8 +79,7 @@ public class MainController
 			UserSearchDto userInfo = userService.getUserInfoByLoginEmail(email);
 
 			// DB에 존재하지 않는 사용자
-			if(userInfo == null)
-			{
+			if(userInfo == null) {
 				LOGGER.info("*****************************************");
 				LOGGER.info("  Disallowed Users.. [tigris] ");
 				LOGGER.info("  Not Exist DB.. ");
