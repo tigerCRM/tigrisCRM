@@ -62,7 +62,7 @@ public class LoginController
 		}
 
 		// 로그인 페이지로 리다이렉트
-		return "redirect:/intro";
+		return "redirect:/login";
 	}
 
 	/*
