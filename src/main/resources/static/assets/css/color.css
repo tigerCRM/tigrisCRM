@@ -1,0 +1,100 @@
+/*** e-novator color system ***/
+
+:root {
+    /* black / white */
+    --black: #121212;
+    --white: #ffffff;
+
+    /* primary colors */
+    --primary-navy-900: #020E4A;
+    --primary-navy-800: #031459;
+    --primary-navy-700: #061D6D;
+    --primary-navy-600: #092885;
+    --primary-navy-500: #0D349B;
+    --primary-navy-400: #3C65C1;
+    --primary-navy-300: #658EE0;
+    --primary-navy-200: #9BBBF4;
+    --primary-navy-100: #CDDEFA;
+    --primary-navy-50:  #E8F0FD;
+    --primary-navy-20:  #F1F6FE;
+
+    /* grayscales */
+    --gray-900: #333333;
+    --gray-800: #555555;
+    --gray-700: #6B6B6B;
+    --gray-600: #888888;
+    --gray-500: #A6A6A6;
+    --gray-400: #C4C4C4;
+    --gray-300: #DBDBDB;
+    --gray-200: #EFEFEF;
+    --gray-100: #F6F6F6;
+    --gray-50:  #F8F8F8;
+
+    /* system colors */
+    --info-900: #022B69;
+    --info-800: #013E7F;
+    --info-700: #03579D;
+    --info-600: #0673BB;
+    --info-500: #0697DA;
+    --info-400: #3FB6E9;
+    --info-300: #6DC7EE;
+    --info-200: #9AD9F3;
+    --info-100: #C8EAF9;
+    --info-50:  #E8F6FC;
+
+    --warning-900: #6D200D;
+    --warning-800: #872D10;
+    --warning-700: #AC4116;
+    --warning-600: #D45A1C;
+    --warning-500: #FD7822;
+    --warning-400: #FEA24A;
+    --warning-300: #FEBB69;
+    --warning-200: #FFD798;
+    --warning-100: #FFEDCA;
+    --warning-50:  #FFF6E5;
+    
+    --error-900: #6C0520;
+    --error-800: #80091F;
+    --error-700: #A10F1C;
+    --error-600: #C01619;
+    --error-500: #E02C1E;
+    --error-400: #E65247;
+    --error-300: #EA7166;
+    --error-200: #F2A19C;
+    --error-100: #F7C4C0;
+    --error-50:  #FDEEED;
+    
+    --success-900: #054C12;
+    --success-800: #085C11;
+    --success-700: #0E7411;
+    --success-600: #1A8913;
+    --success-500: #2C9F1C;
+    --success-400: #63C54A;
+    --success-300: #92E273;
+    --success-200: #C1F5A3;
+    --success-100: #E3FAD0;
+    --success-50:  #F1FDE8;
+
+    /* sub colors */
+    --margenta-900: #430028;
+    --margenta-800: #65003D;
+    --margenta-700: #870453;
+    --margenta-600: #A90F6B;
+    --margenta-500: #CB1D85;
+    --margenta-400: #ED2FA1;
+    --margenta-300: #FF60BF;
+    --margenta-200: #FF8ED2;
+    --margenta-100: #FFBCE4;
+    --margenta-50:  #FFEAF7;
+
+    /* calendar color */
+    --green-light: #EBF8F4;
+    --green-strong: #00A876;
+    --purple-light: #F7EDFC;
+    --purple-normal: #E8C6F7;
+    --purple-strong: #B347E6;
+    --yellow-light: #FEFBE8;
+    --yellow-strong: #F2DC17;
+    --brown-light: #F3EDE5;
+    --brown-strong: #8A4B00;
+  }

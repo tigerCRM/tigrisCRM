@@ -1,0 +1,51 @@
+/* 연락처 작성 버튼 */
+.sidebar__btn-wrap {
+    display: flex;
+    gap: 1px;
+}
+.sidebar__btn-wrap .sidebar__btn:first-child {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.sidebar__btn-wrap .sidebar__btn:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.sidebar__btn-wrap .sidebar__btn .icon {
+    font-size: 2.4rem;
+}
+
+/* 작은 서브 컨테이너 */
+.sub-container.small-container {
+    max-width: 122rem;
+}
+
+/* 연락처 작성 */
+.contact__picture-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+.contact__picture-wrap .contact__picture-img {
+    width: 5.6rem;
+    height: 5.6rem;
+    border-radius: 0.4rem;
+    border: 1px solid var(--gray-300);
+}
+
+.contact__profile-wrap {
+    padding: 1.6rem;
+    border-radius: 0.8rem;
+    background-color: var(--gray-50);
+}
+.contact__profile-wrap .profile {
+    gap: 1.6rem;
+}
+.contact__profile-wrap .profile .profile__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+.mail-btn {
+    gap: 0.4rem;
+}

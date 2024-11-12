@@ -1,0 +1,23 @@
+.wrapper {
+    flex-direction: column;
+}
+.index_tb {
+    width: 600px;
+    margin: 0 auto 120px auto;
+    border-top: 2px solid var(--black);
+    border-collapse: collapse;
+    overflow-y: auto;
+}
+.index_tb li {
+    border-bottom: 1px solid var(--gray-300);
+}
+.index_tb li a {
+    display: block;
+    padding: 0 16px;
+    line-height: 56px;
+    font-size: 15px;
+    transition: .2s ease;
+}
+.index_tb li a:hover {
+    background-color: var(--gray-50);
+}

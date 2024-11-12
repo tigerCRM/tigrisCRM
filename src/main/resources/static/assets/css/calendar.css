@@ -1,0 +1,465 @@
+.sub-lnb {
+    height: calc(100% - 6rem);
+}
+.sub-container.small-container {
+    max-width: 122rem;
+}
+.sub-container.calendar-container {
+    padding-left: 24rem;
+    padding-right: 0;
+}
+.calendar-container:after {
+    display: none;
+}
+.calendar-container > .content-header {
+    padding: 0 3.6rem;
+}
+.calendar-title-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+.calendar-title {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+}
+.calendar-title > p {
+    line-height: 1.7em;
+    font-weight: 700;
+    font-size: 2rem;
+}
+
+.calendar-wrap {
+    display: flex;
+    flex-direction: column;
+
+    flex: 1;
+}
+.monthly-header {
+    flex: 0 0 3.2rem;
+}
+
+/* 캘린더 달력 */
+.calendar-header {
+    display: flex;
+    align-items: center;
+    height: 3.2rem;
+    border-top: 1px solid var(--gray-300);
+    border-bottom: 1px solid var(--gray-300);
+}
+.calendar-header > .calendar-header-item {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    line-height: 1.7em;
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+/* 캘린더 달력 :: 월간 */
+.monthly-calendar {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.monthly-week {
+    flex: 0 0 20%;
+    position: relative;
+    border-bottom: 1px solid var(--gray-300);
+}
+.monthly-week:last-child {
+    border-bottom: 0;
+}
+.monthly-date {
+    display: flex;
+    height: 100%;
+}
+.monthly-date-item {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0.8rem;
+    font-size: 1.4rem;
+}
+.monthly-date-item > div {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    height: 2.4rem;
+}
+.monthly-date-item .date {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+}
+.monthly-date-item .other-date {
+    opacity: 0.5;
+}
+.monthly-date-item .holiday {
+    color: var(--error-500);
+}
+.monthly-date-item .today {
+    background-color: var(--primary-navy-500);
+    color: var(--white);
+    font-weight: 700;
+}
+.monthly-date-item .lunar {
+    color: var(--gray-600);
+}
+
+.monthly-date-item .schedule-add-btn {
+    display: none;
+}
+.monthly-date-item:hover .schedule-add-btn {
+    display: block;
+}
+
+
+/* 주말 색상 추가 */
+.monthly-date .monthly-date-item:first-child .date {
+    color: var(--error-500);
+}
+.monthly-date .monthly-date-item:last-child .date {
+    color: var(--info-500);
+}
+
+/* 일정 표시 */
+:root {
+    --monthlyboxwidth: calc(100% / 7);
+    --weeklyboxwidth: calc(var(--monthlyboxwidth) - 0.8rem);
+    --weeklybox1width: calc(100% - 0.8rem);
+}
+
+.monthly-schedule {
+    position: absolute;
+    top: 3.6rem;
+    width: 100%;
+}
+
+.schedule-item {
+    position: relative;
+    display: flex;
+    gap: 0.4rem;
+    height: 2.4rem;
+    margin-bottom: 0.2rem;
+    padding-left: 1.2rem;
+    border-radius: 0.4rem;
+    background-color: var(--gray-50);
+    color: var(--gray-900);
+    text-align: left;
+    line-height: 1.7em;
+    font-size: 1.4rem;
+    cursor: pointer;
+    z-index: 1;
+    overflow: hidden;
+}
+.schedule-item:hover {
+    filter: brightness(0.95);
+}
+.schedule-item:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 0.4rem;
+    height: 100%;
+    border-radius: 0.4rem;
+    background-color: var(--gray-300);
+    content: '';
+}
+.schedule-item.temporary {
+    background-color: var(--white);
+}
+.schedule-item.temporary:before {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+}
+.schedule-item.expand {
+    flex-direction: column;
+    gap: 0;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    line-height: 1.4em;
+}
+.schedule-item .time {
+    font-weight: 700;
+}
+
+
+.date-color--brown     { background-color: var(--brown-light); }
+.date-color--red       { background-color: var(--error-50); }
+.date-color--green     { background-color: var(--success-50); }
+.date-color--deepgreen { background-color: var(--green-light); }
+.date-color--orange    { background-color: var(--warning-50); }
+.date-color--navy      { background-color: var(--primary-navy-50); }
+.date-color--pink      { background-color: var(--margenta-50); }
+.date-color--purple    { background-color: var(--purple-light); }
+.date-color--yellow    { background-color: var(--yellow-light); }
+.date-color--skyblue   { background-color: var(--info-50); }
+
+.date-color--brown:before     { background-color: var(--brown-strong); }
+.date-color--red:before       { background-color: var(--error-500); }
+.date-color--green:before     { background-color: var(--success-400); }
+.date-color--deepgreen:before { background-color: var(--green-strong); }
+.date-color--orange:before    { background-color: var(--warning-400); }
+.date-color--navy:before      { background-color: var(--primary-navy-400); }
+.date-color--pink:before      { background-color: var(--margenta-400); }
+.date-color--purple:before    { background-color: var(--purple-strong); }
+.date-color--yellow:before    { background-color: var(--yellow-strong); }
+.date-color--skyblue:before   { background-color: var(--info-400); }
+
+.schedule-more-btn {
+    position: absolute;
+    margin: 0.2rem 0.8rem;
+}
+
+
+/* 테스트용 testbox */
+.testbox {
+    left: calc(var(--monthlyboxwidth) *2 + 0.8rem) !important;
+    width: calc(var(--monthlyboxwidth) *2 - 1.6rem) !important;
+}
+.nexttestbox {
+    left: calc(var(--monthlyboxwidth) *5 + 0.8rem) !important;
+    width: calc(var(--monthlyboxwidth) *2 - 0.8rem) !important;
+}
+.prevtestbox {
+    left: 0 !important;
+    width: calc(var(--monthlyboxwidth) *3 - 0.8rem) !important;
+}
+.prevtestbox:before {
+    display: none;
+}
+.weeklyalldaytestbox {
+    width: calc(var(--monthlyboxwidth) *2 - 0.8rem) !important;
+}
+.weeklytestbox {
+    height: calc(2.4rem * 4 + 0.2rem * 3) !important;
+}
+.dailyptestbox {
+    height: calc(2.4rem * 2 + 0.2rem);
+}
+.dailypinktestbox {
+    height: calc(2.4rem * 3 + 0.2rem * 2);
+
+}
+/* //테스트용 testbox */
+
+/* 월간: 스케줄 아이템 */
+.monthly-schedule .schedule-item {
+    position: absolute;
+    left: 0.8rem;
+    width: calc(var(--monthlyboxwidth) - 1.6rem);
+}
+/* 월간 - 일일 일정 리스트 팝업 */
+.daily-popup .scroll-list-wrap {
+    max-height: 23.4rem;
+}
+.daily-schedule-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+.daily-schedule-list .schedule-item {
+    position: relative;
+    width: 100%;
+}
+
+/* 월간 - 일정 초대 팝업 */
+.require-box {
+    padding: 1.6rem;
+    border-radius: 0.8rem;
+}
+.require-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background-color: var(--white);
+    color: var(--primary-navy-500);
+    font-size: 2rem;
+}
+.require-box + .definition-wrap {
+    margin-top: 1.6rem;
+}
+
+/* 주간 달력 */
+.weekly-header {
+    display: flex;
+}
+.weekly-header .calendar-header {
+    flex: 1;
+}
+.weekly-header .time-cell {
+    flex: 0 0 8rem;
+    border-right: 1px solid var(--gray-300);
+}
+.weekly-header .calendar-header > .calendar-header-item:not(:last-child) {
+    border-right: 1px solid var(--gray-300);
+}
+
+.timetable {
+    display: flex;
+}
+.timetable.allday {
+    height: 7.6rem;
+    border-bottom: 1px solid var(--gray-300);
+}
+.timetable.allday .timetable-time .time {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+.timetable .timetable-time {
+    flex: 0 0 8rem;
+    width: 8rem;
+    border-right: 1px solid var(--gray-300);
+}
+.timetable .timetable-time .time {
+    height: 5.2rem;
+    padding: 0.8rem;
+    text-align: right;
+    font-size: 1.2rem;
+}
+
+.timetable .timetable-schedule {
+    position: relative;
+    flex: 1;
+}
+.calendar-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+.calendar-grid .daily-wrap {
+    flex: 1;
+    height: 100%;
+}
+.calendar-grid .daily-wrap:not(:last-child) {
+    border-right: 1px solid var(--gray-300);
+}
+.calendar-grid .daily-wrap .hour-item {
+    height: 5.2rem;
+}
+.calendar-grid .daily-wrap .hour-item:not(:last-child) {
+    border-bottom: 1px solid var(--gray-300);
+}
+
+.weekly-schedule {
+    position: relative;
+    display: flex;
+    height: 100%;
+}
+.weekly-schedule-item {
+    flex: 1;
+    position: relative;
+}
+.weekly-schedule-item .schedule-item {
+    position: absolute;
+    width: calc(100% - 0.8rem);
+}
+.schedule-item-group {
+    position: absolute;
+    display: flex;
+    gap: 0.2rem;
+    width: calc(100% - 0.8rem);
+}
+.schedule-item-group .schedule-item {
+    position: relative;
+    flex: 1;
+}
+
+/* 주간: 하루종일 일정 */
+.timetable.allday .weekly-schedule-item {
+    position: initial;
+}
+.timetable.allday .weekly-schedule-item .schedule-item {
+    width: var(--weeklyboxwidth);
+}
+
+/* 일간 스케줄 */
+.daily-calendar .timetable.allday .daily-schedule-item {
+    flex-direction: column;
+}
+.daily-schedule-item {
+    display: flex;
+    flex-direction: column;
+    padding-right: 0.8rem;
+}
+
+
+/* 접기 영역 */
+.fold-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+/* 초대 박스 */
+.invite-detail-box {
+    padding: 0.4rem 1.6rem;
+    border-top: 0;
+    background-color: var(--gray-50);
+}
+
+/* 초대 리스트 */
+.invite-list {
+    max-height: 16rem;
+    overflow-y: auto;
+}
+.invite-list-title {
+    padding: 0 1.6rem;
+}
+.invite-list .tag {
+    margin-right: 0.4rem;
+}
+
+/* 캘린더 레이어 팝업 */
+.calendar-layer {
+    width: 35.2rem;
+    padding: 2rem;
+}
+
+/* 범주 드롭다운 (색상) */
+.color-dropdown .color-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background-color: var(--white);
+}
+.color-dropdown .color-dropdown-item:before {
+    display: inline-block;
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    content: '';
+}
+
+/* 일정 공유 리스트 */
+.shared-user-list {
+    width: 100%;
+    max-height: 14.5rem;
+    overflow-y: auto;
+}
+.search-name-list {
+    max-height: 35rem;
+    overflow-y: auto;
+}

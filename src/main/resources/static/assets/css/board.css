@@ -1,0 +1,233 @@
+.sub-lnb {
+    height: calc(100% - 6rem);
+}
+.board-top-wrap {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 -2.4rem 2.4rem;
+    padding: 1.2rem 2.4rem;
+    border-bottom: 1px solid var(--gray-300);
+}
+
+.reaction-wrap {
+    padding: 0.6rem 1.2rem;
+    border: 1px solid var(--gray-300);
+    background-color: var(--gray-50);
+}
+.reaction-wrap .like-btn {
+    color: var(--error-400);
+}
+
+.table + .reaction-wrap {
+    border-top: 0;
+}
+.reaction-wrap + .comment-wrap {
+    border-top: 0;
+}
+.comment-wrap {
+    border: 1px solid var(--gray-300);
+}
+.comment__header {
+    padding: 1.6rem 1.6rem 0;
+    
+}
+.comment__header-title {
+    display: flex;
+    align-items: center;
+    line-height: 1.7em;
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+.comment__write {
+    padding: 1.6rem;
+    border-bottom: 1px solid var(--gray-300);
+}
+.comment-opinion .opinion__header {
+    display: flex;
+    justify-content: space-between;
+    padding: 2rem 1.6rem 0.8rem;
+}
+.opinion__content {
+    display: flex;
+    justify-content: space-between;
+}
+.opinion__content .opinion-wrap {
+    padding: 1.6rem;
+}
+.opinion-wrap.opinion-yes .opinion-item__content {
+    background-color: var(--info-50);
+}
+.opinion-wrap.opinion-no .opinion-item__content {
+    background-color: var(--error-50);
+}
+.opinion-wrap > ul {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+.opinion-item {
+    max-width: 41rem;
+}
+.opinion-item__content {
+    padding: 0.8rem 1.2rem;
+}
+
+/* 게시판 */
+.comment-table .reply-wrap > td {
+    padding: 0;
+}
+.reply-table tr:last-child td,
+.reply-table .board-item {
+    border-bottom: 0;
+}
+.reply-table .board-item:hover td {
+    background-color: var(--gray-50);
+}
+
+.comment-table .board-item {
+    font-weight: 400;
+}
+
+/* 이미지 게시판 */
+.gallery-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.4rem;
+}
+.gallery-item {
+    border: 1px solid var(--gray-300);
+    box-sizing: border-box;
+    transition: .2s ease;
+
+    overflow-x: auto;
+    box-sizing: border-box;
+}
+.gallery-item:hover {
+    border-color: var(--primary-navy-500);
+}
+.gallery-thumbnail {
+    width: 100%; /* 갤러리 아이템의 가로 크기 */
+    padding-top: 100%; /* 갤러리 아이템의 세로 크기를 가로 크기와 동일하게 만듭니다. */
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+}
+.gallery-thumbnail > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.gallery-info > a {
+    padding: 1.6rem 1.6rem 1.2rem;
+}
+.gallery-info > a {
+    display: block;
+}
+.gallery-info {
+    position: relative;
+    border-top: 1px solid var(--gray-300);
+}
+.gallery-info .title {
+    line-height: 1.7em;
+    font-weight: 700;
+    font-size: 1.8rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.gallery-info .date,
+.gallery-info .name {
+    margin-top: 0.4rem;
+    color: var(--gray-600);
+    line-height: 1.7em;
+    font-size: 1.4rem;
+}
+.gallery-info .content {
+    line-height: 1.4em;
+    font-size: 1.4rem;
+}
+.gallery-info .tag-wrap {
+    position: absolute;
+    bottom: 0;
+}
+
+/* 이미지 첨부 리스트 */
+.file-image {
+    height: 10rem;
+    overflow-y: auto;
+}
+.file-image-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-auto-rows: 100px; /* 행의 크기를 100px로 고정 */
+    gap: 2rem 1.6rem;
+}
+.file-image-item {
+    position: relative;
+    width: 10rem;
+    box-sizing: border-box;
+}
+.file-image__delete-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2rem;
+    height: 2rem;
+    background: url('../images/icon/close_rectangle_fill.svg') no-repeat 0 0 / contain;
+    z-index: 1;
+}
+
+/* 웹진 게시판 */
+.webzine-list {
+    border-top: 1px solid var(--black);
+}
+.webzine-item {
+    padding: 1.6rem 2.4rem;
+    border-bottom: 1px solid var(--gray-300);
+}
+.webzine-item > a {
+    display: flex;
+    gap: 2.4rem;
+}
+.webzine-item .gallery-thumbnail {
+    flex: 0 0 18rem;
+    width: 18rem;
+    height: 18rem;
+    padding-top: 0;
+}
+.webzine-item .gallery-info {
+    position: relative;
+    border-top: 0;
+}
+.webzine-item .gallery-info .content {
+    height: 10rem;
+    margin-top: 0.4rem;
+}
+
+.tag-list {
+    display: flex;
+    gap: 0.4rem;
+}
+.tag-list .tag-item {
+    color: var(--gray-600);
+    line-height: 1.4em;
+    font-size: 1.4rem;
+}
+
+/* 게시판 목록 */
+.new-icon {
+    position: relative;
+    top: -0.2rem;
+    width: 1.6rem; 
+    height: 1.6rem;
+    color: var(--error-500);
+    font-size: 1.6rem;
+}
+.board-title .comment-num {
+    /* line-height: 1.7em; */
+    /* font-size: 1.4rem; */
+    color: var(--primary-navy-500);
+}

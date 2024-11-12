@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width" />
+    <title>메인</title>
+    <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/layout.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/intro.css" />
+    <script src="/lib/jquery/jquery-2.2.2.min.js"></script>
+    <script src="./Style/js/script2.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+</head>
+<body>
+<div class="wrapper">
+    <!-- 사이드바 -->
+    <div id="sidebar" class="main-sidebar main-sidebar--expand">
+        <button type="button" class="btn btn--l icon-btn menu-btn menu__btn">
+            <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#menu}"/></svg>
+        </button>
+        <div class="profile">
+            <div class="profile__img profile__img--48">
+                <a href="#">
+                    <img th:src="@{/assets/images/temp/profile.png}" alt="">
+                </a>
+            </div>
+            <div class="profile__info">
+                <p class="name">
+                    <span class="text-body3 text-ellipsis" th:text="'userName'"></span>
+                </p>
+                <p class="team">
+                    <span class="text-caption1" th:text="'department'">이노베이터 사업부</span>
+                </p>
+            </div>
+        </div>
+        <nav class="main-lnb">
+            <ul>
+                <li>
+                    <a href="ticketlist" class="menu-item active">
+                            <span class="menu-icon">
+                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#mail}"/></svg>
+                            </span>
+                        <p class="menu-title">
+                            <span class="menu-title__text">요청관리</span>
+                            <span class="menu-title__num"></span>
+                        </p>
+                    </a>
+                </li>
+                <!-- 나머지 메뉴 항목들... -->
+            </ul>
+        </nav>
+    </div>
+    <!-- //사이드바 -->
+
+    <!-- 컨텐츠 영역 -->
+    <div class="main-area">
+        <!-- 헤더 -->
+        <header class="header">
+            <div class="container">
+                <div class="logo">
+                    <span class="hidden">이노베이터</span>
+                </div>
+
+                <nav id="utilMenu" class="main-util-menu">
+                    <ul>
+                        <li>
+                            <button type="button" class="btn btn--l icon-btn menu-btn">
+                                <span class="badge"></span>
+                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#notification}"/></svg>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn--l icon-btn menu-btn">
+                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#setting}"/></svg>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <!-- //헤더 -->
+        <!-- 내용 영역 -->
+        <main class="main-content">
+            <div class="container">
+                <div class="main-widget-wrap">
+                    <div class="flex1">
+                        <!-- 티켓 미리보기 -->
+                        <section id="notice" class="widget-item">
+                            <h2 class="widget-title"><a href="#" class="widget-title__link">요청내역</a></h2>
+                            <div class="widget__content">
+                                <ul class="widget-board" th:each="ticket : 'tickets'">
+                                    <li>
+                                        <a href="#" class="list__link"><span class="tag tag--navy">요청등록</span><span th:text="'ticket.title'">OO 포탈 배너 이미지 추가 요청</span></a>
+                                        <span class="widget-board__date" th:text="'ticket.author'">김사원</span>
+                                        <span class="widget-board__date" th:text="'ticket.date'">2023.08.11</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="flex1">
+                        <!-- 공지사항 미리보기 -->
+                        <section id="notice" class="widget-item">
+                            <h2 class="widget-title"><a href="#" class="widget-title__link">공지사항</a></h2>
+                            <div class="widget__content">
+                                <ul class="widget-board" th:each="notice : ${notices}">
+                                    <li>
+                                        <a href="#" class="list__link" th:text="'notice.title'">[필독] 요청사항 등록 전에 꼭 읽어주세요</a>
+                                        <span class="widget-board__date" th:text="'notice.author'">김사원</span>
+                                        <span class="widget-board__date" th:text="'notice.date'">2023.08.11</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <!-- 통계 미리보기 -->
+                <div class="widget-edit-wrap">
+                    <div class="widget-edit__content">
+                        <p class="text-body3">게시판 미리보기 영역</p>
+                        <div class="swiper widget-edit-list">
+                            <div class="swiper-wrapper">
+                                <!-- Swiper slides here if needed -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- // 통계 미리보기 -->
+            </div>
+        </main>
+        <!-- //내용 영역 -->
+    </div>
+    <!-- //컨텐츠 영역 -->
+</div>
+
+<script>
+   <!-- var swiper = new Swiper(".widget-edit-list", {
+        slidesPerView: 'auto',
+        spaceBetween: 16,
+    });-->
+</script>
+</body>
+</html>

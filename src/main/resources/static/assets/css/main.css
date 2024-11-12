@@ -1,0 +1,679 @@
+.main-content {
+    background-color: var(--gray-100);
+}
+
+.main-content .container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--grid-gutter);
+    max-width: 160.8rem;
+    margin: 0 auto;
+    padding: 4rem 0;
+}
+
+/* 배너 영역 */
+.banner-wrap {
+    display: flex;
+    gap: var(--grid-gutter);
+}
+
+.banner-wrap .banner {
+    position: relative;
+    height: 22rem;
+    border-radius: 1.2rem;
+    background-color: var(--gray-200);
+    background-repeat: no-repeat;
+    background-position: 0% center;
+    background-size: cover;
+    overflow: hidden;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+/* 위젯 영역 */
+.main-widget-wrap {
+    display: flex;
+    gap: var(--grid-gutter);
+}
+
+.main-widget-wrap>.flex1 {
+    display: flex;
+    flex-direction: column;
+    gap: 2.4rem;
+    overflow: hidden;
+}
+
+#bookmark,
+#ticker,
+#weather {
+    padding-bottom: 2.4rem;
+}
+
+#board.widget-item .setting-btn,
+#eApproval.widget-item .setting-btn,
+#weather.widget-item .setting-btn,
+#reservation.widget-item .setting-btn {
+    display: none;
+}
+
+#board.widget-item:hover .setting-btn,
+#eApproval.widget-item:hover .setting-btn,
+#weather.widget-item:hover .setting-btn,
+#reservation.widget-item:hover .setting-btn {
+    display: block;
+}
+
+/* 위젯 설정 */
+.widget-edit-wrap h2 {
+    color: var(--black);
+}
+
+.widget-edit__head {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.6rem;
+}
+
+.widget-edit__btn-wrap {
+    display: flex;
+    gap: 0.8rem;
+}
+
+.widget-edit__content {
+    padding: 2.4rem;
+    border-radius: 1.2rem;
+    background-color: var(--white);
+}
+
+.widget-edit-list {
+    margin-top: 0.8rem;
+}
+
+.widget-edit__item {
+    cursor: pointer;
+}
+
+.widget-edit__thumbnail {
+    width: 100%;
+    height: 11.6rem;
+    border-radius: 0.4rem;
+    background-color: var(--gray-100);
+}
+
+.widget-edit__title {
+    margin-top: 0.4rem;
+    text-align: center;
+    line-height: 1.75em;
+    font-weight: 700;
+    font-size: 1.6rem;
+}
+
+.widget-edit-list .swiper-slide {
+    width: 14rem;
+}
+
+/* 위젯 공통 */
+.widget-item {
+    position: relative;
+    padding: 2.4rem 2.4rem 3.2rem;
+    border-radius: 1.2rem;
+    background-color: var(--white);
+}
+
+.widget-selected {
+    border: 1px solid var(--primary-navy-500);
+}
+
+.widget-disable .widget-title,
+.widget-disable .widget__content {
+    opacity: 0.5;
+}
+
+.widget-edit-wrap {
+    margin-bottom: 2.4rem;
+}
+
+.widget-title {
+    position: relative;
+    margin-bottom: 1.6rem;
+    color: var(--black);
+    line-height: 1.7em;
+    font-weight: 700;
+    font-size: 2rem;
+}
+
+.widget-title__link {
+    display: flex;
+    align-items: center;
+}
+
+.widget-title__link:after {
+    display: block;
+    width: 2.4rem;
+    height: 2.4rem;
+    margin-left: 0.4rem;
+    background: url('../images/icon/icon-arrow_right.svg') no-repeat;
+    content: '';
+}
+
+.widget-item .setting-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: transparent;
+    color: var(--gray-600);
+    font-size: 2.4rem;
+}
+
+.widget-item .tab__list {
+    margin-bottom: 2.4rem;
+}
+
+.content-scroll {
+    padding-right: 0.4rem;
+    overflow-y: auto;
+}
+
+.no-content {
+    margin-top: 1.2rem;
+    text-align: center;
+    line-height: 1.7em;
+    font-size: 1.4rem;
+}
+
+.table-caption {
+    margin-top: 0.8rem;
+    color: var(--gray-600);
+}
+
+
+/* 게시판형 위젯 */
+.widget-board {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.widget-board>li {
+    display: flex;
+    justify-content: space-between;
+    min-width: 0;
+    overflow: hidden;
+    line-height: 1.7em;
+    font-size: 1.4rem;
+}
+
+.widget-board .widget-board__date {
+    width: 7.2rem;
+    margin-left: 1.2rem;
+    color: var(--gray-600);
+    text-align: right;
+    letter-spacing: -0.1px;
+    white-space: nowrap;
+}
+
+.widget-board .tag {
+    margin-right: 0.8rem;
+}
+
+.list__link {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 이미지 게시판형 위젯 */
+.widget-img-board {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.2rem;
+    max-height: 14rem;
+}
+
+.widget-img-board>li>a {
+    position: relative;
+}
+
+.widget-board__thumbnail {
+    height: 11.4rem;
+    overflow: hidden;
+}
+
+.widget-board__thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.widget-board__thumbnail+.widget-board__title {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 4.8rem;
+    padding: 2rem 0.4rem 0.4rem;
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.00) 100%);
+    color: #fff;
+}
+
+.widget-board__title {
+    line-height: 1.7em;
+    font-weight: 700;
+    font-size: 1.4rem;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+#webzine .widget-img-board {
+    max-height: 14rem;
+}
+
+#imageBoard .widget-img-board {
+    max-height: 45rem;
+}
+
+#imageBoard .widget-board__thumbnail {
+    height: 13rem;
+}
+
+/* 근태관리 위젯 */
+.commute-time {
+    margin-bottom: 3.2rem;
+}
+
+.commute-state .table02 {
+    margin-top: 1.2rem;
+}
+
+.current-time {
+    color: var(--primary-navy-500);
+}
+
+.timestamp {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1.6rem;
+}
+
+.timestamp-btn {
+    flex: 1;
+    height: 8rem;
+    padding: 1.2rem;
+    border-radius: 0.8rem;
+    background-color: var(--primary-navy-500);
+    color: var(--white);
+}
+
+.timestamp-btn span {
+    line-height: 1.7em;
+    font-weight: 500;
+    font-size: 1.4rem;
+    letter-spacing: -0.35px;
+}
+
+.timestamp-btn .timestamp-btn__time {
+    line-height: 1.77em;
+    font-weight: 700;
+    font-size: 1.8rem;
+}
+
+.timestamp-btn:disabled {
+    background-color: var(--gray-300);
+    color: var(--gray-600);
+}
+
+/* 북마크 위젯 */
+.widget-bookmark {
+    gap: 2rem;
+}
+
+.widget-bookmark .flex1 {
+    overflow: hidden;
+}
+
+.widget-bookmark .circle-icon {
+    margin: 0 auto;
+}
+
+.bookmark__title {
+    margin-top: 0.4rem;
+    color: var(--gray-900);
+    text-align: center;
+    line-height: 1.7em;
+    font-size: 1.4rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 티커 위젯 */
+.widget-ticker {
+    gap: 1.2rem;
+}
+
+.ticker__text {
+    color: var(--gray-900);
+    line-height: 1.7em;
+    font-size: 1.4rem;
+}
+
+.ticker__text.no-content {
+    margin-top: 0;
+}
+
+/* 신규입사자 위젯 */
+.newbie__list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr));
+    gap: 1.2rem;
+    max-height: 24.4rem;
+}
+
+.newbie__item {
+    padding: 1.2rem 1.6rem;
+    border-radius: 0.8rem;
+    background-color: var(--gray-50);
+    box-sizing: border-box;
+}
+
+.newbie__item .profile {
+    align-items: center;
+    padding: 0;
+}
+
+/* 스케줄 위젯 */
+.widget-schedule {
+    max-height: 29.2rem;
+    margin-top: 1.6rem;
+}
+
+.schedule-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.schedule-item>a {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 1.6rem;
+    border-radius: 0.8rem;
+}
+
+.schedule-item.schedule-item--done>a {
+    background-color: var(--gray-50);
+}
+
+.schedule-item.schedule-item--active>a {
+    background-color: var(--primary-navy-20);
+}
+
+.schedule-item>a>.icon {
+    position: absolute;
+    top: 50%;
+    right: 1.6rem;
+    transform: translateY(-50%);
+}
+
+.schedule-item>a p {
+    margin-bottom: 0.4rem;
+}
+
+.schedule-item .schedule__info {
+    display: flex;
+    gap: 1.2rem;
+    color: var(--gray-600);
+}
+
+.schedule-item .schedule__info>div {
+    display: flex;
+    align-items: center;
+}
+
+.schedule-item .schedule__info .icon {
+    margin-right: 0.4rem;
+    font-size: 1.6rem;
+}
+
+.schedule-item .schedule__info .icon+span {
+    line-height: 1.6rem;
+}
+
+.schedule-item .tag {
+    margin-right: 1.2rem;
+}
+
+/* 생일자, 휴가자 위젯 */
+.widget-user-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    max-height: 28rem;
+}
+
+.widget-user-list .user__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.2rem 1.6rem;
+}
+
+.widget-user-list .user__item .profile {
+    align-items: center;
+    overflow: hidden;
+}
+
+
+.widget__content .weekly-calendar {
+    margin-bottom: 2.4rem;
+}
+
+.calendar+.tab-menu {
+    margin: 3.2rem 0 0;
+}
+
+/* 일정 위젯 */
+#calendar .no-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 25.2rem;
+    margin-top: 0;
+}
+
+/* 뉴스피드 위젯 */
+.newsfeed-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.newsfeed-item {
+    padding: 2.4rem 1.6rem;
+    border-radius: 0.4rem;
+    border: 1px solid var(--gray-300);
+
+}
+.newsfeed-item .profile {
+    margin-bottom: 1.2rem;
+}
+.newsfeed-item .profile .name {
+    font-weight: 400;
+}
+.newsfeed-item .content {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.newsfeed-item .content .icon {
+    
+    align-self: flex-start;
+} 
+.newsfeed-item .content .title {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    line-height: 1.25em;
+    font-size: 1.4rem;
+}
+
+/* 날씨 위젯 */
+#weather {
+    height: 12.6rem;
+    background-size: cover;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    cursor: default;
+}
+#weather .setting-btn {
+    top: 2.4rem;
+    right: 2.4rem;
+
+}
+.weather--sun       { background-image: url('../images/main/sun.png'); }
+.weather--sun_cloud { background-image: url('../images/main/sun_cloud.png'); }
+.weather--snow      { background-image: url('../images/main/snow.png'); }
+.weather--rain      { background-image: url('../images/main/rain.png'); }
+.weather--cloudy    { background-image: url('../images/main/cloudy.png'); }
+
+.weather-wrap {
+    color: var(--white);
+}
+.weather-title {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-bottom: 0.4rem;
+    line-height: 1.7em;
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+.weather-title > svg {
+    width: 1.6rem;
+    height: 1.6rem;
+}
+.weather-content {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+.weather-content .temperature {
+    line-height: 1.35em;
+    font-weight: 700;
+    font-size: 4rem;
+}
+.weather-content .location {
+    line-height: 1.7em;
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+.weather-content .date {
+    line-height: 1.3em;
+    font-size: 1.2rem;
+}
+
+/* 위젯 설정 */
+.widget-setting-wrap {
+    position: absolute;
+    top: 6.2rem;
+    right: 0.8rem;
+}
+
+.widget-setting-wrap:before {
+    position: absolute;
+    top: -1rem;
+    right: 2.2rem;
+    display: block;
+    content: '';
+    width: 1.2rem;
+    height: 1rem;
+    background: url('../images/common/tail_widget.svg') no-repeat;
+}
+
+.widget-setting-wrap .layerpopup__content {
+    padding: 0 2.4rem;
+}
+
+.board-widget-setting {
+    max-height: 22rem;
+}
+
+.board-widget-setting>ul {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 0.8rem;
+}
+.board-widget-setting>ul>li {
+    overflow-x: auto;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* 금주의 식단 */
+/* 주간 버튼 탭 목록 */
+.weekly-button-tab {
+    display: flex;
+    width: 100%;
+    border: 1px solid var(--gray-300);
+    border-radius: 0.8rem;
+    overflow: hidden;
+}
+.weekly-button-tab > li {
+    flex: 1;
+    height: 4.4rem;
+}
+.weekly-button-tab > li:not(:last-child) {
+    border-right: 1px solid var(--gray-300);
+}
+.weekly-button-tab > li > .weekly-button {
+    width: 100%;
+    height: 100%;
+    background-color: var(--white);
+    color: var(--gray-800);
+    line-height: 1.75em;
+    font-weight: 700;
+    font-size: 1.6rem;
+}
+.weekly-button-tab > li > .weekly-button.active {
+    background-color: var(--primary-navy-500);
+    color: var(--white);
+}
+/* 식단 목록 */
+.meal-list {
+    display: flex;
+    gap: 1.6rem;
+}
+.meal-list > div {
+    flex: 1;
+}
+.meal-list .gray-box {
+    min-height: 21.6rem;
+}
+.gray-box {
+    padding: 1.6rem;
+    border-radius: 0.8rem;
+    border: 1px solid var(--gray-300);
+}
+.gray-box .box-title {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+}
+.gray-box .box-title > svg {
+    color: var(--gray-800);
+    font-size: 2rem;
+}
+.gray-box .box-content {
+    color: var(--gray-800);
+}
+
+@media screen and (max-width: 1680px) {
+    .schedule-item>a {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

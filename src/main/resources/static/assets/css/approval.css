@@ -1,0 +1,316 @@
+/* 결재양식 썸네일 리스트 */
+.approval-list--thumbnail {
+    padding: 2.4rem 1.2rem;
+}
+.approval-list--thumbnail > ul {
+    /* display: grid; */
+    /* grid-template-columns: repeat(9, 1fr); */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.6rem;
+}
+.approval-list--thumbnail .approval-item {
+    flex: 0 0 10rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    min-width: 10rem;
+    padding: 1.6rem 0.8rem;
+    border-radius: 0.8rem;
+    cursor: pointer;
+    transition: .2s ease;
+    box-sizing: border-box;
+}
+.approval-list--thumbnail .approval-item:hover {
+    background-color: var(--gray-50);
+}
+
+.approval-item > .approval-thumbnail {
+    width: 5.6rem;
+    height: 5.6rem;
+    background: url('../images/common/document--56.svg') no-repeat;
+}
+.approval-item > .approval-title {
+    text-align: center;
+    line-height: 1.4em;
+    font-size: 1.4rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+/* 결재 팝업 */
+.approval-popup {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.approval-popup__top {
+    flex: 0 0 5.6rem;
+    padding: 1.2rem 2.4rem;
+    border-bottom: 1px solid var(--gray-300);
+}
+.approval-popup__header {
+    position: relative;
+    padding: 1.6rem 2.4rem;
+}
+.approval-popup__content {
+    padding: 0 2.4rem 4.8rem;
+}
+
+.approval-popup__title {
+    margin-bottom: 1.6rem;
+    text-align: center;
+    line-height: 1.5em;
+    font-weight: 700;
+    font-size: 3.2rem;
+}
+.approval-mode {
+    position: absolute;
+    top: 1.6rem;
+    left: 2.4rem;
+}
+
+.approval-label-wrap {
+    position: absolute;
+    top: 1.6rem;
+    right: 2.4rem;
+    display: flex;
+    gap: 0.8rem;
+}
+
+.approval-box-wrap {
+    display: flex;
+    justify-content: space-between;
+}
+.approval-box-wrap .left,
+.approval-box-wrap .right {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+.approval-box-wrap .right {
+    align-items: flex-end;
+    margin-left: auto;
+}
+
+.approval-line-text {
+    font-weight: 500;
+    font-size: 1.2rem;
+    color: var(--primary-navy-500);
+}
+
+/* 결재선 테이블 */
+.approval-line-tb {
+    width: auto;
+}
+.approval-line-tb th,
+.approval-line-tb td {
+    border: 1px solid var(--gray-300);
+    padding: 0.4rem;
+    text-align: center;
+    line-height: 1.3em;
+    font-size: 1.2rem;
+    box-sizing: border-box;
+}
+.approval-line-tb thead th {
+    font-weight: 700;
+}
+.approval-line-tb thead th,
+.approval-line-tb tfoot td {
+    background-color: var(--gray-50);
+}
+.approval-line-tb tbody .sign__row td {
+    width: 7rem;
+    height: 5.8rem;
+}
+.approval-line-tb td.sign-comment {
+    position: relative;
+    background-color: var(--primary-navy-20);
+}
+.approval-line-tb td.sign-comment:hover:after {
+    position: absolute;
+    min-width: 8rem;
+    max-width: 20rem;
+    padding: 1.2rem;
+    border: 1px solid var(--gray-300);
+    background-color: var(--white);
+    content: attr(data-comment);
+}
+
+.approval-list-wrap .approval-line-tb th,
+.approval-list-wrap .approval-line-tb td {
+    padding: 0.4rem 1.2rem;
+}
+
+/* 추가결재선 테이블 */
+.additional-approval-tb {
+    width: 28rem;
+}
+.approval-list-wrap .additional-approval-tb th {
+    height: 2.4rem;
+}
+.approval-list-wrap .additional-approval-tb td {
+    text-align: left;
+    padding: 0.8rem 1.2rem;
+}
+.approval-list-wrap .additional-approval-tb td > p:not(:last-child) {
+    margin-bottom: 0.4rem;
+}
+
+.tb-fold-btn {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.tb-fold-btn > .icon {
+    position: absolute;
+    right: 0rem;
+    width: 2rem;
+    height: 2rem;
+    font-size: 2rem;
+}
+
+/* 결재팝업 댓글 */
+.approval-popup__comment {
+    width: 100%;
+}
+.approval-popup__comment .comment--folded {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 1.2rem 0;
+    background-color: var(--gray-200);
+    color: var(--gray-800);
+    text-align: center;
+    line-height: 1.7em;
+    font-size: 1.4rem;
+    cursor: pointer;
+}
+.approval-popup__comment .comment--folded .num {
+    color: var(--primary-navy-500);
+    font-weight: 500;
+}
+
+.approval-popup__comment .comment--opened {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: var(--white);
+    border-top: 1px solid var(--gray-300);
+}
+.comment--opened .approval-comment__header {
+    padding: 2.4rem 2.4rem 1.6rem;
+}
+.comment--opened .approval-comment__content {
+    max-height: 36rem;
+    padding: 0 2.4rem;
+    overflow-y: auto;
+}
+.approval-comment__write {
+    border-top: 1px solid var(--gray-300);
+    padding: 2.4rem;
+}
+.approval-comment__write > .textarea01 {
+    height: 8rem;
+}
+
+.table tr.focus td {
+    background-color: var(--primary-navy-20);
+    font-weight: 700;
+}
+
+/* 결재내역 */
+.approval-history-list > .history-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 1.2rem 1.6rem;
+    border-bottom: 1px solid var(--gray-300);
+}
+.history-item .history-info {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.history-item .history-content {
+    color: var(--gray-800);
+    line-height: 1.4em;
+    font-size: 1.4rem;
+}
+
+.tab__content .empty-field {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 46rem;
+}
+
+/* 결재선 지정 팝업 */
+.approval-contact-layer .bar {
+    width: 1px;
+    height: 2rem;
+    background-color: var(--gray-400);   
+}
+.approval-contact-wrap > .left-wrap {
+    flex: 0 0 38rem;
+}
+.approval-contact-wrap > .right-wrap {
+    gap: 0;
+}
+.approval-contact-wrap > .left-wrap > div {
+    width: 30rem;
+}
+.approval-contact-wrap .contact__user-list {
+    width: 30rem;
+}
+
+/* 자동결재선 레이어 */
+.approval-setting-layer {
+    position: absolute;
+    width: 34.8rem;
+    margin-top: 0.8rem;
+    padding: 0.8rem 0;
+    border-radius: 0.8rem;
+    border: 1px solid var(--gray-300);
+    background-color: var(--white);
+    z-index: 1;
+}
+.approval-setting-layer > ul {
+    height: 20rem;
+    overflow-y: auto;
+}
+
+/* 문서조회 */
+.document-layer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+.document-layer .layerpopup__header {
+    flex: 0 0 7.4rem;
+}
+.layerpopup__content--sidebar {
+    flex: 0 1 auto;
+    display: flex;
+    height: 100%;
+    padding: 0;
+    border-top: 1px solid var(--gray-400);
+    line-height: 1.7em;
+    font-size: 1.4rem;
+}
+.layerpopup__content--sidebar > .layer-sidebar {
+    flex: 0 0 24rem;
+    border-right: 1px solid var(--gray-400);
+    padding: 3.2rem 1.6rem;
+    overflow-y: auto;
+}
+.layerpopup__content--sidebar > .layer-content {
+    flex: 1;
+    padding: 0 2.4rem;
+}
