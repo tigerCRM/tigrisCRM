@@ -7,5 +7,4 @@ import java.util.Map;
 @Mapper
 public interface TicketMapper {
     List<Map<String, Object>> getTicketList();
-    List<Map<String, Object>> searchTickets(String searchKeyword);
 }

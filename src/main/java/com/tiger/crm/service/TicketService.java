@@ -15,8 +15,4 @@ public class TicketService {
     public List<Map<String, Object>> getTicketList() {
         return ticketMapper.getTicketList();
     }
-
-    public List<Map<String, Object>> searchTickets(String searchKeyword) {
-        return ticketMapper.searchTickets(searchKeyword);  // MyBatis Mapper에서 쿼리 실행
-    }
 }

@@ -10,10 +10,5 @@
         FROM T_TICKET_INFO
     </select>
 
-    <select id="searchTickets" resultType="map">
-        SELECT TICKET_ID, COMPANY_ID, COMPANY_NAME,STATUS_CD,TITLE FROM T_TICKET_INFO
-        WHERE TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
-        OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')
-    </select>
 
 </mapper>
