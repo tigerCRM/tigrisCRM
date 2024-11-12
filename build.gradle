@@ -52,6 +52,9 @@ dependencies {
     // json
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
+    // SMTP MAIL
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
     // jsp(jstl) for SpringBoot 3.x
     implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 //    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper'
