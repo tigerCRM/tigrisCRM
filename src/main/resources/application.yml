@@ -12,9 +12,10 @@ spring:
 
   # maria DB setting
   datasource:
-    url: jdbc:mariadb://192.168.0.240:3306/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
+   # url: jdbc:mariadb://192.168.0.240:3306/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
+    url: jdbc:mariadb://localhost:3306/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
     driver-class-name: org.mariadb.jdbc.Driver
-    username: crmadmin
+    username: root
     password: Xkdlrj@2024!
     hikari:
       maximum-pool-size: 5
@@ -24,7 +25,7 @@ spring:
 
 # mybatis path setting
 mybatis:
-  mapper-locations: classpath:/mapper/sqls/**/*.xml # mapper XML 파일 경로
+  mapper-locations: classpath:/mapper/**/*.xml # mapper XML 파일 경로
   type-aliases-package: com.example.project.model # 도메인 모델 클래스가 있는 패키지 경로
   configuration:
     map-underscore-to-camel-case: true  # underscore_to_camel_case 설정

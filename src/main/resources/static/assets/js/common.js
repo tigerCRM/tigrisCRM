@@ -1,140 +1,76 @@
-var GLB_SEARCH_TYPE 	= 'TITLEANDCONTENTS'; // 제목+내용(TITLEANDCONTENTS), 작성자(USERNAME), 부서명(ORGNAME)
-var GLB_SEARCH_KEYWORD 	= null;
-var GLB_FILTER_START_DT = null;
-var GLB_FILTER_END_DT 	= null;
-var GLB_FILTER_PAGE 	= 1;
-var GLB_COMMUNITY_ID 	= null;
+//////////////////////////////////// 요소가 로드된 이후 보이기
+const wrapper = document.querySelector('.wrapper');
+wrapper.classList.remove('fouc');
 
-function getFeeds(layerId)
-{
-	var postData = {
-		 'searchType' : GLB_SEARCH_TYPE
-		,'page' : GLB_FILTER_PAGE
-	};
+//////////////////////////////////// 툴팁 표시하기
+let tooltipElem;
+document.onmouseover = function(event) {
+    let target = event.target;
+    // console.log(target);
 
-	if(GLB_COMMUNITY_ID != null){
-		postData.communityId = GLB_COMMUNITY_ID;
-	}
-	if(GLB_SEARCH_KEYWORD != null){
-		postData.searchKeyword = GLB_SEARCH_KEYWORD;
-	}
-	if(GLB_FILTER_START_DT != null){
-		postData.filterStartDt = GLB_FILTER_START_DT;
-	}
-	if(GLB_FILTER_END_DT != null){
-		postData.filterEndDt = GLB_FILTER_END_DT;
-	}
+    // data-tooltip 속성이 있는 요소
+    let tooltipHtml = target.dataset.tooltip;
+    if (!tooltipHtml) return;
 
-	$.ajax({
-		type: 'POST',
-		url: '/feed/list',
-		data: postData,
-		dataType: 'html',
-		async: false,
-		success: function(data, textStatus, XMLHttpRequest) {
-			$('#'+layerId).html(data);
-		}
-	});
+    // 툴팁 요소를 만듭니다.
+
+    tooltipElem = document.createElement('div');
+    tooltipElem.className = 'tooltip';
+    tooltipElem.innerHTML = tooltipHtml;
+    document.body.append(tooltipElem)
+    setTimeout(() => {
+        tooltipElem.style.opacity = 1;
+    }, 200)
+    
+    // 툴팁 요소를 data-tooltip 속성이 있는 요소 오른쪽, 가운데에 위치시킵니다.
+    let coords = target.getBoundingClientRect();
+
+    let left = coords.left + target.offsetWidth + 10; // 오른쪽에 위치하도록 설정
+    if (left + tooltipElem.offsetWidth > window.innerWidth) {
+    // 툴팁이 화면 오른쪽을 넘어가면 조절
+    left = window.innerWidth - tooltipElem.offsetWidth;
+    if (left < 0) left = 0;
+    }
+
+    let top = coords.top + (target.offsetHeight - tooltipElem.offsetHeight) / 2; // 세로 가운데에 위치하도록 설정
+    if (top < 0) top = 0; // 툴팁이 화면 위를 넘지 않도록 조절
+
+    tooltipElem.style.left = left + 'px';
+    tooltipElem.style.top = top + 'px';
+    };
+
+document.onmouseout = function(e) {
+
+    if (tooltipElem) {
+    tooltipElem.remove();
+    tooltipElem = null;
+    }
+};
+
+// 서브 LNB 트리 열고닫기
+let treeLists = document.getElementsByClassName('tree-list');
+let toggleNode = document.getElementsByClassName('tree-arrow-btn');
+for (let i = 0; i < toggleNode.length; i++) {
+    toggleNode[i].addEventListener('click', (e)=> {
+        let arrowbtn = e.target;
+        let treeFolder = arrowbtn.closest('.tree-folder');
+        if (treeFolder) {
+            treeFolder.classList.toggle('active');
+        }
+        arrowbtn.classList.toggle('tree--open');
+    })
 }
 
-function getStorageList(layerId)
-{
-	var postData = {
-		 'searchType' : GLB_SEARCH_TYPE
-		,'page' : GLB_FILTER_PAGE
-	};
-
-	if(GLB_SEARCH_KEYWORD != null){
-		postData.searchKeyword = GLB_SEARCH_KEYWORD;
-	}
-	if(GLB_FILTER_START_DT != null){
-		postData.filterStartDt = GLB_FILTER_START_DT;
-	}
-	if(GLB_FILTER_END_DT != null){
-		postData.filterEndDt = GLB_FILTER_END_DT;
-	}
-
-	$.ajax({
-		type: 'POST',
-		url: '/storage/list',
-		data: postData,
-		dataType: 'html',
-		async: false,
-		success: function(data, textStatus, XMLHttpRequest) {
-			$('#'+layerId).html(data);
-		}
-	});
-}
-
-function getReplyList(layerId, feedId)
-{
-	var postData = {
-		 'feedId' : feedId
-		,'layerId' : layerId
-	};
-
-	$.ajax({
-		type: 'POST',
-		url: '/feed/reply/list',
-		data: postData,
-		dataType: 'html',
-		async: false,
-		success: function(data, textStatus, XMLHttpRequest) {
-			$('#'+layerId).html(data);
-		}
-	});
-}
-
-function deleteReplySubmit(layerId, feedId, upFeedId)
-{
-	if(!confirm('댓글을 삭제하시겠습니까?')) { return; }
-
-	var postData = {
-		'feedId' : feedId
-	};
-
-	$.ajax({
-		type: 'POST',
-		url: '/feed/reply/delete',
-		data: postData,
-		dataType: 'json',
-		async: false,
-		success: function(data, textStatus, XMLHttpRequest) {
-			if(data.code == 0) { getReplyList(layerId, upFeedId); }
-			else { alert('댓글 삭제가 실패하였습니다.'); }
-		}
-	});
-}
-
-function modifyReplySubmit(layerId, feedId, upFeedId)
-{
-
-}
-
-function checkWordByte(value, maxByte) {
-	var returnValue = false;
-
-	var strValue = value;
-	var strLen = strValue.length;
-	var totalByte = 0;
-	var len = 0;
-	var oneChar = "";
-	var str2 = "";
-
-	for (var i = 0; i < strLen; i++) {
-		oneChar = strValue.charAt(i);
-		if (escape(oneChar).length > 4) {
-			totalByte += 2;
-
-		} else {
-			totalByte++;
-		}
-		if (totalByte <= maxByte) {
-			len = i + 1;
-		}
-	}
-	if (totalByte > maxByte) {
-		returnValue = true;
-	}
-	return returnValue;
-}
+// sub lnb 트리 구조 좌측 패딩
+document.addEventListener('DOMContentLoaded', function() {
+    let treeListSubs = document.querySelectorAll('[class^="tree-list--sub"]');
+    treeListSubs.forEach(treeListSub => {
+        let num = parseInt(treeListSub.classList[0].split('-')[4]); // 클래스명에서 [num] 추출
+        let paddingValue = (num * 12 + 20) + 'px'; // 기본값 16을 더하여 최종 padding 값 계산
+        let treeItems = treeListSub.querySelectorAll('.tree-item-title');
+        treeItems.forEach(item => {
+            item.style.paddingLeft = paddingValue;
+        });
+        // console.log(num, paddingValue)
+    });
+});

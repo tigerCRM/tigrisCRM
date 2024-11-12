@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width" />
+    <title>메인</title>
+    <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/common_add.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/layout.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/intro.css" />
+    <script src="/lib/jquery/jquery-2.2.2.min.js"></script>
+    <script src="./Style/js/script2.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+</head>
+<body>
+<div class="wrapper">
+    <!-- 사이드바 -->
+    <div id="sidebar" class="main-sidebar main-sidebar--expand">
+        <button type="button" class="btn btn--l icon-btn menu-btn menu__btn">
+            <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#menu}"/></svg>
+        </button>
+        <div class="profile">
+            <div class="profile__img profile__img--48">
+                <a href="#">
+                    <img th:src="@{/assets/images/temp/profile.png}" alt="">
+                </a>
+            </div>
+            <div class="profile__info">
+                <p class="name">
+                    <span class="text-body3 text-ellipsis" th:text="'userName'"></span>
+                </p>
+                <p class="team">
+                    <span class="text-caption1" th:text="'department'">이노베이터 사업부</span>
+                </p>
+            </div>
+        </div>
+        <nav class="main-lnb">
+            <ul>
+                <li>
+                    <a href="ticketlist" class="menu-item active">
+                            <span class="menu-icon">
+                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#mail}"/></svg>
+                            </span>
+                        <p class="menu-title">
+                            <span class="menu-title__text">요청관리</span>
+                            <span class="menu-title__num"></span>
+                        </p>
+                    </a>
+                </li>
+                <!-- 나머지 메뉴 항목들... -->
+            </ul>
+        </nav>
+    </div>
+    <!-- //사이드바 -->
+
+    <!-- 컨텐츠 영역 -->
+    <div class="main-area">
+        <!-- 헤더 -->
+        <header class="header">
+            <div class="container">
+                <div class="logo">
+                    <span class="hidden">이노베이터</span>
+                </div>
+
+                <nav id="utilMenu" class="main-util-menu">
+                    <ul>
+                        <li>
+                            <button type="button" class="btn btn--l icon-btn menu-btn">
+                                <span class="badge"></span>
+                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#notification}"/></svg>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn--l icon-btn menu-btn">
+                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#setting}"/></svg>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <!-- //헤더 -->
+        <!-- 내용 영역 -->
+        <main class="main-content">
+            <div class="container">
+                <div class="main-widget-wrap">
+                    <div class="content">
+                        <!-- 검색 영역 -->
+                        <div class="search--box">
+                            <div class="dropdown--box search-term--box">
+                                <!-- 날짜 선택기 -->
+                                <input type="text" class="dropdown--select" th:name="daterangepicker" />
+                                <div class="dropdown--list">
+                                    <!-- 캘린더 표시 -->
+                                </div>
+                            </div>
+
+                            <div class="dropdown--box search--select-box">
+                                <!-- 검색 유형 선택 -->
+                                <input type="hidden" th:name="searchType" />
+                                <div class="dropdown--select" th:text="${searchType != null ? searchType : '제목 + 내용'}">제목 + 내용</div>
+                                <ul class="dropdown--list">
+                                    <li id="TITLEANDCONTENTS" th:text="'제목 + 내용'"></li>
+                                    <li id="ORGNAME" th:text="'부서명'"></li>
+                                    <li id="USERNAME" th:text="'작성자'"></li>
+                                </ul>
+                            </div>
+
+                            <div class="search--input-box">
+                                <input type="text" th:name="searchKeyword" th:placeholder="'검색어를 입력하세요'" th:value="${searchKeyword}" />
+                                <button class="search--button" th:text="'검색'"></button>
+                            </div>
+                        </div>
+                        <!-- //검색 영역 -->
+
+                        <!-- 목록 영역 -->
+                        <div id="ticketList" th:if="${ticketList != null}">
+                            <ul>
+                                <li th:each="item : ${ticketList}">
+                                    <span th:text="${item.TICKET_ID}">제목</span> -
+                                    <span th:text="${item.COMPANY_NAME}">내용</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- //목록 영역 -->
+
+                        <!-- 버튼 영역 -->
+                        <div class="button--box">
+                            <a th:href="@{/storage/writeForm}" class="button primary-button" th:text="'작성하기'"></a>
+                        </div>
+                        <!-- //버튼 영역 -->
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- //내용 영역 -->
+    </div>
+    <!-- //컨텐츠 영역 -->
+</div>
+
+<script>
+   <!-- var swiper = new Swiper(".widget-edit-list", {
+        slidesPerView: 'auto',
+        spaceBetween: 16,
+    });-->
+</script>
+</body>
+</html>
