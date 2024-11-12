@@ -3,6 +3,7 @@ package com.tiger.crm.controller;
 import com.tiger.crm.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,5 +28,29 @@ public class LoginController
 		rttr.addFlashAttribute("userId", 	userId);
 		rttr.addFlashAttribute("userEmpNo", userEmpNo);
 		return "redirect:/intro";
+	}
+
+	/*
+	* 로그아웃
+	*/
+	@RequestMapping("/logout")
+	public String logout(HttpServletRequest request) {
+		// 세션을 무효화하여 로그아웃 처리
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.invalidate();  // 세션 무효화(필요시)
+		}
+
+		// 로그인 페이지로 리다이렉트
+		return "redirect:/intro";
+	}
+
+	/*
+	 * 비밀번호 초기화
+	 */
+	@RequestMapping("/resetPassword")
+	public String resetPassword(HttpServletRequest request) {
+
+		return null;
 	}
 }
