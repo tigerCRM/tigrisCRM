@@ -36,12 +36,13 @@ public class MainController
 	@RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
 	public String main(String userId, String userEmpNo, Model model, HttpServletRequest request, HttpServletResponse response, RedirectAttributes rttr)
 	{
+		//todo : (예솔) 세션이 살아있으면 메인페이지, 세션이 죽어있으면 로그인으로 넘기는 로직 필요
 		rttr.addFlashAttribute("userId", 	userId);
 		rttr.addFlashAttribute("userEmpNo", userEmpNo);
-		return "redirect:/intro";
+		return "redirect:/login";
 	}
 
-	@RequestMapping(value="/intro")
+	/*@RequestMapping(value="/intro")
 	public String intro(Model model, HttpServletRequest request, HttpServletResponse response)
 	{
 		String email 		= "";
@@ -138,5 +139,5 @@ public class MainController
 	public String main(Model model)
 	{
 		return "main";
-	}
+	}*/
 }
