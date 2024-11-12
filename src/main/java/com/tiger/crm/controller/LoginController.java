@@ -26,7 +26,7 @@ public class LoginController
 
 
 	@RequestMapping(value = {"/login"}, method = RequestMethod.GET)
-	public String main(Model model, HttpServletRequest request, HttpServletResponse response, RedirectAttributes rttr)
+	public String main(Model model, HttpServletRequest request, HttpServletResponse response)
 	{
 		return "/login";
 	}
@@ -43,11 +43,16 @@ public class LoginController
 		String password = request.getParameter("password");
 		User user = loginService.login(id,password);
 
+		LOGGER.info("login access {}",user);
+
 		if (user == null) {
 			return "redirect:/login";
 		}
 
-		return "/main";
+		HttpSession session = request.getSession();
+		session.setAttribute("loginUser", user);
+
+		return "redirect:/main";
 	}
 
 	/*

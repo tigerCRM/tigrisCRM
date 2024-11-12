@@ -34,13 +34,23 @@ public class MainController
 
 
 	@RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
-	public String main(String userId, String userEmpNo, Model model, HttpServletRequest request, HttpServletResponse response, RedirectAttributes rttr)
+	public String intro(String userId, String userEmpNo, Model model, HttpServletRequest request, HttpServletResponse response, RedirectAttributes rttr)
 	{
 		//todo : (예솔) 세션이 살아있으면 메인페이지, 세션이 죽어있으면 로그인으로 넘기는 로직 필요
 		rttr.addFlashAttribute("userId", 	userId);
 		rttr.addFlashAttribute("userEmpNo", userEmpNo);
 		return "redirect:/login";
 	}
+
+	/*
+	* 메인페이지
+	* */
+	@RequestMapping(value = {"main"}, method = RequestMethod.GET)
+	public String main(HttpServletRequest request, HttpServletResponse response)
+	{
+		return "/main";
+	}
+
 
 	/*@RequestMapping(value="/intro")
 	public String intro(Model model, HttpServletRequest request, HttpServletResponse response)
