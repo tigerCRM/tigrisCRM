@@ -7,7 +7,7 @@
     <title>메인</title>
     <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/common_add.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/layout.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
@@ -91,48 +91,103 @@
                     <div class="content">
                         <!-- 검색 영역 -->
                         <div class="search--box">
-                            <div class="dropdown--box search-term--box">
-                                <!-- 날짜 선택기 -->
-                                <input type="text" class="dropdown--select" th:name="daterangepicker" />
-                                <div class="dropdown--list">
-                                    <!-- 캘린더 표시 -->
+                            <div class="content-header">
+                                <h2 class="text-body1">
+                                    <div class="flex flex-align_center gap--8">
+                                        <b>요청관리</b>
+                                    </div>
+                                </h2>
+
+                                <!-- 서치바 -->
+                                <div class="searchbar">
+                                    <div>
+                                        <div class="dropdown dropdown--s period-dropdown wd120" aria-expanded="false" tabindex="0">
+                                            <div class="dropdown__selected">
+                                                <p th:text="'selectedPeriod'">3개월</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
+                                        <div class="dropdown__selected">
+                                            <p th:text="'searchOption}'">제목+내용</p>
+                                        </div>
+                                    </div>
+                                    <div class="search-wrap">
+                                        <input type="text" id="inputid" class="input--s input01" placeholder="검색어를 입력해주세요." th:value="'earchKeyword'">
+                                        <button class="icon-btn search__btn">
+                                            <svg class="icon"><use th:href="@{/Style/images/icon/sprite-sheet.svg#search}" /></svg>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="dropdown--box search--select-box">
-                                <!-- 검색 유형 선택 -->
-                                <input type="hidden" th:name="searchType" />
-                                <div class="dropdown--select" th:text="${searchType != null ? searchType : '제목 + 내용'}">제목 + 내용</div>
-                                <ul class="dropdown--list">
-                                    <li id="TITLEANDCONTENTS" th:text="'제목 + 내용'"></li>
-                                    <li id="ORGNAME" th:text="'부서명'"></li>
-                                    <li id="USERNAME" th:text="'작성자'"></li>
-                                </ul>
-                            </div>
-
-                            <div class="search--input-box">
-                                <input type="text" th:name="searchKeyword" th:placeholder="'검색어를 입력하세요'" th:value="${searchKeyword}" />
-                                <button class="search--button" th:text="'검색'"></button>
+                                <!-- //서치바 -->
+                                <!-- 게시판 상단 영역 -->
+                                <div class="flex flex-justify_between flex-align_center ">
+                                    <div class="flex gap--4">
+                                        <button type="button" class="btn btn--s primary-btn" th:onclick="'window.location.href=\'' + @{/create} + '\''">작성</button>
+                                    </div>
+                                    <div class="pageinfo">
+                                        <div class="pagetotal">
+                                            <span class="text-body4">전체 <strong class="color-navy500" th:text="'000'"></strong>건</span>
+                                        </div>
+                                        <div class="pageview flex">
+                                            <button class="btn btn--xs icon-btn mono-ghost-btn" th:classappend="${viewType == 'full' ? ' active' : ''}" data-viewtype="full">
+                                                <svg class="icon"><use th:href="@{/Style/images/icon/sprite-sheet.svg#layout-one-fill}" /></svg>
+                                            </button>
+                                            <button class="btn btn--xs icon-btn mono-ghost-btn" th:classappend="${viewType == 'column' ? ' active' : ''}" data-viewtype="column">
+                                                <svg class="icon"><use th:href="@{/Style/images/icon/sprite-sheet.svg#layout-column-fill}" /></svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- //게시판 상단 영역 -->
                             </div>
                         </div>
                         <!-- //검색 영역 -->
 
                         <!-- 목록 영역 -->
-                        <div id="ticketList" th:if="${ticketList != null}">
-                            <ul>
-                                <li th:each="item : ${ticketList}">
-                                    <span th:text="${item.TICKET_ID}">제목</span> -
-                                    <span th:text="${item.COMPANY_NAME}">내용</span>
-                                </li>
-                            </ul>
-                        </div>
-                        <!-- //목록 영역 -->
+                        <!-- <div id="ticketList" th:if="${ticketList != null}">
+                             <ul>
+                                 <li th:each="item : ${ticketList}">
+                                     <span th:text="${item.TICKET_ID}">제목</span> -
+                                     <span th:text="${item.COMPANY_NAME}">내용</span>
+                                 </li>
+                             </ul>
+                         </div>-->
+                        <!-- //리스트 영역 -->
+                        <div class="is_full">
+                            <div class="board-list board--m list-wrap ">
+                                <table class="table table01 table-ellipsis">
+                                    <colgroup>
+                                        <col style="width: 10%;">
+                                        <col style="width: 50%;">
+                                        <col style="width: 20%;">
+                                        <col style="width: 20%;">
+                                    </colgroup>
+                                    <thead>
+                                    <tr>
+                                        <th>티켓번호</th>
+                                        <th class="board-title">제목</th>
+                                        <th>고객사</th>
+                                        <th>진행상태</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <div id="ticketList" th:if="${ticketList != null}">
+                                        <tr th:each="item : ${ticketList}">
+                                            <td><span th:text="${item.TICKET_ID}"></span></td>
+                                            <td><span th:text="${item.TITLE}"></span></td>
+                                            <td><span th:text="${item.COMPANY_NAME}"></span></td>
+                                            <td><span th:text="${item.STATUS_CD}"></span></td>
+                                        </tr>
+                                    </div>
+                                    </tbody>
+                                </table>
 
-                        <!-- 버튼 영역 -->
-                        <div class="button--box">
-                            <a th:href="@{/storage/writeForm}" class="button primary-button" th:text="'작성하기'"></a>
+                                <!-- 페이지네이션 -->
+                                <!-- 페이지네이션 -->
+                            </div>
                         </div>
-                        <!-- //버튼 영역 -->
+                        <!-- //리스트 영역 -->
                     </div>
                 </div>
             </div>
@@ -143,10 +198,10 @@
 </div>
 
 <script>
-   <!-- var swiper = new Swiper(".widget-edit-list", {
-        slidesPerView: 'auto',
-        spaceBetween: 16,
-    });-->
+    <!-- var swiper = new Swiper(".widget-edit-list", {
+         slidesPerView: 'auto',
+         spaceBetween: 16,
+     });-->
 </script>
 </body>
 </html>
