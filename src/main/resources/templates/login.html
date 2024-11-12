@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width" />
+    <title>타이거컴퍼니 CRM</title>
+    <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css" />
+    <link rel="stylesheet" href="/assets/css/color.css">
+    <link rel="stylesheet" href="/assets/css/common.css">
+    <link rel="stylesheet" href="/assets/css/layout.css">
+    <link rel="stylesheet" href="/assets/css/loginv1.css">
+</head>
+<body>
+<div class="wrapper fouc">
+    <article id="login">
+        <div class="container">
+            <section class="login">
+                <h1 class="logo"><span class="hidden">이노베이터 로그인</span></h1>
+                <form action="/login"  method="post" class="login-form">
+                    <div class="input-wrap">
+                        <label for="id" class="label01">아이디</label>
+                        <input type="text" id="id" name="id" class="input--l input--full input01 login__input" placeholder="아이디를 입력해주세요"/>
+                    </div>
+                    <div class="input-wrap">
+                        <label for="password" class="label01">비밀번호</label>
+                        <input type="password" id="password" name="password" class="input--l input01 login__input" placeholder="비밀번호를 입력해주세요"/>
+                    </div>
+
+                    <div class="login__button-wrap">
+                        <button type="submit" class="btn btn--full btn--l primary-btn">로그인</button>
+                    </div>
+                </form>
+            </section>
+            <p class="copyright">Copyright © 2022 Tiger Company Co., LTD. All rights reserved.</p>
+        </div>
+    </article>
+</div>
+<script src="./Style/js/script.js"></script>
+</body>
+</html>
