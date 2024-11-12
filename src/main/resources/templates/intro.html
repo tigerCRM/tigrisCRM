@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width">
-    <title>씨젠의료재단 법무시스템</title>
+    <title>씨</title>
 
     <link rel="stylesheet" type="text/css" href="/assets/css/common.css" />
     <link rel="stylesheet" type="text/css" href="/assets/css/intro.css" />
@@ -27,15 +27,23 @@
 <main id="main">
     <article id="intro">
         <h1 class="intro--logo"></h1>
-        <h2>CRM 메인 페이지</h2>
+        <h2>할수있다</h2>
         <section class="intro-menu">
             <div class="container">
                 <ul class="intro-menu--list">
                     <li>
-                        <a href="/main">
+                        <a href="/storage">
                             <p class="menu--name">자료실</p>
                             <p class="menu--link">바로가기</p>
                         </a>
+                        <a href="/storage">
+                            <p class="menu--name">자료실</p>
+                            <p class="menu--link">바로가기</p>
+                        </a>
+                        <!--<a th:href="@{/feed(communityId=${community.communityId})}">
+                            <p class="menu&#45;&#45;name" th:text="${community.communityName}">커뮤니티 이름</p>
+                            <p class="menu&#45;&#45;link">바로가기</p>
+                        </a>-->
                     </li>
                     <th:block th:each="community : ${communityList}">
                         <li>
