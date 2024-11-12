@@ -677,3 +677,33 @@
         align-items: flex-start;
     }
 }
+
+
+/* ############################################################## */
+/* ############################################################## */
+/* 드롭다운 메뉴 부모에 relative 위치 추가 */
+.main-util-menu {
+    position: relative; /* 드롭다운 메뉴의 기준이 되는 부모 요소 */
+}
+/* 드롭다운 메뉴 스타일 */
+.dropdown-menu {
+    display: none; /* 기본적으로 숨겨짐 */
+    position: absolute;
+    top: 100%; /* 버튼 아래에 위치 */
+    left: 0;
+    width: 150px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    z-index: 1000; /* 다른 요소 위에 오도록 */
+}
+/* 드롭다운 항목 스타일 */
+.dropdown-menu li {
+    padding: 10px;
+}
+.dropdown-menu li a {
+    text-decoration: none;
+    color: #333;
+}
+.dropdown-menu li:hover {
+    background-color: #f1f1f1;
+}
