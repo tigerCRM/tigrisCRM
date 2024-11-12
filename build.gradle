@@ -59,6 +59,9 @@ dependencies {
 //    implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api' //스프링부트 3.0 이상
 //    implementation 'org.glassfish.web:jakarta.servlet.jsp.jstl:3.0.1' //스프링부트 3.0 이상
 //    implementation 'org.springframework:spring-webmvc:6.1.14' // Spring Web MVC 추가 (타임리프 쓰려면 주석해야함)
+    
+    //test 코드 오류 방지용
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.withType(JavaCompile) {
