@@ -113,9 +113,9 @@
                                         </div>
                                     </div>
                                     <div class="search-wrap">
-                                        <input type="text" id="inputid" class="input--s input01" placeholder="검색어를 입력해주세요." th:value="'earchKeyword'">
-                                        <button class="icon-btn search__btn">
-                                            <svg class="icon"><use th:href="@{/Style/images/icon/sprite-sheet.svg#search}" /></svg>
+                                        <input type="text" id="searchKeyword" class="input--s input01" placeholder="검색어를 입력해주세요." th:value="${searchKeyword}">
+                                        <button class="icon-btn search__btn" onclick="searchTickets();">
+                                            <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#search}" /></svg>
                                         </button>
                                     </div>
                                 </div>
@@ -198,10 +198,13 @@
 </div>
 
 <script>
-    <!-- var swiper = new Swiper(".widget-edit-list", {
-         slidesPerView: 'auto',
-         spaceBetween: 16,
-     });-->
+    function searchTickets() {
+        const searchKeyword = document.getElementById('searchKeyword').value;
+        const url = `/ticketlist?searchKeyword=${encodeURIComponent(searchKeyword)}`;
+
+        // URL로 GET 요청을 보냄
+       window.location.href = url;  // 검색어를 URL 파라미터로 전달하여 페이지 이동
+    }
 </script>
 </body>
 </html>
