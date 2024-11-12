@@ -5,8 +5,8 @@
 <mapper namespace="com.tiger.crm.repository.mapper.TicketMapper">
 
     <!-- 데이터 조회 쿼리 -->
-    <select id="getTicketList" resultType="com.tiger.crm.repository.dto.TicketDto">
-        SELECT TICKET_ID, COMPANY_ID, COMPANY_NAME
+    <select id="getTicketList" resultType="map">
+        SELECT TICKET_ID, COMPANY_ID, COMPANY_NAME,STATUS_CD,TITLE
         FROM T_TICKET_INFO
     </select>
 
