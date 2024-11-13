@@ -83,7 +83,9 @@
                             <!-- 드롭다운 메뉴 추가 -->
                             <ul class="dropdown-menu" id="settingDropdownMenu">
                                 <li id="resetPassword"><a href="/resetPassword">비밀번호 초기화</a></li>
-                                <li id="logout">로그아웃</li>
+                                <li id="logout">
+                                    <a href="#" onclick="if(confirm('로그아웃 하시겠습니까?')) window.location.href='/logout'; else alert('취소하였습니다.'); return false;">로그아웃</a>
+                                </li>
                             </ul>
                         </li>
                     </ul>
@@ -100,11 +102,16 @@
                         <section id="notice" class="widget-item">
                             <h2 class="widget-title"><a href="#" class="widget-title__link">요청내역</a></h2>
                             <div class="widget__content">
-                                <ul class="widget-board" th:each="ticket : 'tickets'">
+                                <ul class="widget-board" th:each="item : ${ticketList}">
                                     <li>
-                                        <a href="#" class="list__link"><span class="tag tag--navy">요청등록</span><span th:text="'ticket.title'">OO 포탈 배너 이미지 추가 요청</span></a>
-                                        <span class="widget-board__date" th:text="'ticket.author'">김사원</span>
-                                        <span class="widget-board__date" th:text="'ticket.date'">2023.08.11</span>
+                                        <a href="#" class="list__link">
+                                            <span class="tag tag--navy">요청등록</span>
+                                            <span th:text="${item.TITLE}"></span>
+                                        </a>
+                                        <span class="widget-board__date" th:text="${item.STATUS_CD}"></span>
+                                        <!--
+                                        <span class="widget-board__date" th:text="${item.CREATE_DT}"></span>
+                                        -->
                                     </li>
                                 </ul>
                             </div>
@@ -115,6 +122,7 @@
                         <section id="notice" class="widget-item">
                             <h2 class="widget-title"><a href="#" class="widget-title__link">공지사항</a></h2>
                             <div class="widget__content">
+                                <!--
                                 <ul class="widget-board" th:each="notice : ${notices}">
                                     <li>
                                         <a href="#" class="list__link" th:text="'notice.title'">[필독] 요청사항 등록 전에 꼭 읽어주세요</a>
@@ -122,6 +130,41 @@
                                         <span class="widget-board__date" th:text="'notice.date'">2023.08.11</span>
                                     </li>
                                 </ul>
+                                -->
+                                <!-- //리스트 영역 -->
+                                <div class="is_full">
+                                    <div class="board-list board--m list-wrap ">
+                                        <table class="table table01 table-ellipsis">
+                                            <colgroup>
+                                                <col style="width: 10%;">
+                                                <col style="width: 50%;">
+                                                <col style="width: 20%;">
+                                                <col style="width: 20%;">
+                                            </colgroup>
+                                            <thead>
+                                            <tr>
+                                                <th>티켓번호</th>
+                                                <th class="board-title">제목</th>
+                                                <th>고객사</th>
+                                                <th>진행상태</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <div id="ticketList" th:if="${ticketList != null}">
+                                                <tr th:each="item : ${ticketList}">
+                                                    <td><span th:text="${item.TICKET_ID}"></span></td>
+                                                    <td><span th:text="${item.TITLE}"></span></td>
+                                                    <td><span th:text="${item.COMPANY_NAME}"></span></td>
+                                                    <td><span th:text="${item.STATUS_CD}"></span></td>
+                                                </tr>
+                                            </div>
+                                            </tbody>
+                                        </table>
+                                        <!-- 페이지네이션 -->
+                                        <!-- 페이지네이션 -->
+                                    </div>
+                                </div>
+                                <!-- //리스트 영역 -->
                             </div>
                         </section>
                     </div>
@@ -168,20 +211,6 @@
                 $settingDropdownMenu.hide();
             }
         });
-
-
-        // -------------------
-        // 로그아웃 > 페이지 전환
-        // -------------------
-        $("#logout").on("click", function (event) {
-            event.preventDefault();  // 링크 기본 동작 막기
-            if(confirm("로그아웃 하시겠습니까?")){
-                window.location.href = "/logout";
-            }else{
-                alert("취소하였습니다.");
-            }
-        });
-
     });
 </script>
 </body>

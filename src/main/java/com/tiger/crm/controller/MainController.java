@@ -1,6 +1,8 @@
 package com.tiger.crm.controller;
 
 import com.tiger.crm.common.context.ConfigProperties;
+import com.tiger.crm.repository.dto.TicketDto;
+import com.tiger.crm.service.TicketService;
 import com.tiger.crm.common.crypto.AES128Utils;
 import com.tiger.crm.repository.dto.user.User;
 import com.tiger.crm.repository.dto.user.UserSearchDto;
@@ -18,10 +20,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.support.RequestContextUtils;
-
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -32,6 +31,8 @@ public class MainController
 	private ConfigProperties config;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private TicketService ticketService;
 
 	private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
@@ -55,20 +56,14 @@ public class MainController
 	* 설명 : 세션이 살아있으면 세션 정보 화면으로 보내줌, 세션 없으면 로그인 페이지로
 	* */
 	@RequestMapping(value = {"main"}, method = RequestMethod.GET)
-	public String mainPage(@ModelAttribute("user") User user, HttpServletRequest request, HttpServletResponse response, Model model)
-	{
-		HttpSession session = request.getSession(false);
-		if (session == null){
-			LOGGER.info("세션 없음");
-			return "redirect:/login";
-		}
+	public String main(TicketDto storageSearchDto, HttpServletRequest request, HttpServletResponse response, Model model) {
 
-		User loginUser = (User)session.getAttribute("loginUser");
-		LOGGER.info("세션정보 : " + loginUser.toString());
+		// 게시글 리스트
+		List<Map<String, Object>> ticketList = ticketService.getTicketList();
+		model.addAttribute("ticketList", ticketList);
 
-		//사용자 정보 리턴
-		model.addAttribute("user", loginUser);
+		// todo : 요청내역(ticket), 공지사항(board) 내용 불러와서 뿌려야함.
+
 		return "/main";
 	}
-
 }

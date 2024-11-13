@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class TicketController {
@@ -26,9 +27,8 @@ public class TicketController {
     {
 
         // 게시글 리스트
-        List<TicketDto> List = ticketService.getTicketList();
-
-        model.addAttribute("ticketList", List);
+        List<Map<String, Object>> ticketList = ticketService.getTicketList();
+        model.addAttribute("ticketList", ticketList);
 
         return "ticketlist";
     }
