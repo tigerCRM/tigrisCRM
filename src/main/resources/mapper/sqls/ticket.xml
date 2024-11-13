@@ -4,11 +4,21 @@
 
 <mapper namespace="com.tiger.crm.repository.mapper.TicketMapper">
 
-    <!-- 데이터 조회 쿼리 -->
-    <select id="getTicketList" resultType="map">
+    <!-- 티켓 리스트 쿼리 -->
+    <select id="getTicketList" resultType="map"  parameterType="string">
         SELECT TICKET_ID, COMPANY_ID, COMPANY_NAME,STATUS_CD,TITLE
         FROM T_TICKET_INFO
+        <if test='searchKeyword != null'>
+            WHERE TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
+            OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')
+        </if>
     </select>
 
+    <!-- 티켓 리스트 검색 쿼리 -->
+    <select id="searchTickets" resultType="map">
+        SELECT TICKET_ID, COMPANY_ID, COMPANY_NAME,STATUS_CD,TITLE FROM tickets
+        WHERE TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
+        OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')
+    </select>
 
 </mapper>

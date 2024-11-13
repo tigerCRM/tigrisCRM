@@ -12,7 +12,7 @@ public class TicketService {
     @Autowired
     private TicketMapper ticketMapper;
 
-    public List<Map<String, Object>> getTicketList() {
-        return ticketMapper.getTicketList();
+    public List<Map<String, Object>> getTicketList(String searchKeyword) {
+        return ticketMapper.getTicketList(searchKeyword);
     }
 }

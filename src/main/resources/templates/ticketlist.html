@@ -113,9 +113,9 @@
                                         </div>
                                     </div>
                                     <div class="search-wrap">
-                                        <input type="text" id="inputid" class="input--s input01" placeholder="검색어를 입력해주세요." th:value="'earchKeyword'">
-                                        <button class="icon-btn search__btn">
-                                            <svg class="icon"><use th:href="@{/Style/images/icon/sprite-sheet.svg#search}" /></svg>
+                                        <input type="text" id="searchKeyword" class="input--s input01" placeholder="검색어를 입력해주세요." th:value="${searchKeyword}" onkeydown="if (event.keyCode === 13) searchTickets();"  >
+                                        <button class="icon-btn search__btn" onclick="searchTickets();">
+                                            <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#search}" /></svg>
                                         </button>
                                     </div>
                                 </div>
@@ -143,18 +143,8 @@
                             </div>
                         </div>
                         <!-- //검색 영역 -->
-
-                        <!-- 목록 영역 -->
-                        <!-- <div id="ticketList" th:if="${ticketList != null}">
-                             <ul>
-                                 <li th:each="item : ${ticketList}">
-                                     <span th:text="${item.TICKET_ID}">제목</span> -
-                                     <span th:text="${item.COMPANY_NAME}">내용</span>
-                                 </li>
-                             </ul>
-                         </div>-->
                         <!-- //리스트 영역 -->
-                        <div class="is_full">
+                        <div class="is_full" id="">
                             <div class="board-list board--m list-wrap ">
                                 <table class="table table01 table-ellipsis">
                                     <colgroup>
@@ -198,10 +188,32 @@
 </div>
 
 <script>
-    <!-- var swiper = new Swiper(".widget-edit-list", {
-         slidesPerView: 'auto',
-         spaceBetween: 16,
-     });-->
+    function searchTickets() {
+        const searchKeyword = document.getElementById('searchKeyword').value;
+        const url = `/ticketlist?searchKeyword=${encodeURIComponent(searchKeyword)}`;
+
+        // URL로 GET 요청을 보냄
+       window.location.href = url;  // 검색어를 URL 파라미터로 전달하여 페이지 이동
+    }
+
+    function searchTicketstest() {
+        const searchKeyword = document.getElementById('searchKeyword').value;
+
+        // AJAX 요청 보내기
+        fetch('/ticketlisttest', {
+            method: 'POST', // POST 방식으로 컨트롤러에 데이터 전송
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ searchKeyword: searchKeyword }) // JSON 형식으로 검색어 데이터 전송
+            })
+            .then(response => response.text()) // 서버에서 HTML이 반환될 경우 텍스트로 처리
+            .then(html => {
+                // 서버 응답으로 받은 HTML을 특정 위치에 삽입 (예: 'ticketListContainer'라는 div)
+                document.getElementById('ticketListContainer').innerHTML = html;
+            })
+        .catch(error => console.error('Error:', error));
+    }
 </script>
 </body>
 </html>
