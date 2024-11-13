@@ -1,10 +1,7 @@
 package com.tiger.crm.controller;
 
-import com.tiger.crm.repository.mail.MailService;
 import com.tiger.crm.repository.dto.user.User;
 import com.tiger.crm.service.login.LoginService;
-import com.tiger.crm.service.user.UserService;
-import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -16,19 +13,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Controller
 public class LoginController
 {
 	@Autowired
 	private LoginService loginService;
-
-	@Autowired
-	private MailService mailService;
 
 	private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
@@ -82,20 +72,15 @@ public class LoginController
 	 * 비밀번호 초기화 이메일 발송
 	 */
 	@RequestMapping("/resetPassword")
-	public String resetPassword(String userEmail, String userName/*, String resetLink*/) throws MessagingException {
+	public String resetPassword(User user) {
 		try {
-			Map<String, Object> model = new HashMap<>();
-			// model.put("userName", userName);
-			model.put("userName", "안상재");
-			// model.put("resetLink", resetLink);
-
-			// mailService.sendEmail(userEmail, "Password Reset Request", "password-reset-email", model);
-			mailService.sendEmail("dkstkdwo93@tigrison.com", "비밀번호 초기화", "password-reset-email", model);
-
+			// 임시 비밀번호로 업데이트 및 메일 발송
+			loginService.resetPassword(user);
 		}catch (Exception e){
 			System.out.println(e.getStackTrace());
 		}
 
 		return "redirect:/main";
 	}
+
 }
