@@ -2,7 +2,6 @@ package com.tiger.crm.controller;
 
 import com.tiger.crm.repository.dto.user.User;
 import com.tiger.crm.service.login.LoginService;
-import com.tiger.crm.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -14,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 public class LoginController
@@ -26,7 +24,7 @@ public class LoginController
 
 
 	@RequestMapping(value = {"/login"}, method = RequestMethod.GET)
-	public String main(Model model, HttpServletRequest request, HttpServletResponse response, RedirectAttributes rttr)
+	public String main(Model model, HttpServletRequest request, HttpServletResponse response)
 	{
 		return "/login";
 	}
@@ -43,11 +41,16 @@ public class LoginController
 		String password = request.getParameter("password");
 		User user = loginService.login(id,password);
 
+		LOGGER.info("login access {}",user);
+
 		if (user == null) {
 			return "redirect:/login";
 		}
 
-		return "/main";
+		HttpSession session = request.getSession();
+		session.setAttribute("loginUser", user);
+
+		return "redirect:/main";
 	}
 
 	/*
@@ -66,11 +69,18 @@ public class LoginController
 	}
 
 	/*
-	 * 비밀번호 초기화
+	 * 비밀번호 초기화 이메일 발송
 	 */
 	@RequestMapping("/resetPassword")
-	public String resetPassword(HttpServletRequest request) {
+	public String resetPassword(User user) {
+		try {
+			// 임시 비밀번호로 업데이트 및 메일 발송
+			loginService.resetPassword(user);
+		}catch (Exception e){
+			System.out.println(e.getStackTrace());
+		}
 
-		return null;
+		return "redirect:/main";
 	}
+
 }

@@ -16,5 +16,12 @@
             AND USER_PW = #{password}
     </select>
 
+    <!-- 비밀번호 변경 쿼리 -->
+    <update id="resetPassword" parameterType="com.tiger.crm.repository.dto.user.User">
+        UPDATE T_USER_INFO
+        SET USER_PW = #{password}
+        WHERE USER_ID = #{userId}
+    </update>
+
 
 </mapper>

@@ -8,8 +8,9 @@ import lombok.Data;
 @Data
 public class User {
 
-    private String UserId;
+    private String userId;
     private String userName;
+    private String password;
     private Integer companyId;
     private String userClass;
 
