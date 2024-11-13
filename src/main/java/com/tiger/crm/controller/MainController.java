@@ -56,7 +56,17 @@ public class MainController
 	* 설명 : 세션이 살아있으면 세션 정보 화면으로 보내줌, 세션 없으면 로그인 페이지로
 	* */
 	@RequestMapping(value = {"main"}, method = RequestMethod.GET)
-	public String main(TicketDto storageSearchDto, HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String mainPage(@ModelAttribute("user") User user, TicketDto storageSearchDto, HttpServletRequest request, HttpServletResponse response, Model model) {
+
+		HttpSession session = request.getSession(false);
+
+		if (session == null){
+			LOGGER.info("세션 없음");
+			return "redirect:/login";
+		}
+		User loginUser = (User)session.getAttribute("loginUser");
+		LOGGER.info("세션정보 : " + loginUser.toString());
+		model.addAttribute("user", loginUser);
 
 		// 게시글 리스트
 		List<Map<String, Object>> ticketList = ticketService.getTicketList();
