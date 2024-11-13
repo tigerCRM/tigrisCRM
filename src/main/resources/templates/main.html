@@ -31,10 +31,12 @@
             </div>
             <div class="profile__info">
                 <p class="name">
-                    <span class="text-body3 text-ellipsis" th:text="'userName'"></span>
+                    <span class="text-body3 text-ellipsis" th:text="${user.userName}"></span>
                 </p>
                 <p class="team">
-                    <span class="text-caption1" th:text="'department'">이노베이터 사업부</span>
+                    <span class="text-caption1" th:text="'회사이름1'">회사이름</span>
+                    <span class="text-caption1"> | </span>
+                    <span class="text-caption1" th:text="${user.userClass}">권한이름</span>
                 </p>
             </div>
         </div>

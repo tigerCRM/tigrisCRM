@@ -12,7 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,7 +35,7 @@ public class LoginController
 
 
 	@RequestMapping(value = {"/login"}, method = RequestMethod.GET)
-	public String main(Model model, HttpServletRequest request, HttpServletResponse response)
+	public String loginPage(@ModelAttribute("user") User user, HttpServletRequest request, HttpServletResponse response)
 	{
 		return "/login";
 	}
@@ -45,20 +46,36 @@ public class LoginController
 	* 설명 : 로그인 성공 -> 메인화면 / 로그인 실패 -> 로그인 페이지
 	* */
 	@PostMapping(value = {"/login"})
-	public String login(HttpServletRequest request, HttpServletResponse response)
+	public String login(@ModelAttribute("user") User user, HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult, RedirectAttributes redirectAttributes)
 	{
-		String id = request.getParameter("id");
-		String password = request.getParameter("password");
-		User user = loginService.login(id,password);
 
-		LOGGER.info("login access {}",user);
+		//검증로직 1 : id 또는 password 가 공백일 경우
+		if(user.getUserId() == null || user.getUserId().trim().isEmpty()){
+			bindingResult.rejectValue("userId", "id.empty");
+		}
+		if(user.getUserPw() == null|| user.getUserPw().trim().isEmpty()){
+			bindingResult.rejectValue("userPw", "password.empty");
+		}
+		if (bindingResult.hasErrors()) {
+			LOGGER.info("validation error 발생");
+			redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);
+			redirectAttributes.addFlashAttribute("user", user);
+			return "/login";
+		}
 
-		if (user == null) {
+		//로그인 정보 가져옴
+		User loginUser = loginService.login(user.getUserId(),user.getUserPw());
+
+		LOGGER.info("login access {}",loginUser);
+		
+		//검증로직 2: 해당 사용자가 없을 경우
+		if (loginUser == null) {
+			bindingResult.reject("login.failed", "아이디 또는 비밀번호가 올바르지 않습니다.");
 			return "redirect:/login";
 		}
 
 		HttpSession session = request.getSession();
-		session.setAttribute("loginUser", user);
+		session.setAttribute("loginUser", loginUser);
 
 		return "redirect:/main";
 	}
