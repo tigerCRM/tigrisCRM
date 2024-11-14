@@ -1,6 +1,5 @@
 package com.tiger.crm.repository.mapper;
 
-import com.tiger.crm.repository.dto.user.User;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

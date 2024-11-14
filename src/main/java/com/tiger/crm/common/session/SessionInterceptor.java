@@ -1,7 +1,7 @@
 package com.tiger.crm.common.session;
 
 import com.tiger.crm.common.auth.AuthorizationService;
-import com.tiger.crm.repository.dto.user.User;
+import com.tiger.crm.repository.dto.user.UserLoginDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         String requestUrl = request.getRequestURI();
 
         // 세션에서 userId를 조회
-        User user = (User) request.getSession().getAttribute("loginUser");
+        UserLoginDto user = (UserLoginDto) request.getSession().getAttribute("loginUser");
 
         // user가 없거나 세션에서 로그인된 정보가 없으면 로그인 페이지로 리다이렉트
         if (user == null || user.getUserId() == null) {
