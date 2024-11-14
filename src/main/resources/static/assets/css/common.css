@@ -3017,6 +3017,15 @@ ul[class*='list-tree--'] {
     margin-top: 1.6rem;
 }
 
+/*예솔 추가 : 로그인 페이지 검증 실패시 뜨는 안내 문구 */
+.login_validation{
+    color: #E02C1E;              /* 빨간색 글씨 */
+    font-size: 1.4em;        /* 글자 크기 키우기 */
+    margin-bottom: 10px;     /* 아래 태그와 간격 */
+    font-weight: bold;       /* 글자 강조 */
+    /*background-color: #f8d7da;*/
+}
+
 /* 사용자 상세 정보 */
 .user-detail-info .table th,
 .user-detail-info .table td {
