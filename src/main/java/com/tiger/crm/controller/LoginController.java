@@ -1,6 +1,6 @@
 package com.tiger.crm.controller;
 
-import com.tiger.crm.repository.dto.user.User;
+import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.service.login.LoginService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +28,7 @@ public class LoginController
 
 
 	@RequestMapping(value = {"/login"}, method = RequestMethod.GET)
-	public String loginPage(@ModelAttribute("user") User user, HttpServletRequest request, HttpServletResponse response)
+	public String loginPage(@ModelAttribute("user") UserLoginDto user, HttpServletRequest request, HttpServletResponse response)
 	{
 		return "/login";
 	}
@@ -37,32 +39,31 @@ public class LoginController
 	* 설명 : 로그인 성공 -> 메인화면 / 로그인 실패 -> 로그인 페이지
 	* */
 	@PostMapping(value = {"/login"})
-	public String login(@ModelAttribute("user") User user, HttpServletRequest request, HttpServletResponse response, BindingResult bindingResult, RedirectAttributes redirectAttributes)
+	public String login(@ModelAttribute("user") UserLoginDto user, BindingResult bindingResult, HttpServletRequest request, HttpServletResponse response,  RedirectAttributes redirectAttributes)
 	{
 
 		//검증로직 1 : id 또는 password 가 공백일 경우
 		if(user.getUserId() == null || user.getUserId().trim().isEmpty()){
-			bindingResult.rejectValue("userId", "id.empty");
+			bindingResult.addError(new FieldError("user","userId","아이디는 공백일 수 없습니다"));
 		}
 		if(user.getUserPw() == null|| user.getUserPw().trim().isEmpty()){
-			bindingResult.rejectValue("userPw", "password.empty");
+			bindingResult.addError(new FieldError("user","userPw","패스워드는 공백일 수 없습니다"));
 		}
 		if (bindingResult.hasErrors()) {
-			LOGGER.info("validation error 발생");
-			redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.user", bindingResult);
-			redirectAttributes.addFlashAttribute("user", user);
+			LOGGER.info("validation error 발생={}",bindingResult);
 			return "/login";
 		}
 
 		//로그인 정보 가져옴
-		User loginUser = loginService.login(user.getUserId(),user.getUserPw());
+		UserLoginDto loginUser = loginService.login(user.getUserId(),user.getUserPw());
 
 		LOGGER.info("login access {}",loginUser);
 		
 		//검증로직 2: 해당 사용자가 없을 경우
 		if (loginUser == null) {
-			bindingResult.reject("login.failed", "아이디 또는 비밀번호가 올바르지 않습니다.");
-			return "redirect:/login";
+			bindingResult.addError(new ObjectError("user","아이디 또는 비밀번호를 확인해주세요"));
+			LOGGER.info("로그인 실패={}",bindingResult);
+			return "/login";
 		}
 
 		HttpSession session = request.getSession();
@@ -90,7 +91,7 @@ public class LoginController
 	 * 비밀번호 초기화 이메일 발송
 	 */
 	@RequestMapping("/resetPassword")
-	public String resetPassword(User user) {
+	public String resetPassword(UserLoginDto user) {
 		try {
 			// 임시 비밀번호로 업데이트 및 메일 발송
 			loginService.resetPassword(user);

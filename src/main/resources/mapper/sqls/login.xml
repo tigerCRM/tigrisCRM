@@ -5,7 +5,7 @@
 <mapper namespace="com.tiger.crm.repository.mapper.LoginMapper">
 
     <!-- 데이터 조회 쿼리 -->
-    <select id="getUser" resultType="com.tiger.crm.repository.dto.user.User">
+    <select id="getUser" resultType="com.tiger.crm.repository.dto.user.UserLoginDto">
         SELECT
             USER_ID,
             USER_NAME,
@@ -17,7 +17,7 @@
     </select>
 
     <!-- 비밀번호 변경 쿼리 -->
-    <update id="resetPassword" parameterType="com.tiger.crm.repository.dto.user.User">
+    <update id="resetPassword" parameterType="com.tiger.crm.repository.dto.user.UserLoginDto">
         UPDATE T_USER_INFO
         SET USER_PW = #{password}
         WHERE USER_ID = #{userId}

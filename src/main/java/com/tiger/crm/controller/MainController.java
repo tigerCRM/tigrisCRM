@@ -3,9 +3,7 @@ package com.tiger.crm.controller;
 import com.tiger.crm.common.context.ConfigProperties;
 import com.tiger.crm.repository.dto.TicketDto;
 import com.tiger.crm.service.TicketService;
-import com.tiger.crm.common.crypto.AES128Utils;
-import com.tiger.crm.repository.dto.user.User;
-import com.tiger.crm.repository.dto.user.UserSearchDto;
+import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.service.user.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +39,7 @@ public class MainController
 	 * 설명 : 세션이 살아 있으면 메인페이지로, 세션이 없으면 로그인으로 리다이렉트
 	 * */
 	@RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
-	public String intro(@ModelAttribute("user") User user, HttpServletRequest request, HttpServletResponse response)
+	public String intro(@ModelAttribute("user") UserLoginDto user, HttpServletRequest request, HttpServletResponse response)
 	{
 		HttpSession session = request.getSession(false);
 		if(session == null){
@@ -56,7 +54,7 @@ public class MainController
 	* 설명 : 세션이 살아있으면 세션 정보 화면으로 보내줌, 세션 없으면 로그인 페이지로
 	* */
 	@RequestMapping(value = {"main"}, method = RequestMethod.GET)
-	public String mainPage(@ModelAttribute("user") User user, TicketDto storageSearchDto, HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String mainPage(TicketDto storageSearchDto, HttpServletRequest request, HttpServletResponse response, Model model) {
 
 		HttpSession session = request.getSession(false);
 
@@ -64,7 +62,7 @@ public class MainController
 			LOGGER.info("세션 없음");
 			return "redirect:/login";
 		}
-		User loginUser = (User)session.getAttribute("loginUser");
+		UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
 		LOGGER.info("세션정보 : " + loginUser.toString());
 		model.addAttribute("user", loginUser);
 

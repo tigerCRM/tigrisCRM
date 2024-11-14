@@ -17,22 +17,29 @@
             <section class="login">
                 <h1 class="logo"><span class="hidden">이노베이터 로그인</span></h1>
                 <form action="/login"  method="post" class="login-form" th:object="${user}">
+                    <div th:each="err : ${#fields.globalErrors()}" th:text="${err}" class="login_validation">
+                        error message area
+                    </div>
                     <div class="input-wrap">
                         <label for="userId" class="label01">아이디</label>
                         <input type="text" id="userId" name="userId"
-                               th:class="${#fields.hasErrors('userId')} ? 'input--l input--full input01 input--error' : 'input--l input01 login__input'"
+                               th:field="*{userId}"
+                               th:errorclass="'input--error'"
+                               class="input--l input01 login__input"
                                placeholder="아이디를 입력해주세요"/>
-                        <div class="msg" th:if="${#fields.hasErrors('userId')}">
-                            <span>아이디 값은 공백일 수 없습니다</span>
+                        <div class="msg">
+                            <span th:errors="*{userId}">error message area</span>
                         </div>
                     </div>
                     <div class="input-wrap">
                         <label for="userPw" class="label01" >비밀번호</label>
                         <input type="password" id="userPw" name="userPw"
-                               th:class="${#fields.hasErrors('userPw')} ? 'input--l input--full input01 input--error' : 'input--l input01 login__input'"
+                               th:field="*{userPw}"
+                               th:errorclass="'input--error'"
+                               class="input--l input01 login__input"
                                placeholder="비밀번호를 입력해주세요"/>
-                        <div class="msg" th:if="${#fields.hasErrors('userPw')}">
-                            <span>비밀번호는 공백일 수 없습니다</span>
+                        <div class="msg">
+                            <span th:errors="*{userPw}">error message area</span>
                         </div>
 
                     </div>
