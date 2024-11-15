@@ -3,22 +3,106 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.tiger.crm.repository.mapper.TicketMapper">
+    <select id="getTicketList" resultType="map">
+        SELECT TICKET_ID, COMPANY_NAME, STATUS_CD, REQUEST_TYPE_CD,
+        IFNULL(MD, '') as MD,
+        TITLE, U.USER_NAME,
+        DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d') as CREATE_DT,
+        IFNULL(DATE_FORMAT(IFNULL(REAL_COMPLETE_DT, ''), '%Y-%m-%d'),'') as REAL_COMPLETE_DT
+        FROM T_TICKET_INFO as T
+        LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
+        <where>
+            DELETE_YN = 'N'
+            <!-- 검색어 조건 (검색어가 존재하는 경우 제목, 내용 필드에서 LIKE 검색) -->
+            <if test="searchStatus == '' and searchType == '' and (searchKeyword != null or searchKeyword != '')" >
+                AND (TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
+                OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
 
-    <!-- 티켓 리스트 쿼리 -->
-    <select id="getTicketList" resultType="map"  parameterType="string">
-        SELECT TICKET_ID, COMPANY_ID, COMPANY_NAME,STATUS_CD,TITLE
-        FROM T_TICKET_INFO
-        <if test='searchKeyword != null'>
-            WHERE TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
-            OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')
+            <!-- 상태 검색 조건 (상태가 존재하는 경우) -->
+            <if test="searchStatus != null and searchStatus != ''">
+                AND STATUS_CD = #{searchStatus}
+            </if>
+
+            <!-- 검색 유형 (searchType이 제목, 내용, 담당자, 등 선택된 경우) -->
+            <if test="searchType != null and searchType != ''">
+                <choose>
+                    <when test="searchType == 'NUM'">
+                        AND TICKET_ID LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 티켓번호로 검색 -->
+                    </when>
+                    <when test="searchType == 'TITLE'">
+                        AND TITLE LIKE CONCAT('%', #{searchKeyword}, '%') <!-- 제목으로 검색 -->
+                    </when>
+                    <when test="searchType == 'TITLEANDCONTENTS'">
+                        AND (TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
+                        OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')) <!-- 제목+내용으로 검색 -->
+                    </when>
+                    <when test="searchType == 'USERNAME'">
+                        AND ASSIGNEE LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 담당자로 검색 -->
+                    </when>
+                </choose>
+            </if>
+
+            <!-- 시작일 필터링 -->
+            <if test="startDt != null and endDt != ''">
+                AND CREATED_DATE BETWEEN #{startDt} AND #{endDt}
+            </if>
+
+        </where>
+
+        <!-- 페이지 처리 (페이징 처리) -->
+        <if test="page != null">
+            LIMIT #{page}, 10 <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
         </if>
     </select>
 
-    <!-- 티켓 리스트 검색 쿼리 -->
-    <select id="searchTickets" resultType="map">
-        SELECT TICKET_ID, COMPANY_ID, COMPANY_NAME,STATUS_CD,TITLE FROM tickets
-        WHERE TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
-        OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')
+    <select id="getTicketListCount" resultType="int">
+        SELECT COALESCE(COUNT(*), 0)
+        FROM T_TICKET_INFO as T
+        LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
+        <where>
+            DELETE_YN = 'N'
+            <!-- 검색어 조건 (검색어가 존재하는 경우 제목, 내용 필드에서 LIKE 검색) -->
+            <if test="searchStatus == '' and searchType == '' and (searchKeyword != null or searchKeyword != '')" >
+                AND (TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
+                OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+
+            <!-- 상태 검색 조건 (상태가 존재하는 경우) -->
+            <if test="searchStatus != null and searchStatus != ''">
+                AND STATUS_CD = #{searchStatus}
+            </if>
+
+            <!-- 검색 유형 (searchType이 제목, 내용, 담당자, 등 선택된 경우) -->
+            <if test="searchType != null and searchType != ''">
+                <choose>
+                    <when test="searchType == 'NUM'">
+                        AND TICKET_ID LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 티켓번호로 검색 -->
+                    </when>
+                    <when test="searchType == 'TITLE'">
+                        AND TITLE LIKE CONCAT('%', #{searchKeyword}, '%') <!-- 제목으로 검색 -->
+                    </when>
+                    <when test="searchType == 'TITLEANDCONTENTS'">
+                        AND (TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
+                        OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')) <!-- 제목+내용으로 검색 -->
+                    </when>
+                    <when test="searchType == 'USERNAME'">
+                        AND ASSIGNEE LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 담당자로 검색 -->
+                    </when>
+                </choose>
+            </if>
+
+            <!-- 시작일 필터링 -->
+            <if test="startDt != null and endDt != ''">
+                AND CREATED_DATE BETWEEN #{startDt} AND #{endDt}
+            </if>
+
+        </where>
+
+        <!-- 페이지 처리 (페이징 처리) -->
+        <if test="page != null">
+            LIMIT #{page}, 10 <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
+        </if>
     </select>
 
 </mapper>

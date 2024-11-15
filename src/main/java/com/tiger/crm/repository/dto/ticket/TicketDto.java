@@ -1,4 +1,4 @@
-package com.tiger.crm.repository.dto;
+package com.tiger.crm.repository.dto.ticket;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,25 +11,20 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-public class TicketDto
-{
-    private String storageId;
-    private String userId;
-    private String TICKET_ID;
-    private String COMPANY_NAME;
-    //필터 구분 - 제목+내용(TITLEANDCONTENTS), 제목(TITLE), 내용(CONTENTS), 작성자(WRITER)
-    private String searchType = "TITLEANDCONTENTS";
+public class TicketDto {
     private String searchKeyword;
-
+    private String searchStatus;
+    private String searchType;
+    ;
+    private String startDt;
+    private String endDt;
     //필터 기간
     private Date filterStartDt;
     private Date filterEndDt;
-
-    //데이터 개수
-    private int page 				= 1;
+    //페이지
+    private Integer page				= 0;
     private int limitStart 			= 0;
     private int recordCountPerPage 	= 12;
-
     public void setFilterStartDt(String date)
     {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -65,5 +60,4 @@ public class TicketDto
     {
         return this.limitStart + this.recordCountPerPage;
     }
-
 }

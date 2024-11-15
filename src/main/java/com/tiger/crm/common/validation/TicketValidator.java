@@ -1,6 +1,6 @@
 package com.tiger.crm.common.validation;
 
-import com.tiger.crm.repository.dto.TicketDto;
+import com.tiger.crm.repository.dto.ticket.TicketDto;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

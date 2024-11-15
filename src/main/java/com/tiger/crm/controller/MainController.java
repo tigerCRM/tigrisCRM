@@ -1,8 +1,8 @@
 package com.tiger.crm.controller;
 
 import com.tiger.crm.common.context.ConfigProperties;
-import com.tiger.crm.repository.dto.TicketDto;
-import com.tiger.crm.service.TicketService;
+import com.tiger.crm.repository.dto.ticket.TicketDto;
+import com.tiger.crm.service.ticket.TicketService;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.service.user.UserService;
 
@@ -54,7 +54,7 @@ public class MainController
 	* 설명 : 세션이 살아있으면 세션 정보 화면으로 보내줌, 세션 없으면 로그인 페이지로
 	* */
 	@RequestMapping(value = {"main"}, method = RequestMethod.GET)
-	public String mainPage(TicketDto storageSearchDto, HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String mainPage(@ModelAttribute("user") UserLoginDto user, TicketDto ticketDto, HttpServletRequest request, HttpServletResponse response, Model model) {
 
 		HttpSession session = request.getSession(false);
 
@@ -67,7 +67,7 @@ public class MainController
 		model.addAttribute("user", loginUser);
 
 		// 게시글 리스트
-		List<Map<String, Object>> ticketList = ticketService.getTicketList();
+		List<Map<String, Object>> ticketList = ticketService.getTicketList(ticketDto);
 		model.addAttribute("ticketList", ticketList);
 
 		// todo : 요청내역(ticket), 공지사항(board) 내용 불러와서 뿌려야함.

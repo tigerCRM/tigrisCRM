@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" >
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -97,37 +97,48 @@
                                         <b>요청관리</b>
                                     </div>
                                 </h2>
-
-                                <!-- 서치바 -->
+                                <!-- 검색영역 -->
                                 <div class="searchbar">
                                     <div>
-                                        <div class="dropdown dropdown--s period-dropdown wd120" aria-expanded="false" tabindex="0">
-                                            <div class="dropdown__selected">
-                                                <p th:text="'selectedPeriod'">3개월</p>
-                                            </div>
+                                        <div class="dropdown dropdown--s wd100" aria-expanded="false" tabindex="0">
+                                            <select class="dropdown__selected" id="searchStatus" name="searchStatus" th:value="${searchStatus}" >
+                                                <option value="">상태</option>
+                                                <option value="NUM">등록</option>
+                                                <option value="TITLE">요청</option>
+                                                <option value="TITLEANDCONTENTS">진행</option>
+                                                <option value="USERNAME">완료</option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
-                                        <div class="dropdown__selected">
-                                            <p th:text="'searchOption}'">제목+내용</p>
+                                    <div>
+                                        <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
+                                            <select class="dropdown__selected" id="searchType" name="searchType" th:value="${searchType}" >
+                                                <option value="">검색조건</option>
+                                                <option value="NUM">티켓번호</option>
+                                                <option value="TITLE">제목</option>
+                                                <option value="TITLEANDCONTENTS">제목+내용</option>
+                                                <option value="USERNAME">담당자</option>
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="search-wrap">
-                                        <input type="text" id="searchKeyword" class="input--s input01" placeholder="검색어를 입력해주세요." th:value="${searchKeyword}" onkeydown="if (event.keyCode === 13) searchTickets();"  >
-                                        <button class="icon-btn search__btn" onclick="searchTickets();">
-                                            <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#search}" /></svg>
-                                        </button>
+                                    <div>
+                                        <div class="search-wrap">
+                                            <input type="text" id="searchKeyword" name="searchKeyword" class="input--s input01" placeholder="검색어를 입력해주세요." th:value="${searchKeyword}" onkeydown="if (event.keyCode === 13) searchTickets();"  >
+                                            <button class="icon-btn search__btn" onclick="searchTickets();">
+                                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#search}" /></svg>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                                <!-- //서치바 -->
-                                <!-- 게시판 상단 영역 -->
+                                <!-- //검색영역 -->
+                                <!-- 리스트 상단 영역 -->
                                 <div class="flex flex-justify_between flex-align_center ">
                                     <div class="flex gap--4">
                                         <button type="button" class="btn btn--s primary-btn" th:onclick="'window.location.href=\'' + @{/create} + '\''">작성</button>
                                     </div>
                                     <div class="pageinfo">
                                         <div class="pagetotal">
-                                            <span class="text-body4">전체 <strong class="color-navy500" th:text="'000'"></strong>건</span>
+                                            <span class="text-body4">전체 <strong class="color-navy500"  th:text="${cnt}"></strong>건</span>
                                         </div>
                                         <div class="pageview flex">
                                             <button class="btn btn--xs icon-btn mono-ghost-btn" th:classappend="${viewType == 'full' ? ' active' : ''}" data-viewtype="full">
@@ -139,45 +150,99 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- //게시판 상단 영역 -->
+                                <!-- //리스트 상단 영역 -->
                             </div>
                         </div>
-                        <!-- //검색 영역 -->
+
                         <!-- //리스트 영역 -->
-                        <div class="is_full" id="">
+                        <div class="is_full" >
                             <div class="board-list board--m list-wrap ">
                                 <table class="table table01 table-ellipsis">
                                     <colgroup>
+                                        <col style="width: 5%;">
                                         <col style="width: 10%;">
-                                        <col style="width: 50%;">
                                         <col style="width: 20%;">
-                                        <col style="width: 20%;">
+                                        <col style="width: 10%;">
+                                        <col style="width: 10%;">
+                                        <col style="width: 10%;">
+                                        <col style="width: 10%;">
+                                        <col style="width: 10%;">
+                                        <col style="width: 10%;">
+                                        <col style="width: 10%;">
                                     </colgroup>
                                     <thead>
                                     <tr>
                                         <th>티켓번호</th>
-                                        <th class="board-title">제목</th>
                                         <th>고객사</th>
-                                        <th>진행상태</th>
+                                        <th class="board-title">제목</th>
+                                        <th>분류</th>
+                                        <th>상태</th>
+                                        <th>범위</th>
+                                        <th>담당</th>
+                                        <th>MD</th>
+                                        <th>등록일</th>
+                                        <th>완료일</th>
                                     </tr>
                                     </thead>
-                                    <tbody>
-                                    <div id="ticketList" th:if="${ticketList != null}">
-                                        <tr th:each="item : ${ticketList}">
-                                            <td><span th:text="${item.TICKET_ID}"></span></td>
-                                            <td><span th:text="${item.TITLE}"></span></td>
-                                            <td><span th:text="${item.COMPANY_NAME}"></span></td>
-                                            <td><span th:text="${item.STATUS_CD}"></span></td>
-                                        </tr>
+                                    <div th:fragment="ticketListFragment">
+                                        <tbody id ="ticketListContainer">
+                                            <tr th:if="${ticketList == null || ticketList.isEmpty()}">
+                                                <td colspan="4" style="text-align:center;">등록된 티켓이 없습니다.</td>
+                                            </tr>
+                                            <tr th:each="item : ${ticketList}" >
+                                                <td><span th:text="${item.TICKET_ID}"></span></td>
+                                                <td><span th:text="${item.COMPANY_NAME}"></span></td>
+                                                <td><span th:text="${item.TITLE}"></span></td>
+                                                <td><span th:text="${item.REQUEST_TYPE_CD}"></span></td>
+                                                <td><span th:text="${item.STATUS_CD}"></span></td>
+                                                <td><span th:text="${item.REQUEST_TYPE_CD}"></span></td>
+                                                <td><span th:text="${item.USER_NAME}"></span></td>
+                                                <td><span th:text="${item.MD}"></span></td>
+                                                <td><span th:text="${item.CREATE_DT}"></span></td>
+                                                <td><span th:text="${item.REAL_COMPLETE_DT}"></span></td>
+                                            </tr>
+                                        </tbody>
                                     </div>
-                                    </tbody>
                                 </table>
 
-                                <!-- 페이지네이션 -->
-                                <!-- 페이지네이션 -->
+
                             </div>
                         </div>
                         <!-- //리스트 영역 -->
+                        <div class="board-footer">
+                            <div class="pagination">
+                                <ul>
+                                    <!-- 이전 페이지로 이동 버튼 -->
+                                    <li>
+                                        <button type="button" class="btn paging-btn arrow-btn"
+                                                th:disabled="${currentPage == 1}">
+                                            <svg class="icon">
+                                                <use href="./assets/images/icon/sprite-sheet.svg#arrow-left"></use>
+                                            </svg>
+                                        </button>
+                                    </li>
+
+                                    <!-- 페이지 번호 버튼 -->
+                                    <li th:each="page : ${pages}">
+                                        <button type="button" class="btn paging-btn"
+                                                th:classappend="${page == currentPage} ? 'active'"
+                                                >
+                                            <span th:text="${page}">1</span>
+                                        </button>
+                                    </li>
+                                    <!-- 다음 페이지로 이동 버튼 -->
+                                    <li>
+                                        <button type="button" class="btn paging-btn arrow-btn"
+                                                th:disabled="${currentPage == totalPages}">
+                                            <svg class="icon">
+                                                <use href="./assets/images/icon/sprite-sheet.svg#arrow-right"></use>
+                                            </svg>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -188,32 +253,44 @@
 </div>
 
 <script>
+    var SEARCH_TYPE 	= null; // 티켓번호(NUM),제목(TITLE),제목+내용(TITLEANDCONTENTS),담당자(USERNAME)
+    var SEARCH_KEYWORD 	= null;
+    var FILTER_START_DT = null;
+    var FILTER_END_DT 	= null;
+    var FILTER_PAGE 	= 1;
     function searchTickets() {
-        const searchKeyword = document.getElementById('searchKeyword').value;
-        const url = `/ticketlist?searchKeyword=${encodeURIComponent(searchKeyword)}`;
+        var Data = {
+            searchType: $("#searchType").val(),
+            searchStatus: $("#searchStatus").val(),
+            searchKeyword: $("#searchKeyword").val(),
+            startDt: $("#filterStartDt").val(),
+            endDt: $("#filterEndDt").val(),
+            page: FILTER_PAGE
+        };
 
-        // URL로 GET 요청을 보냄
-       window.location.href = url;  // 검색어를 URL 파라미터로 전달하여 페이지 이동
-    }
-
-    function searchTicketstest() {
-        const searchKeyword = document.getElementById('searchKeyword').value;
-
-        // AJAX 요청 보내기
-        fetch('/ticketlisttest', {
-            method: 'POST', // POST 방식으로 컨트롤러에 데이터 전송
-            headers: {
-                'Content-Type': 'application/json'
+        $.ajax({
+            type: 'POST',
+            url: '/ticketlist',
+            contentType: 'application/json',  // JSON 형식으로 데이터를 보냄
+            data: JSON.stringify(Data),       // 데이터를 JSON 형식으로 변환하여 전송
+            success: function(response) {
+                if (response && response.trim() !== "") {
+                    document.getElementById('ticketListContainer').innerHTML = response;
+                } else {
+                    document.getElementById('ticketListContainer').innerHTML =
+                        '<tr><td colspan="4" style="text-align:center;">등록된 티켓이 없습니다.</td></tr>';
+                }
             },
-            body: JSON.stringify({ searchKeyword: searchKeyword }) // JSON 형식으로 검색어 데이터 전송
-            })
-            .then(response => response.text()) // 서버에서 HTML이 반환될 경우 텍스트로 처리
-            .then(html => {
-                // 서버 응답으로 받은 HTML을 특정 위치에 삽입 (예: 'ticketListContainer'라는 div)
-                document.getElementById('ticketListContainer').innerHTML = html;
-            })
-        .catch(error => console.error('Error:', error));
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                alert("티켓 목록을 가져오는 데 오류가 발생했습니다.");
+            }
+        });
     }
+    function goToPage(page) {
+       searchTickets();
+    }
+
 </script>
 </body>
 </html>
