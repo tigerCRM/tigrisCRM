@@ -44,6 +44,7 @@ CREATE TABLE T_AUTH_MANAGE (
    AUTH_CODE VARCHAR(10) NOT NULL COMMENT '접근 가능한 권한 코드 (예: USER, ADMIN)',
    PRIMARY KEY (AUTH_URL, AUTH_CODE)
 );
+insert into T_AUTH_MANAGE values ('/main', 'USER'), ('/main', 'ADMIN'), ('/main', 'SYSADMIN'), ('/test', 'ADMIN');
 
 -- T_COMMON_CODE 테이블
 CREATE TABLE T_COMMON_CODE (

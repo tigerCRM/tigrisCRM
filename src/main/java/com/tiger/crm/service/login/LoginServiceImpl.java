@@ -1,6 +1,6 @@
 package com.tiger.crm.service.login;
 
-import com.tiger.crm.repository.dto.user.User;
+import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.repository.mail.MailService;
 import com.tiger.crm.repository.mapper.LoginMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +20,13 @@ public class LoginServiceImpl implements LoginService{
     MailService mailService;
 
     @Override
-    public User login(String id, String password) {
+    public UserLoginDto login(String id, String password) {
         return loginMapper.getUser(id , password);
     }
 
     // 비밀번호 초기화
     @Override
-    public void resetPassword(User user) throws MessagingException {
+    public void resetPassword(UserLoginDto user) throws MessagingException {
         try {
             // 1. 임시 비밀번호 생성
             String tempPassword = generateTempPassword();

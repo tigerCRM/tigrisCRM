@@ -3,10 +3,10 @@ package com.tiger.crm.repository.dto.user;
 import lombok.Data;
 /*
 * 작성자 : 제예솔
-* T_USER_INFO 와 매핑하여 사용자 객체 정보 저장
+* 설명 : T_USER_INFO 와 매핑하여 사용자 객체 정보 저장
 * */
 @Data
-public class User {
+public class UserLoginDto {
 
     private String userId;
     private String userName;
