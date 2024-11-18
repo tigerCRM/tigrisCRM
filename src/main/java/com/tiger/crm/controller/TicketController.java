@@ -36,21 +36,21 @@ public class TicketController {
             String endDt = ticketDto.getEndDt();
 
             // 필요한 데이터 조회
-            List<Map<String, Object>> ticketList = ticketService.getTicketList(ticketDto);
-            int cnt = ticketService.getTicketListCount(ticketDto);
+            //List<Map<String, Object>> ticketList = ticketService.getTicketList(ticketDto);
+            //int cnt = ticketService.getTicketListCount(ticketDto);
 
             // 페이지 계산 (PageUtils가 null 반환 시 기본 페이지 처리)
-            ArrayList<Integer> pages = PageUtils.makePages(cnt, ticketDto.getRecordCountPerPage(), page);
-            if (pages == null) {
-                pages = new ArrayList<>();
-                pages.add(1);  // 기본 페이지 번호 설정
-            }
+//            ArrayList<Integer> pages = PageUtils.makePages(cnt, ticketDto.getRecordCountPerPage(), page);
+//            if (pages == null) {
+//                pages = new ArrayList<>();
+//                pages.add(1);  // 기본 페이지 번호 설정
+//            }
 
             // 모델에 데이터 추가
-            model.addAttribute("ticketList", ticketList);
+            //model.addAttribute("ticketList", ticketList);
             model.addAttribute("searchTicketDTO", ticketDto);  // 검색 조건 및 페이징 정보 전달
-            model.addAttribute("cnt", cnt);
-            model.addAttribute("pages", pages);
+            //model.addAttribute("cnt", cnt);
+            //model.addAttribute("pages", pages);
 
             return "ticketList";
         } catch (Exception e) {
@@ -78,20 +78,20 @@ public class TicketController {
             String endDt = ticketDto.getEndDt();
 
             // 데이터 조회
-            List<Map<String, Object>> ticketList = ticketService.getTicketList(ticketDto);
-            int cnt = ticketService.getTicketListCount(ticketDto);
+            //List<Map<String, Object>> ticketList = ticketService.getTicketList(ticketDto);
+            //int cnt = ticketService.getTicketListCount(ticketDto);
 
             // 페이지 계산
-            ArrayList<Integer> pages = PageUtils.makePages(cnt, ticketDto.getRecordCountPerPage(), page);
-            if (pages == null) {
-                pages = new ArrayList<>();
-                pages.add(1);  // 기본 페이지 번호 설정
-            }
+            //ArrayList<Integer> pages = PageUtils.makePages(cnt, ticketDto.getRecordCountPerPage(), page);
+//            if (pages == null) {
+//                pages = new ArrayList<>();
+//                pages.add(1);  // 기본 페이지 번호 설정
+//            }
 
             // 모델에 데이터 추가
-            model.addAttribute("ticketList", ticketList);
-            model.addAttribute("cnt", cnt);
-            model.addAttribute("pages", pages);
+            //model.addAttribute("ticketList", ticketList);
+            //model.addAttribute("cnt", cnt);
+            //model.addAttribute("pages", pages);
 
             // 부분 뷰 렌더링 (리스트 부분만 갱신)
             return "ticketList :: ticketListFragment";

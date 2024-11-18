@@ -1,6 +1,8 @@
 package com.tiger.crm.controller;
 
 import com.tiger.crm.common.context.ConfigProperties;
+import com.tiger.crm.repository.dto.page.PagingRequest;
+import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.dto.ticket.TicketDto;
 import com.tiger.crm.service.ticket.TicketService;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
@@ -54,7 +56,7 @@ public class MainController
 	* 설명 : 세션이 살아있으면 세션 정보 화면으로 보내줌, 세션 없으면 로그인 페이지로
 	* */
 	@RequestMapping(value = {"main"}, method = RequestMethod.GET)
-	public String mainPage(@ModelAttribute("user") UserLoginDto user, TicketDto ticketDto, HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String mainPage(@ModelAttribute PagingRequest pagingRequest, @ModelAttribute("user") UserLoginDto user, TicketDto ticketDto, HttpServletRequest request, HttpServletResponse response, Model model) {
 
 		HttpSession session = request.getSession(false);
 
@@ -66,12 +68,21 @@ public class MainController
 		LOGGER.info("세션정보 : " + loginUser.toString());
 		model.addAttribute("user", loginUser);
 
-		// 게시글 리스트
-		List<Map<String, Object>> ticketList = ticketService.getTicketList(ticketDto);
-		model.addAttribute("ticketList", ticketList);
-
-		// todo : 요청내역(ticket), 공지사항(board) 내용 불러와서 뿌려야함.
+		// 티켓 조회
+		PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList2(pagingRequest);
+		model.addAttribute("ticketList", pageResponse);
 
 		return "/main";
+	}
+
+	/*
+	 * 메일발송내역 페이지
+	 */
+	@RequestMapping(value = { "mailHistory"}, method = RequestMethod.GET)
+	public String mailHistory( HttpServletRequest request, HttpServletResponse response)
+	{
+		HttpSession session = request.getSession(false);
+
+		return "mailHistory";
 	}
 }

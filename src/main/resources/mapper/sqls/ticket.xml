@@ -4,11 +4,15 @@
 
 <mapper namespace="com.tiger.crm.repository.mapper.TicketMapper">
     <select id="getTicketList" resultType="map">
-        SELECT TICKET_ID, COMPANY_NAME, STATUS_CD, REQUEST_TYPE_CD,
-        IFNULL(MD, '') as MD,
-        TITLE, U.USER_NAME,
-        DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d') as CREATE_DT,
-        IFNULL(DATE_FORMAT(IFNULL(REAL_COMPLETE_DT, ''), '%Y-%m-%d'),'') as REAL_COMPLETE_DT
+        SELECT TICKET_ID,
+               COMPANY_NAME,
+               STATUS_CD,
+               REQUEST_TYPE_CD,
+               IFNULL(MD, '') as MD,
+               TITLE,
+               U.USER_NAME,
+               DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d') as CREATE_DT,
+               IFNULL(DATE_FORMAT(IFNULL(REAL_COMPLETE_DT, ''), '%Y-%m-%d'),'') as REAL_COMPLETE_DT
         FROM T_TICKET_INFO as T
         LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
         <where>
@@ -103,6 +107,13 @@
         <if test="page != null">
             LIMIT #{page}, 10 <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
         </if>
+    </select>
+
+    <select id="getTicketList2" resultType="java.util.HashMap">
+        select * from T_TICKET_INFO LIMIT #{offset}, #{size}
+    </select>
+    <select id="getTicketListCount2" resultType="int">
+        select COUNT(*) from T_TICKET_INFO
     </select>
 
 </mapper>

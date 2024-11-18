@@ -1,0 +1,23 @@
+<!-- pagination.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- 페이징 처리 -->
+    <div th:fragment="pagination" class="pagination">
+        <!-- 이전 페이지 버튼 -->
+        <a href="#" th:if="${ticketList.currentPage > 1}"
+           th:href="@{${paginationUrl}(page=${ticketList.currentPage - 1})}" class="prev">이전</a>
+
+        <!-- 페이지 번호 -->
+        <span th:each="i : ${#numbers.sequence(1, ticketList.totalPages)}">
+            <a href="#" th:href="@{${paginationUrl}(page=${i})}"
+               th:text="${i}"
+               th:classappend="${ticketList.currentPage == i} ? 'active' : ''"></a>
+        </span>
+
+        <!-- 다음 페이지 버튼 -->
+        <a href="#" th:if="${ticketList.currentPage < ticketList.totalPages}"
+           th:href="@{${paginationUrl}(page=${ticketList.currentPage + 1})}" class="next">다음</a>
+    </div>
+</body>
+</html>
