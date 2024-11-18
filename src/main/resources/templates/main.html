@@ -1,99 +1,19 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width" />
-    <title>메인</title>
-    <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/layout.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/intro.css" />
-    <script src="/lib/jquery/jquery-2.2.2.min.js"></script>
-    <script src="./Style/js/script2.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-</head>
+
+<!-- <head>공통 /meta/import/script 호출  -->
+<head th:replace="~{common/frame_head :: head}"></head>
+
 <body>
 <div class="wrapper">
-    <!-- 사이드바 -->
-    <div id="sidebar" class="main-sidebar main-sidebar--expand">
-        <button type="button" class="btn btn--l icon-btn menu-btn menu__btn">
-            <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#menu}"/></svg>
-        </button>
-        <div class="profile">
-            <div class="profile__img profile__img--48">
-                <a href="#">
-                    <img th:src="@{/assets/images/temp/profile.png}" alt="">
-                </a>
-            </div>
-            <div class="profile__info">
-                <p class="name">
-                    <span class="text-body3 text-ellipsis" th:text="${user.userName}"></span>
-                </p>
-                <p class="team">
-                    <span class="text-caption1" th:text="'회사이름1'">회사이름</span>
-                    <span class="text-caption1"> | </span>
-                    <span class="text-caption1" th:text="${user.userClass}">권한이름</span>
-                </p>
-            </div>
-        </div>
-        <nav class="main-lnb">
-            <ul>
-                <li>
-                    <a href="ticketlist" class="menu-item active">
-                            <span class="menu-icon">
-                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#mail}"/></svg>
-                            </span>
-                        <p class="menu-title">
-                            <span class="menu-title__text">요청관리</span>
-                            <span class="menu-title__num"></span>
-                        </p>
-                    </a>
-                </li>
-                <!-- 나머지 메뉴 항목들... -->
-            </ul>
-        </nav>
-    </div>
-    <!-- //사이드바 -->
+    <!-- 왼쪽 메뉴  -->
+    <div th:replace="~{common/frame_left_menu :: frame_left_menu}" />
+
+    <!-- 상단 메뉴  -->
+    <div th:replace="~{common/frame_top_menu :: frame_top_menu}" />
 
     <!-- 컨텐츠 영역 -->
     <div class="main-area">
-        <!-- 헤더 -->
-        <header class="header">
-            <div class="container">
-                <div class="logo">
-                    <span class="hidden">이노베이터</span>
-                </div>
-
-                <nav id="utilMenu" class="main-util-menu">
-                    <ul>
-                        <li>
-                            <button type="button" class="btn btn--l icon-btn menu-btn">
-                                <span class="badge"></span>
-                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#notification}"/></svg>
-                            </button>
-                        </li>
-                        <li>
-                            <button type="button" class="btn btn--l icon-btn menu-btn setting-btn" id="settingMenuBtn">
-                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#setting}"/></svg>
-                            </button>
-                            <!-- 드롭다운 메뉴 추가 -->
-                            <ul class="dropdown-menu" id="settingDropdownMenu">
-                                <li><a href="/test">접근권한 테스트</a></li>
-                                <li id="resetPassword"><a href="/resetPassword">비밀번호 초기화</a></li>
-                                <li id="logout">
-                                    <a href="#" onclick="if(confirm('로그아웃 하시겠습니까?')) window.location.href='/logout'; else alert('취소하였습니다.'); return false;">로그아웃</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </header>
-        <!-- //헤더 -->
         <!-- 내용 영역 -->
         <main class="main-content">
             <div class="container">
@@ -101,21 +21,21 @@
                     <div class="flex1">
                         <!-- 티켓 미리보기 -->
                         <section id="notice" class="widget-item">
-                            <h2 class="widget-title"><a href="#" class="widget-title__link">요청내역</a></h2>
+                            <h2 class="widget-title"><a href="#" class="widget-title__link">요청ㅇㅇ내역</a></h2>
                             <div class="widget__content">
-                                <ul class="widget-board" th:each="item : ${ticketList}">
+                                <ul class="widget-board" th:each="ticket : ${ticketList.dataList}">
                                     <li>
                                         <a href="#" class="list__link">
                                             <span class="tag tag--navy">요청등록</span>
-                                            <span th:text="${item.TITLE}"></span>
+                                            <span th:text="${ticket['TITLE']}"></span>
                                         </a>
-                                        <span class="widget-board__date" th:text="${item.STATUS_CD}"></span>
-                                        <!--
-                                        <span class="widget-board__date" th:text="${item.CREATE_DT}"></span>
-                                        -->
+                                        <span class="widget-board__date" th:text="${ticket['CONTENT']}"></span>
+                                        <span class="widget-board__date" th:text="${ticket['STATUS_CD']}"></span>
                                     </li>
                                 </ul>
                             </div>
+                            <!-- 페이징 버튼 템플릿 호출 -->
+                            <div th:replace="~{fragments/pagination :: pagination(ticketList=${ticketList}, paginationUrl='/main')}" />
                         </section>
                     </div>
                     <div class="flex1">
@@ -151,14 +71,14 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <div id="ticketList" th:if="${ticketList != null}">
+                                            <!--<div id="ticketList" th:if="${ticketList != null}">
                                                 <tr th:each="item : ${ticketList}">
                                                     <td><span th:text="${item.TICKET_ID}"></span></td>
                                                     <td><span th:text="${item.TITLE}"></span></td>
                                                     <td><span th:text="${item.COMPANY_NAME}"></span></td>
                                                     <td><span th:text="${item.STATUS_CD}"></span></td>
                                                 </tr>
-                                            </div>
+                                            </div>-->
                                             </tbody>
                                         </table>
                                         <!-- 페이지네이션 -->
@@ -189,30 +109,5 @@
     <!-- //컨텐츠 영역 -->
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-
-        // -------------------
-        // 드롭 다운 바 작동
-        // -------------------
-        const $settingMenuBtn = $("#settingMenuBtn");
-        const $settingDropdownMenu = $("#settingDropdownMenu");
-        // 설정 버튼 클릭 시 드롭다운 토글
-        $settingMenuBtn.on("click", function(event) {
-            // 이벤트 전파 방지
-            event.stopPropagation();
-            // 드롭다운 메뉴 토글 (보이거나 숨기기)
-            $settingDropdownMenu.toggle();
-        });
-        // 드롭다운 외부를 클릭하면 드롭다운 숨기기
-        $(document).on("click", function(event) {
-            // 드롭다운 메뉴가 열려있고 클릭한 곳이 드롭다운 메뉴가 아니면 숨기기
-            if (!$settingDropdownMenu.is(event.target) && !$settingMenuBtn.is(event.target) && !$settingDropdownMenu.has(event.target).length) {
-                $settingDropdownMenu.hide();
-            }
-        });
-    });
-</script>
 </body>
 </html>

@@ -1,0 +1,50 @@
+<body>
+    <div th:fragment="frame_left_menu" id="sidebar" class="main-sidebar main-sidebar--expand">
+        <button type="button" class="btn btn--l icon-btn menu-btn menu__btn">
+            <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#menu}"/></svg>
+        </button>
+        <div class="profile">
+            <div class="profile__img profile__img--48">
+                <a href="#">
+                    <img th:src="@{/assets/images/temp/profile.png}" alt="">
+                </a>
+            </div>
+            <div class="profile__info">
+                <p class="name">
+                    <span class="text-body3 text-ellipsis" th:text="'userName'"></span>
+                </p>
+                <p class="team">
+                    <span class="text-caption1" th:text="'department'"></span>
+                </p>
+            </div>
+        </div>
+        <nav class="main-lnb">
+            <ul>
+                <ul>
+                    <li>
+                        <a href="ticketlist" class="menu-item active">
+                                <span class="menu-icon">
+                                    <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#mail}"/></svg>
+                                </span>
+                            <p class="menu-title">
+                                <span class="menu-title__text">요청관리</span>
+                                <span class="menu-title__num"></span>
+                            </p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mailHistory" class="menu-item active">
+                                <span class="menu-icon">
+                                    <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#mail}"/></svg>
+                                </span>
+                            <p class="menu-title">
+                                <span class="menu-title__text">발송내역</span>
+                                <span class="menu-title__num"></span>
+                            </p>
+                        </a>
+                    </li>
+                </ul>
+            </ul>
+        </nav>
+    </div>
+</body>

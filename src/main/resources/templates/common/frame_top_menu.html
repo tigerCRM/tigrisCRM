@@ -1,0 +1,60 @@
+<body>
+    <div th:fragment="frame_top_menu"  class="main-area">
+        <header class="header">
+            <div class="container">
+                <div class="logo" onclick="location.href='/main';" style="cursor: pointer;">
+                    <span class="hidden">뭐냐이건</span>
+                </div>
+
+                <nav id="utilMenu" class="main-util-menu">
+                    <ul>
+                        <li>
+                            <button type="button" class="btn btn--l icon-btn menu-btn">
+                                <span class="badge"></span>
+                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#notification}"/></svg>
+                            </button>
+                        </li>
+                        <li>
+                            <button type="button" class="btn btn--l icon-btn menu-btn setting-btn" id="settingMenuBtn">
+                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#setting}"/></svg>
+                            </button>
+                            <!-- 드롭다운 메뉴 추가 -->
+                            <ul class="dropdown-menu" id="settingDropdownMenu">
+                                <li><a href="/test">접근권한 테스트</a></li>
+                                <li id="resetPassword"><a href="/resetPassword">비밀번호 초기화</a></li>
+                                <li id="logout">
+                                    <a href="#" onclick="if(confirm('로그아웃 하시겠습니까?')) window.location.href='/logout'; else alert('취소하였습니다.'); return false;">로그아웃</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function () {
+
+                // -------------------
+                // 드롭 다운 바 작동
+                // -------------------
+                const $settingMenuBtn = $("#settingMenuBtn");
+                const $settingDropdownMenu = $("#settingDropdownMenu");
+                // 설정 버튼 클릭 시 드롭다운 토글
+                $settingMenuBtn.on("click", function(event) {
+                    // 이벤트 전파 방지
+                    event.stopPropagation();
+                    // 드롭다운 메뉴 토글 (보이거나 숨기기)
+                    $settingDropdownMenu.toggle();
+                });
+                // 드롭다운 외부를 클릭하면 드롭다운 숨기기
+                $(document).on("click", function(event) {
+                    // 드롭다운 메뉴가 열려있고 클릭한 곳이 드롭다운 메뉴가 아니면 숨기기
+                    if (!$settingDropdownMenu.is(event.target) && !$settingMenuBtn.is(event.target) && !$settingDropdownMenu.has(event.target).length) {
+                        $settingDropdownMenu.hide();
+                    }
+                });
+            });
+        </script>
+</body>
