@@ -65,7 +65,7 @@ public class MainController
 		model.addAttribute("user", loginUser);
 
 		// 티켓 조회
-		PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList2(pagingRequest);
+		PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
 		model.addAttribute("ticketList", pageResponse);
 
 		return "/main";
