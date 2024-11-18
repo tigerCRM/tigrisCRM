@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.tiger.crm.repository.mapper.TicketMapper">
-    <select id="getTicketList" resultType="map">
+    <select id="getTicketList"  resultType="java.util.HashMap">
         SELECT TICKET_ID,
                COMPANY_NAME,
                STATUS_CD,
@@ -48,20 +48,20 @@
             </if>
 
             <!-- 시작일 필터링 -->
-            <if test="startDt != null and endDt != ''">
-                AND CREATED_DATE BETWEEN #{startDt} AND #{endDt}
+            <if test="startDt != '' and startDt != null and endDt != '' and endDt != null ">
+                AND T.CREATE_DT BETWEEN #{startDt} AND #{endDt}
             </if>
 
         </where>
 
         <!-- 페이지 처리 (페이징 처리) -->
         <if test="page != null">
-            LIMIT #{page}, 10 <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
+            LIMIT  #{offset}, #{size} <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
         </if>
     </select>
 
-    <select id="getTicketListCount" resultType="int">
-        SELECT COALESCE(COUNT(*), 0)
+    <select id="getTicketListCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
         FROM T_TICKET_INFO as T
         LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
         <where>
@@ -95,25 +95,23 @@
                     </when>
                 </choose>
             </if>
-
             <!-- 시작일 필터링 -->
-            <if test="startDt != null and endDt != ''">
-                AND CREATED_DATE BETWEEN #{startDt} AND #{endDt}
+            <if test="startDt != '' and startDt != null and endDt != '' and endDt != null ">
+                AND T.CREATE_DT BETWEEN #{startDt} AND #{endDt}
             </if>
-
         </where>
 
         <!-- 페이지 처리 (페이징 처리) -->
         <if test="page != null">
-            LIMIT #{page}, 10 <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
+            LIMIT #{offset}, #{size}<!-- 10개씩 보여주는 예시 (limit offset, rows) -->
         </if>
     </select>
-
+<!--
     <select id="getTicketList2" resultType="java.util.HashMap">
         select * from T_TICKET_INFO LIMIT #{offset}, #{size}
     </select>
     <select id="getTicketListCount2" resultType="int">
         select COUNT(*) from T_TICKET_INFO
-    </select>
+    </select>-->
 
 </mapper>

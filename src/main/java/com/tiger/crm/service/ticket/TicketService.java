@@ -12,7 +12,7 @@ public interface TicketService {
 //    int getTicketListCount(TicketDto ticketDto);
 
     // 페이징 객체를 사용한 리스트
-    PagingResponse<Map<String, Object>> getTicketList2(PagingRequest pagingRequest);
+    PagingResponse<Map<String, Object>> getTicketList(PagingRequest pagingRequest);
 }
 
 

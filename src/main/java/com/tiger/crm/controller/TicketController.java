@@ -1,6 +1,8 @@
 package com.tiger.crm.controller;
 
 import com.tiger.crm.common.util.PageUtils;
+import com.tiger.crm.repository.dto.page.PagingRequest;
+import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.dto.ticket.TicketDto;
 import com.tiger.crm.service.ticket.TicketService;
 import org.slf4j.Logger;
@@ -26,7 +28,7 @@ public class TicketController {
      * 설명 : 요청관리 페이지 초기화면
      * */
     @GetMapping("/ticketlist")
-    public String getTickets(@ModelAttribute TicketDto ticketDto, Model model) {
+    public String getTickets(@ModelAttribute TicketDto ticketDto, @ModelAttribute PagingRequest pagingRequest, Model model) {
         try {
             // 입력 값 검증 및 기본값 설정
             String searchKeyword = ticketDto.getSearchKeyword() != null ? ticketDto.getSearchKeyword() : "";
@@ -35,23 +37,9 @@ public class TicketController {
             String startDt = ticketDto.getStartDt();
             String endDt = ticketDto.getEndDt();
 
-            // 필요한 데이터 조회
-            //List<Map<String, Object>> ticketList = ticketService.getTicketList(ticketDto);
-            //int cnt = ticketService.getTicketListCount(ticketDto);
-
-            // 페이지 계산 (PageUtils가 null 반환 시 기본 페이지 처리)
-//            ArrayList<Integer> pages = PageUtils.makePages(cnt, ticketDto.getRecordCountPerPage(), page);
-//            if (pages == null) {
-//                pages = new ArrayList<>();
-//                pages.add(1);  // 기본 페이지 번호 설정
-//            }
-
-            // 모델에 데이터 추가
-            //model.addAttribute("ticketList", ticketList);
-            model.addAttribute("searchTicketDTO", ticketDto);  // 검색 조건 및 페이징 정보 전달
-            //model.addAttribute("cnt", cnt);
-            //model.addAttribute("pages", pages);
-
+            // 티켓 조회
+            PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
+            model.addAttribute("ticketList", pageResponse);
             return "ticketList";
         } catch (Exception e) {
             // 오류 로그 기록
@@ -67,32 +55,11 @@ public class TicketController {
      * * 스크립트단에서 ajax로 호출하여 RequestBody로 data를 받아서 처리
      * */
     @PostMapping("/ticketlist")
-    public String searchTickets(@RequestBody TicketDto ticketDto, Model model) {
+    public String searchTickets(@ModelAttribute PagingRequest pagingRequest, Model model) {
         try {
-            // 입력 값 검증 및 기본값 설정
-            String searchKeyword = ticketDto.getSearchKeyword() != null ? ticketDto.getSearchKeyword() : "";
-            String searchStatus = ticketDto.getSearchStatus() != null ? ticketDto.getSearchStatus() : "";
-            String searchType = ticketDto.getSearchType() != null ? ticketDto.getSearchType() : "";
-            Integer page = ticketDto.getPage() != null ? ticketDto.getPage() : 1;
-            String startDt = ticketDto.getStartDt();
-            String endDt = ticketDto.getEndDt();
-
-            // 데이터 조회
-            //List<Map<String, Object>> ticketList = ticketService.getTicketList(ticketDto);
-            //int cnt = ticketService.getTicketListCount(ticketDto);
-
-            // 페이지 계산
-            //ArrayList<Integer> pages = PageUtils.makePages(cnt, ticketDto.getRecordCountPerPage(), page);
-//            if (pages == null) {
-//                pages = new ArrayList<>();
-//                pages.add(1);  // 기본 페이지 번호 설정
-//            }
-
-            // 모델에 데이터 추가
-            //model.addAttribute("ticketList", ticketList);
-            //model.addAttribute("cnt", cnt);
-            //model.addAttribute("pages", pages);
-
+            // 티켓 조회
+            PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
+            model.addAttribute("ticketList", pageResponse);
             // 부분 뷰 렌더링 (리스트 부분만 갱신)
             return "ticketList :: ticketListFragment";
         } catch (IllegalArgumentException e) {

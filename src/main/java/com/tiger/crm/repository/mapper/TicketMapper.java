@@ -22,7 +22,7 @@ public interface TicketMapper {
 //                           @Param("endDt") String endDt);
 
     // 결과를 List<Map<String, Object>>로 받는 경우, @Param 어노테이션 사용
-    List<Map<String, Object>> getTicketList2(PagingRequest pagingRequest);
+    List<Map<String, Object>> getTicketList(PagingRequest pagingRequest);
 
-    int getTicketListCount2(PagingRequest pagingRequest);
+    Integer getTicketListCount(PagingRequest pagingRequest);
 }

@@ -12,6 +12,7 @@ public class PagingRequest {
     private String searchType;            // 검색 타입
     private String startDt;
     private String endDt;
+    private String searchStatus;            //티켓상태
 
     public PagingRequest() {
         this.page = 1;  // 기본값 설정
