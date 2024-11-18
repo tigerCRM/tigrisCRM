@@ -13,7 +13,6 @@
             USER_CLASS
         FROM T_USER_INFO
         WHERE USER_ID = #{id}
-            AND USER_PW = #{password}
     </select>
 
     <!-- 비밀번호 변경 쿼리 -->
@@ -23,5 +22,23 @@
         WHERE USER_ID = #{userId}
     </update>
 
+    <!--전체 사용자 불러오기-->
+    <select id="getAllUsers" resultType="com.tiger.crm.repository.dto.user.UserLoginDto">
+        SELECT USER_ID, USER_NAME, USER_PW
+        FROM T_USER_INFO
+    </select>
 
+    <!-- 사용자 비밀번호를 업데이트하는 쿼리 -->
+    <update id="updateUserPassword">
+        UPDATE T_USER_INFO
+        SET USER_PW = #{password}
+        WHERE USER_ID = #{id}
+    </update>
+
+    <select id="getUserPwByUserId" resultType="String">
+        SELECT
+        USER_PW
+        FROM T_USER_INFO
+        WHERE USER_ID = #{id}
+    </select>
 </mapper>

@@ -2,6 +2,7 @@ package com.tiger.crm.repository.mapper;
 
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 import org.apache.ibatis.annotations.Mapper;
+import java.util.List;
 
 @Mapper
 public interface LoginMapper {
@@ -9,4 +10,13 @@ public interface LoginMapper {
 
     // 비밀번호 초기화
     void resetPassword(UserLoginDto user);
+
+    //전체 사용자 불러오기
+    List<UserLoginDto> getAllUsers();
+    
+    //사용자 비밀번호 업데이트(**주의** 테스트 시 외에는 사용하지 말것)
+    void updateUserPassword(String id, String password);
+    
+    String getUserPwByUserId(String id);
+
 }

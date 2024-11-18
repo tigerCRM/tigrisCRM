@@ -3,7 +3,10 @@ package com.tiger.crm.service.login;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.repository.mail.MailService;
 import com.tiger.crm.repository.mapper.LoginMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import jakarta.mail.MessagingException;
 
@@ -15,13 +18,19 @@ import java.util.Map;
 public class LoginServiceImpl implements LoginService{
     @Autowired
     LoginMapper loginMapper;
-
     @Autowired
     MailService mailService;
-
+    @Autowired
+    PasswordEncoder passwordEncoder;
+    private Logger LOGGER = LoggerFactory.getLogger(getClass());
     @Override
     public UserLoginDto login(String id, String password) {
+        if(!passwordEncoder.matches(password, loginMapper.getUserPwByUserId(id))){
+            LOGGER.info("비밀번호 에러");
+            return null;
+        }
         return loginMapper.getUser(id , password);
+
     }
 
     // 비밀번호 초기화
@@ -32,7 +41,7 @@ public class LoginServiceImpl implements LoginService{
             String tempPassword = generateTempPassword();
 
             user.setUserId("sys1@test.com");
-            user.setPassword(tempPassword);
+            user.setUserPw(tempPassword);
 
             // 2. 비밀번호 업데이트
             loginMapper.resetPassword(user);
