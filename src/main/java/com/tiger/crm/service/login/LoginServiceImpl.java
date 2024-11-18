@@ -40,8 +40,8 @@ public class LoginServiceImpl implements LoginService{
             // 1. 임시 비밀번호 생성
             String tempPassword = generateTempPassword();
 
-            user.setUserId("sys1@test.com");
-            user.setUserPw(tempPassword);
+            user.setUserId(user.getUserId());
+            user.setUserPw(passwordEncoder.encode(generateTempPassword())); // 암호화 후 저장
 
             // 2. 비밀번호 업데이트
             loginMapper.resetPassword(user);
