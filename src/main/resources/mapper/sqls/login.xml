@@ -6,11 +6,10 @@
 
     <!-- 데이터 조회 쿼리 -->
     <select id="getUser" resultType="com.tiger.crm.repository.dto.user.UserLoginDto">
-        SELECT
-            USER_ID,
-            USER_NAME,
-            COMPANY_ID,
-            USER_CLASS
+        SELECT USER_ID,
+               USER_NAME,
+               COMPANY_ID,
+               USER_CLASS
         FROM T_USER_INFO
         WHERE USER_ID = #{id}
     </select>
@@ -24,7 +23,9 @@
 
     <!--전체 사용자 불러오기-->
     <select id="getAllUsers" resultType="com.tiger.crm.repository.dto.user.UserLoginDto">
-        SELECT USER_ID, USER_NAME, USER_PW
+        SELECT USER_ID,
+               USER_NAME,
+               USER_PW
         FROM T_USER_INFO
     </select>
 
@@ -36,8 +37,7 @@
     </update>
 
     <select id="getUserPwByUserId" resultType="String">
-        SELECT
-        USER_PW
+        SELECT USER_PW
         FROM T_USER_INFO
         WHERE USER_ID = #{id}
     </select>

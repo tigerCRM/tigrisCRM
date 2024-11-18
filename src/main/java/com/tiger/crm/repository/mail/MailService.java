@@ -1,5 +1,7 @@
 package com.tiger.crm.repository.mail;
 
+import com.tiger.crm.repository.dto.mail.MailDto;
+import com.tiger.crm.repository.mapper.MailMapper;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,9 @@ import java.util.Map;
 
 @Service
 public class MailService {
+
+    @Autowired
+    private MailMapper mailMapper;
 
     private final JavaMailSender mailSender;
     private final ThymeleafViewResolver thymeleafViewResolver;
@@ -42,6 +47,16 @@ public class MailService {
 
             // 이메일 발송
             mailSender.send(message);
+
+            // 메일 발송 이력 저장
+            MailDto mail = new MailDto();
+            mail.setCategory(templateName);
+            mail.setTitle(subject);
+            mail.setContent(htmlContent);
+            mail.setSenderAddr("dkstkdwo93@tigrison.com");
+            mail.setReceiverAddr(to);
+
+            mailMapper.saveMailHist(mail);
 
         }catch (Exception e){
             System.err.println("Error sending email: " + e.getMessage());

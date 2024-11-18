@@ -3,6 +3,7 @@ package com.tiger.crm.service.login;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.repository.mail.MailService;
 import com.tiger.crm.repository.mapper.LoginMapper;
+import com.tiger.crm.repository.mapper.MailMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +17,18 @@ import java.util.Map;
 
 @Service
 public class LoginServiceImpl implements LoginService{
+
     @Autowired
     LoginMapper loginMapper;
     @Autowired
     MailService mailService;
     @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    private MailMapper mailMapper;
+
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
+
     @Override
     public UserLoginDto login(String id, String password) {
         if(!passwordEncoder.matches(password, loginMapper.getUserPwByUserId(id))){
@@ -50,6 +56,7 @@ public class LoginServiceImpl implements LoginService{
             Map<String, Object> model = new HashMap<>();
             model.put("userName", "안상재");
             model.put("password", tempPassword);
+
             mailService.sendEmail("dkstkdwo93@tigrison.com", "비밀번호 초기화", "password-reset-email", model);
 
         } catch (Exception e) {
