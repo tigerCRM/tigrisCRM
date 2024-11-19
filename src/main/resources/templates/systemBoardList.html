@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width" />
+    <title>메인</title>
+    <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/layout.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/intro.css" />
+    <script src="/lib/jquery/jquery-2.2.2.min.js"></script>
+    <script src="./Style/js/script2.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+</head>
+<body>
+<div class="wrapper">
+    <!-- 왼쪽 메뉴  -->
+    <div th:replace="~{common/frame_left_menu :: frame_left_menu}" />
+
+    <!-- 상단 메뉴  -->
+    <div th:replace="~{common/frame_top_menu :: frame_top_menu}" />
+
+    <!-- 컨텐츠 영역 -->
+    <div class="main-area">
+        <!-- 내용 영역 -->
+        <main class="main-content">
+            <div class="container">
+                <div class="main-widget-wrap">
+                    <div class="content">
+                        <!-- 검색 영역 -->
+                        <div class="search--box">
+                            <div class="content-header">
+                                <h2 class="text-body1">
+                                    <div class="flex flex-align_center gap--8">
+                                        <b>시스템 관리</b>
+                                    </div>
+                                </h2>
+                                <!-- 검색영역 -->
+                                <div class="searchbar">
+                                    <div>
+                                        <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
+                                            <select class="dropdown__selected" id="searchType" name="searchType" th:value="${searchType}" >
+                                                <option value="">검색조건</option>
+                                                <option value="TITLE">제목</option>
+                                                <option value="TITLEANDCONTENTS">제목+내용</option>
+                                                <option value="USERNAME">작성자</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="search-wrap">
+                                            <input type="text" id="searchKeyword" name="searchKeyword" class="input--s input01" placeholder="검색어를 입력해주세요." th:value="${searchKeyword}" onkeydown="if (event.keyCode === 13) searchTickets();"  >
+                                            <button class="icon-btn search__btn" onclick="searchTickets();">
+                                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#search}" /></svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- //검색영역 -->
+                                <!-- 리스트 상단 영역 -->
+                                <div class="flex flex-justify_between flex-align_center ">
+                                    <div class="flex gap--4">
+                                        <button type="button" class="btn btn--s primary-btn" th:onclick="'window.location.href=\'' + @{/systemBoard} + '\''">작성</button>
+                                    </div>
+                                    <div class="pageinfo">
+                                        <div class="pagetotal">
+                                            <span class="text-body4">전체 <strong class="color-navy500"  th:text="${ticketList.totalcnt}"></strong>건</span>
+                                        </div>
+                                        <div class="pageview flex">
+                                            <button class="btn btn--xs icon-btn mono-ghost-btn" th:classappend="${viewType == 'full' ? ' active' : ''}" data-viewtype="full">
+                                                <svg class="icon"><use th:href="@{/Style/images/icon/sprite-sheet.svg#layout-one-fill}" /></svg>
+                                            </button>
+                                            <button class="btn btn--xs icon-btn mono-ghost-btn" th:classappend="${viewType == 'column' ? ' active' : ''}" data-viewtype="column">
+                                                <svg class="icon"><use th:href="@{/Style/images/icon/sprite-sheet.svg#layout-column-fill}" /></svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- //리스트 상단 영역 -->
+                            </div>
+                        </div>
+
+                        <!-- //리스트 영역 -->
+                        <div class="is_full" >
+                            <div class="board-list board--m list-wrap ">
+                                <table class="table table01 table-ellipsis">
+                                    <colgroup>
+                                        <col style="width: 5%;">
+                                        <col style="width: 10%;">
+                                        <col style="width: 20%;">
+                                        <col style="width: 10%;">
+                                        <col style="width: 10%;">
+                                        <col style="width: 10%;">
+                                        <col style="width: 10%;">
+                                        <col style="width: 10%;">
+                                        <col style="width: 10%;">
+                                        <col style="width: 10%;">
+                                    </colgroup>
+                                    <thead>
+                                    <tr>
+                                        <th>티켓번호</th>
+                                        <th>고객사</th>
+                                        <th class="board-title">제목</th>
+                                        <th>분류</th>
+                                        <th>상태</th>
+                                        <th>범위</th>
+                                        <th>담당</th>
+                                        <th>MD</th>
+                                        <th>등록일</th>
+                                        <th>완료일</th>
+                                    </tr>
+                                    </thead>
+                                    <div th:fragment="ticketListFragment">
+                                        <tbody id ="ticketListContainer">
+                                            <tr th:if="${ticketList == null or #lists.isEmpty(ticketList)}">
+                                                <td colspan="10" style="text-align:center;">등록된 티켓이 없습니다.</td>
+                                            </tr>
+                                            <tr th:each="ticket : ${ticketList.dataList}">
+                                                <td><span th:text="${ticket['TICKET_ID']}"></span></td>
+                                                <td><span th:text="${ticket['COMPANY_NAME']}"></span></td>
+                                                <td><span th:text="${ticket['TITLE']}"></span></td>
+                                                <td><span th:text="${ticket['REQUEST_TYPE_CD']}"></span></td>
+                                                <td><span th:text="${ticket['STATUS_CD']}"></span></td>
+                                                <td><span th:text="${ticket['REQUEST_TYPE_CD']}"></span></td>
+                                                <td><span th:text="${ticket['USER_NAME']}"></span></td>
+                                                <td><span th:text="${ticket['MD']}"></span></td>
+                                                <td><span th:text="${ticket['CREATE_DT']}"></span></td>
+                                                <td><span th:text="${ticket['REAL_COMPLETE_DT']}"></span></td>
+                                            </tr>
+                                        </tbody>
+                                    </div>
+                                </table>
+
+
+                            </div>
+                        </div>
+                        <!-- //리스트 영역 -->
+                        <div class="board-footer">
+                            <!-- 페이징 버튼 템플릿 호출 -->
+                            <div th:replace="~{fragments/pagination :: pagination(ticketList=${ticketList}, paginationUrl='/ticketlist')}" />
+                         <!--   <div class="pagination">
+                                <ul>
+                                    &lt;!&ndash; 이전 페이지로 이동 버튼 &ndash;&gt;
+                                    <li>
+                                        <button type="button" class="btn paging-btn arrow-btn"
+                                                th:disabled="${currentPage == 1}">
+                                            <svg class="icon">
+                                                <use href="./assets/images/icon/sprite-sheet.svg#arrow-left"></use>
+                                            </svg>
+                                        </button>
+                                    </li>
+
+                                    &lt;!&ndash; 페이지 번호 버튼 &ndash;&gt;
+                                    <li th:each="page : ${pages}">
+                                        <button type="button" class="btn paging-btn"
+                                                th:classappend="${page == currentPage} ? 'active'"
+                                                >
+                                            <span th:text="${page}">1</span>
+                                        </button>
+                                    </li>
+                                    &lt;!&ndash; 다음 페이지로 이동 버튼 &ndash;&gt;
+                                    <li>
+                                        <button type="button" class="btn paging-btn arrow-btn"
+                                                th:disabled="${currentPage == totalPages}">
+                                            <svg class="icon">
+                                                <use href="./assets/images/icon/sprite-sheet.svg#arrow-right"></use>
+                                            </svg>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>-->
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- //내용 영역 -->
+    </div>
+    <!-- //컨텐츠 영역 -->
+</div>
+
+<script>
+    var SEARCH_TYPE 	= null; // 티켓번호(NUM),제목(TITLE),제목+내용(TITLEANDCONTENTS),담당자(USERNAME)
+    var SEARCH_KEYWORD 	= null;
+    var startDt = $("#filterStartDt").val();
+    startDt = (startDt === undefined || startDt === "") ? null : startDt;
+     var endDt = $("#filterEndDt").val();
+    endDt = (endDt === undefined || endDt === "") ? null : endDt;
+    var FILTER_PAGE 	= 1;
+
+
+   function searchTickets3() {
+        const page = 1;
+        const size = 5;
+        const pagingRequest = {
+            page: page,
+            size: size,
+            searchType: $("#searchType").val(),
+            searchStatus: $("#searchStatus").val(),
+            searchKeyword: $("#searchKeyword").val(),
+            startDt: startDt,
+            endDt: endDt,
+
+        };
+
+        // Ajax를 사용하여 서버로 검색 요청 전송
+        fetch('/ticketlist', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(pagingRequest)
+        })
+        .then(response => response.text())
+        .then(data => {
+            // 응답받은 HTML 조각을 페이지에 삽입하거나 처리
+            document.getElementById('ticketListContainer').innerHTML = data;
+        })
+        .catch(error => console.error('검색 중 오류 발생:', error));
+    }
+
+    function searchTickets2() {
+        var Data = {
+            searchType: $("#searchType").val(),
+            searchStatus: $("#searchStatus").val(),
+            searchKeyword: $("#searchKeyword").val(),
+            startDt: $("#filterStartDt").val(),
+            endDt: $("#filterEndDt").val(),
+            page: FILTER_PAGE
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/ticketlist',
+            contentType: 'application/json',  // JSON 형식으로 데이터를 보냄
+            data: JSON.stringify(Data),       // 데이터를 JSON 형식으로 변환하여 전송
+            success: function(response) {
+                if (response && response.trim() !== "") {
+                    document.getElementById('ticketListContainer').innerHTML = response;
+                } else {
+                    document.getElementById('ticketListContainer').innerHTML =
+                        '<tr><td colspan="10" style="text-align:center;">등록된 티켓이 없습니다.</td></tr>';
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                alert("티켓 목록을 가져오는 데 오류가 발생했습니다.");
+            }
+        });
+    }
+
+      function searchTickets() {
+        var page = 1;
+        var size = 5;
+        var searchType = $("#searchType").val();
+        var searchStatus = $("#searchStatus").val();
+        var searchKeyword = $("#searchKeyword").val();
+        var startDt = ($("#filterStartDt").val() === undefined || $("#filterStartDt").val() === "") ? '1999-01-01' : $("#filterStartDt").val();
+        var endDt = ($("#filterEndDt").val() === undefined || $("#filterEndDt").val() === "") ? '2030-01-01' : $("#filterEndDt").val();
+
+        // x-www-form-urlencoded 형식으로 데이터 생성
+        const data = new URLSearchParams({
+            page: page,
+            size: size,
+            searchType: searchType,
+            searchStatus: searchStatus,
+            searchKeyword: searchKeyword,
+            startDt: startDt,
+            endDt: endDt
+        });
+
+        // Ajax 요청
+        fetch('/ticketlist', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: data.toString() // URLSearchParams 객체를 문자열로 변환하여 전송
+        })
+        .then(response => response.text())
+        .then(data => {
+            // 응답받은 HTML을 페이지에 삽입
+            document.getElementById('ticketListContainer').innerHTML = data;
+        })
+        .catch(error => console.error('검색 중 오류 발생:', error));
+    }
+
+
+</script>
+</body>
+</html>
