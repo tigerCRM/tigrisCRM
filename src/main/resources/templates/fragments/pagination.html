@@ -3,14 +3,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
     <!-- 페이징 처리 -->
-    <!-- 페이징 처리 -->
     <div th:fragment="pagination" class="pagination">
         <ul>
             <!-- 이전 페이지로 이동 버튼 -->
             <li>
                 <a class="btn paging-btn arrow-btn"
                    th:if="${ticketList.currentPage > 1}"
-                   th:href="@{${paginationUrl}(page=${ticketList.currentPage - 1})}">
+                   th:href="@{|${paginationUrl}?page=${ticketList.currentPage - 1}|}">
                     <svg class="icon">
                         <use href="./assets/images/icon/sprite-sheet.svg#arrow-left"></use>
                     </svg>
@@ -19,16 +18,16 @@
             <!-- 페이지 번호 버튼 -->
             <li th:each="i : ${#numbers.sequence(1, ticketList.totalPages)}">
                 <a class="btn paging-btn"
-                   th:href="@{${paginationUrl}(page=${i})}">
+                   th:href="@{|${paginationUrl}?page=${i}|}" th:classappend="${ticketList.currentPage == i} ? 'active' : ''">
                     <span th:text="${i}"
-                          th:classappend="${ticketList.currentPage == i} ? 'active' : ''"></span>
+                          ></span>
                 </a>
             </li>
             <!-- 다음 페이지로 이동 버튼 -->
             <li>
                 <a class="btn paging-btn arrow-btn"
                    th:if="${ticketList.currentPage < ticketList.totalPages}"
-                   th:href="@{${paginationUrl}(page=${ticketList.currentPage + 1})}">
+                   th:href="@{|${paginationUrl}?page=${ticketList.currentPage + 1}|}">
                     <svg class="icon">
                         <use href="./assets/images/icon/sprite-sheet.svg#arrow-right"></use>
                     </svg>

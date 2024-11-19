@@ -11,8 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -31,8 +29,8 @@ public class TicketController {
     @GetMapping("/ticketlist")
     public String getTickets(@ModelAttribute PagingRequest pagingRequest, Model model) {
         try {
-            // 상태 옵션을 모델에 추가
-            model.addAttribute("statusOptions", commonService.getSelectOptions("status"));
+            // selectbox 바인딩
+            model.addAttribute("statusOptions", commonService.getSelectOptions("t_status"));
             model.addAttribute("searchOptions", commonService.getSelectOptions("t_search"));
             // 티켓 조회
             PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
@@ -49,7 +47,7 @@ public class TicketController {
     /*
      * 요청관리(티켓관리) 검색
      * 설명 : 요청관리 페이지 검색
-     * * 스크립트단에서 ajax로 호출하여 RequestBody로 data를 받아서 처리
+     * * 스크립트단에서 ajax로 호출하여 PagingRequest data를 받아서 처리
      * */
     @PostMapping("/ticketlist")
     public String searchTickets(@ModelAttribute PagingRequest pagingRequest, Model model) {

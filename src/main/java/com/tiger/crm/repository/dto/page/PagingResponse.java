@@ -20,6 +20,7 @@ public class PagingResponse<T> {
         this.currentPage = pagingRequest.getPage();
         this.totalPages = (int) Math.ceil((double) totalElements / pageSize);
         this.pages = PageUtils2.makePages(totalElements, pageSize, currentPage);
+
     }
     public boolean isEmpty() {
         return this.dataList == null || this.dataList.isEmpty();

@@ -158,37 +158,6 @@
                         <div class="board-footer">
                             <!-- 페이징 버튼 템플릿 호출 -->
                             <div th:replace="~{fragments/pagination :: pagination(ticketList=${ticketList}, paginationUrl='/ticketlist')}" />
-                         <!--   <div class="pagination">
-                                <ul>
-                                    &lt;!&ndash; 이전 페이지로 이동 버튼 &ndash;&gt;
-                                    <li>
-                                        <button type="button" class="btn paging-btn arrow-btn"
-                                                th:disabled="${currentPage == 1}">
-                                            <svg class="icon">
-                                                <use href="./assets/images/icon/sprite-sheet.svg#arrow-left"></use>
-                                            </svg>
-                                        </button>
-                                    </li>
-
-                                    &lt;!&ndash; 페이지 번호 버튼 &ndash;&gt;
-                                    <li th:each="page : ${pages}">
-                                        <button type="button" class="btn paging-btn"
-                                                th:classappend="${page == currentPage} ? 'active'"
-                                                >
-                                            <span th:text="${page}">1</span>
-                                        </button>
-                                    </li>
-                                    &lt;!&ndash; 다음 페이지로 이동 버튼 &ndash;&gt;
-                                    <li>
-                                        <button type="button" class="btn paging-btn arrow-btn"
-                                                th:disabled="${currentPage == totalPages}">
-                                            <svg class="icon">
-                                                <use href="./assets/images/icon/sprite-sheet.svg#arrow-right"></use>
-                                            </svg>
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>-->
                         </div>
 
                     </div>
