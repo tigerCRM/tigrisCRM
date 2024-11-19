@@ -1,14 +1,12 @@
 package com.tiger.crm.controller;
 
-import com.tiger.crm.common.util.PageUtils;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
-import com.tiger.crm.repository.dto.ticket.TicketDto;
+import com.tiger.crm.service.common.CommonService;
 import com.tiger.crm.service.ticket.TicketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -21,25 +19,21 @@ import java.util.Map;
 public class TicketController {
     @Autowired
     private TicketService ticketService;
+    @Autowired
+    private CommonService commonService;
 
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-   /* @Value("${status.options}")
-    private String[] statusOptions;*/
     /*
      * 요청관리(티켓관리)
      * 설명 : 요청관리 페이지 초기화면
      * */
     @GetMapping("/ticketlist")
-    public String getTickets(@ModelAttribute TicketDto ticketDto, @ModelAttribute PagingRequest pagingRequest, Model model) {
+    public String getTickets(@ModelAttribute PagingRequest pagingRequest, Model model) {
         try {
-            // 입력 값 검증 및 기본값 설정
-            String searchKeyword = ticketDto.getSearchKeyword() != null ? ticketDto.getSearchKeyword() : "";
-            String searchType = ticketDto.getSearchType() != null ? ticketDto.getSearchType() : "";
-            Integer page = ticketDto.getPage() != null ? ticketDto.getPage() : 1;
-            String startDt = ticketDto.getStartDt();
-            String endDt = ticketDto.getEndDt();
-
+            // 상태 옵션을 모델에 추가
+            model.addAttribute("statusOptions", commonService.getSelectOptions("status"));
+            model.addAttribute("searchOptions", commonService.getSelectOptions("t_search"));
             // 티켓 조회
             PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
             model.addAttribute("ticketList", pageResponse);
