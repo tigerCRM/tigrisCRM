@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tiger.crm.repository.mapper.SystemBoardMapper">
+    <select id="getSystemBoardList"  resultType="java.util.HashMap">
+        SELECT
+            B.BOARD_ID,
+            B.CATEGORY_CD,
+            OC.COMPANY_NAME,
+            B.TITLE,
+            B.CREATE_ID,
+            U.USER_NAME,
+            B.CREATE_DT
+        FROM T_BOARD B
+        LEFT JOIN T_BOARD_OPEN_COMPANY OC
+            ON B.BOARD_ID = OC.BOARD_ID
+        LEFT JOIN T_USER_INFO U
+        ON B.CREATE_ID = U.USER_ID
+        WHERE CATEGORY_CD = 'SYSTEM'
+            AND DELETE_YN = 'N'
+
+    </select>
+    <select id="getSystemBoardListCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM T_BOARD
+        WHERE CATEGORY_CD = 'SYSTEM'
+        AND DELETE_YN = 'N'
+    </select>
+</mapper>

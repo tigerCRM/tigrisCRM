@@ -68,7 +68,7 @@
                                     </div>
                                     <div class="pageinfo">
                                         <div class="pagetotal">
-                                            <span class="text-body4">전체 <strong class="color-navy500"  th:text="${ticketList.totalcnt}"></strong>건</span>
+                                            <span class="text-body4">전체 <strong class="color-navy500"  th:text="${systemBoardList.totalcnt}"></strong>건</span>
                                         </div>
                                         <div class="pageview flex">
                                             <button class="btn btn--xs icon-btn mono-ghost-btn" th:classappend="${viewType == 'full' ? ' active' : ''}" data-viewtype="full">
@@ -89,47 +89,32 @@
                             <div class="board-list board--m list-wrap ">
                                 <table class="table table01 table-ellipsis">
                                     <colgroup>
-                                        <col style="width: 5%;">
-                                        <col style="width: 10%;">
+                                        <col style="width: 15%;">
+                                        <col style="width: 15%;">
+                                        <col style="width: 30%;">
                                         <col style="width: 20%;">
-                                        <col style="width: 10%;">
-                                        <col style="width: 10%;">
-                                        <col style="width: 10%;">
-                                        <col style="width: 10%;">
-                                        <col style="width: 10%;">
-                                        <col style="width: 10%;">
-                                        <col style="width: 10%;">
+                                        <col style="width: 20%;">
                                     </colgroup>
                                     <thead>
                                     <tr>
-                                        <th>티켓번호</th>
+                                        <th>글번호</th>
                                         <th>고객사</th>
                                         <th class="board-title">제목</th>
-                                        <th>분류</th>
-                                        <th>상태</th>
-                                        <th>범위</th>
-                                        <th>담당</th>
-                                        <th>MD</th>
-                                        <th>등록일</th>
-                                        <th>완료일</th>
+                                        <th>작성자</th>
+                                        <th>등록일시</th>
                                     </tr>
                                     </thead>
-                                    <div th:fragment="ticketListFragment">
-                                        <tbody id ="ticketListContainer">
-                                            <tr th:if="${ticketList == null or #lists.isEmpty(ticketList)}">
-                                                <td colspan="10" style="text-align:center;">등록된 티켓이 없습니다.</td>
+                                    <div th:fragment="systemBoardListFragment">
+                                        <tbody id ="systemBoardListContainer">
+                                            <tr th:if="${systemBoardList == null or #lists.isEmpty(systemBoardList)}">
+                                                <td colspan="10" style="text-align:center;">등록된 시스템 정보가 없습니다.</td>
                                             </tr>
-                                            <tr th:each="ticket : ${ticketList.dataList}">
-                                                <td><span th:text="${ticket['TICKET_ID']}"></span></td>
-                                                <td><span th:text="${ticket['COMPANY_NAME']}"></span></td>
-                                                <td><span th:text="${ticket['TITLE']}"></span></td>
-                                                <td><span th:text="${ticket['REQUEST_TYPE_CD']}"></span></td>
-                                                <td><span th:text="${ticket['STATUS_CD']}"></span></td>
-                                                <td><span th:text="${ticket['REQUEST_TYPE_CD']}"></span></td>
-                                                <td><span th:text="${ticket['USER_NAME']}"></span></td>
-                                                <td><span th:text="${ticket['MD']}"></span></td>
-                                                <td><span th:text="${ticket['CREATE_DT']}"></span></td>
-                                                <td><span th:text="${ticket['REAL_COMPLETE_DT']}"></span></td>
+                                            <tr th:each="systemBoard : ${systemBoardList.dataList}">
+                                                <td><span th:text="${systemBoard['BOARD_ID']}"></span></td>
+                                                <td><span th:text="${systemBoard['COMPANY_NAME']}"></span></td>
+                                                <td><span th:text="${systemBoard['TITLE']}"></span></td>
+                                                <td><span th:text="${systemBoard['USER_NAME']}"></span></td>
+                                                <td><span th:text="${systemBoard['CREATE_DT']}"></span></td>
                                             </tr>
                                         </tbody>
                                     </div>
@@ -141,7 +126,8 @@
                         <!-- //리스트 영역 -->
                         <div class="board-footer">
                             <!-- 페이징 버튼 템플릿 호출 -->
-                            <div th:replace="~{fragments/pagination :: pagination(ticketList=${ticketList}, paginationUrl='/ticketlist')}" />
+                            <!--<div th:replace="~{fragments/pagination :: pagination(ticketList=${ticketList}, paginationUrl='/ticketlist')}" />-->
+
                          <!--   <div class="pagination">
                                 <ul>
                                     &lt;!&ndash; 이전 페이지로 이동 버튼 &ndash;&gt;
@@ -185,12 +171,8 @@
 </div>
 
 <script>
-    var SEARCH_TYPE 	= null; // 티켓번호(NUM),제목(TITLE),제목+내용(TITLEANDCONTENTS),담당자(USERNAME)
+    var SEARCH_TYPE 	= null; // 제목(TITLE),제목+내용(TITLEANDCONTENTS),작성자(USERNAME)
     var SEARCH_KEYWORD 	= null;
-    var startDt = $("#filterStartDt").val();
-    startDt = (startDt === undefined || startDt === "") ? null : startDt;
-     var endDt = $("#filterEndDt").val();
-    endDt = (endDt === undefined || endDt === "") ? null : endDt;
     var FILTER_PAGE 	= 1;
 
 

@@ -5,10 +5,12 @@ import java.util.Date;
 @Data
 public class SystemBoardDto {
     private int boardId;
-    private String categoryId;
+    private String categoryCd;
+    private String companyName;
     private String title;
     private String content;
     private String createId;
+    private String userName;
     private Date createDt;
     private String updateId;
     private Date updateDt;

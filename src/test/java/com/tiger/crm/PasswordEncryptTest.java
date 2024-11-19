@@ -1,6 +1,5 @@
 package com.tiger.crm;
 
-import com.tiger.crm.common.crypto.SHA512Utils;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.repository.mapper.LoginMapper;
 import jakarta.transaction.Transactional;
