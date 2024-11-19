@@ -13,6 +13,7 @@ public class PagingRequest {
     private String startDt;
     private String endDt;
     private String searchStatus;            //티켓상태
+    private int totalcnt;
 
     public PagingRequest() {
         this.page = 1;  // 기본값 설정
@@ -22,4 +23,5 @@ public class PagingRequest {
     public int getOffset() {
         return (page - 1) * size;
     }
+
 }

@@ -101,10 +101,7 @@
             </if>
         </where>
 
-        <!-- 페이지 처리 (페이징 처리) -->
-        <if test="page != null">
-            LIMIT #{offset}, #{size}<!-- 10개씩 보여주는 예시 (limit offset, rows) -->
-        </if>
+
     </select>
 <!--
     <select id="getTicketList2" resultType="java.util.HashMap">
