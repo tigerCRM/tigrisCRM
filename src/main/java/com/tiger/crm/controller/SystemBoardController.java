@@ -4,7 +4,9 @@ import com.tiger.crm.common.context.ConfigProperties;
 import com.tiger.crm.repository.dto.board.SystemBoardDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
+import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.service.board.SystemBoardService;
+import com.tiger.crm.service.common.CommonService;
 import com.tiger.crm.service.ticket.TicketService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -30,29 +32,32 @@ public class SystemBoardController {
     * */
     @Autowired
     private ConfigProperties config;
-
+    @Autowired
+    private CommonService commonService;
     @Autowired
     private SystemBoardService systemBoardService;
 
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
     
     /*
-    * 시스템 정보 페이지
+    * GET 시스템 정보 리스트 페이지
     * */
     @RequestMapping(value = {"systemBoardList"}, method = RequestMethod.GET)
     public String getSystemBoardListPage(SystemBoardDto systemBoardDto, PagingRequest pagingRequest, HttpServletRequest request, HttpServletResponse response, Model model)
     {
-        HttpSession session = request.getSession(false);
+        model.addAttribute("searchOptions", commonService.getSelectOptions("t_search"));
         PagingResponse<Map<String, Object>> pageResponse = systemBoardService.getSystemBoardList(pagingRequest);
         model.addAttribute("systemBoardList", pageResponse);
         return "systemBoardList";
     }
-
-    @RequestMapping(value = {"systemBoard"}, method = RequestMethod.POST)
-    public String getSystemBoardPage(SystemBoardDto systemBoardDto, HttpServletRequest request, HttpServletResponse response, Model model)
+    
+    /*
+     * GET 시스템 정보 입력창 페이지
+     * */
+    @RequestMapping(value = {"systemBoard"}, method = RequestMethod.GET)
+    public String getSystemBoardPage(@ModelAttribute("system") SystemBoardDto systemBoardDto, HttpServletRequest request, HttpServletResponse response, Model model)
     {
-        HttpSession session = request.getSession(false);
-
-        return null;
+        model.addAttribute("systemBoardList", null);
+        return "systemBoard";
     }
 }

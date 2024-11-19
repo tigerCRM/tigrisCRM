@@ -7,6 +7,7 @@
         SELECT
             B.BOARD_ID,
             B.CATEGORY_CD,
+            OC.COMPANY_ID,
             OC.COMPANY_NAME,
             B.TITLE,
             B.CREATE_ID,

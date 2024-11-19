@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width" />
+    <title>메인</title>
+    <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/layout.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/intro.css" />
+    <script src="/lib/jquery/jquery-2.2.2.min.js"></script>
+    <script src="./Style/js/script2.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+</head>
+<body>
+<div class="wrapper">
+    <!-- 왼쪽 메뉴  -->
+    <div th:replace="~{common/frame_left_menu :: frame_left_menu}" />
+
+    <!-- 상단 메뉴  -->
+    <div th:replace="~{common/frame_top_menu :: frame_top_menu}" />
+
+    <!-- 컨텐츠 영역 -->
+    <div class="main-area">
+        <!-- 내용 영역 -->
+        <main class="main-content">
+            <div class="container">
+                <div class="main-widget-wrap">
+                    <div class="content">
+                        <!-- 헤더 영역 -->
+                        <div class="search--box">
+                            <div class="content-header">
+                                <h2 class="text-body1">
+                                    <div class="flex flex-align_center gap--8">
+                                        <b>시스템 정보 작성</b>
+                                    </div>
+                                </h2>
+                            </div>
+                        </div>
+                        <!-- //헤더 영역 -->
+                        <!-- form 영역 -->
+                        <div>
+                            <form action="/systemBoard" method="post" th:object="${system}">
+                                <!--제목-->
+                                <div class="input-wrap">
+                                    <label for="title" class="label01">제목</label>
+                                    <input type="text" id="title" class="input--l input--full input01" placeholder="제목을 입력해 주세요">
+                                </div>
+                                <!--//제목-->
+                                <!--회사-->
+                                <div class="input-wrap">
+                                    <label for="companyName" class="label01">회사</label>
+                                    <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
+                                        <select class="dropdown__selected" id="companyName" name="companyName" >
+                                            <option value="">==검색조건==</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <!--//회사-->
+                                <!--시스템내용-->
+                                <div class="input-wrap">
+                                    <label for="content" class="label01">내용</label>
+                                    <textarea id="content" rows="5" placeholder="시스템 내용을 입력하세요"></textarea>
+                                </div>
+                                <!--//시스템내용-->
+                                <!--첨부파일-->
+                                <div class="input-wrap">
+                                    <label for="file-upload" class="label01">첨부파일</label>
+                                    <input type="file" id="file-upload">
+                                </div>
+                                <!--//첨부파일-->
+                                <!--버튼그룹-->
+                                <div class="button-group">
+                                    <button type="submit" class="btn-submit">글등록</button>
+                                    <button type="button" class="btn-list">목록으로</button>
+                                </div>
+                                <!--//버튼그룹-->
+                            </form>
+                        </div>
+                        <!-- //form 영역 -->
+
+
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- //내용 영역 -->
+    </div>
+    <!-- //컨텐츠 영역 -->
+</div>
+
+<script>
+
+</script>
+</body>
+</html>

@@ -6,6 +6,7 @@ import java.util.Date;
 public class SystemBoardDto {
     private int boardId;
     private String categoryCd;
+    private String companyId;
     private String companyName;
     private String title;
     private String content;
