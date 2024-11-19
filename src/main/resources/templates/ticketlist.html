@@ -45,10 +45,9 @@
                                         <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
                                             <select class="dropdown__selected" id="searchStatus" name="searchStatus" th:value="${searchStatus}" >
                                                 <option value="">==상태==</option>
-                                                <option value="OPEN">등록</option>
-                                                <option value="RECEIPT">접수</option>
-                                                <option value="PROGRESS">진행</option>
-                                                <option value="CLOSED">완료</option>
+                                                <option th:each="op : ${statusOptions}"
+                                                        th:value="${op.key}"
+                                                        th:text="${op.value}"></option>
                                             </select>
                                         </div>
                                     </div>
@@ -56,10 +55,9 @@
                                         <div class="dropdown dropdown--s wd160" aria-expanded="false" tabindex="0">
                                             <select class="dropdown__selected" id="searchType" name="searchType" th:value="${searchType}" >
                                                 <option value="">==검색조건==</option>
-                                                <option value="NUM">티켓번호</option>
-                                                <option value="TITLE">제목</option>
-                                                <option value="TITLEANDCONTENTS">제목+내용</option>
-                                                <option value="USERNAME">담당자</option>
+                                                <option th:each="op : ${searchOptions}"
+                                                        th:value="${op.key}"
+                                                        th:text="${op.value}"></option>
                                             </select>
                                         </div>
                                     </div>
