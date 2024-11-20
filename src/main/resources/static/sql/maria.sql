@@ -127,14 +127,20 @@ CREATE TABLE T_BOARD_OPEN_COMPANY (
     PRIMARY KEY (BOARD_ID, COMPANY_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---2024.11.19 제예솔 / 게시판 및 게시판 연관회사 테이블 data insert
+--2024.11.19 제예솔 / 게시판,게시판 연관회사,회사 테이블 data insert
 INSERT INTO t_board_open_company (BOARD_ID,COMPANY_ID,COMPANY_NAME) VALUES (1,1,'타이거컴퍼니');
-INSERT INTO t_company_info
-(COMPANY_ID, COMPANY_NAME, MANAGER_ID, UPDATE_DT, UPDATE_ID, NOTES, USE_YN)
-VALUES(1, '타이거컴퍼니', 'testAdmin01@test.com', NULL, NULL, NULL, 'Y');
-INSERT INTO t_company_info
-(COMPANY_ID, COMPANY_NAME, MANAGER_ID, UPDATE_DT, UPDATE_ID, NOTES, USE_YN)
-VALUES(2, 'HPI', 'testAdmin01@test.com', NULL, NULL, NULL, 'Y');
-INSERT INTO t_company_info
-(COMPANY_ID, COMPANY_NAME, MANAGER_ID, UPDATE_DT, UPDATE_ID, NOTES, USE_YN)
-VALUES(3, '네패스', 'testAdmin01@test.com', NULL, NULL, NULL, 'Y');
+INSERT INTO t_company_info (COMPANY_ID, COMPANY_NAME, MANAGER_ID, UPDATE_DT, UPDATE_ID, NOTES, USE_YN) VALUES(1, '타이거컴퍼니', 'testAdmin01@test.com', NULL, NULL, NULL, 'Y');
+INSERT INTO t_company_info (COMPANY_ID, COMPANY_NAME, MANAGER_ID, UPDATE_DT, UPDATE_ID, NOTES, USE_YN) VALUES(2, 'HPI', 'testAdmin01@test.com', NULL, NULL, NULL, 'Y');
+INSERT INTO t_company_info (COMPANY_ID, COMPANY_NAME, MANAGER_ID, UPDATE_DT, UPDATE_ID, NOTES, USE_YN) VALUES(3, '네패스', 'testAdmin01@test.com', NULL, NULL, NULL, 'Y');
+
+--2024.11.20 제예솔 / 회사 테이블 create
+CREATE TABLE `t_company_info` (
+  `COMPANY_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `COMPANY_NAME` varchar(50) NOT NULL,
+  `MANAGER_ID` varchar(50) NOT NULL,
+  `UPDATE_DT` datetime DEFAULT NULL,
+  `UPDATE_ID` varchar(50) DEFAULT NULL,
+  `NOTES` varchar(200) DEFAULT NULL,
+  `USE_YN` char(1) NOT NULL,
+  PRIMARY KEY (`COMPANY_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

@@ -28,4 +28,24 @@
         WHERE CATEGORY_CD = 'SYSTEM'
         AND DELETE_YN = 'N'
     </select>
+
+    <insert id="insertSystemBoard" parameterType="com.tiger.crm.repository.dto.board.SystemBoardDto" useGeneratedKeys="true" keyProperty="boardId">
+        INSERT INTO T_BOARD (
+            CATEGORY_CD,
+            TITLE,
+            CONTENT,
+            CREATE_ID,
+            CREATE_DT,
+            DELETE_YN,
+            FILE_ID
+        ) VALUES (
+            'SYSTEM',
+            #{title},
+            #{content},
+            #{createId},
+            NOW(),
+            'N',
+            NULL
+        )
+    </insert>
 </mapper>

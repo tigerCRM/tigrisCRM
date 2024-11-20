@@ -1,22 +1,23 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" >
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" style="height: auto;">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width" />
-    <title>메인</title>
+    <title>시스템 정보</title>
     <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/layout.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/intro.css" />
     <script src="/lib/jquery/jquery-2.2.2.min.js"></script>
-    <script src="./Style/js/script2.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <!--toast ui 설정-->
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 </head>
-<body>
+<body style="height: auto;">
 <div class="wrapper">
     <!-- 왼쪽 메뉴  -->
     <div th:replace="~{common/frame_left_menu :: frame_left_menu}" />
@@ -43,44 +44,107 @@
                         </div>
                         <!-- //헤더 영역 -->
                         <!-- form 영역 -->
-                        <div>
-                            <form action="/systemBoard" method="post" th:object="${system}">
-                                <!--제목-->
-                                <div class="input-wrap">
-                                    <label for="title" class="label01">제목</label>
-                                    <input type="text" id="title" class="input--l input--full input01" placeholder="제목을 입력해 주세요">
-                                </div>
-                                <!--//제목-->
-                                <!--회사-->
-                                <div class="input-wrap">
-                                    <label for="companyName" class="label01">회사</label>
-                                    <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
-                                        <select class="dropdown__selected" id="companyName" name="companyName" >
-                                            <option value="">==검색조건==</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <!--//회사-->
-                                <!--시스템내용-->
-                                <div class="input-wrap">
-                                    <label for="content" class="label01">내용</label>
-                                    <textarea id="content" rows="5" placeholder="시스템 내용을 입력하세요"></textarea>
-                                </div>
-                                <!--//시스템내용-->
-                                <!--첨부파일-->
-                                <div class="input-wrap">
-                                    <label for="file-upload" class="label01">첨부파일</label>
-                                    <input type="file" id="file-upload">
-                                </div>
-                                <!--//첨부파일-->
+                        <form id= "systemBoard" action="/systemBoard"  method="post" th:object="${systemBoard}">
+                            <div>
+                                <!--사용자 입력 영역-->
+                                <table class="table table03 table--h table--xs">
+                                    <colgroup>
+                                        <col style="width: 18%;">
+                                        <col style="width: auto;">
+                                        <col style="width: 18%;">
+                                        <col style="width: auto;">
+                                    </colgroup>
+                                    <tbody>
+                                    <tr>
+                                        <th>작성자</th>
+                                        <td th:text="${user.userName}"></td>
+                                        <th>작성일자</th>
+                                        <td>0000-00-00</td>
+                                    </tr>
+                                    <tr>
+                                        <th>제목</th>
+                                        <td colspan="3">
+                                            <input type="text" id="title" name="title" class="input--xs input01 input--full" th:field="*{title}">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>회사</th>
+                                        <td colspan="3">
+                                            <div class="dropdown dropdown--xs" aria-expanded="false" tabindex="0">
+                                                <select class="dropdown__selected" name="selectedCompany">
+                                                    <option value="" disabled selected>==회사 선택==</option>
+                                                    <option th:each="option : ${companyOptions}"
+                                                            th:value="${option.companyId}"
+                                                            th:text="${option.companyName}">
+                                                    </option>
+                                                </select>
+                                                <input type="hidden" name="companyName" id="companyName">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                            <div class="editor-wrap">
+                                                <div id="editorContent"></div>
+                                                <input type="hidden" name="content" id="content" th:field="*{content}">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>첨부파일</th>
+                                        <td colspan="3">
+                                            <div class="attachment-wrapper">
+                                                <div class="flex gap--4">
+                                                    <button type="file" class="btn btn--xs mono-outline-btn">추가</button>
+                                                    <button type="button" class="btn btn--xs mono-outline-btn">삭제</button>
+                                                </div>
+                                                <div class="attachment-file">
+                                                    <!-- <p class="absolute-center empty-text"><svg class="icon"><use href="./Style/images/icon/sprite-sheet.svg#attachment"/></svg> 첨부할 파일을 끌어다 놓아주세요.</p> -->
+                                                    <ul class="list01">
+                                                        <li class="list__item">
+                                                            <div class="item__title">
+                                                                <svg class="icon icon--20 color-gray700"><use href="./Style/images/icon/sprite-sheet.svg#attachment"></use></svg>
+                                                                <span>파일명1.pdf</span>
+                                                                <button type="button" class="icon icon--20 just-icon"><svg class="icon"><use href="./Style/images/icon/sprite-sheet.svg#close"></use></svg></button>
+                                                            </div>
+                                                        </li>
+                                                        <li class="list__item">
+                                                            <div class="item__title">
+                                                                <svg class="icon icon--20 color-gray700"><use href="./Style/images/icon/sprite-sheet.svg#attachment"></use></svg>
+                                                                <span>파일명2.pdf</span>
+                                                                <button type="button" class="icon icon--20 just-icon"><svg class="icon"><use href="./Style/images/icon/sprite-sheet.svg#close"></use></svg></button>
+                                                            </div>
+                                                        </li>
+                                                        <li class="list__item">
+                                                            <div class="item__title">
+                                                                <svg class="icon icon--20 color-gray700"><use href="./Style/images/icon/sprite-sheet.svg#attachment"></use></svg>
+                                                                <span>파일명3.pdf</span>
+                                                                <button type="button" class="icon icon--20 just-icon"><svg class="icon"><use href="./Style/images/icon/sprite-sheet.svg#close"></use></svg></button>
+                                                            </div>
+                                                        </li>
+                                                        <li class="list__item">
+                                                            <div class="item__title">
+                                                                <svg class="icon icon--20 color-gray700"><use href="./Style/images/icon/sprite-sheet.svg#attachment"></use></svg>
+                                                                <span>파일명4.pdf</span>
+                                                                <button type="button" class="icon icon--20 just-icon"><svg class="icon"><use href="./Style/images/icon/sprite-sheet.svg#close"></use></svg></button>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <!--//사용자 입력 영역-->
                                 <!--버튼그룹-->
-                                <div class="button-group">
-                                    <button type="submit" class="btn-submit">글등록</button>
-                                    <button type="button" class="btn-list">목록으로</button>
+                                <div class="button-group align-right">
+                                    <button type="submit" class="btn btn--m  primary-btn">글등록</button>
+                                    <button type="button" class="btn btn--m  secondary-btn" onclick="location.href='/systemBoardList';">목록으로</button>
                                 </div>
                                 <!--//버튼그룹-->
-                            </form>
-                        </div>
+                            </div>
+                        </form>
                         <!-- //form 영역 -->
 
 
@@ -94,7 +158,26 @@
 </div>
 
 <script>
+    //1. editor load 및 초기화
+    const editor = new toastui.Editor({
+        el: document.querySelector('#editorContent'), // 에디터를 적용할 요소 (컨테이너)
+        height: 'auto',                        // 에디터 영역의 높이 값 (OOOpx || auto)
+        initialEditType: 'wysiwyg',            // 최초로 보여줄 에디터 타입 (markdown || wysiwyg)
+        initialValue: '내용을 입력해 주세요.',     // 내용의 초기 값으로, 반드시 마크다운 문자열 형태여야 함
+        previewStyle: 'vertical',                // 마크다운 프리뷰 스타일 (tab || vertical)
+        hideModeSwitch: true
+    });
 
+    //2. form submit 시 toast editor 영역 안의 값을 content 안에 넣음
+    document.querySelector('#systemBoard').addEventListener('submit', function (e) {
+            const content = editor.getHTML(); // 에디터 안의 html 콘텐츠를 가져옴
+            document.querySelector('#content').value = content; // hidden input 안에 입력한 데이터를 넣고 전송
+
+            const selectElement = document.querySelector('.dropdown__selected');
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            const companyNameInput = document.querySelector('#companyName');
+            companyNameInput.value = selectedOption.textContent.trim();
+    });
 </script>
 </body>
 </html>

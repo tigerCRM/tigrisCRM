@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tiger.crm.repository.mapper.CompanyOptionMapper">
+    <!--전체 회사 불러오기-->
+    <select id="getAllCompany" resultType="com.tiger.crm.repository.dto.company.CompanyOptionDto">
+        SELECT COMPANY_ID,
+        COMPANY_NAME
+        FROM T_COMPANY_INFO
+        WHERE USE_YN = 'Y'
+    </select>
+</mapper>

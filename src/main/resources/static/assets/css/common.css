@@ -368,6 +368,14 @@ div::-webkit-scrollbar-button:end:increment {
     transition: .2s ease;
     white-space: nowrap;
 }
+/*예솔 : 제출 버튼 정렬을 위해 추가*/
+.align-right{
+    display: flex; /* 버튼들을 수평 정렬 */
+    justify-content: flex-end; /* 버튼들을 우측으로 정렬 */
+    align-items: center; /* 버튼들의 세로 방향 중앙 정렬 */
+    margin-top: 1.0rem;
+    gap: 8px;
+}
 
 .btn:focus-visible {
     outline: none;
