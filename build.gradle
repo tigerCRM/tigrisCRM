@@ -65,7 +65,11 @@ dependencies {
     
     //비밀번호 암호화
     implementation 'org.springframework.security:spring-security-crypto:6.3.3'
-    
+
+    //엑셀
+    implementation 'org.apache.poi:poi-ooxml:5.2.2'
+    implementation 'org.apache.poi:poi:5.2.2'
+
     //test 코드 오류 방지용
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
