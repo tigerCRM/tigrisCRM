@@ -4,6 +4,7 @@ import com.tiger.crm.common.context.ConfigProperties;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.dto.ticket.TicketDto;
+import com.tiger.crm.repository.mail.MailService;
 import com.tiger.crm.service.ticket.TicketService;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 
@@ -15,9 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -29,7 +28,8 @@ public class MainController
 	private ConfigProperties config;
 	@Autowired
 	private TicketService ticketService;
-
+	@Autowired
+	private MailService mailService;
 	private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	/*
@@ -72,17 +72,44 @@ public class MainController
 	}
 
 	/*
-	 * 메일발송내역 페이지
+	 * 1. 메일발송내역 페이지(초기 접속 시)
 	 */
-	@RequestMapping(value = { "mailHistory"}, method = RequestMethod.GET)
+	@GetMapping(value = { "mailHistory"})
 	public String mailHistory( HttpServletRequest request, HttpServletResponse response, @ModelAttribute PagingRequest pagingRequest, HttpSession session, Model model)	{
+		try {
+			// 메일 발송 내역 조회
+			PagingResponse<Map<String, Object>> pageResponse = mailService.getMailHistList(pagingRequest);
+			model.addAttribute("mailHistList", pageResponse);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 
-		//세션 로그인 정보 가져옴
-		UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
-		
-		// 메일 발송 내역 조회
-		// PagingResponse<Map<String, Object>> pageResponse = dddd.getMailHist(pagingRequest);
-		// model.addAttribute("ticketList", pageResponse);
+		return "mailHistory";
+	}
+
+	/*
+	 * 2. 메일발송내역 페이지(검색 시)
+	 */
+	@PostMapping(value = { "mailHistory"})
+	public String searchMailHistory( HttpServletRequest request, HttpServletResponse response, @ModelAttribute PagingRequest pagingRequest, HttpSession session, Model model)	{
+
+		try {
+			// 메일 발송 내역 조회
+			PagingResponse<Map<String, Object>> pageResponse = mailService.getMailHistList(pagingRequest);
+			model.addAttribute("mailHistList", pageResponse);
+
+			// 부분 뷰 렌더링 (리스트 부분만 갱신)
+			return "mailHistory :: mailHistListFragment";
+
+		} catch (IllegalArgumentException e) {
+			// 입력 값에 대한 오류 처리 (예: 유효하지 않은 파라미터)
+			model.addAttribute("error", "잘못된 입력 값이 있습니다. 다시 확인해 주세요.");
+			e.printStackTrace();
+		} catch (Exception e) {
+			// 데이터 조회 중 발생한 일반적인 오류 처리
+			model.addAttribute("error", "데이터를 불러오는 중 오류가 발생했습니다. 다시 시도해주세요.");
+			e.printStackTrace();
+		}
 
 		return "mailHistory";
 	}

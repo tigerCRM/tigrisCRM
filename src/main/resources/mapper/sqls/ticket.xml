@@ -101,14 +101,6 @@
             </if>
         </where>
 
-
     </select>
-<!--
-    <select id="getTicketList2" resultType="java.util.HashMap">
-        select * from T_TICKET_INFO LIMIT #{offset}, #{size}
-    </select>
-    <select id="getTicketListCount2" resultType="int">
-        select COUNT(*) from T_TICKET_INFO
-    </select>-->
 
 </mapper>

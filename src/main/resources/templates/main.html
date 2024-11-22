@@ -35,7 +35,7 @@
                                 </ul>
                             </div>
                             <!-- 페이징 버튼 템플릿 호출 -->
-                            <div th:replace="~{fragments/pagination :: pagination(ticketList=${ticketList}, paginationUrl='/main')}" />
+                            <div th:replace="~{fragments/pagination :: pagination(${ticketList}, '/main')}" />
                         </section>
                     </div>
                     <div class="flex1">

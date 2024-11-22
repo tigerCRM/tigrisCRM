@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" >
 
-<!-- <head>공통 /meta/import/script 호출   -->
+<!-- <head> 공통   -->
 <head th:replace="~{common/frame_head :: head}"></head>
 
 <body>
@@ -31,7 +31,7 @@
                                 <div class="searchbar">
                                     <div>
                                         <div class="dropdown dropdown--s wd100" aria-expanded="false" tabindex="0">
-                                            <select class="dropdown__selected" id="searchStatus" name="searchStatus" th:value="${searchStatus}" >
+                                            <select class="dropdown__selected" id="searchStatus" name="searchStatus" th:value="${searchStatus}" disabled readonly>
                                                 <option value="">상태</option>
                                                 <option value="NUM">등록</option>
                                                 <option value="TITLE">요청</option>
@@ -44,23 +44,30 @@
                                         <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
                                             <select class="dropdown__selected" id="searchType" name="searchType" th:value="${searchType}" >
                                                 <option value="">검색조건</option>
-                                                <option value="NUM">티켓번호</option>
                                                 <option value="TITLE">제목</option>
                                                 <option value="TITLEANDCONTENTS">제목+내용</option>
-                                                <option value="USERNAME">담당자</option>
+                                                <option value="RECEIVER_ADDR">수신자</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="search-wrap">
-                                            <input type="text" id="searchKeyword" name="searchKeyword" class="input--s input01" placeholder="검색어를 입력해주세요." th:value="${searchKeyword}" onkeydown="if (event.keyCode === 13) searchTickets();"  >
-                                            <button class="icon-btn search__btn" onclick="searchTickets();">
+                                            <input type="text" id="searchKeyword" name="searchKeyword" class="input--s input01" placeholder="검색어를 입력해주세요." th:value="${searchKeyword}" onkeydown="if (event.keyCode === 13) searchMailHist();"  >
+                                            <button class="icon-btn search__btn" onclick="searchMailHist();">
                                                 <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#search}" /></svg>
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                                <!-- //검색영역 -->
+                            </div>
+
+                            <!-- 전체 건수 -->
+                            <div class="flex flex-justify_between flex-align_center ">
+                                <div class="pageinfo">
+                                    <div class="pagetotal">
+                                        <span class="text-body4">전체 <strong class="color-navy500"  th:text="${mailHistList.totalcnt}"></strong>건</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -69,51 +76,40 @@
                             <div class="board-list board--m list-wrap ">
                                 <table class="table table01 table-ellipsis">
                                     <colgroup>
-                                        <col style="width: 5%;">
-                                        <col style="width: 10%;">
+                                        <col style="width: 3%;">
+                                        <col style="width: 8%;">
                                         <col style="width: 20%;">
-                                        <col style="width: 10%;">
-                                        <col style="width: 10%;">
-                                        <col style="width: 10%;">
-                                        <col style="width: 10%;">
-                                        <col style="width: 10%;">
-                                        <col style="width: 10%;">
-                                        <col style="width: 10%;">
+                                        <col style="width: 13%;">
+                                        <col style="width: 13%;">
+                                        <col style="width: 12%;">
+                                        <col style="width: 3%;">
                                     </colgroup>
                                     <thead>
                                     <tr>
-                                        <th>티켓번호</th>
-                                        <th>고객사</th>
-                                        <th class="board-title">제목</th>
+                                        <th>번호</th>
                                         <th>분류</th>
-                                        <th>상태</th>
-                                        <th>범위</th>
-                                        <th>담당</th>
-                                        <th>MD</th>
-                                        <th>등록일</th>
-                                        <th>완료일</th>
+                                        <th class="board-title">제목</th>
+                                        <th>발신자</th>
+                                        <th>수신자</th>
+                                        <th>발송일</th>
+                                        <th>여부</th>
                                     </tr>
                                     </thead>
-                                    <div th:fragment="ticketListFragment">
-                                        <!--
-                                        <tbody id ="ticketListContainer">
-                                            <tr th:if="${ticketList == null || ticketList.isEmpty()}">
-                                                <td colspan="4" style="text-align:center;">등록된 티켓이 없습니다.</td>
+                                    <div th:fragment="mailHistListFragment">
+                                        <tbody id ="mailHistListContainer">
+                                            <tr th:if="${mailHistList == null or #lists.isEmpty(mailHistList)}">
+                                                <td colspan="7" style="text-align:center;">내역이 없습니다</td>
                                             </tr>
-                                            <tr th:each="item : ${ticketList}" >
-                                                <td><span th:text="${item.TICKET_ID}"></span></td>
-                                                <td><span th:text="${item.COMPANY_NAME}"></span></td>
-                                                <td><span th:text="${item.TITLE}"></span></td>
-                                                <td><span th:text="${item.REQUEST_TYPE_CD}"></span></td>
-                                                <td><span th:text="${item.STATUS_CD}"></span></td>
-                                                <td><span th:text="${item.REQUEST_TYPE_CD}"></span></td>
-                                                <td><span th:text="${item.USER_NAME}"></span></td>
-                                                <td><span th:text="${item.MD}"></span></td>
-                                                <td><span th:text="${item.CREATE_DT}"></span></td>
-                                                <td><span th:text="${item.REAL_COMPLETE_DT}"></span></td>
+                                            <tr th:each="mailHist : ${mailHistList.dataList}">
+                                                <td><span th:text="${mailHist['MAIL_SEND_ID']}"></span></td>
+                                                <td><span th:text="${mailHist['CATEGORY']}"></span></td>
+                                                <td><span th:text="${mailHist['TITLE']}"></span></td>
+                                                <td><span th:text="${mailHist['SENDER_ADDR']}"></span></td>
+                                                <td><span th:text="${mailHist['RECEIVER_ADDR']}"></span></td>
+                                                <td><span th:text="${mailHist['SEND_DT']}"></span></td>
+                                                <td><span th:text="${mailHist['SUCCESS_YN']}"></span></td>
                                             </tr>
                                         </tbody>
-                                        -->
                                     </div>
                                 </table>
                             </div>
@@ -121,54 +117,49 @@
                         <!-- //리스트 영역 -->
 
                         <!-- 페이징 버튼 템플릿 호출 -->
-                        <!--<div th:replace="~{fragments/pagination :: pagination(ticketList=${ticketList}, paginationUrl='/mailHistory')}" />-->
+                        <div class="board-footer">
+                            <div th:replace="~{fragments/pagination :: pagination(${mailHistList}, '/mailHistory')}" />
+                        </div>
                     </div>
                 </div>
             </div>
         </main>
-        <!-- //내용 영역 -->
     </div>
-    <!-- //컨텐츠 영역 -->
 </div>
 
 <script>
-    // var SEARCH_TYPE 	= null; // 티켓번호(NUM),제목(TITLE),제목+내용(TITLEANDCONTENTS),담당자(USERNAME)
-    // var SEARCH_KEYWORD 	= null;
-    // var FILTER_START_DT = null;
-    // var FILTER_END_DT 	= null;
-    // var FILTER_PAGE 	= 1;
-    // function searchTickets() {
-    //     var Data = {
-    //         searchType: $("#searchType").val(),
-    //         searchStatus: $("#searchStatus").val(),
-    //         searchKeyword: $("#searchKeyword").val(),
-    //         startDt: $("#filterStartDt").val(),
-    //         endDt: $("#filterEndDt").val(),
-    //         page: FILTER_PAGE
-    //     };
-    //
-    //     $.ajax({
-    //         type: 'POST',
-    //         url: '/ticketlist',
-    //         contentType: 'application/json',  // JSON 형식으로 데이터를 보냄
-    //         data: JSON.stringify(Data),       // 데이터를 JSON 형식으로 변환하여 전송
-    //         success: function(response) {
-    //             if (response && response.trim() !== "") {
-    //                 document.getElementById('ticketListContainer').innerHTML = response;
-    //             } else {
-    //                 document.getElementById('ticketListContainer').innerHTML =
-    //                     '<tr><td colspan="4" style="text-align:center;">등록된 티켓이 없습니다.</td></tr>';
-    //             }
-    //         },
-    //         error: function(xhr, status, error) {
-    //             console.error('Error:', error);
-    //             alert("티켓 목록을 가져오는 데 오류가 발생했습니다.");
-    //         }
-    //     });
-    // }
-    // function goToPage(page) {
-    //    searchTickets();
-    // }
+
+    // -------------------
+    // 상세 검색
+    // -------------------
+    function searchMailHist() {
+        var page = 1;
+        var size = 5;
+        var searchType = $("#searchType").val();
+        var searchStatus = $("#searchStatus").val();
+        var searchKeyword = $("#searchKeyword").val();
+
+        // x-www-form-urlencoded 형식으로 데이터 생성
+        const data = new URLSearchParams({
+            page: page,
+            size: size,
+            searchType: searchType,
+            searchStatus: searchStatus,
+            searchKeyword: searchKeyword
+        });
+
+        fetch('/mailHistory', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: data.toString()
+        })
+        .then(response => response.text())
+        .then(data => {
+            // $('#mailHistListContainer').html(data);
+            document.getElementById('mailHistListContainer').innerHTML = data;
+        })
+        .catch(error => console.error('검색 중 오류 발생:', error));
+    }
 
 </script>
 </body>
