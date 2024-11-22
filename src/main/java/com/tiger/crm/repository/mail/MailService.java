@@ -1,6 +1,8 @@
 package com.tiger.crm.repository.mail;
 
 import com.tiger.crm.repository.dto.mail.MailDto;
+import com.tiger.crm.repository.dto.page.PagingRequest;
+import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.mapper.MailMapper;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -77,5 +80,16 @@ public class MailService {
         } catch (Exception e) {
             throw new RuntimeException("Template rendering failed", e);
         }
+    }
+
+    // 메일 발송 내역 조회
+    public PagingResponse<Map<String, Object>> getMailHistList(PagingRequest pagingRequest) {
+
+        // 전체 건수 조회
+        int totalRecords = mailMapper.getMailHistListCount(pagingRequest);
+
+        List<Map<String, Object>> mailHistList = mailMapper.getMailHistList(pagingRequest);
+
+        return new PagingResponse<>(mailHistList, totalRecords, pagingRequest);
     }
 }
