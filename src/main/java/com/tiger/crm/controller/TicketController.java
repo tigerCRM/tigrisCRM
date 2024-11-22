@@ -4,6 +4,9 @@ import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.service.common.CommonService;
 import com.tiger.crm.service.ticket.TicketService;
+
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+
+import org.springframework.web.bind.annotation.GetMapping;
+
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -29,6 +36,8 @@ public class TicketController {
     @GetMapping("/ticketlist")
     public String getTickets(@ModelAttribute PagingRequest pagingRequest, Model model) {
         try {
+            model.addAttribute("startDate", "2024-01-01");
+            model.addAttribute("endDate", "2024-12-31");
             // selectbox 바인딩
             model.addAttribute("statusOptions", commonService.getSelectOptions("t_status"));
             model.addAttribute("searchOptions", commonService.getSelectOptions("t_search"));
@@ -56,6 +65,7 @@ public class TicketController {
             PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
             model.addAttribute("ticketList", pageResponse);
             // 부분 뷰 렌더링 (리스트 부분만 갱신)
+           // return "ticketList :: ticketListFragment";
             return "ticketList :: ticketListFragment";
         } catch (IllegalArgumentException e) {
             // 입력 값에 대한 오류 처리 (예: 유효하지 않은 파라미터)
@@ -69,6 +79,22 @@ public class TicketController {
 
         // 오류 발생 시 전체 페이지로 돌아가도록 처리
         return "ticketList";  // 기본 화면으로 이동
+    }
+
+    @PostMapping("/exceldownload")
+    public void excelDownload(@ModelAttribute PagingRequest pagingRequest, HttpServletResponse response) {
+        try {
+            pagingRequest.setPage(1);
+            pagingRequest.setSize(1000000);
+            // 데이터 조회
+            PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
+            List<Map<String, Object>> dataList = pageResponse.getDataList();
+
+            // 공통 Excel 다운로드 서비스 호출
+            commonService.downloadExcel(dataList, response, "ticketlist");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

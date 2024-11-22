@@ -2324,7 +2324,8 @@ label.checkbox02 input[type="checkbox"]:disabled+span {
     align-items: center;
     gap: 0.4rem;
 }
-.datepicker .datepicker-input {
+/*.datepicker .datepicker-input {*/
+.datepicker-input {
     width: 12rem;
     text-align: center;
 }

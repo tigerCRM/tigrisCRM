@@ -7,14 +7,15 @@
     <title>메인</title>
     <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/layout.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/intro.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/common.css?v=1.0">
+    <link rel="stylesheet" type="text/css" href="/assets/css/layout.css?v=1.0">
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css?v=3.0">
     <script src="/lib/jquery/jquery-2.2.2.min.js"></script>
-    <script src="./Style/js/script2.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <!--datepicker 관련 -->
+    <script src="/lib/picker/datepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/lib/picker/datepicker.min.css">
+    <script src="/js/datepicker.js"></script>
+
 </head>
 <body>
 <div class="wrapper">
@@ -27,11 +28,10 @@
     <!-- 컨텐츠 영역 -->
     <div class="main-area">
         <!-- 내용 영역 -->
-        <main class="main-content">
+        <main class="form-content">
             <div class="container">
                 <div class="main-widget-wrap">
                     <div class="content">
-                        <!-- 검색 영역 -->
                         <div class="search--box">
                             <div class="content-header">
                                 <h2 class="text-body1">
@@ -43,7 +43,7 @@
                                 <div class="searchbar">
                                     <div>
                                         <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
-                                            <select class="dropdown__selected" id="searchStatus" name="searchStatus" th:value="${searchStatus}" >
+                                            <select class="dropdown__selected" id="searchStatus" name="searchStatus" th:value="${searchStatus}" onchange="searchTickets(this);">
                                                 <option value="">==상태==</option>
                                                 <option th:each="op : ${statusOptions}"
                                                         th:value="${op.key}"
@@ -62,70 +62,73 @@
                                         </div>
                                     </div>
                                     <div>
+                                        <div th:include="fragments/datepicker :: datepicker('startDate', 'endDate')"  ></div>
+                                    </div>
+                                    <div>
                                         <div class="search-wrap">
-                                            <input type="text" id="searchKeyword" name="searchKeyword" class="input--s input01" placeholder="검색어를 입력해주세요." th:value="${searchKeyword}" onkeydown="if (event.keyCode === 13) searchTickets();"  >
-                                            <button class="icon-btn search__btn" onclick="searchTickets();">
+                                            <input type="text" id="searchKeyword" name="searchKeyword" class="input--s input01" placeholder="검색어를 입력해주세요." th:value="${searchKeyword}" onkeydown="if (event.keyCode === 13) searchTickets(this);"  >
+                                            <button class="icon-btn search__btn" onclick="searchTickets(this);">
                                                 <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#search}" /></svg>
                                             </button>
                                         </div>
                                     </div>
+                                    <div style="align-content: center;">
+                                        <button class="btn just-icon btn--24" onclick="searchTickets(this);" id="refresh">
+                                            <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#refresh}" /></svg>
+                                        </button>
+                                    </div>
+                                    <div  style="margin-left:auto;">
+                                        <button class="btn btn--s  secondary-btn" onclick="exceldownload(this);" id="excelticket">엑셀다운로드</button>
+                                    </div>
                                 </div>
                                 <!-- //검색영역 -->
-                                <!-- 리스트 상단 영역 -->
-                                <div class="flex flex-justify_between flex-align_center ">
-                                    <div class="flex gap--4">
-                                        <button type="button" class="btn btn--s primary-btn" th:onclick="'window.location.href=\'' + @{/create} + '\''">작성</button>
-                                    </div>
-                                    <div class="pageinfo">
-                                        <div class="pagetotal">
-                                            <span class="text-body4">전체 <strong class="color-navy500"  th:text="${ticketList.totalcnt}"></strong>건</span>
-                                        </div>
-                                        <div class="pageview flex">
-                                            <button class="btn btn--xs icon-btn mono-ghost-btn" th:classappend="${viewType == 'full' ? ' active' : ''}" data-viewtype="full">
-                                                <svg class="icon"><use th:href="@{/Style/images/icon/sprite-sheet.svg#layout-one-fill}" /></svg>
-                                            </button>
-                                            <button class="btn btn--xs icon-btn mono-ghost-btn" th:classappend="${viewType == 'column' ? ' active' : ''}" data-viewtype="column">
-                                                <svg class="icon"><use th:href="@{/Style/images/icon/sprite-sheet.svg#layout-column-fill}" /></svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- //리스트 상단 영역 -->
                             </div>
                         </div>
-
-                        <!-- //리스트 영역 -->
-                        <div class="is_full" >
-                            <div class="board-list board--m list-wrap ">
-                                <table class="table table01 table-ellipsis">
-                                    <colgroup>
-                                        <col style="width: 5%;">
-                                        <col style="width: 10%;">
-                                        <col style="width: 20%;">
-                                        <col style="width: 10%;">
-                                        <col style="width: 10%;">
-                                        <col style="width: 10%;">
-                                        <col style="width: 10%;">
-                                        <col style="width: 10%;">
-                                        <col style="width: 10%;">
-                                        <col style="width: 10%;">
-                                    </colgroup>
-                                    <thead>
-                                    <tr>
-                                        <th>티켓번호</th>
-                                        <th>고객사</th>
-                                        <th class="board-title">제목</th>
-                                        <th>분류</th>
-                                        <th>상태</th>
-                                        <th>범위</th>
-                                        <th>담당</th>
-                                        <th>MD</th>
-                                        <th>등록일</th>
-                                        <th>완료일</th>
-                                    </tr>
-                                    </thead>
-                                    <div th:fragment="ticketListFragment">
-                                        <tbody id ="ticketListContainer">
+                        <div th:fragment="ticketListFragment" id ="ticketListContainer">
+                            <!-- 리스트 상단 영역 -->
+                            <div class="flex flex-justify_between flex-align_center ">
+                                <div class="flex gap--4">
+                                    <button type="button" class="btn btn--s primary-btn" th:onclick="'window.location.href=\'' + @{/create} + '\''">작성</button>
+                                </div>
+                            </div>
+                            <div class="pageinfo">
+                                <div class="pagetotal">
+                                    <span class="text-body4">전체 <strong class="color-navy500"  th:text="${ticketList.totalcnt}"></strong>건</span>
+                                </div>
+                            </div>
+                            <!-- //리스트 상단 영역 -->
+                            <!-- 리스트 영역 -->
+                            <div class="is_full">
+                                <div class="board-list board--m list-wrap ">
+                                    <table class="table table01 table-ellipsis">
+                                        <colgroup>
+                                            <col style="width: 5%;">
+                                            <col style="width: 10%;">
+                                            <col style="width: 20%;">
+                                            <col style="width: 10%;">
+                                            <col style="width: 10%;">
+                                            <col style="width: 10%;">
+                                            <col style="width: 10%;">
+                                            <col style="width: 10%;">
+                                            <col style="width: 10%;">
+                                            <col style="width: 10%;">
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th>티켓번호</th>
+                                            <th>고객사</th>
+                                            <th class="board-title">제목</th>
+                                            <th>분류</th>
+                                            <th>상태</th>
+                                            <th>범위</th>
+                                            <th>담당</th>
+                                            <th>MD</th>
+                                            <th>등록일</th>
+                                            <th>완료일</th>
+                                        </tr>
+                                        </thead>
+                                        <div >
+                                            <tbody >
                                             <tr th:if="${ticketList == null or #lists.isEmpty(ticketList)}">
                                                 <td colspan="10" style="text-align:center;">등록된 티켓이 없습니다.</td>
                                             </tr>
@@ -147,19 +150,20 @@
                                                 <td><span th:text="${ticket['CREATE_DT']}"></span></td>
                                                 <td><span th:text="${ticket['REAL_COMPLETE_DT']}"></span></td>
                                             </tr>
-                                        </tbody>
-                                    </div>
-                                </table>
+                                            </tbody>
+                                        </div>
+                                    </table>
 
 
+                                </div>
                             </div>
+                            <!-- //리스트 영역 -->
+                            <!-- 페이징 버튼 템플릿 -->
+                            <div class="board-footer">
+                                <div th:replace="~{fragments/pagination :: pagination(${ticketList}, '/ticketlist')}" />
+                            </div>
+                            <!-- //페이징 버튼 템플릿 -->
                         </div>
-                        <!-- //리스트 영역 -->
-                        <div class="board-footer">
-                            <!-- 페이징 버튼 템플릿 호출 -->
-                            <div th:replace="~{fragments/pagination :: pagination(${ticketList}, '/ticketlist')}" />
-                        </div>
-
                     </div>
                 </div>
             </div>
@@ -170,112 +174,88 @@
 </div>
 
 <script>
-    var SEARCH_TYPE 	= null; // 티켓번호(NUM),제목(TITLE),제목+내용(TITLEANDCONTENTS),담당자(USERNAME)
-    var SEARCH_KEYWORD 	= null;
-    var startDt = $("#filterStartDt").val();
-    startDt = (startDt === undefined || startDt === "") ? null : startDt;
-     var endDt = $("#filterEndDt").val();
-    endDt = (endDt === undefined || endDt === "") ? null : endDt;
-    var FILTER_PAGE 	= 1;
 
-
-   function searchTickets3() {
-        const page = 1;
-        const size = 5;
-        const pagingRequest = {
-            page: page,
-            size: size,
-            searchType: $("#searchType").val(),
-            searchStatus: $("#searchStatus").val(),
-            searchKeyword: $("#searchKeyword").val(),
-            startDt: startDt,
-            endDt: endDt,
-
-        };
-
-        // Ajax를 사용하여 서버로 검색 요청 전송
-        fetch('/ticketlist', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(pagingRequest)
-        })
-        .then(response => response.text())
-        .then(data => {
-            // 응답받은 HTML 조각을 페이지에 삽입하거나 처리
-            document.getElementById('ticketListContainer').innerHTML = data;
-        })
-        .catch(error => console.error('검색 중 오류 발생:', error));
-    }
-
-    function searchTickets2() {
-        var Data = {
-            searchType: $("#searchType").val(),
-            searchStatus: $("#searchStatus").val(),
-            searchKeyword: $("#searchKeyword").val(),
-            startDt: $("#filterStartDt").val(),
-            endDt: $("#filterEndDt").val(),
-            page: FILTER_PAGE
-        };
-
-        $.ajax({
-            type: 'POST',
-            url: '/ticketlist',
-            contentType: 'application/json',  // JSON 형식으로 데이터를 보냄
-            data: JSON.stringify(Data),       // 데이터를 JSON 형식으로 변환하여 전송
-            success: function(response) {
-                if (response && response.trim() !== "") {
-                    document.getElementById('ticketListContainer').innerHTML = response;
-                } else {
-                    document.getElementById('ticketListContainer').innerHTML =
-                        '<tr><td colspan="10" style="text-align:center;">등록된 티켓이 없습니다.</td></tr>';
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);
-                alert("티켓 목록을 가져오는 데 오류가 발생했습니다.");
-            }
-        });
-    }
-
-      function searchTickets() {
-        var page = 1;
-        var size = 5;
+    function searchTickets(obj) {
+        if (obj.id == "refresh"){
+          $("#searchType").val("");
+          $("#searchStatus").val("");
+          $("#searchKeyword").val("");
+          $("#startDate").val("");
+          $("#endDate").val("");
+        }
         var searchType = $("#searchType").val();
         var searchStatus = $("#searchStatus").val();
         var searchKeyword = $("#searchKeyword").val();
-        var startDt = ($("#filterStartDt").val() === undefined || $("#filterStartDt").val() === "") ? '1999-01-01' : $("#filterStartDt").val();
-        var endDt = ($("#filterEndDt").val() === undefined || $("#filterEndDt").val() === "") ? '2030-01-01' : $("#filterEndDt").val();
+        var startDt = ($("#startDate").val() === undefined || $("#startDate").val() === "") ? '1999-01-01' : $("#startDate").val();
+        var endDt = ($("#endDate").val() === undefined || $("#endDate").val() === "") ? '2030-01-01' : $("#endDate").val();
 
         // x-www-form-urlencoded 형식으로 데이터 생성
         const data = new URLSearchParams({
-            page: page,
-            size: size,
-            searchType: searchType,
-            searchStatus: searchStatus,
-            searchKeyword: searchKeyword,
-            startDt: startDt,
-            endDt: endDt
+
+          searchType: searchType,
+          searchStatus: searchStatus,
+          searchKeyword: searchKeyword,
+          startDt: startDt,
+          endDt: endDt
         });
 
         // Ajax 요청
         fetch('/ticketlist', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: data.toString() // URLSearchParams 객체를 문자열로 변환하여 전송
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: data.toString() // URLSearchParams 객체를 문자열로 변환하여 전송 (POST로 밖에 보낼수 없음)
         })
         .then(response => response.text())
         .then(data => {
-            // 응답받은 HTML을 페이지에 삽입
-            document.getElementById('ticketListContainer').innerHTML = data;
+          // 응답받은 HTML을 페이지에 삽입
+          document.getElementById('ticketListContainer').innerHTML = data;
         })
         .catch(error => console.error('검색 중 오류 발생:', error));
     }
 
+    function exceldownload(obj){
+        const formData = new FormData();
+       var searchType = $("#searchType").val();
+        var searchStatus = $("#searchStatus").val();
+        var searchKeyword = $("#searchKeyword").val();
+        var startDt = ($("#startDate").val() === undefined || $("#startDate").val() === "") ? '1999-01-01' : $("#startDate").val();
+        var endDt = ($("#endDate").val() === undefined || $("#endDate").val() === "") ? '2030-01-01' : $("#endDate").val();
+
+        const data = new URLSearchParams({
+
+          searchType: searchType,
+          searchStatus: searchStatus,
+          searchKeyword: searchKeyword,
+          startDt: startDt,
+          endDt: endDt
+        });
+
+         // Ajax 요청
+        fetch('/exceldownload', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: data.toString() // URLSearchParams 객체를 문자열로 변환하여 전송
+        })
+        .then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "data.xlsx"; // 다운로드할 파일명 설정
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        })
+        .catch(error => {
+            console.error("Error downloading the file:", error);
+        });
+    }
 
 </script>
+
 </body>
 </html>

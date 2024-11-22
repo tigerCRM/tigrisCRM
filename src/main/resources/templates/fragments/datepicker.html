@@ -1,0 +1,21 @@
+<!-- 날짜 두울 -->
+<div th:fragment="datepicker(startDateId, endDateId)" >
+    <input type="text" class="input--s input01 datepicker-input" placeholder="시작 날짜" th:id="${startDateId}">
+    <button type="button" class="btn just-icon btn--24 calendar-btn">
+        <svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use></svg>
+    </button>
+    ~
+    <input type="text" class="input--s input01 datepicker-input" placeholder="종료 날짜" th:id="${endDateId}">
+    <button type="button" class="btn just-icon btn--24 calendar-btn">
+        <svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use></svg>
+    </button>
+</div>
+
+<!-- 날짜 하나 (fragment 호출할때 아래와 같이 작성하면 하나만 바인딩됨)-->
+<!--<div th:include="fragments/datepicker :: datepickersingle('Date')"  ></div>-->
+<div th:fragment="datepickersingle(DateId)" >
+    <input type="text" class="input--s input01 datepicker-input" placeholder="" th:id="${DateId}">
+    <button type="button" class="btn just-icon btn--24 calendar-btn">
+        <svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use></svg>
+    </button>
+</div>
