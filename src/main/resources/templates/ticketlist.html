@@ -157,7 +157,7 @@
                         <!-- //리스트 영역 -->
                         <div class="board-footer">
                             <!-- 페이징 버튼 템플릿 호출 -->
-                            <div th:replace="~{fragments/pagination :: pagination(ticketList=${ticketList}, paginationUrl='/ticketlist')}" />
+                            <div th:replace="~{fragments/pagination :: pagination(${ticketList}, '/ticketlist')}" />
                         </div>
 
                     </div>
