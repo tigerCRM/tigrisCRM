@@ -1,7 +1,11 @@
 package com.tiger.crm.repository.dto.board;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Date;
+import java.util.List;
+
 @Data
 public class SystemBoardDto {
     private int boardId;
@@ -17,5 +21,6 @@ public class SystemBoardDto {
     private Date updateDt;
     private char deleteYn;
     private String fileId;
+    private List<MultipartFile> attachFiles;
 
 }

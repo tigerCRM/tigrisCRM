@@ -44,7 +44,7 @@
                         </div>
                         <!-- //헤더 영역 -->
                         <!-- form 영역 -->
-                        <form id= "systemBoard" action="/systemBoard"  method="post" th:object="${systemBoard}">
+                        <form id= "boardSubmitArea" action="/systemBoard"  method="post" enctype="multipart/form-data" th:object="${systemBoard}">
                             <div>
                                 <!--사용자 입력 영역-->
                                 <table class="table table03 table--h table--xs">
@@ -95,13 +95,14 @@
                                         <td colspan="3">
                                             <div class="attachment-wrapper">
                                                 <div class="flex gap--4">
-                                                    <button type="file" class="btn btn--xs mono-outline-btn">추가</button>
-                                                    <button type="button" class="btn btn--xs mono-outline-btn">삭제</button>
+                                                    <label for="attachFiles" class="btn btn--xs mono-outline-btn">추가</label>
+                                                    <input type="file" multiple="multiple" id="attachFiles" name="attachFiles" class="file_attach_input">
+                                                    <button type="button" id="fileDelete" class="btn btn--xs mono-outline-btn">삭제</button>
                                                 </div>
                                                 <div class="attachment-file">
                                                     <!-- <p class="absolute-center empty-text"><svg class="icon"><use href="./Style/images/icon/sprite-sheet.svg#attachment"/></svg> 첨부할 파일을 끌어다 놓아주세요.</p> -->
                                                     <ul class="list01">
-                                                        <li class="list__item">
+                                                        <!--<li class="list__item">
                                                             <div class="item__title">
                                                                 <svg class="icon icon--20 color-gray700"><use href="./Style/images/icon/sprite-sheet.svg#attachment"></use></svg>
                                                                 <span>파일명1.pdf</span>
@@ -128,7 +129,7 @@
                                                                 <span>파일명4.pdf</span>
                                                                 <button type="button" class="icon icon--20 just-icon"><svg class="icon"><use href="./Style/images/icon/sprite-sheet.svg#close"></use></svg></button>
                                                             </div>
-                                                        </li>
+                                                        </li>-->
                                                     </ul>
                                                 </div>
                                             </div>
@@ -169,7 +170,7 @@
     });
 
     //2. form submit 시 toast editor 영역 안의 값을 content 안에 넣음
-    document.querySelector('#systemBoard').addEventListener('submit', function (e) {
+    document.querySelector('#boardSubmitArea').addEventListener('submit', function (e) {
             const content = editor.getHTML(); // 에디터 안의 html 콘텐츠를 가져옴
             document.querySelector('#content').value = content; // hidden input 안에 입력한 데이터를 넣고 전송
 
@@ -178,6 +179,39 @@
             const companyNameInput = document.querySelector('#companyName');
             companyNameInput.value = selectedOption.textContent.trim();
     });
+
+    //3. 첨부파일 등록 시 밑에 있는 영역에 파일 이름 넣음
+    $("#attachFiles").on('change',function(){
+        const files = this.files;
+        const list = $(".list01");
+
+        // 기존 리스트 초기화
+        list.empty();
+        Array.from(files).forEach(file => {
+            const fileName = file.name;
+            const listItem = `
+                <li class="list__item">
+                    <div class="item__title">
+                        <svg class="icon icon--20 color-gray700">
+                            <use href="/assets/images/icon/sprite-sheet.svg#attachment"></use>
+                        </svg>
+                        <span>${fileName}</span>
+                    </div>
+                </li>
+            `;
+            list.append(listItem);
+        });
+
+    });
+
+    //4. 첨부파일 전체 삭제
+    $("#fileDelete").on('click', function () {
+            // 파일 입력 값 초기화
+            $("#attachFiles").val('');
+
+            // 동적 리스트 초기화
+            $(".list01").empty();
+        });
 </script>
 </body>
 </html>

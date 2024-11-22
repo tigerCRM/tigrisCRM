@@ -48,4 +48,10 @@
             NULL
         )
     </insert>
+
+    <update id="updateSystemBoardFileId" parameterType="java.util.Map">
+        UPDATE T_BOARD
+        SET FILE_ID = #{fileId}
+        WHERE BOARD_ID = #{boardId}
+    </update>
 </mapper>
