@@ -145,7 +145,7 @@ CREATE TABLE t_company_info (
   PRIMARY KEY (`COMPANY_ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
---2024.11.21 제예솔 / file 첨부 테이블 create
+-- 2024.11.21 제예솔 / file 첨부 테이블 create
 CREATE TABLE t_file (
     FILE_ID VARCHAR(20) NOT NULL,
     SEQ INT NOT NULL,

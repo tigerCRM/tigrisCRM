@@ -52,73 +52,79 @@
                                     </div>
                                     <div>
                                         <div class="search-wrap">
-                                            <input type="text" id="searchKeyword" name="searchKeyword" class="input--s input01" placeholder="검색어를 입력해주세요." th:value="${searchKeyword}" onkeydown="if (event.keyCode === 13) searchMailHist();"  >
-                                            <button class="icon-btn search__btn" onclick="searchMailHist();">
+                                            <input type="text" id="searchKeyword" name="searchKeyword" class="input--s input01" placeholder="검색어를 입력해주세요." th:value="${searchKeyword}" onkeydown="if (event.keyCode === 13) searchMailHist(this);"  >
+                                            <button class="icon-btn search__btn" onclick="searchMailHist(this);">
                                                 <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#search}" /></svg>
                                             </button>
                                         </div>
                                     </div>
+                                    <div style="align-content: center;">
+                                        <button class="btn just-icon btn--24" id="refresh" onclick="searchMailHist(this);" >
+                                            <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#refresh}" /></svg>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-
+                        </div>
+                        <div th:fragment="mailHistListFragment" id ="mailHistListContainer">
                             <!-- 전체 건수 -->
                             <div class="flex flex-justify_between flex-align_center ">
                                 <div class="pageinfo">
                                     <div class="pagetotal">
-                                        <span class="text-body4">전체 <strong class="color-navy500"  th:text="${mailHistList.totalcnt}"></strong>건</span>
+                                        <span class="text-body4">전체 <strong class="color-navy500" th:text="${mailHistList.totalcnt}"></strong>건</span>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- //리스트 영역 -->
-                        <div class="is_full" >
-                            <div class="board-list board--m list-wrap ">
-                                <table class="table table01 table-ellipsis">
-                                    <colgroup>
-                                        <col style="width: 3%;">
-                                        <col style="width: 8%;">
-                                        <col style="width: 20%;">
-                                        <col style="width: 13%;">
-                                        <col style="width: 13%;">
-                                        <col style="width: 12%;">
-                                        <col style="width: 3%;">
-                                    </colgroup>
-                                    <thead>
-                                    <tr>
-                                        <th>번호</th>
-                                        <th>분류</th>
-                                        <th class="board-title">제목</th>
-                                        <th>발신자</th>
-                                        <th>수신자</th>
-                                        <th>발송일</th>
-                                        <th>여부</th>
-                                    </tr>
-                                    </thead>
-                                    <div th:fragment="mailHistListFragment">
-                                        <tbody id ="mailHistListContainer">
-                                            <tr th:if="${mailHistList == null or #lists.isEmpty(mailHistList)}">
-                                                <td colspan="7" style="text-align:center;">내역이 없습니다</td>
-                                            </tr>
-                                            <tr th:each="mailHist : ${mailHistList.dataList}">
-                                                <td><span th:text="${mailHist['MAIL_SEND_ID']}"></span></td>
-                                                <td><span th:text="${mailHist['CATEGORY']}"></span></td>
-                                                <td><span th:text="${mailHist['TITLE']}"></span></td>
-                                                <td><span th:text="${mailHist['SENDER_ADDR']}"></span></td>
-                                                <td><span th:text="${mailHist['RECEIVER_ADDR']}"></span></td>
-                                                <td><span th:text="${mailHist['SEND_DT']}"></span></td>
-                                                <td><span th:text="${mailHist['SUCCESS_YN']}"></span></td>
-                                            </tr>
-                                        </tbody>
-                                    </div>
-                                </table>
+                            <!-- //리스트 영역 -->
+                            <div class="is_full" >
+                                <div class="board-list board--m list-wrap ">
+                                    <table class="table table01 table-ellipsis">
+                                        <colgroup>
+                                            <col style="width: 3%;">
+                                            <col style="width: 8%;">
+                                            <col style="width: 20%;">
+                                            <col style="width: 13%;">
+                                            <col style="width: 13%;">
+                                            <col style="width: 12%;">
+                                            <col style="width: 3%;">
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th>번호</th>
+                                            <th>분류</th>
+                                            <th class="board-title">제목</th>
+                                            <th>발신자</th>
+                                            <th>수신자</th>
+                                            <th>발송일</th>
+                                            <th>여부</th>
+                                        </tr>
+                                        </thead>
+                                        <div>
+                                            <tbody>
+                                                <tr th:if="${mailHistList == null or #lists.isEmpty(mailHistList)}">
+                                                    <td colspan="7" style="text-align:center;">내역이 없습니다</td>
+                                                </tr>
+                                                <tr th:each="mailHist : ${mailHistList.dataList}">
+                                                    <td><span th:text="${mailHist['MAIL_SEND_ID']}"></span></td>
+                                                    <td><span th:text="${mailHist['CATEGORY']}"></span></td>
+                                                    <td><span th:text="${mailHist['TITLE']}"></span></td>
+                                                    <td><span th:text="${mailHist['SENDER_ADDR']}"></span></td>
+                                                    <td><span th:text="${mailHist['RECEIVER_ADDR']}"></span></td>
+                                                    <td><span th:text="${mailHist['SEND_DT']}"></span></td>
+                                                    <td><span th:text="${mailHist['SUCCESS_YN']}"></span></td>
+                                                </tr>
+                                            </tbody>
+                                        </div>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
-                        <!-- //리스트 영역 -->
+                            <!-- //리스트 영역 -->
 
-                        <!-- 페이징 버튼 템플릿 호출 -->
-                        <div class="board-footer">
-                            <div th:replace="~{fragments/pagination :: pagination(${mailHistList}, '/mailHistory')}" />
+                            <!-- 페이징 버튼 템플릿 호출 -->
+                            <div class="board-footer">
+                                <div th:replace="~{fragments/pagination :: pagination(${mailHistList}, '/mailHistory')}" />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -132,7 +138,16 @@
     // -------------------
     // 상세 검색
     // -------------------
-    function searchMailHist() {
+    function searchMailHist(obj) {
+        // 상세검색 초기화
+        if (obj.id == "refresh"){
+            $("#searchType").val("");
+            $("#searchStatus").val("");
+            $("#searchKeyword").val("");
+            $("#startDate").val("");
+            $("#endDate").val("");
+        }
+
         var page = 1;
         var size = 5;
         var searchType = $("#searchType").val();
@@ -155,8 +170,7 @@
         })
         .then(response => response.text())
         .then(data => {
-            // $('#mailHistListContainer').html(data);
-            document.getElementById('mailHistListContainer').innerHTML = data;
+            $('#mailHistListContainer').html(data);
         })
         .catch(error => console.error('검색 중 오류 발생:', error));
     }
