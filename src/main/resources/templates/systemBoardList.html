@@ -70,14 +70,6 @@
                                         <div class="pagetotal">
                                             <span class="text-body4">전체 <strong class="color-navy500"  th:text="${systemBoardList.totalcnt}"></strong>건</span>
                                         </div>
-                                        <div class="pageview flex">
-                                            <button class="btn btn--xs icon-btn mono-ghost-btn" th:classappend="${viewType == 'full' ? ' active' : ''}" data-viewtype="full">
-                                                <svg class="icon"><use th:href="@{/Style/images/icon/sprite-sheet.svg#layout-one-fill}" /></svg>
-                                            </button>
-                                            <button class="btn btn--xs icon-btn mono-ghost-btn" th:classappend="${viewType == 'column' ? ' active' : ''}" data-viewtype="column">
-                                                <svg class="icon"><use th:href="@{/Style/images/icon/sprite-sheet.svg#layout-column-fill}" /></svg>
-                                            </button>
-                                        </div>
                                     </div>
                                 </div>
                                 <!-- //리스트 상단 영역 -->
@@ -126,41 +118,8 @@
                         <!-- //리스트 영역 -->
                         <div class="board-footer">
                             <!-- 페이징 버튼 템플릿 호출 -->
-                            <!--<div th:replace="~{fragments/pagination :: pagination(ticketList=${ticketList}, paginationUrl='/ticketlist')}" />-->
-
-                         <!--   <div class="pagination">
-                                <ul>
-                                    &lt;!&ndash; 이전 페이지로 이동 버튼 &ndash;&gt;
-                                    <li>
-                                        <button type="button" class="btn paging-btn arrow-btn"
-                                                th:disabled="${currentPage == 1}">
-                                            <svg class="icon">
-                                                <use href="./assets/images/icon/sprite-sheet.svg#arrow-left"></use>
-                                            </svg>
-                                        </button>
-                                    </li>
-
-                                    &lt;!&ndash; 페이지 번호 버튼 &ndash;&gt;
-                                    <li th:each="page : ${pages}">
-                                        <button type="button" class="btn paging-btn"
-                                                th:classappend="${page == currentPage} ? 'active'"
-                                                >
-                                            <span th:text="${page}">1</span>
-                                        </button>
-                                    </li>
-                                    &lt;!&ndash; 다음 페이지로 이동 버튼 &ndash;&gt;
-                                    <li>
-                                        <button type="button" class="btn paging-btn arrow-btn"
-                                                th:disabled="${currentPage == totalPages}">
-                                            <svg class="icon">
-                                                <use href="./assets/images/icon/sprite-sheet.svg#arrow-right"></use>
-                                            </svg>
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>-->
+                            <div th:replace="~{fragments/pagination :: pagination(${systemBoardList}, '/systemBoardList')}" />
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -171,103 +130,42 @@
 </div>
 
 <script>
-    var SEARCH_TYPE 	= null; // 제목(TITLE),제목+내용(TITLEANDCONTENTS),작성자(USERNAME)
-    var SEARCH_KEYWORD 	= null;
-    var FILTER_PAGE 	= 1;
-
-
-   function searchTickets3() {
-        const page = 1;
-        const size = 5;
-        const pagingRequest = {
-            page: page,
-            size: size,
-            searchType: $("#searchType").val(),
-            searchStatus: $("#searchStatus").val(),
-            searchKeyword: $("#searchKeyword").val(),
-            startDt: startDt,
-            endDt: endDt,
-
-        };
-
-        // Ajax를 사용하여 서버로 검색 요청 전송
-        fetch('/ticketlist', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(pagingRequest)
-        })
-        .then(response => response.text())
-        .then(data => {
-            // 응답받은 HTML 조각을 페이지에 삽입하거나 처리
-            document.getElementById('ticketListContainer').innerHTML = data;
-        })
-        .catch(error => console.error('검색 중 오류 발생:', error));
-    }
-
-    function searchTickets2() {
-        var Data = {
-            searchType: $("#searchType").val(),
-            searchStatus: $("#searchStatus").val(),
-            searchKeyword: $("#searchKeyword").val(),
-            startDt: $("#filterStartDt").val(),
-            endDt: $("#filterEndDt").val(),
-            page: FILTER_PAGE
-        };
-
-        $.ajax({
-            type: 'POST',
-            url: '/ticketlist',
-            contentType: 'application/json',  // JSON 형식으로 데이터를 보냄
-            data: JSON.stringify(Data),       // 데이터를 JSON 형식으로 변환하여 전송
-            success: function(response) {
-                if (response && response.trim() !== "") {
-                    document.getElementById('ticketListContainer').innerHTML = response;
-                } else {
-                    document.getElementById('ticketListContainer').innerHTML =
-                        '<tr><td colspan="10" style="text-align:center;">등록된 티켓이 없습니다.</td></tr>';
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);
-                alert("티켓 목록을 가져오는 데 오류가 발생했습니다.");
-            }
-        });
-    }
-
-      function searchTickets() {
-        var page = 1;
-        var size = 5;
+    function searchTickets(obj) {
+        if (obj.id == "refresh"){
+          $("#searchType").val("");
+          $("#searchStatus").val("");
+          $("#searchKeyword").val("");
+          $("#startDate").val("");
+          $("#endDate").val("");
+        }
         var searchType = $("#searchType").val();
         var searchStatus = $("#searchStatus").val();
         var searchKeyword = $("#searchKeyword").val();
-        var startDt = ($("#filterStartDt").val() === undefined || $("#filterStartDt").val() === "") ? '1999-01-01' : $("#filterStartDt").val();
-        var endDt = ($("#filterEndDt").val() === undefined || $("#filterEndDt").val() === "") ? '2030-01-01' : $("#filterEndDt").val();
+        var startDt = ($("#startDate").val() === undefined || $("#startDate").val() === "") ? '1999-01-01' : $("#startDate").val();
+        var endDt = ($("#endDate").val() === undefined || $("#endDate").val() === "") ? '2030-01-01' : $("#endDate").val();
 
         // x-www-form-urlencoded 형식으로 데이터 생성
         const data = new URLSearchParams({
-            page: page,
-            size: size,
-            searchType: searchType,
-            searchStatus: searchStatus,
-            searchKeyword: searchKeyword,
-            startDt: startDt,
-            endDt: endDt
+
+          searchType: searchType,
+          searchStatus: searchStatus,
+          searchKeyword: searchKeyword,
+          startDt: startDt,
+          endDt: endDt
         });
 
         // Ajax 요청
         fetch('/ticketlist', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: data.toString() // URLSearchParams 객체를 문자열로 변환하여 전송
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: data.toString() // URLSearchParams 객체를 문자열로 변환하여 전송 (POST로 밖에 보낼수 없음)
         })
         .then(response => response.text())
         .then(data => {
-            // 응답받은 HTML을 페이지에 삽입
-            document.getElementById('ticketListContainer').innerHTML = data;
+          // 응답받은 HTML을 페이지에 삽입
+          document.getElementById('ticketListContainer').innerHTML = data;
         })
         .catch(error => console.error('검색 중 오류 발생:', error));
     }

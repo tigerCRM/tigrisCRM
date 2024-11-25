@@ -20,8 +20,14 @@
         ON B.CREATE_ID = U.USER_ID
         WHERE CATEGORY_CD = 'SYSTEM'
             AND DELETE_YN = 'N'
+        ORDER BY B.CREATE_DT DESC
+        <!-- 페이지 처리 (페이징 처리) -->
+        <if test="page != null">
+            LIMIT  #{offset}, #{size} <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
+        </if>
 
     </select>
+
     <select id="getSystemBoardListCount" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM T_BOARD

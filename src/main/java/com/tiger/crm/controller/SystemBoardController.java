@@ -95,37 +95,27 @@ public class SystemBoardController {
 
         HttpSession session = request.getSession(false);
         UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
-
+        
+        //작성자 저장
         systemBoard.setCreateId(loginUser.getUserId());
-
-        BoardOpenCompanyDto boardOpenCompanyDto = new BoardOpenCompanyDto();
-        boardOpenCompanyDto.setCompanyId(companyId);
-        boardOpenCompanyDto.setCompanyName(companyName);
-
-        //정보 저장 로직. 저장 성공시 boardId 리턴받아옴
-        int savedBoardId = systemBoardService.insertSystemBoard(systemBoard, boardOpenCompanyDto);
+        
+        //정보 저장 로직. Board 와 OpenCompany DB 저장 후 BoardId 리턴받음
+        int savedBoardId = systemBoardService.insertSystemBoard(systemBoard, new BoardOpenCompanyDto(companyId,companyName));
 
         if(savedBoardId ==0 ){
             LOGGER.info("postSystemBoard ERROR occured!");
             return null;
         }
-        //첨부파일 경로에 저장
-        List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(systemBoard.getAttachFiles());
-        //첨부파일 데이터에 저장
-        LOGGER.info("어떻게 나오나???" + uploadFiles.toString());
-
-        for(int i = 0 ; i < uploadFiles.size();i++){
-            UploadFileDto uploadFile = new UploadFileDto(uploadFiles.get(i).getOriginFileName(),uploadFiles.get(i).getFileName());
-            uploadFile.setFileId("B" + savedBoardId);
-            uploadFile.setSeq(i+1);
-            uploadFile.setCategory("시스템관리");
-            uploadFile.setFilePath(fileDir);
-
-            fileService.insertFile(uploadFile);
-            systemBoardService.setSystemBoardFileId(uploadFile.getFileId(),savedBoardId);
-
+        
+        //첨부파일
+        try{
+            List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(systemBoard.getAttachFiles()); // 경로에 저장
+            fileService.insertFile(uploadFiles, savedBoardId); //DB 에 저장
+            
+        }catch (Exception e){
+            LOGGER.info(e.toString());
+            return null;
         }
-        //return null;
 
         return "redirect:/systemBoardList";
     }

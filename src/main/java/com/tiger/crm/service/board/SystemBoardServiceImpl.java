@@ -43,6 +43,7 @@ public class SystemBoardServiceImpl implements SystemBoardService{
         return count != null ? count : 0;  // null일 경우 0 반환
     }
 
+    //시스템관리 글 저장
     @Override
     public int insertSystemBoard(SystemBoardDto systemBoardDto, BoardOpenCompanyDto boardOpenCompanyDto) {
         systemBoardMapper.insertSystemBoard(systemBoardDto);

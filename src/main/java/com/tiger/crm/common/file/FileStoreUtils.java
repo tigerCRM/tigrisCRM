@@ -29,6 +29,9 @@ public class FileStoreUtils {
     
     //여러개의 파일 동시 저장
     public List<UploadFileDto> storeFiles(List<MultipartFile> multipartFiles){
+        if(multipartFiles.isEmpty()){
+            return null;
+        }
         List<UploadFileDto> storeFileList = new ArrayList<>();
         for(MultipartFile multipartFile : multipartFiles){
             if(!multipartFile.isEmpty()){
