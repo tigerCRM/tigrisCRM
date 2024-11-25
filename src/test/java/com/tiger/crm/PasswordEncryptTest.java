@@ -30,9 +30,9 @@ public class PasswordEncryptTest {
     @Test
     void pwdMatch(){
         // 기존 저장해두었던 암호화된 비밀번호
-        String encodedPwd = "{bcrypt}$2a$10$J7v5PwJYRKdBzhNtZwbUiu4dq9BwXHIL5BEHgogsUCAHHBjI9zmn2";
+        String encodedPwd = "{bcrypt}$2a$10$/sp4LuU4aqkEHoRlXQLjgeinyR36c5JVx3hhvkfL57OLoavN2TPpC";
         // 검증할 비밀번호
-        String newPwd = "1234";
+        String newPwd = "XpYjMHCoI8";
         if(passwordEncoder.matches(newPwd, encodedPwd)){
             System.out.println("true");
         }else{

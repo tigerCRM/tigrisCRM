@@ -22,4 +22,7 @@ public interface SystemBoardMapper {
 
     //시스템 관리 글저장
     void insertSystemBoard(SystemBoardDto systemBoardDto);
+
+    //시스템 관리 첨부파일 아이디 저장
+    void updateSystemBoardFileId(String fileId, int boardId);
 }

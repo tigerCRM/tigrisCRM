@@ -3252,3 +3252,23 @@ ul[class*='list-tree--'] {
 .overflow-content-wrap > .table {
     width: 132rem;
 }
+
+/*예솔 첨부파일 버튼 영역 변경*/
+.file_attach_input{
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+}
+
+.upload-name {
+    display: inline-block;
+    height: 40px;
+    padding: 0 10px;
+    vertical-align: middle;
+    border: 1px solid #dddddd;
+    width: 78%;
+    color: #999999;
+}

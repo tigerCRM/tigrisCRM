@@ -49,9 +49,17 @@ public class SystemBoardServiceImpl implements SystemBoardService{
         boardOpenCompanyDto.setBoardId(systemBoardDto.getBoardId());
         int resultCount = boardOpenCompanyMapper.insertBoardOpenCompany(boardOpenCompanyDto);
 
-        LOGGER.info("거의다왔나?" + resultCount);
-
-        return resultCount;
+        if(resultCount != 1){
+            LOGGER.info("insertSystemBoard ERROR occured!");
+            return 0;
+        }
+        return systemBoardDto.getBoardId(); // 저장 실패시 0, 저장 성공시 boardId 리턴
+    }
+    
+    //첨부파일 저장 후 boardTable 에 첨부파일 아이디 업데이트
+    @Override
+    public void setSystemBoardFileId(String fileId,int boardId) {
+        systemBoardMapper.updateSystemBoardFileId(fileId,boardId);
     }
 
 }
