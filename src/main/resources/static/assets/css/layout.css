@@ -267,6 +267,7 @@
 .main-area {
     flex: 1;
     overflow: hidden;
+    height: 100%;
 }
 
 .header {
