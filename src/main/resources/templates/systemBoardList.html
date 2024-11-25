@@ -13,7 +13,6 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/intro.css" />
     <script src="/lib/jquery/jquery-2.2.2.min.js"></script>
-    <script src="./Style/js/script2.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 </head>
 <body>
@@ -104,7 +103,12 @@
                                             <tr th:each="systemBoard : ${systemBoardList.dataList}">
                                                 <td><span th:text="${systemBoard['BOARD_ID']}"></span></td>
                                                 <td><span th:text="${systemBoard['COMPANY_NAME']}"></span></td>
-                                                <td><span th:text="${systemBoard['TITLE']}"></span></td>
+                                                <!--<td><span th:text="${systemBoard['TITLE']}"></span></td>-->
+                                                <td>
+                                                    <a th:href="@{/systemBoard(boardId=${systemBoard['BOARD_ID']})}"
+                                                       th:text="${systemBoard['TITLE']}"></a>
+                                                </td>
+
                                                 <td><span th:text="${systemBoard['USER_NAME']}"></span></td>
                                                 <td><span th:text="${systemBoard['CREATE_DT']}"></span></td>
                                             </tr>
