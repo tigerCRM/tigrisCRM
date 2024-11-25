@@ -27,7 +27,8 @@ public class SystemBoardServiceImpl implements SystemBoardService{
 
     @Autowired
     private BoardOpenCompanyMapper boardOpenCompanyMapper;
-
+    
+    //시스템 보드 리스트 가져오기
     @Override
     public PagingResponse<Map<String, Object>> getSystemBoardList(PagingRequest pagingRequest) {
 
@@ -43,6 +44,7 @@ public class SystemBoardServiceImpl implements SystemBoardService{
         return count != null ? count : 0;  // null일 경우 0 반환
     }
 
+    //시스템관리 글 저장
     @Override
     public int insertSystemBoard(SystemBoardDto systemBoardDto, BoardOpenCompanyDto boardOpenCompanyDto) {
         systemBoardMapper.insertSystemBoard(systemBoardDto);
@@ -60,6 +62,11 @@ public class SystemBoardServiceImpl implements SystemBoardService{
     @Override
     public void setSystemBoardFileId(String fileId,int boardId) {
         systemBoardMapper.updateSystemBoardFileId(fileId,boardId);
+    }
+
+    @Override
+    public SystemBoardDto getSystemBoardByBoardId(int boardId) {
+        return systemBoardMapper.getSystemBoardByBoardId(boardId);
     }
 
 }

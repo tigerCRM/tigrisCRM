@@ -25,4 +25,7 @@ public interface SystemBoardMapper {
 
     //시스템 관리 첨부파일 아이디 저장
     void updateSystemBoardFileId(String fileId, int boardId);
+
+    //시스템게시글 게시글아이디로 찾아오기
+    SystemBoardDto getSystemBoardByBoardId(int boardId);
 }

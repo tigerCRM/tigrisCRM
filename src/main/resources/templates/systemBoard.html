@@ -16,6 +16,8 @@
     <!--toast ui 설정-->
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+    <!--기타 전역에서 쓸 공통javascript 설정-->
+    <script src="/js/common.js"></script>
 </head>
 <body style="height: auto;">
 <div class="wrapper">
@@ -37,7 +39,7 @@
                             <div class="content-header">
                                 <h2 class="text-body1">
                                     <div class="flex flex-align_center gap--8">
-                                        <b>시스템 정보 작성</b>
+                                        <b th:text="${systemBoard.boardId != 0 ? '시스템 정보 상세' : '시스템 정보 작성'}"></b>
                                     </div>
                                 </h2>
                             </div>
@@ -45,6 +47,7 @@
                         <!-- //헤더 영역 -->
                         <!-- form 영역 -->
                         <form id= "boardSubmitArea" action="/systemBoard"  method="post" enctype="multipart/form-data" th:object="${systemBoard}">
+                            <input type="hidden" th:value="${systemBoard.boardId}" name="boardId">
                             <div>
                                 <!--사용자 입력 영역-->
                                 <table class="table table03 table--h table--xs">
@@ -57,14 +60,14 @@
                                     <tbody>
                                     <tr>
                                         <th>작성자</th>
-                                        <td th:text="${user.userName}"></td>
+                                        <td th:text="${systemBoard.boardId != 0 ? systemBoard.userName : user.userName}"></td>
                                         <th>작성일자</th>
-                                        <td>0000-00-00</td>
+                                        <td th:text="${systemBoard.createDt}" class="convertDateFormat">0000-00-00</td>
                                     </tr>
                                     <tr>
                                         <th>제목</th>
                                         <td colspan="3">
-                                            <input type="text" id="title" name="title" class="input--xs input01 input--full" th:field="*{title}">
+                                            <input type="text" id="title" name="title" class="input--xs input01 input--full" th:field="*{title}" th:readonly="${systemBoard.boardId != 0}">
                                         </td>
                                     </tr>
                                     <tr>
@@ -72,10 +75,22 @@
                                         <td colspan="3">
                                             <div class="dropdown dropdown--xs" aria-expanded="false" tabindex="0">
                                                 <select class="dropdown__selected" name="selectedCompany">
-                                                    <option value="" disabled selected>==회사 선택==</option>
+                                                    <!-- 기본 옵션 -->
+                                                    <option value=""
+                                                            th:selected="${systemBoard.boardId == 0}"
+                                                            selected disabled>==회사 선택==
+                                                    </option>
+                                                    <!-- 상세보기 상태에서 선택된 회사 -->
+                                                    <option th:if="${systemBoard.boardId != 0}"
+                                                            th:value="${systemBoard.companyId}"
+                                                            th:text="${systemBoard.companyName}"
+                                                            selected disabled>
+                                                    </option>
+                                                    <!-- 회사 목록 옵션 -->
                                                     <option th:each="option : ${companyOptions}"
                                                             th:value="${option.companyId}"
-                                                            th:text="${option.companyName}">
+                                                            th:text="${option.companyName}"
+                                                            th:disabled="${systemBoard.boardId != 0 and option.companyId != systemBoard.companyId}">
                                                     </option>
                                                 </select>
                                                 <input type="hidden" name="companyName" id="companyName">
@@ -100,33 +115,11 @@
                                                     <button type="button" id="fileDelete" class="btn btn--xs mono-outline-btn">삭제</button>
                                                 </div>
                                                 <div class="attachment-file">
-                                                    <!-- <p class="absolute-center empty-text"><svg class="icon"><use href="./Style/images/icon/sprite-sheet.svg#attachment"/></svg> 첨부할 파일을 끌어다 놓아주세요.</p> -->
                                                     <ul class="list01">
                                                         <!--<li class="list__item">
                                                             <div class="item__title">
                                                                 <svg class="icon icon--20 color-gray700"><use href="./Style/images/icon/sprite-sheet.svg#attachment"></use></svg>
                                                                 <span>파일명1.pdf</span>
-                                                                <button type="button" class="icon icon--20 just-icon"><svg class="icon"><use href="./Style/images/icon/sprite-sheet.svg#close"></use></svg></button>
-                                                            </div>
-                                                        </li>
-                                                        <li class="list__item">
-                                                            <div class="item__title">
-                                                                <svg class="icon icon--20 color-gray700"><use href="./Style/images/icon/sprite-sheet.svg#attachment"></use></svg>
-                                                                <span>파일명2.pdf</span>
-                                                                <button type="button" class="icon icon--20 just-icon"><svg class="icon"><use href="./Style/images/icon/sprite-sheet.svg#close"></use></svg></button>
-                                                            </div>
-                                                        </li>
-                                                        <li class="list__item">
-                                                            <div class="item__title">
-                                                                <svg class="icon icon--20 color-gray700"><use href="./Style/images/icon/sprite-sheet.svg#attachment"></use></svg>
-                                                                <span>파일명3.pdf</span>
-                                                                <button type="button" class="icon icon--20 just-icon"><svg class="icon"><use href="./Style/images/icon/sprite-sheet.svg#close"></use></svg></button>
-                                                            </div>
-                                                        </li>
-                                                        <li class="list__item">
-                                                            <div class="item__title">
-                                                                <svg class="icon icon--20 color-gray700"><use href="./Style/images/icon/sprite-sheet.svg#attachment"></use></svg>
-                                                                <span>파일명4.pdf</span>
                                                                 <button type="button" class="icon icon--20 just-icon"><svg class="icon"><use href="./Style/images/icon/sprite-sheet.svg#close"></use></svg></button>
                                                             </div>
                                                         </li>-->
@@ -141,6 +134,8 @@
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
                                     <button type="submit" class="btn btn--m  primary-btn">글등록</button>
+                                    <button type="button" class="btn btn--m  primary-btn">글수정</button>
+                                    <button type="button" class="btn btn--m  danger-btn">글삭제</button>
                                     <button type="button" class="btn btn--m  secondary-btn" onclick="location.href='/systemBoardList';">목록으로</button>
                                 </div>
                                 <!--//버튼그룹-->
@@ -174,6 +169,7 @@
             const content = editor.getHTML(); // 에디터 안의 html 콘텐츠를 가져옴
             document.querySelector('#content').value = content; // hidden input 안에 입력한 데이터를 넣고 전송
 
+            //선택한 회사 옵션 관련 설정
             const selectElement = document.querySelector('.dropdown__selected');
             const selectedOption = selectElement.options[selectElement.selectedIndex];
             const companyNameInput = document.querySelector('#companyName');

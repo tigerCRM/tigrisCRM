@@ -18,6 +18,6 @@ public interface SystemBoardService {
     PagingResponse<Map<String, Object>> getSystemBoardList(PagingRequest pagingRequest);
     int getSystemBoardListCount(PagingRequest pagingRequest);
     int insertSystemBoard(SystemBoardDto systemBoardDto, BoardOpenCompanyDto boardOpenCompanyDto);
-
     void setSystemBoardFileId(String fileId,int boardId);
+    SystemBoardDto getSystemBoardByBoardId(int boardId);
 }

@@ -20,8 +20,14 @@
         ON B.CREATE_ID = U.USER_ID
         WHERE CATEGORY_CD = 'SYSTEM'
             AND DELETE_YN = 'N'
+        ORDER BY B.CREATE_DT DESC
+        <!-- 페이지 처리 (페이징 처리) -->
+        <if test="page != null">
+            LIMIT  #{offset}, #{size} <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
+        </if>
 
     </select>
+
     <select id="getSystemBoardListCount" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM T_BOARD
@@ -54,4 +60,23 @@
         SET FILE_ID = #{fileId}
         WHERE BOARD_ID = #{boardId}
     </update>
+
+    <select id="getSystemBoardByBoardId"  resultType="com.tiger.crm.repository.dto.board.SystemBoardDto">
+        SELECT
+        B.BOARD_ID,
+        B.CATEGORY_CD,
+        OC.COMPANY_ID,
+        OC.COMPANY_NAME,
+        B.TITLE,
+        B.CONTENT,
+        B.CREATE_ID,
+        U.USER_NAME,
+        B.CREATE_DT
+        FROM T_BOARD B
+        LEFT JOIN T_BOARD_OPEN_COMPANY OC
+        ON B.BOARD_ID = OC.BOARD_ID
+        LEFT JOIN T_USER_INFO U
+        ON B.CREATE_ID = U.USER_ID
+        WHERE B.BOARD_ID = #{boardId}
+    </select>
 </mapper>
