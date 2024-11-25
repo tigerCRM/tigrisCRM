@@ -103,7 +103,6 @@
                                             <tr th:each="systemBoard : ${systemBoardList.dataList}">
                                                 <td><span th:text="${systemBoard['BOARD_ID']}"></span></td>
                                                 <td><span th:text="${systemBoard['COMPANY_NAME']}"></span></td>
-                                                <!--<td><span th:text="${systemBoard['TITLE']}"></span></td>-->
                                                 <td>
                                                     <a th:href="@{/systemBoard(boardId=${systemBoard['BOARD_ID']})}"
                                                        th:text="${systemBoard['TITLE']}"></a>

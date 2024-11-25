@@ -39,7 +39,7 @@
                             <div class="content-header">
                                 <h2 class="text-body1">
                                     <div class="flex flex-align_center gap--8">
-                                        <b>시스템 정보 작성</b>
+                                        <b th:text="${systemBoard.boardId != 0 ? '시스템 정보 상세' : '시스템 정보 작성'}"></b>
                                     </div>
                                 </h2>
                             </div>
@@ -62,12 +62,12 @@
                                         <th>작성자</th>
                                         <td th:text="${systemBoard.boardId != 0 ? systemBoard.userName : user.userName}"></td>
                                         <th>작성일자</th>
-                                        <td th:text="${systemBoard.createDt}"></td>
+                                        <td th:text="${systemBoard.createDt}" class="convertDateFormat">0000-00-00</td>
                                     </tr>
                                     <tr>
                                         <th>제목</th>
                                         <td colspan="3">
-                                            <input type="text" id="title" name="title" class="input--xs input01 input--full" th:field="*{title}">
+                                            <input type="text" id="title" name="title" class="input--xs input01 input--full" th:field="*{title}" th:readonly="${systemBoard.boardId != 0}">
                                         </td>
                                     </tr>
                                     <tr>
@@ -75,10 +75,22 @@
                                         <td colspan="3">
                                             <div class="dropdown dropdown--xs" aria-expanded="false" tabindex="0">
                                                 <select class="dropdown__selected" name="selectedCompany">
-                                                    <option value="" disabled selected>==회사 선택==</option>
+                                                    <!-- 기본 옵션 -->
+                                                    <option value=""
+                                                            th:selected="${systemBoard.boardId == 0}"
+                                                            selected disabled>==회사 선택==
+                                                    </option>
+                                                    <!-- 상세보기 상태에서 선택된 회사 -->
+                                                    <option th:if="${systemBoard.boardId != 0}"
+                                                            th:value="${systemBoard.companyId}"
+                                                            th:text="${systemBoard.companyName}"
+                                                            selected disabled>
+                                                    </option>
+                                                    <!-- 회사 목록 옵션 -->
                                                     <option th:each="option : ${companyOptions}"
                                                             th:value="${option.companyId}"
-                                                            th:text="${option.companyName}">
+                                                            th:text="${option.companyName}"
+                                                            th:disabled="${systemBoard.boardId != 0 and option.companyId != systemBoard.companyId}">
                                                     </option>
                                                 </select>
                                                 <input type="hidden" name="companyName" id="companyName">
@@ -122,6 +134,8 @@
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
                                     <button type="submit" class="btn btn--m  primary-btn">글등록</button>
+                                    <button type="button" class="btn btn--m  primary-btn">글수정</button>
+                                    <button type="button" class="btn btn--m  danger-btn">글삭제</button>
                                     <button type="button" class="btn btn--m  secondary-btn" onclick="location.href='/systemBoardList';">목록으로</button>
                                 </div>
                                 <!--//버튼그룹-->
@@ -155,6 +169,7 @@
             const content = editor.getHTML(); // 에디터 안의 html 콘텐츠를 가져옴
             document.querySelector('#content').value = content; // hidden input 안에 입력한 데이터를 넣고 전송
 
+            //선택한 회사 옵션 관련 설정
             const selectElement = document.querySelector('.dropdown__selected');
             const selectedOption = selectElement.options[selectElement.selectedIndex];
             const companyNameInput = document.querySelector('#companyName');
