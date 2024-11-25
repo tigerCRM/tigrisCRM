@@ -18,41 +18,11 @@
         <main class="main-content">
             <div class="container">
                 <div class="main-widget-wrap">
+                    <!-- 티켓 미리보기 -->
                     <div class="flex1">
-                        <!-- 티켓 미리보기 -->
-                        <section id="notice" class="widget-item">
-                            <h2 class="widget-title"><a href="#" class="widget-title__link">요청내역</a></h2>
+                        <section id="request" class="widget-item">
+                            <h2 class="widget-title"><a href="/ticketlist" class="widget-title__link">요청내역</a></h2>
                             <div class="widget__content">
-                                <ul class="widget-board" th:each="ticket : ${ticketList.dataList}">
-                                    <li>
-                                        <a href="#" class="list__link">
-                                            <span class="tag tag--navy">요청등록</span>
-                                            <span th:text="${ticket['TITLE']}"></span>
-                                        </a>
-                                        <span class="widget-board__date" th:text="${ticket['CONTENT']}"></span>
-                                        <span class="widget-board__date" th:text="${ticket['STATUS_CD']}"></span>
-                                    </li>
-                                </ul>
-                            </div>
-                            <!-- 페이징 버튼 템플릿 호출 -->
-                            <div th:replace="~{fragments/pagination :: pagination(${ticketList}, '/main')}" />
-                        </section>
-                    </div>
-                    <div class="flex1">
-                        <!-- 공지사항 미리보기 -->
-                        <section id="notice" class="widget-item">
-                            <h2 class="widget-title"><a href="#" class="widget-title__link">공지사항</a></h2>
-                            <div class="widget__content">
-                                <!--
-                                <ul class="widget-board" th:each="notice : ${notices}">
-                                    <li>
-                                        <a href="#" class="list__link" th:text="'notice.title'">[필독] 요청사항 등록 전에 꼭 읽어주세요</a>
-                                        <span class="widget-board__date" th:text="'notice.author'">김사원</span>
-                                        <span class="widget-board__date" th:text="'notice.date'">2023.08.11</span>
-                                    </li>
-                                </ul>
-                                -->
-                                <!-- //리스트 영역 -->
                                 <div class="is_full">
                                     <div class="board-list board--m list-wrap ">
                                         <table class="table table01 table-ellipsis">
@@ -71,21 +41,56 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <!--<div id="ticketList" th:if="${ticketList != null}">
-                                                <tr th:each="item : ${ticketList}">
+                                            <div id="requestList" th:if="${ticketList != null}">
+                                                <tr th:each="item : ${ticketList.dataList}">
                                                     <td><span th:text="${item.TICKET_ID}"></span></td>
                                                     <td><span th:text="${item.TITLE}"></span></td>
                                                     <td><span th:text="${item.COMPANY_NAME}"></span></td>
-                                                    <td><span th:text="${item.STATUS_CD}"></span></td>
+                                                    <td><span class="tag tag--navy" th:text="${item.STATUS_CD}"></span></td>
                                                 </tr>
-                                            </div>-->
+                                            </div>
                                             </tbody>
                                         </table>
-                                        <!-- 페이지네이션 -->
-                                        <!-- 페이지네이션 -->
                                     </div>
                                 </div>
-                                <!-- //리스트 영역 -->
+                            </div>
+                        </section>
+                    </div>
+                    <!-- 공지사항 미리보기 -->
+                    <div class="flex1">
+                        <section id="notice" class="widget-item">
+                            <h2 class="widget-title"><a href="javascript:alert('준비중입니다');" class="widget-title__link">공지사항</a></h2>
+                            <div class="widget__content">
+                                <div class="is_full">
+                                    <div class="board-list board--m list-wrap ">
+                                        <table class="table table01 table-ellipsis">
+                                            <colgroup>
+                                                <col style="width: 10%;">
+                                                <col style="width: 50%;">
+                                                <col style="width: 20%;">
+                                                <col style="width: 20%;">
+                                            </colgroup>
+                                            <thead>
+                                            <tr>
+                                                <th>번호</th>
+                                                <th class="board-title">제목</th>
+                                                <th>작성자</th>
+                                                <th>작성일</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <div id="noticeList" th:if="${ticketList != null}">
+                                                    <tr th:each="item : ${ticketList.dataList}">
+                                                        <td><span th:text="${item.TICKET_ID}"></span></td>
+                                                        <td><span th:text="${item.TITLE}"></span></td>
+                                                        <td><span th:text="${item.USER_NAME}"></span></td>
+                                                        <td><span th:text="${item.CREATE_DT}"></span></td>
+                                                    </tr>
+                                                </div>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </section>
                     </div>
@@ -101,7 +106,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- // 통계 미리보기 -->
             </div>
         </main>
         <!-- //내용 영역 -->

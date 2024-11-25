@@ -698,9 +698,10 @@
     position: absolute;
     top: 100%; /* 버튼 아래에 위치 */
     left: 0;
-    width: 150px;
+    width: 100%;
     background-color: #fff;
-    border: 1px solid #ddd;
+    border-radius: 0.8rem;
+    border: 1px solid var(--gray-300);
     z-index: 1000; /* 다른 요소 위에 오도록 */
 }
 /* 드롭다운 항목 스타일 */

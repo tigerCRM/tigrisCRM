@@ -1631,6 +1631,7 @@ label.checkbox02 input[type="checkbox"]:disabled+span {
     border-collapse: collapse;
 }
 .table tr {
+    height: 42px;
     transition: .2s ease;
 }
 
