@@ -29,7 +29,6 @@ public class WebConfig implements WebMvcConfigurer {
 						"/public/**",        // 외부에 공개된 자원 1
 						"/Style/**",		 // 외부에 공개된 자원 2
 						"/favicon.ico",	     // 파비콘
-						"/js/datepicker.js",// datepicker.js
 						"/exceldownload"     // datepicker.js
 				);
 	}
