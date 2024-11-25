@@ -75,7 +75,7 @@ public class MainController
 	 * 1. 메일발송내역 페이지(초기 접속 시)
 	 */
 	@GetMapping(value = { "mailHistory"})
-	public String mailHistory( HttpServletRequest request, HttpServletResponse response, @ModelAttribute PagingRequest pagingRequest, HttpSession session, Model model)	{
+	public String mailHistory(@ModelAttribute PagingRequest pagingRequest, Model model)	{
 		try {
 			// 메일 발송 내역 조회
 			PagingResponse<Map<String, Object>> pageResponse = mailService.getMailHistList(pagingRequest);
@@ -91,7 +91,7 @@ public class MainController
 	 * 2. 메일발송내역 페이지(검색 시)
 	 */
 	@PostMapping(value = { "mailHistory"})
-	public String searchMailHistory( HttpServletRequest request, HttpServletResponse response, @ModelAttribute PagingRequest pagingRequest, HttpSession session, Model model)	{
+	public String searchMailHistory(@ModelAttribute PagingRequest pagingRequest, Model model)	{
 
 		try {
 			// 메일 발송 내역 조회
