@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" style="height: auto;">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -18,7 +18,7 @@
     <!--기타 전역에서 쓸 공통javascript 설정-->
     <script src="/js/common.js"></script>
 </head>
-<body style="height: auto;">
+<body>
 <div class="wrapper">
     <!-- 왼쪽 메뉴  -->
     <div th:replace="~{common/frame_left_menu :: frame_left_menu}" />
@@ -29,7 +29,7 @@
     <!-- 컨텐츠 영역 -->
     <div class="main-area">
         <!-- 내용 영역 -->
-        <main class="main-content">
+        <main class="form-content">
             <div class="container">
                 <div class="main-widget-wrap">
                     <div class="content">
