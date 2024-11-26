@@ -39,7 +39,7 @@
                             <div class="content-header">
                                 <h2 class="text-body1">
                                     <div class="flex flex-align_center gap--8">
-                                        <b th:text="${systemBoard.boardId != 0 ? '시스템 정보 상세' : '시스템 정보 작성'}"></b>
+                                        <b th:text="${mode == 'write' ? '시스템 정보 작성' : (mode == 'modify' ? '시스템 정보 수정' : '시스템 정보 상세')}"></b>
                                     </div>
                                 </h2>
                             </div>
@@ -47,7 +47,8 @@
                         <!-- //헤더 영역 -->
                         <!-- form 영역 -->
                         <form id= "boardSubmitArea" action="/systemBoard"  method="post" enctype="multipart/form-data" th:object="${systemBoard}">
-                            <input type="hidden" th:value="${systemBoard.boardId}" name="boardId">
+                            <input type="hidden" id="boardId" th:value="${systemBoard.boardId}" name="boardId">
+                            <input type="hidden" id="mode" th:value="${mode}" name="mode">
                             <div>
                                 <!--사용자 입력 영역-->
                                 <table class="table table03 table--h table--xs">
@@ -90,7 +91,7 @@
                                                     <option th:each="option : ${companyOptions}"
                                                             th:value="${option.companyId}"
                                                             th:text="${option.companyName}"
-                                                            th:disabled="${systemBoard.boardId != 0 and option.companyId != systemBoard.companyId}">
+                                                            th:if="${systemBoard.boardId == 0}">
                                                     </option>
                                                 </select>
                                                 <input type="hidden" name="companyName" id="companyName">
@@ -133,9 +134,11 @@
                                 <!--//사용자 입력 영역-->
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
-                                    <button type="submit" class="btn btn--m  primary-btn">글등록</button>
-                                    <button type="button" class="btn btn--m  primary-btn">글수정</button>
-                                    <button type="button" class="btn btn--m  danger-btn">글삭제</button>
+                                    <button type="submit" class="btn btn--m primary-btn" th:if="${mode == 'write' or mode == 'modify'}">글등록</button>
+                                    <button type="button" class="btn btn--m primary-btn"
+                                            th:if="${mode == 'read'}"
+                                            onclick="window.location.href='/systemBoard?boardId=' + document.getElementById('boardId').value + '&mode=modify'">글수정</button>
+                                    <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'read'}">글삭제</button>
                                     <button type="button" class="btn btn--m  secondary-btn" onclick="location.href='/systemBoardList';">목록으로</button>
                                 </div>
                                 <!--//버튼그룹-->
@@ -154,26 +157,29 @@
 </div>
 
 <script>
+    var boardId = document.querySelector('#boardId').value;
+    var mode = document.querySelector('#mode').value;
+
+    /*
+    글 읽기 모드 - 글수정, 글삭제, 목록으로
+    글 쓰기 모드 - 글등록, 목록으로
+    글 수정 모드 - 글등록, 목록으로
+    */
+
     //1. editor load 및 초기화
-    const editor = new toastui.Editor({
-        el: document.querySelector('#editorContent'), // 에디터를 적용할 요소 (컨테이너)
-        height: 'auto',                        // 에디터 영역의 높이 값 (OOOpx || auto)
-        initialEditType: 'wysiwyg',            // 최초로 보여줄 에디터 타입 (markdown || wysiwyg)
-        initialValue: '내용을 입력해 주세요.',     // 내용의 초기 값으로, 반드시 마크다운 문자열 형태여야 함
-        previewStyle: 'vertical',                // 마크다운 프리뷰 스타일 (tab || vertical)
-        hideModeSwitch: true
-    });
+    var editor = common.loadOrInitializeEditor(editor , mode);
 
     //2. form submit 시 toast editor 영역 안의 값을 content 안에 넣음
     document.querySelector('#boardSubmitArea').addEventListener('submit', function (e) {
-            const content = editor.getHTML(); // 에디터 안의 html 콘텐츠를 가져옴
-            document.querySelector('#content').value = content; // hidden input 안에 입력한 데이터를 넣고 전송
+        // 에디터 안의 html 콘텐츠를 가져와서 hidden input 안에 데이터를 넣고 전송
+        const content = editor.getHTML();
+        document.querySelector('#content').value = content;
 
-            //선택한 회사 옵션 관련 설정
-            const selectElement = document.querySelector('.dropdown__selected');
-            const selectedOption = selectElement.options[selectElement.selectedIndex];
-            const companyNameInput = document.querySelector('#companyName');
-            companyNameInput.value = selectedOption.textContent.trim();
+        //선택한 회사 옵션 관련 설정
+        const selectElement = document.querySelector('.dropdown__selected');
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+        const companyNameInput = document.querySelector('#companyName');
+        companyNameInput.value = selectedOption.textContent.trim();
     });
 
     //3. 첨부파일 등록 시 밑에 있는 영역에 파일 이름 넣음
@@ -202,12 +208,12 @@
 
     //4. 첨부파일 전체 삭제
     $("#fileDelete").on('click', function () {
-            // 파일 입력 값 초기화
-            $("#attachFiles").val('');
+        // 파일 입력 값 초기화
+        $("#attachFiles").val('');
 
-            // 동적 리스트 초기화
-            $(".list01").empty();
-        });
+        // 동적 리스트 초기화
+        $(".list01").empty();
+    });
 </script>
 </body>
 </html>

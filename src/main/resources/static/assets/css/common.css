@@ -3263,7 +3263,10 @@ ul[class*='list-tree--'] {
     overflow: hidden;
     border: 0;
 }
-
+/*예솔 에디터영역 크기 하드코딩*/
+.editor-wrap{
+    width: 850px;
+}
 .upload-name {
     display: inline-block;
     height: 40px;
