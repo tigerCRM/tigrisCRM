@@ -10,4 +10,6 @@ import java.util.Map;
 public interface MainMapper {
     // 메인페이지 요청내역 조회
     List<Map<String, Object>> getMainTicketList(UserLoginDto user);
+    // 메인 페이지 완료내역 조회
+    List<Map<String, Object>> getCloseList(UserLoginDto user);
 }

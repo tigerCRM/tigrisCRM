@@ -21,4 +21,11 @@ public class MainServiceImpl implements MainService {
             return ticketList;
     }
 
+    // 메인 페이지 완료내역 조회
+    @Override
+    public List<Map<String, Object>> getCloseList(UserLoginDto user) {
+        List<Map<String, Object>> ticketList = mainMapper.getCloseList(user);
+        return ticketList;
+    }
+
 }
