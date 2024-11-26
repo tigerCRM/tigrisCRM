@@ -715,3 +715,29 @@
 .dropdown-menu li:hover {
     background-color: #f1f1f1;
 }
+
+/* 메인페이지 하단 공지사항 슬라이드 관련 */
+
+.widget-edit__content { /* flexbox로 설정하여 내용이 수평으로 배치되도록 */
+    display: flex;
+    justify-content: flex-start; /* 수평 왼쪽 정렬 */
+}
+.icon-wrap { /* icon-wrap에 여백을 추가하여 아이콘과 텍스트 사이 간격을 조정 */
+    margin-right: 10px;
+}
+.swiper {
+    width: 1000px; /* 슬라이더의 높이 */
+    height: 50px; /* 슬라이더의 높이 */
+    overflow: hidden;
+}
+.swiper-slide { /* 각 슬라이드에 대한 스타일 */
+    display: inline-block; /* 블록이 아닌 인라인으로 설정 */
+    width: 1000px; /* 슬라이드가 자동으로 늘어나도록 설정 */
+    white-space: nowrap; /* 텍스트를 한 줄로 표시하고 줄 바꿈을 하지 않음 */
+    padding: 0 10px; /* 슬라이드 양옆의 패딩 설정 */
+    font-size: 16px;
+    line-height: 50px; /* 슬라이더 높이에 맞춰 수직 가운데 정렬 */
+    background-color: transparent; /* 배경 색상 제거 */
+    border: none; /* 불필요한 테두리 제거 */
+    text-align: left; /* 텍스트를 왼쪽 정렬 */
+}

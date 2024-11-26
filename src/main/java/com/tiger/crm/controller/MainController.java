@@ -69,7 +69,11 @@ public class MainController
 
 		// 메인 페이지 요청내역 조회
 		List<Map<String, Object>> ticketList = mainService.getMainTicketList(user);
+		// 메인 페이지 완료내역 조회
+		List<Map<String, Object>> ticketList2 = mainService.getCloseList(user);
+
 		model.addAttribute("ticketList", ticketList);
+		model.addAttribute("ticketList2", ticketList2);
 
 		return "main";
 	}

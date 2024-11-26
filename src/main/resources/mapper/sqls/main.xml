@@ -28,4 +28,28 @@
         LIMIT 5
     </select>
 
+    <!-- 메인 페이지 완료내역 조회 -->
+    <select id="getCloseList" resultType="Map">
+        SELECT TTI.TICKET_ID,
+        TTI.TITLE,
+        TTI.COMPANY_NAME,
+        TTI.STATUS_CD
+        FROM T_TICKET_INFO TTI
+        LEFT JOIN T_COMPANY_INFO TCI ON TTI.COMPANY_ID = TCI.COMPANY_ID
+        WHERE TTI.DELETE_YN = 'N'
+        AND TTI.STATUS_CD = 'CLOSED'
+
+        /* 고객(USER)일 경우, 본인 회사만 */
+        <if test="userClass == 'USER'">
+            AND TTI.COMPANY_ID = #{companyId}
+        </if>
+        /* 관리자(ADMIN)일 경우, 할당된 요청만 */
+        <if test="userClass == 'ADMIN'">
+            AND TTI.MANAGER_ID = #{userId}
+        </if>
+
+        ORDER BY CREATE_DT DESC
+        LIMIT 5
+    </select>
+
 </mapper>
