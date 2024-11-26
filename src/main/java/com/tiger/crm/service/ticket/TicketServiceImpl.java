@@ -2,11 +2,11 @@ package com.tiger.crm.service.ticket;
 
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
-import com.tiger.crm.repository.dto.ticket.TicketDto;
 import com.tiger.crm.repository.mapper.TicketMapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.tiger.crm.repository.dto.ticket.TicketDto;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -30,6 +30,20 @@ public class TicketServiceImpl implements TicketService {
     private int getTicketListCount(PagingRequest pagingRequest) {
         Integer count = ticketMapper.getTicketListCount(pagingRequest);  // Integer로 받아서 null 체크
         return count != null ? count : 0;  // null일 경우 0 반환
+    }
+
+    public boolean saveTicket(TicketDto ticketDto, List<MultipartFile> files) {
+        // Save ticketDto data to the database
+        ticketMapper.insertTicketInfo(ticketDto);
+        for (MultipartFile file : files) {
+            if (!file.isEmpty()) {
+                // Save each file, e.g., save to a directory or database
+                String fileName = file.getOriginalFilename();
+                // Save logic here
+            }
+        }
+
+        return true;
     }
 
 }
