@@ -143,6 +143,6 @@ public class SystemBoardController {
             return null;
         }
 
-        return "redirect:/systemBoardList";
+        return "redirect:systemBoardList";
     }
 }
