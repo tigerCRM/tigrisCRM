@@ -137,7 +137,7 @@
                                     <button type="button" class="btn btn--m primary-btn"
                                             th:if="${mode == 'read'}"
                                             onclick="window.location.href='/systemBoard?boardId=' + document.getElementById('boardId').value + '&mode=modify'">글수정</button>
-                                    <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'read'}">글삭제</button>
+                                    <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'read'}" >글삭제</button>
                                     <button type="button" class="btn btn--m  secondary-btn" onclick="location.href='/systemBoardList';">목록으로</button>
                                 </div>
                                 <!--//버튼그룹-->
@@ -158,12 +158,6 @@
 <script>
     var boardId = document.querySelector('#boardId').value;
     var mode = document.querySelector('#mode').value;
-
-    /*
-    글 읽기 모드 - 글수정, 글삭제, 목록으로
-    글 쓰기 모드 - 글등록, 목록으로
-    글 수정 모드 - 글등록, 목록으로
-    */
 
     //1. editor load 및 초기화
     var editor = common.loadOrInitializeEditor(editor , mode);

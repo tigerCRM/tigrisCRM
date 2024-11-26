@@ -22,10 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -59,7 +56,7 @@ public class SystemBoardController {
     /*
     * GET 시스템 정보 리스트 페이지
     * */
-    @RequestMapping(value = {"systemBoardList"}, method = RequestMethod.GET)
+    @GetMapping("/systemBoardList")
     public String getSystemBoardListPage(SystemBoardDto systemBoardDto, PagingRequest pagingRequest, HttpServletRequest request, HttpServletResponse response, Model model)
     {
         model.addAttribute("searchOptions", commonService.getSelectOptions("t_search"));
@@ -71,7 +68,7 @@ public class SystemBoardController {
     /*
      * GET 시스템 정보 입력창 페이지
      * */
-    @RequestMapping(value = {"systemBoard"}, method = RequestMethod.GET)
+    @GetMapping("/systemBoard")
     public String getSystemBoardPage(
             @RequestParam(value = "boardId", required = false) Integer boardId,
             @RequestParam(value = "mode", required = false) String mode,
@@ -116,7 +113,7 @@ public class SystemBoardController {
     /*
      * POST 시스템 정보 신규 등록
      * */
-    @RequestMapping(value={"systemBoard"}, method = RequestMethod.POST)
+    @PostMapping("/systemBoard")
     public String postSystemBoard(@ModelAttribute("systemBoard") SystemBoardDto systemBoard, @RequestParam("selectedCompany") int companyId, @RequestParam("companyName") String companyName, HttpServletRequest request, HttpServletResponse response){
 
         HttpSession session = request.getSession(false);
@@ -145,4 +142,8 @@ public class SystemBoardController {
 
         return "redirect:systemBoardList";
     }
+
+    /*
+     * DELETE 시스템 정보 삭제
+     * */
 }
