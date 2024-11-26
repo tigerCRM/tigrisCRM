@@ -43,9 +43,9 @@ public class MainController
 		HttpSession session = request.getSession(false);
 		if(session == null){
 			LOGGER.info("세션 없음");
-			return "redirect:/login";
+			return "redirect:login";
 		}
-		return "redirect:/main";
+		return "redirect:main";
 	}
 
 	/*
@@ -59,7 +59,7 @@ public class MainController
 
 		if (session == null){
 			LOGGER.info("세션 없음");
-			return "redirect:/login";
+			return "redirect:login";
 		}
 
 		// 유저정보
@@ -71,7 +71,7 @@ public class MainController
 		List<Map<String, Object>> ticketList = mainService.getMainTicketList(user);
 		model.addAttribute("ticketList", ticketList);
 
-		return "/main";
+		return "main";
 	}
 
 	/*
