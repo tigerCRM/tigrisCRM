@@ -3,9 +3,8 @@ package com.tiger.crm.controller;
 import com.tiger.crm.common.context.ConfigProperties;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
-import com.tiger.crm.repository.dto.ticket.TicketDto;
 import com.tiger.crm.repository.mail.MailService;
-import com.tiger.crm.service.ticket.TicketService;
+import com.tiger.crm.service.main.MainService;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -27,9 +27,10 @@ public class MainController
 	@Autowired
 	private ConfigProperties config;
 	@Autowired
-	private TicketService ticketService;
+	private MainService mainService;
 	@Autowired
 	private MailService mailService;
+
 	private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	/*
@@ -42,9 +43,9 @@ public class MainController
 		HttpSession session = request.getSession(false);
 		if(session == null){
 			LOGGER.info("세션 없음");
-			return "redirect:/login";
+			return "redirect:login";
 		}
-		return "redirect:/main";
+		return "redirect:main";
 	}
 
 	/*
@@ -52,23 +53,25 @@ public class MainController
 	* 설명 : 세션이 살아있으면 세션 정보 화면으로 보내줌, 세션 없으면 로그인 페이지로
 	* */
 	@RequestMapping(value = {"main"}, method = RequestMethod.GET)
-	public String mainPage(@ModelAttribute PagingRequest pagingRequest, @ModelAttribute("user") UserLoginDto user, TicketDto ticketDto, HttpServletRequest request, HttpServletResponse response, Model model) {
+	public String mainPage(@ModelAttribute PagingRequest pagingRequest, @ModelAttribute("user") UserLoginDto user, HttpServletRequest request, Model model) {
 
 		HttpSession session = request.getSession(false);
 
 		if (session == null){
 			LOGGER.info("세션 없음");
-			return "redirect:/login";
+			return "redirect:login";
 		}
-		UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
-		LOGGER.info("세션정보 : " + loginUser.toString());
-		model.addAttribute("user", loginUser);
 
-		// 티켓 조회
-		PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
-		model.addAttribute("ticketList", pageResponse);
+		// 유저정보
+		user = (UserLoginDto)session.getAttribute("loginUser");
+		LOGGER.info("세션정보 : " + user.toString());
+		model.addAttribute("user", user);
 
-		return "/main";
+		// 메인 페이지 요청내역 조회
+		List<Map<String, Object>> ticketList = mainService.getMainTicketList(user);
+		model.addAttribute("ticketList", ticketList);
+
+		return "main";
 	}
 
 	/*

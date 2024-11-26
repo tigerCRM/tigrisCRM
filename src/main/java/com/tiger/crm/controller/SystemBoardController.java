@@ -72,10 +72,16 @@ public class SystemBoardController {
      * GET 시스템 정보 입력창 페이지
      * */
     @RequestMapping(value = {"systemBoard"}, method = RequestMethod.GET)
-    public String getSystemBoardPage(@RequestParam(value = "boardId", required = false) Integer boardId, @ModelAttribute("systemBoard") SystemBoardDto systemBoard, HttpServletRequest request, HttpServletResponse response, Model model)
-    {
+    public String getSystemBoardPage(
+            @RequestParam(value = "boardId", required = false) Integer boardId,
+            @RequestParam(value = "mode", required = false) String mode,
+            @ModelAttribute("systemBoard") SystemBoardDto systemBoard,
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Model model
+    ) {
         HttpSession session = request.getSession(false);
-        if(boardId != null){ //글 불러오기 로직
+        if(boardId != null ){ //글 불러오기 로직
             UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
             List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
             //사용자 정보 가져오기
@@ -87,6 +93,12 @@ public class SystemBoardController {
             SystemBoardDto loadSystemBoard = systemBoardService.getSystemBoardByBoardId(boardId);
             model.addAttribute("systemBoard",loadSystemBoard);
 
+            if("modify".equals(mode)){
+                model.addAttribute("mode", "modify");
+            }else{
+                model.addAttribute("mode", "read");
+            }
+
         }else{//신규 글 작성 로직
             UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
             List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
@@ -94,6 +106,8 @@ public class SystemBoardController {
             model.addAttribute("user", loginUser);
             //회사 옵션 정보 가져오기
             model.addAttribute("companyOptions", companyOptions);
+
+            model.addAttribute("mode", "write");
         }
 
         return "systemBoard";
@@ -129,6 +143,6 @@ public class SystemBoardController {
             return null;
         }
 
-        return "redirect:/systemBoardList";
+        return "redirect:systemBoardList";
     }
 }

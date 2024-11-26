@@ -1,6 +1,5 @@
 package com.tiger.crm.controller;
 
-import com.tiger.crm.repository.dto.company.CompanyOptionDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.dto.ticket.TicketDto;
@@ -53,7 +52,7 @@ public class TicketController {
             // 티켓 조회
             PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
             model.addAttribute("ticketList", pageResponse);
-            return "ticketList";
+            return "ticketlist";
         } catch (Exception e) {
             // 오류 로그 기록
             e.printStackTrace();
@@ -75,8 +74,7 @@ public class TicketController {
             PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
             model.addAttribute("ticketList", pageResponse);
             // 부분 뷰 렌더링 (리스트 부분만 갱신)
-            // return "ticketList :: ticketListFragment";
-            return "ticketList :: ticketListFragment";
+            return "ticketlist :: ticketListFragment";
         } catch (IllegalArgumentException e) {
             // 입력 값에 대한 오류 처리 (예: 유효하지 않은 파라미터)
             model.addAttribute("error", "잘못된 입력 값이 있습니다. 다시 확인해 주세요.");
@@ -88,7 +86,7 @@ public class TicketController {
         }
 
         // 오류 발생 시 전체 페이지로 돌아가도록 처리
-        return "ticketList";  // 기본 화면으로 이동
+        return "ticketlist";  // 기본 화면으로 이동
     }
 
     @PostMapping("/exceldownload")
