@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +44,7 @@ public class LoginController
 	@RequestMapping(value = {"/login"}, method = RequestMethod.GET)
 	public String loginPage(@ModelAttribute("user") UserLoginDto user, HttpServletRequest request, HttpServletResponse response)
 	{
-		return "/login";
+		return "login";
 	}
 
 	/*
@@ -60,7 +59,7 @@ public class LoginController
 		//최초 인입된 dto 에 대해 validation 수행 후 반환
 		if (bindingResult.hasErrors()) {
 			LOGGER.info("validation error 발생={}",bindingResult);
-			return "/login";
+			return "login";
 		}
 
 		//로그인 정보 가져옴
@@ -72,13 +71,13 @@ public class LoginController
 		if (loginUser == null) {
 			bindingResult.reject("error.notExistMember");
 			LOGGER.info("로그인 실패={}",bindingResult);
-			return "/login";
+			return "login";
 		}
 
 		HttpSession session = request.getSession();
 		session.setAttribute("loginUser", loginUser);
 
-		return "redirect:/main";
+		return "redirect:main";
 	}
 
 	/*
@@ -93,7 +92,7 @@ public class LoginController
 		}
 
 		// 로그인 페이지로 리다이렉트
-		return "redirect:/login";
+		return "redirect:login";
 	}
 
 	/*
@@ -112,7 +111,7 @@ public class LoginController
 			System.out.println(e.getStackTrace());
 		}
 
-		return "redirect:/main";
+		return "redirect:main";
 	}
 
 }
