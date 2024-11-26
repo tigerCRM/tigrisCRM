@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" >
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width" />
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width"/>
     <title>메인</title>
     <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
@@ -20,10 +20,10 @@
 <body>
 <div class="wrapper">
     <!-- 왼쪽 메뉴  -->
-    <div th:replace="~{common/frame_left_menu :: frame_left_menu}" />
+    <div th:replace="~{common/frame_left_menu :: frame_left_menu}"/>
 
     <!-- 상단 메뉴  -->
-    <div th:replace="~{common/frame_top_menu :: frame_top_menu}" />
+    <div th:replace="~{common/frame_top_menu :: frame_top_menu}"/>
 
     <!-- 컨텐츠 영역 -->
     <div class="main-area">
@@ -43,7 +43,8 @@
                                 <div class="searchbar">
                                     <div>
                                         <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
-                                            <select class="dropdown__selected" id="searchStatus" name="searchStatus" th:value="${searchStatus}" onchange="searchTickets(this);">
+                                            <select class="dropdown__selected" id="searchStatus" name="searchStatus"
+                                                    th:value="${searchStatus}" onchange="searchTickets(this);">
                                                 <option value="">==상태==</option>
                                                 <option th:each="op : ${statusOptions}"
                                                         th:value="${op.key}"
@@ -53,7 +54,8 @@
                                     </div>
                                     <div>
                                         <div class="dropdown dropdown--s wd160" aria-expanded="false" tabindex="0">
-                                            <select class="dropdown__selected" id="searchType" name="searchType" th:value="${searchType}" >
+                                            <select class="dropdown__selected" id="searchType" name="searchType"
+                                                    th:value="${searchType}">
                                                 <option value="">==검색조건==</option>
                                                 <option th:each="op : ${searchOptions}"
                                                         th:value="${op.key}"
@@ -62,38 +64,51 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <div th:include="fragments/datepicker :: datepicker('startDate', 'endDate')"  ></div>
+                                        <div th:include="fragments/datepicker :: datepicker('startDate', 'endDate')"></div>
                                     </div>
                                     <div>
                                         <div class="search-wrap">
-                                            <input type="text" id="searchKeyword" name="searchKeyword" class="input--s input01" placeholder="검색어를 입력해주세요." th:value="${searchKeyword}" onkeydown="if (event.keyCode === 13) searchTickets(this);"  >
+                                            <input type="text" id="searchKeyword" name="searchKeyword"
+                                                   class="input--s input01" placeholder="검색어를 입력해주세요."
+                                                   th:value="${searchKeyword}"
+                                                   onkeydown="if (event.keyCode === 13) searchTickets(this);">
                                             <button class="icon-btn search__btn" onclick="searchTickets(this);">
-                                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#search}" /></svg>
+                                                <svg class="icon">
+                                                    <use th:href="@{/assets/images/icon/sprite-sheet.svg#search}"/>
+                                                </svg>
                                             </button>
                                         </div>
                                     </div>
                                     <div style="align-content: center;">
-                                        <button class="btn just-icon btn--24" onclick="searchTickets(this);" id="refresh">
-                                            <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#refresh}" /></svg>
+                                        <button class="btn just-icon btn--24" onclick="searchTickets(this);"
+                                                id="refresh">
+                                            <svg class="icon">
+                                                <use th:href="@{/assets/images/icon/sprite-sheet.svg#refresh}"/>
+                                            </svg>
                                         </button>
                                     </div>
-                                    <div  style="margin-left:auto;">
-                                        <button class="btn btn--s  secondary-btn" onclick="exceldownload(this);" id="excelticket">엑셀다운로드</button>
+                                    <div style="margin-left:auto;">
+                                        <button class="btn btn--s  secondary-btn" onclick="exceldownload(this);"
+                                                id="excelticket">엑셀다운로드
+                                        </button>
                                     </div>
                                 </div>
                                 <!-- //검색영역 -->
                             </div>
                         </div>
-                        <div th:fragment="ticketListFragment" id ="ticketListContainer">
+                        <div th:fragment="ticketListFragment" id="ticketListContainer">
                             <!-- 리스트 상단 영역 -->
                             <div class="flex flex-justify_between flex-align_center ">
                                 <div class="flex gap--4">
-                                    <button type="button" class="btn btn--s primary-btn" th:onclick="'window.location.href=\'' + @{/create} + '\''">작성</button>
+                                    <button type="button" class="btn btn--s primary-btn"
+                                            th:onclick="'window.location.href=\'' + @{/ticketCreate} + '\''">작성
+                                    </button>
                                 </div>
                             </div>
                             <div class="pageinfo">
                                 <div class="pagetotal">
-                                    <span class="text-body4">전체 <strong class="color-navy500"  th:text="${ticketList.totalcnt}"></strong>건</span>
+                                    <span class="text-body4">전체 <strong class="color-navy500"
+                                                                        th:text="${ticketList.totalcnt}"></strong>건</span>
                                 </div>
                             </div>
                             <!-- //리스트 상단 영역 -->
@@ -127,8 +142,8 @@
                                             <th>완료일</th>
                                         </tr>
                                         </thead>
-                                        <div >
-                                            <tbody >
+                                        <div>
+                                            <tbody>
                                             <tr th:if="${ticketList == null or #lists.isEmpty(ticketList)}">
                                                 <td colspan="10" style="text-align:center;">등록된 티켓이 없습니다.</td>
                                             </tr>
@@ -136,7 +151,14 @@
                                                 <td><span th:text="${ticket['TICKET_ID']}"></span></td>
                                                 <td><span th:text="${ticket['COMPANY_NAME']}"></span></td>
                                                 <td><span th:text="${ticket['TITLE']}"></span></td>
-                                                <td><span th:text="${ticket['REQUEST_TYPE_CD']}"></span></td>
+                                                <td><span th:switch="${ticket['REQUEST_TYPE_CD']}">
+                                                    <span th:case="'QA'">문의답변</span>
+                                                    <span th:case="'ERR'">오류수정</span>
+                                                    <span th:case="'ADD'">기능추가</span>
+                                                    <span th:case="'CH'">기능변경</span>
+                                                    <span th:case="'SP'">기술지원</span>
+                                                    <span th:case="'ETC'">기타</span>
+                                                </span></td>
                                                 <td><span th:switch="${ticket['STATUS_CD']}">
                                                     <span th:case="'OPEN'">등록</span>
                                                     <span th:case="'RECEIPT'">접수</span>
@@ -144,7 +166,10 @@
                                                     <span th:case="'CLOSED'">완료</span>
                                                     <span th:case="*"></span> <!-- 기본 값 -->
                                                 </span></td>
-                                                <td><span th:text="${ticket['REQUEST_TYPE_CD']}"></span></td>
+                                                <td><span th:switch="${ticket['SUPPORT_CD']}">
+                                                    <span th:case="'ST'">기본</span>
+                                                    <span th:case="'ADD'">추가</span>
+                                                </span></td>
                                                 <td><span th:text="${ticket['USER_NAME']}"></span></td>
                                                 <td><span th:text="${ticket['MD']}"></span></td>
                                                 <td><span th:text="${ticket['CREATE_DT']}"></span></td>
@@ -160,7 +185,7 @@
                             <!-- //리스트 영역 -->
                             <!-- 페이징 버튼 템플릿 -->
                             <div class="board-footer">
-                                <div th:replace="~{fragments/pagination :: pagination(${ticketList}, '/ticketlist')}" />
+                                <div th:replace="~{fragments/pagination :: pagination(${ticketList}, '/ticketlist')}"/>
                             </div>
                             <!-- //페이징 버튼 템플릿 -->
                         </div>

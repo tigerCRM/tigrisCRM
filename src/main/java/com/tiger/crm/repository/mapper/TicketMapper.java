@@ -1,6 +1,7 @@
 package com.tiger.crm.repository.mapper;
 
 import com.tiger.crm.repository.dto.page.PagingRequest;
+
 import com.tiger.crm.repository.dto.ticket.TicketDto;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -12,4 +13,6 @@ public interface TicketMapper {
     List<Map<String, Object>> getTicketList(PagingRequest pagingRequest);
 
     Integer getTicketListCount(PagingRequest pagingRequest);
+
+    void insertTicketInfo(TicketDto ticketDto);
 }

@@ -8,6 +8,7 @@
                COMPANY_NAME,
                STATUS_CD,
                REQUEST_TYPE_CD,
+               SUPPORT_CD,
                IFNULL(MD, '') as MD,
                TITLE,
                U.USER_NAME,
@@ -102,5 +103,14 @@
         </where>
 
     </select>
+
+    <insert id="insertTicketInfo" parameterType="com.tiger.crm.repository.dto.ticket.TicketDto">
+        INSERT INTO t_ticket_info
+        (TICKET_ID, COMPANY_ID, COMPANY_NAME, STATUS_CD, REQUEST_TYPE_CD, EXPECTED_COMPLETE_DT, REAL_COMPLETE_DT, MD, PRIORITY_YN,
+        TITLE, CONTENT, DELETE_YN, MANAGER_ID, CREATE_ID, CREATE_DT, UPDATE_ID, UPDATE_DT, FILE_ID, PARENT_TICKET_CD, SUPPORT_CD)
+        VALUES (#{ticketId}, #{companyId}, #{companyName}, #{statusCd}, #{requestTypeCd}, #{expectedCompleteDt},
+        #{realCompleteDt}, #{md}, #{priorityYn}, #{title}, #{content}, #{deleteYn}, #{managerId},
+        #{createId}, #{createDt}, #{updateId}, #{updateDt}, #{fileId}, #{parentTicketCd}, #{supportCd});
+    </insert>
 
 </mapper>

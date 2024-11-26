@@ -57,5 +57,11 @@
                 </ul>
             </ul>
         </nav>
+        <div class="quickmenu">
+            <button type="button" class="btn btn--l primary-btn quick-btn"  th:onclick="'window.location.href=\'' + @{/ticketCreate} + '\''">
+                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#pencil}"/></svg>
+                <span>빠른 작성</span>
+            </button>
+        </div>
     </div>
 </body>
