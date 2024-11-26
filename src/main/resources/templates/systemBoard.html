@@ -67,14 +67,14 @@
                                     <tr>
                                         <th>제목</th>
                                         <td colspan="3">
-                                            <input type="text" id="title" name="title" class="input--xs input01 input--full" th:field="*{title}" th:readonly="${systemBoard.boardId != 0}">
+                                            <input type="text" id="title" name="title" class="input--xs input01 input--full" th:field="*{title}" th:readonly="${mode == 'read'}">
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>회사</th>
                                         <td colspan="3">
                                             <div class="dropdown dropdown--xs" aria-expanded="false" tabindex="0">
-                                                <select class="dropdown__selected" name="selectedCompany">
+                                                <select class="dropdown__selected" name="selectedCompany" th:attr="disabled=${mode != 'write'}">
                                                     <!-- 기본 옵션 -->
                                                     <option value=""
                                                             th:selected="${systemBoard.boardId == 0}"
