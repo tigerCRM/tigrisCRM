@@ -15,8 +15,6 @@ tigris-crm 서비스 개발
       ``` ps -ef | grep java ```
 - 6. 프로세스 kill
       ``` sudo kill -9 [pid] ```
-- 7. 로그확인
-      ``` tail -f  /opt/crmProject/application.log ```
 
 <br/><br/>
 
@@ -28,6 +26,20 @@ tigris-crm 서비스 개발
 
 <br/><br/>
 
-3. URL 정리
-  - 개발서버 :  ``` http://192.168.0.240:8081/login ```
-  - jenkins : ``` http://192.168.0.240:8080/ ``
+3. 개발서버 URL
+      ``` http://192.168.0.240:8081/login ```
+
+
+
+<br/><br/>
+
+
+4. 젠킨스 관련
+   - 서버 : ``` http://192.168.0.240:8080/ ```
+   - 로그확인 : ``` sudo tail -f /var/log/crm/application.log ```
+
+<br/><br/>
+
+
+5. webHook 쓰려면 ngrok써야함. 
+ngrok 사용이유 > 아이피 제한을 걸어뒀기에,  우회하는 시스템을 써야지 push시 반응함.
