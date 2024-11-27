@@ -20,4 +20,5 @@ public interface SystemBoardService {
     int insertSystemBoard(SystemBoardDto systemBoardDto, BoardOpenCompanyDto boardOpenCompanyDto);
     void setSystemBoardFileId(String fileId,int boardId);
     SystemBoardDto getSystemBoardByBoardId(int boardId);
+    void deleteSystemBoardByBoardId(int boardId);
 }

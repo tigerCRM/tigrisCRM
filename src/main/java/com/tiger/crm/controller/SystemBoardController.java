@@ -20,6 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -78,33 +80,32 @@ public class SystemBoardController {
             Model model
     ) {
         HttpSession session = request.getSession(false);
+        UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
+        List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
         if(boardId != null ){ //글 불러오기 로직
-            UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
-            List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
-            //사용자 정보 가져오기
-            model.addAttribute("user", loginUser);
-            //회사 옵션 정보 가져오기
-            model.addAttribute("companyOptions", companyOptions);
-            
-            //시스템 정보 가져오기
             SystemBoardDto loadSystemBoard = systemBoardService.getSystemBoardByBoardId(boardId);
-            model.addAttribute("systemBoard",loadSystemBoard);
+
+            List<UploadFileDto> uploadFiles = fileService.getFilesById("board",boardId);
+
+            LOGGER.info("test : " + uploadFiles.toString());
+
+            model.addAttribute("user", loginUser);//사용자 정보 가져오기
+            model.addAttribute("companyOptions", companyOptions);//회사 옵션 정보 가져오기
+            model.addAttribute("systemBoard",loadSystemBoard);//시스템 정보 가져오기
+            model.addAttribute("uploadFiles",uploadFiles);//첨부파일 정보 가져오기
 
             if("modify".equals(mode)){
-                model.addAttribute("mode", "modify");
+                model.addAttribute("mode", "modify"); // 글 수정
             }else{
-                model.addAttribute("mode", "read");
+                model.addAttribute("mode", "read"); // 글 상세
             }
 
         }else{//신규 글 작성 로직
-            UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
-            List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
-            //사용자 정보 가져오기
-            model.addAttribute("user", loginUser);
-            //회사 옵션 정보 가져오기
-            model.addAttribute("companyOptions", companyOptions);
 
-            model.addAttribute("mode", "write");
+            model.addAttribute("user", loginUser);//사용자 정보 가져오기
+            model.addAttribute("companyOptions", companyOptions);//회사 옵션 정보 가져오기
+            model.addAttribute("mode", "write");//글작성
+            model.addAttribute("uploadFiles",null);
         }
 
         return "systemBoard";
@@ -146,4 +147,17 @@ public class SystemBoardController {
     /*
      * DELETE 시스템 정보 삭제
      * */
+    @DeleteMapping("/systemBoard")
+    public ResponseEntity<?> deleteSystemBoard(@RequestBody Map<String, Object> data){
+        int boardId = Integer.parseInt((String) data.get("boardId"));
+
+        try{
+            systemBoardService.deleteSystemBoardByBoardId(boardId); //t_board 안의 정보 삭제, t_board_open_company 정보 삭제(deleteYn = Y)
+            fileService.deleteFiles("board",boardId); //t_board 에 물려있는 첨부파일들 삭제(deleteYn = y)
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+        }
+
+        return ResponseEntity.ok("삭제되었습니다.");
+    }
 }

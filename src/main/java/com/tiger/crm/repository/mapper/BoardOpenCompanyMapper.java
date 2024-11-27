@@ -8,4 +8,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface BoardOpenCompanyMapper {
 
     int insertBoardOpenCompany(BoardOpenCompanyDto boardOpenCompanyDto);
+
+    void deleteBoardOpenCompany(int boardId);
 }

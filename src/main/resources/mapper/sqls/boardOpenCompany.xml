@@ -15,4 +15,9 @@
         )
     </insert>
 
+    <delete id="deleteBoardOpenCompany" parameterType="int">
+        DELETE FROM T_BOARD_OPEN_COMPANY
+        WHERE BOARD_ID = #{boardId}
+    </delete>
+
 </mapper>

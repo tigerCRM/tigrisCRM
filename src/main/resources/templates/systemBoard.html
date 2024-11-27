@@ -116,13 +116,16 @@
                                                 </div>
                                                 <div class="attachment-file">
                                                     <ul class="list01">
-                                                        <!--<li class="list__item">
+                                                        <li class="list__item" th:each="file : ${uploadFiles}">
                                                             <div class="item__title">
-                                                                <svg class="icon icon--20 color-gray700"><use href="./Style/images/icon/sprite-sheet.svg#attachment"></use></svg>
-                                                                <span>파일명1.pdf</span>
-                                                                <button type="button" class="icon icon--20 just-icon"><svg class="icon"><use href="./Style/images/icon/sprite-sheet.svg#close"></use></svg></button>
+                                                                <svg class="icon icon--20 color-gray700">
+                                                                    <use href="/assets/images/icon/sprite-sheet.svg#attachment"></use>
+                                                                </svg>
+                                                                <a th:href="@{/fileDownload(fileName=${file.fileName})}"
+                                                                   th:text="${file.originFileName}"
+                                                                   class="file-link">파일 이름 sample</a>
                                                             </div>
-                                                        </li>-->
+                                                        </li>
                                                     </ul>
                                                 </div>
                                             </div>
@@ -136,8 +139,8 @@
                                     <button type="submit" class="btn btn--m primary-btn" th:if="${mode == 'write' or mode == 'modify'}">글등록</button>
                                     <button type="button" class="btn btn--m primary-btn"
                                             th:if="${mode == 'read'}"
-                                            onclick="window.location.href='/systemBoard?boardId=' + document.getElementById('boardId').value + '&mode=modify'">글수정</button>
-                                    <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'read'}" >글삭제</button>
+                                            onclick="getModifyBoard()">글수정</button>
+                                    <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'read'}" onclick="deleteBoard()">글삭제</button>
                                     <button type="button" class="btn btn--m  secondary-btn" onclick="location.href='/systemBoardList';">목록으로</button>
                                 </div>
                                 <!--//버튼그룹-->
@@ -207,6 +210,41 @@
         // 동적 리스트 초기화
         $(".list01").empty();
     });
+
+    //5. 글 삭제
+    function deleteBoard() {
+
+        var url = `/systemBoard`;
+
+        if (confirm('정말로 삭제하시겠습니까?')) {
+            fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ boardId: boardId }),
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('삭제되었습니다.');
+                    window.location.href = '/systemBoardList'; // 삭제 후 이동할 페이지
+                } else {
+                    response.text().then(message => {
+                        alert(`서버응답실패: ${message}`);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('오류가 발생해 서버로 요청을 전송하지 못했습니다');
+            });
+        }
+    }
+    //6. 글 수정 페이지로 전환
+    function getModifyBoard() {
+        var url = '/systemBoard?boardId=' + boardId + '&mode=modify';
+        window.location.href = url;
+    }
 </script>
 </body>
 </html>

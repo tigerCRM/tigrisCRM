@@ -28,4 +28,7 @@ public interface SystemBoardMapper {
 
     //시스템게시글 게시글아이디로 찾아오기
     SystemBoardDto getSystemBoardByBoardId(int boardId);
+
+    //시스템 게시글 게시글 아이디로 삭제하기(deleteYn = y)
+    void deleteSystemBoardByBoardId(int boardId);
 }

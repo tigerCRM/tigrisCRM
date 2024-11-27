@@ -79,4 +79,10 @@
         ON B.CREATE_ID = U.USER_ID
         WHERE B.BOARD_ID = #{boardId}
     </select>
+
+    <update id="deleteSystemBoardByBoardId" parameterType="java.util.Map">
+        UPDATE T_BOARD
+        SET DELETE_YN = 'Y'
+        WHERE BOARD_ID = #{boardId}
+    </update>
 </mapper>

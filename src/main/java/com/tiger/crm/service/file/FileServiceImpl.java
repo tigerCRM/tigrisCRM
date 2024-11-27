@@ -42,6 +42,47 @@ public class FileServiceImpl implements FileService{
             systemBoardService.setSystemBoardFileId(uploadFile.getFileId(),savedBoardId);
         }
 
+    }
+
+    /*
+    * 첨부파일 리스트 가져오기
+    * 작성자 : 제예솔
+    * 설명 : type은 첨부한 경로의 타입(board = 게시판, ticket = 티켓) , id (게시판 또는 티켓의 아이디)
+    * 이외의 첨부파일 로드 경로가 있을 시 else if 붙여서 로직 추가하시면 됩니다
+    * */
+    @Override
+    public List<UploadFileDto> getFilesById(String type, int id){
+        String fileId;
+        List<UploadFileDto> files;
+        if("board".equals(type)){ // 게시판 첨부파일
+            fileId = "B".concat(String.valueOf(id));
+        }else if("ticket".equals(type)){ // 티켓 첨부파일
+            fileId = "T".concat(String.valueOf(id));
+        }else{
+            LOGGER.info("파일 찾기 오류 : 명시 되지 않은 요청 타입");
+            return null;
+        }
+        files = fileMapper.getFiles(fileId);
+        return files;
+    }
+    /*
+    * 첨부파일 이름으로 첨부파일 정보 가져오기
+    * */
+    @Override
+    public UploadFileDto getFileByFileName(String fileName){
+        return fileMapper.getFileByFileName(fileName);
+    };
+    @Override
+    public void deleteFiles(String type, int id){
+        String fileId = null;
+        if("board".equals(type)){ // 게시판 첨부파일
+            fileId = "B".concat(String.valueOf(id));
+        }else if("ticket".equals(type)){ // 티켓 첨부파일
+            fileId = "T".concat(String.valueOf(id));
+        }else{
+            LOGGER.info("파일 찾기 오류 : 명시 되지 않은 요청 타입");
+        }
+        fileMapper.deleteFilesByFileId(fileId);
 
     }
 }

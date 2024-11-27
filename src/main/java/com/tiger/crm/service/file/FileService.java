@@ -10,4 +10,10 @@ public interface FileService {
 
     void insertFile(List<UploadFileDto> uploadFiles, int savedBoardId);
 
+    List<UploadFileDto> getFilesById(String type, int id);
+
+    UploadFileDto getFileByFileName(String fileName);
+
+    void deleteFiles(String type, int id);
+
 }

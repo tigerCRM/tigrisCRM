@@ -69,4 +69,12 @@ public class SystemBoardServiceImpl implements SystemBoardService{
         return systemBoardMapper.getSystemBoardByBoardId(boardId);
     }
 
+    @Override
+    public void deleteSystemBoardByBoardId(int boardId){
+        //게시글 삭제
+        systemBoardMapper.deleteSystemBoardByBoardId(boardId);
+        //t_open_company 삭제
+        boardOpenCompanyMapper.deleteBoardOpenCompany(boardId);
+    }
+
 }

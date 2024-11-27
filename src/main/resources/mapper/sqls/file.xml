@@ -24,4 +24,32 @@
         'N'
         )
     </insert>
+
+    <select id="getFiles" resultType="com.tiger.crm.repository.dto.file.UploadFileDto">
+        SELECT
+            FILE_ID,
+            SEQ,
+            FILE_NAME,
+            ORIGIN_FILE_NAME
+        FROM T_FILE
+        WHERE FILE_ID = #{fileId}
+        AND DELETE_YN = 'N'
+    </select>
+
+    <select id="getFileByFileName" resultType="com.tiger.crm.repository.dto.file.UploadFileDto">
+    SELECT
+    FILE_ID,
+    SEQ,
+    FILE_NAME,
+    ORIGIN_FILE_NAME
+    FROM T_FILE
+    WHERE FILE_NAME = #{fileName}
+    </select>
+
+    <update id="deleteFilesByFileId" parameterType="java.util.Map">
+        UPDATE T_FILE
+        SET DELETE_YN = 'Y'
+        WHERE FILE_ID = #{FILE_ID}
+    </update>
+
 </mapper>
