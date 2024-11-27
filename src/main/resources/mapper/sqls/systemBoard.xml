@@ -85,4 +85,14 @@
         SET DELETE_YN = 'Y'
         WHERE BOARD_ID = #{boardId}
     </update>
+
+    <update id="updateSystemBoard" parameterType="com.tiger.crm.repository.dto.board.SystemBoardDto">
+        UPDATE T_BOARD
+        SET
+            TITLE = #{title},
+            CONTENT = #{content},
+            UPDATE_ID = #{updateId},
+            UPDATE_DT = NOW()
+        WHERE BOARD_ID = #{boardId}
+    </update>
 </mapper>

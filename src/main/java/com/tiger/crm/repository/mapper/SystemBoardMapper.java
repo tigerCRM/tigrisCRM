@@ -31,4 +31,7 @@ public interface SystemBoardMapper {
 
     //시스템 게시글 게시글 아이디로 삭제하기(deleteYn = y)
     void deleteSystemBoardByBoardId(int boardId);
+
+    //시스템 게시글 수정
+    void updateSystemBoard(SystemBoardDto systemBoardDto);
 }

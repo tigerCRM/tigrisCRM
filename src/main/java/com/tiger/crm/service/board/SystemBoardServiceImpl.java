@@ -77,4 +77,8 @@ public class SystemBoardServiceImpl implements SystemBoardService{
         boardOpenCompanyMapper.deleteBoardOpenCompany(boardId);
     }
 
+    @Override
+    public void updateSystemBoard(SystemBoardDto systemBoardDto){
+        systemBoardMapper.updateSystemBoard(systemBoardDto);
+    }
 }

@@ -160,4 +160,28 @@ public class SystemBoardController {
 
         return ResponseEntity.ok("삭제되었습니다.");
     }
+
+    /*
+     * PUT 시스템 정보 수정저장
+     * */
+    @PutMapping("/systemBoard")
+    public ResponseEntity<?> updateSystemBoard(@ModelAttribute("systemBoard") SystemBoardDto systemBoard, HttpServletRequest request, HttpServletResponse response){
+        LOGGER.info("#########수정으로 인입 : " + systemBoard.toString());
+        LOGGER.info("#########파일 좀 보자 : " + systemBoard.getAttachFiles().toString());
+        HttpSession session = request.getSession(false);
+        UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
+        systemBoard.setUpdateId(loginUser.getUserId());
+
+        try{
+            //게시글에 대한 작업
+            systemBoardService.updateSystemBoard(systemBoard);
+            
+            //파일 변동사항이 있는지 체크하고 첨부파일에 대한 작업
+        }catch (Exception e){
+
+        }
+
+        return null;
+    }
+
 }
