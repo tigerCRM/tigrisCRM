@@ -4,6 +4,7 @@ import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.dto.ticket.TicketDto;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
+import com.tiger.crm.repository.mapper.TicketMapper;
 import com.tiger.crm.service.common.CommonService;
 import com.tiger.crm.service.ticket.TicketService;
 
@@ -43,9 +44,6 @@ public class TicketController {
     @GetMapping("/ticketlist")
     public String getTickets(@ModelAttribute PagingRequest pagingRequest, Model model) {
         try {
-            pagingRequest.setSize(10);
-            model.addAttribute("startDate", "2024-01-01");
-            model.addAttribute("endDate", "2024-12-31");
             // selectbox 바인딩
             model.addAttribute("statusOptions", commonService.getSelectOptions("t_status"));
             model.addAttribute("searchOptions", commonService.getSelectOptions("t_search"));
@@ -109,19 +107,27 @@ public class TicketController {
     public String goTicketCreatePage(HttpServletRequest request, HttpServletResponse response, Model model){
         try {
             HttpSession session = request.getSession(false);
-
             UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
             String companyId = String.valueOf(loginUser.getCompanyId());
-            loginUser.setCompanyIdStr(companyId);
             String Date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+            Map<String, Object> managerInfo = ticketService.getManagerInfo(companyId);
+            String managerId = (String) managerInfo.get("MANAGER_ID");
+            String managerName = (String) managerInfo.get("MANAGER_NAME");
             TicketDto ticketCreate = new TicketDto();
             ticketCreate.setCreateDt(Date); //작성일
+            ticketCreate.setCreateName(loginUser.getUserName());    //작성자이름
+            ticketCreate.setCreateId(loginUser.getUserId());        //작성자ID
+            ticketCreate.setCompanyName(loginUser.getCompanyName());  //작성자회사
+            ticketCreate.setCompanyId(companyId);                   // 작성자회사ID
+            ticketCreate.setManagerId(managerId);               //담당자ID
+            ticketCreate.setManagerName(managerName);       //담당자이름
+            
             // selectbox 바인딩
-            model.addAttribute("requestType", commonService.getSelectOptions("t_request"));
-            model.addAttribute("supportType", commonService.getSelectOptions("t_support"));
-            model.addAttribute("priorityType", commonService.getSelectOptions("t_priority"));
+            model.addAttribute("requestTypeCd", commonService.getSelectOptions("t_request"));
+            model.addAttribute("supportCd", commonService.getSelectOptions("t_support"));
+            model.addAttribute("priorityYn", commonService.getSelectOptions("t_priority"));
 
-            model.addAttribute("user", loginUser);
             model.addAttribute("ticketCreate", ticketCreate);
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,7 +138,8 @@ public class TicketController {
     @PostMapping("/ticketCreate")
     public String saveTicketCreate(@ModelAttribute TicketDto ticketDto, @RequestParam("attachFiles") List<MultipartFile> files, HttpServletRequest request, HttpServletResponse response, Model model){
         try {
-
+            ticketDto.setStatusCd("OPEN");
+            System.out.println("Selected Request Type: " + ticketDto.getRequestTypeCd());
             boolean result =  ticketService.saveTicket(ticketDto, files);
 
             if(!result){

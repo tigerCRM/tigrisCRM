@@ -17,7 +17,7 @@ public class PagingRequest {
 
     public PagingRequest() {
         this.page = 1;  // 기본값 설정
-        this.size = 5; // 기본값 설정
+        this.size = 10; // 기본값 설정
     }
 
     public int getOffset() {

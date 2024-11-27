@@ -15,4 +15,6 @@ public interface TicketMapper {
     Integer getTicketListCount(PagingRequest pagingRequest);
 
     void insertTicketInfo(TicketDto ticketDto);
+
+    Map<String, Object> getManagerInfo(String companyId);
 }

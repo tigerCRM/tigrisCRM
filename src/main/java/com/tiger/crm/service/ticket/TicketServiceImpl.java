@@ -46,4 +46,17 @@ public class TicketServiceImpl implements TicketService {
         return true;
     }
 
+    public Map<String, Object> getManagerInfo(String companyId) {
+        if (companyId == null || companyId.isEmpty()) {
+            throw new IllegalArgumentException("Company ID must not be null or empty");
+        }
+
+        Map<String, Object> managerInfo = ticketMapper.getManagerInfo(companyId);
+
+        if (managerInfo.isEmpty()) {
+            throw new IllegalArgumentException("No managers found for company ID: " + companyId);
+        }
+
+        return managerInfo;
+    }
 }
