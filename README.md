@@ -3,7 +3,7 @@ tigris-crm 서비스 개발
 
 <br/><br/>
 
-# 개발 반영방법 (crmdevuser 로만 반영 가능)
+# 개발 반영방법 (crmdevuser 로만 반영 가능) 
 1. 로컬(.jar) 파일 개발서버에 반영
   1) 로컬의 jar 최신화 : ``` ./gradlew clean bootJar ``` 
   2) jar파일 서버에 업로드 : 
