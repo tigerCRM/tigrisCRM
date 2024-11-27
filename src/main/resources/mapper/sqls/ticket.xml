@@ -110,7 +110,16 @@
         TITLE, CONTENT, DELETE_YN, MANAGER_ID, CREATE_ID, CREATE_DT, UPDATE_ID, UPDATE_DT, FILE_ID, PARENT_TICKET_CD, SUPPORT_CD)
         VALUES (#{ticketId}, #{companyId}, #{companyName}, #{statusCd}, #{requestTypeCd}, #{expectedCompleteDt},
         #{realCompleteDt}, #{md}, #{priorityYn}, #{title}, #{content}, #{deleteYn}, #{managerId},
-        #{createId}, #{createDt}, #{updateId}, #{updateDt}, #{fileId}, #{parentTicketCd}, #{supportCd});
+        #{createId}, sysdate(), #{updateId}, sysdate(), #{fileId}, #{parentTicketCd}, #{supportCd});
     </insert>
+
+    <select id="getManagerInfo"  resultType="java.util.HashMap">
+        SELECT U.USER_ID as MANAGER_ID,
+            U.USER_NAME as MANAGER_NAME
+        FROM T_USER_INFO as U
+        LEFT JOIN T_COMPANY_INFO as C
+        on C.MANAGER_ID  = U.USER_ID
+        WHERE C.COMPANY_ID = #{companyId}
+    </select>
 
 </mapper>

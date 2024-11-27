@@ -1,6 +1,6 @@
 package com.tiger.crm.repository.dto.page;
 
-import com.tiger.crm.common.util.PageUtils2;
+import com.tiger.crm.common.util.PageUtils;
 import lombok.Getter;
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class PagingResponse<T> {
         this.pageSize = pagingRequest.getSize();
         this.currentPage = pagingRequest.getPage();
         this.totalPages = (int) Math.ceil((double) totalElements / pageSize);
-        this.pages = PageUtils2.makePages(totalElements, pageSize, currentPage);
+        this.pages = PageUtils.makePages(totalElements, pageSize, currentPage);
 
     }
     public boolean isEmpty() {

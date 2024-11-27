@@ -1,5 +1,6 @@
 package com.tiger.crm.repository.dto.ticket;
 
+import com.tiger.crm.repository.dto.user.UserLoginDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,23 +14,19 @@ import java.util.Date;
 @Setter
 @ToString
 public class TicketDto {
+    //검색조건
     private String searchKeyword;
     private String searchStatus;
     private String searchType;
     private String totalcnt;
     private String startDt;
     private String endDt;
-    //필터 기간
-    private Date filterStartDt;
-    private Date filterEndDt;
     //페이지
-    private Integer page				= 0;
-    private int limitStart 			= 0;
-    private int recordCountPerPage 	= 12;
 
     private String title;  //제목
     private String content;  //내용
     private String createId;   //작성자ID
+    private String createName;   //작성자ID
     private String managerName;  //담당자이름
     private String managerId;  //담당자ID
     private String companyName;  //고객사명
@@ -44,46 +41,11 @@ public class TicketDto {
     private String fileId;
     private Integer ticketId;           // TICKET_ID
     private String statusCd;             // STATUS_CD
-    private String requestTypeCd;        // REQUEST_TYPE_CD
     private LocalDate expectedCompleteDt; // EXPECTED_COMPLETE_DT
     private LocalDate realCompleteDt;    // REAL_COMPLETE_DT
     private String priorityYn;           // PRIORITY_YN
     private String parentTicketCd;       // PARENT_TICKET_CD
     private String supportCd;            // SUPPORT_CD
+    private String requestTypeCd;        // requestCd
 
-    public void setFilterStartDt(String date)
-    {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try
-        {
-            this.filterStartDt = sdf.parse(date);
-        }
-        catch (ParseException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public void setFilterEndDt(String date)
-    {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        try
-        {
-            this.filterEndDt = sdf.parse(date);
-        }
-        catch (ParseException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    public int getLimitStart()
-    {
-        return (this.page - 1) * this.recordCountPerPage;
-    }
-
-    public int getLimitEnd()
-    {
-        return this.limitStart + this.recordCountPerPage;
-    }
 }

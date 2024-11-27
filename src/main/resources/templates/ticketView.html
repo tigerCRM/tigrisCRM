@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width" />
-    <title>요청 등록</title>
+    <title>요청 관리</title>
     <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
@@ -65,27 +65,23 @@
                                     </tr>
                                     <tr>
                                         <th>작성자</th>
-                                        <td>
-                                            <input type="text" th:field="*{createName}" readonly>
-                                        </td>
+                                        <td th:text="${user.userName}"></td>
                                         <th>작성일자</th>
-                                        <td>
-                                            <input type="text" th:field="*{createDt}" readonly>
-                                        </td>
+                                        <td th:text="${ticketCreate.createDt}"></td>
                                     </tr>
                                     <tr>
                                         <th>담당자(PM)</th>
                                         <td>
                                             <div class="dropdown dropdown--xs" aria-expanded="false" tabindex="0">
-                                                <input type="text" id="managerName"  class="input--xs input01 input--full" th:field="*{managerName}">
+                                                <input type="text" id="managerName"  class="input--xs input01 input--full" th:value="*{managerName}">
                                                 <input type="hidden" id="managerId" th:field="*{managerId}">
                                             </div>
                                         </td>
                                         <th>고객사</th>
                                         <td>
                                             <div class="dropdown dropdown--xs" aria-expanded="false" tabindex="0">
-                                                <input type="text" id="companyName"  class="input--xs input01 input--full"  th:field="*{companyName}" readonly>
-                                                <input type="hidden" id="companyId"  th:field="*{companyId}" readonly>
+                                                <input type="text" id="companyName"  class="input--xs input01 input--full"  th:value="${user.companyName}">
+                                                <input type="hidden" id="companyId"  th:value="${user.companyId}" >
                                             </div>
                                         </td>
                                     </tr>
@@ -93,8 +89,8 @@
                                         <th>작업구분</th>
                                         <td>
                                             <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
-                                                <select class="dropdown__selected" id="requestTypeCd" th:field="${requestTypeCd}">
-                                                    <option th:each="op : ${requestTypeCd}"
+                                                <select class="dropdown__selected" id="requestType" th:value="${requestType}">
+                                                    <option th:each="op : ${requestType}"
                                                             th:value="${op.key}"
                                                             th:text="${op.value}"></option>
                                                 </select>
@@ -103,8 +99,8 @@
                                         <th>지원범위</th>
                                         <td>
                                             <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
-                                                <select class="dropdown__selected" id="supportCd" th:field="${supportCd}">
-                                                    <option th:each="op : ${supportCd}"
+                                                <select class="dropdown__selected" id="supportType" th:value="${supportType}">
+                                                    <option th:each="op : ${supportType}"
                                                             th:value="${op.key}"
                                                             th:text="${op.value}"></option>
                                                 </select>
@@ -115,8 +111,8 @@
                                         <th>중요도</th>
                                         <td>
                                             <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
-                                                <select class="dropdown__selected" id="priorityYn" th:field="${priorityYn}">
-                                                    <option th:each="op : ${priorityYn}"
+                                                <select class="dropdown__selected" id="priorityType" th:value="${priorityType}">
+                                                    <option th:each="op : ${priorityType}"
                                                             th:value="${op.key}"
                                                             th:text="${op.value}"></option>
                                                 </select>
@@ -124,7 +120,7 @@
                                         </td>
                                         <th>희망완료일</th>
                                         <td>
-                                            <div th:include="fragments/datepicker :: datepickersingle('Date')" th:field="${Date}"></div>
+                                            <div th:include="fragments/datepicker :: datepickersingle('Date')" th:value="${Date}"></div>
                                         </td>
                                     </tr>
                                     <tr>

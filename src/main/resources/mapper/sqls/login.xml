@@ -6,11 +6,14 @@
 
     <!-- 데이터 조회 쿼리 -->
     <select id="getUser" resultType="com.tiger.crm.repository.dto.user.UserLoginDto">
-        SELECT USER_ID,
-               USER_NAME,
-               COMPANY_ID,
-               USER_CLASS
-        FROM T_USER_INFO
+        SELECT U.USER_ID as USER_ID,
+            U.USER_NAME as USER_NAME,
+            U.COMPANY_ID as COMPANY_ID,
+            C.COMPANY_NAME as COMPANY_NAME,
+            U.USER_CLASS as USER_CLASS
+            FROM T_USER_INFO as U
+            LEFT JOIN t_company_info as C
+        on U.COMPANY_ID = C.COMPANY_ID
         WHERE USER_ID = #{id}
     </select>
 
