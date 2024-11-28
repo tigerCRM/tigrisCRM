@@ -119,12 +119,13 @@
                                         <colgroup>
                                             <col style="width: 5%;">
                                             <col style="width: 10%;">
+                                            <col style="width: 3%;">
                                             <col style="width: 20%;">
                                             <col style="width: 10%;">
                                             <col style="width: 10%;">
                                             <col style="width: 10%;">
                                             <col style="width: 10%;">
-                                            <col style="width: 10%;">
+                                            <col style="width: 7%;">
                                             <col style="width: 10%;">
                                             <col style="width: 10%;">
                                         </colgroup>
@@ -132,6 +133,7 @@
                                         <tr>
                                             <th>티켓번호</th>
                                             <th>고객사</th>
+                                            <th></th>
                                             <th class="board-title">제목</th>
                                             <th>분류</th>
                                             <th>상태</th>
@@ -144,13 +146,18 @@
                                         </thead>
                                         <div>
                                             <tbody>
-                                            <tr th:if="${ticketList == null or #lists.isEmpty(ticketList)}">
-                                                <td colspan="10" style="text-align:center;">등록된 티켓이 없습니다.</td>
+                                            <tr th:if="${ticketList == null or ticketList.dataList == null or #lists.isEmpty(ticketList.dataList)}">
+                                                <td colspan="11" style="text-align:center;">등록된 티켓이 없습니다.</td>
                                             </tr>
+
                                             <tr th:each="ticket : ${ticketList.dataList}">
                                                 <td><span th:text="${ticket['TICKET_ID']}"></span></td>
                                                 <td><span th:text="${ticket['COMPANY_NAME']}"></span></td>
-                                                <td><span th:text="${ticket['TITLE']}"></span></td>
+                                                <td><span th:if="${ticket['PRIORITY_YN'] == 'Y'}" class="tag tag--red">긴급</span>
+                                                </td>
+                                                <td class="text-left">
+                                                    <span th:text="${ticket['TITLE']}"></span>
+                                                </td>
                                                 <td><span th:switch="${ticket['REQUEST_TYPE_CD']}">
                                                     <span th:case="'QA'">문의답변</span>
                                                     <span th:case="'ERR'">오류수정</span>
@@ -225,7 +232,7 @@
         });
 
         // Ajax 요청
-        fetch('/ticketlist', {
+        fetch('/ticketList', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
