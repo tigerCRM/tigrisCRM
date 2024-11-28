@@ -47,17 +47,10 @@ public class TicketController {
         try {
             HttpSession session = request.getSession(false);
             UserLoginDto loginUser = (UserLoginDto) session.getAttribute("loginUser");
-            LOGGER.info("세션정보 : " + session.toString());
-            if (session == null) {
-                LOGGER.info("세션 없음");
-                return "redirect:login";
-            }
             String companyId = String.valueOf(loginUser.getCompanyId());
             String userClass = String.valueOf(loginUser.getUserClass());
             pagingRequest.setUserClass(userClass);
             pagingRequest.setCompanyId(companyId);
-            model.addAttribute("user", loginUser);
-
             // selectbox 바인딩
             model.addAttribute("statusOptions", commonService.getSelectOptions("t_status"));
             model.addAttribute("searchOptions", commonService.getSelectOptions("t_search"));
@@ -128,13 +121,6 @@ public class TicketController {
             HttpSession session = request.getSession(false);
             UserLoginDto loginUser = (UserLoginDto) session.getAttribute("loginUser");
             String companyId = String.valueOf(loginUser.getCompanyId());
-
-            LOGGER.info("세션정보 : " + session.toString());
-            if (session == null) {
-                LOGGER.info("세션 없음");
-                return "redirect:login";
-            }
-            model.addAttribute("user", loginUser);
 
             Map<String, Object> managerInfo = ticketService.getManagerInfo(companyId);
             String managerId = (String) managerInfo.get("MANAGER_ID");
