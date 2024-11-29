@@ -14,7 +14,10 @@ public interface TicketMapper {
 
     Integer getTicketListCount(PagingRequest pagingRequest);
 
-    void insertTicketInfo(TicketDto ticketDto);
+    int insertTicketInfo(TicketDto ticketDto);
 
     Map<String, Object> getManagerInfo(String companyId);
+
+    // 티켓 상세 정보 조회
+    TicketDto selectTicketDetails(int ticketId);
 }

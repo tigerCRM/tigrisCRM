@@ -1,11 +1,15 @@
 package com.tiger.crm.controller;
 
+import com.tiger.crm.common.file.FileStoreUtils;
+import com.tiger.crm.repository.dto.company.CompanyOptionDto;
+import com.tiger.crm.repository.dto.file.UploadFileDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.dto.ticket.TicketDto;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.repository.mapper.TicketMapper;
 import com.tiger.crm.service.common.CommonService;
+import com.tiger.crm.service.file.FileService;
 import com.tiger.crm.service.ticket.TicketService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,9 +39,10 @@ public class TicketController {
     private TicketService ticketService;
     @Autowired
     private CommonService commonService;
-
+    @Autowired
+    private FileStoreUtils fileStoreUtils;
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
-
+    private FileService fileService;
     /*
      * 요청관리(티켓관리)
      * 설명 : 요청관리 페이지 초기화면
@@ -47,6 +52,7 @@ public class TicketController {
         try {
             HttpSession session = request.getSession(false);
             UserLoginDto loginUser = (UserLoginDto) session.getAttribute("loginUser");
+
             String companyId = String.valueOf(loginUser.getCompanyId());
             String userClass = String.valueOf(loginUser.getUserClass());
             pagingRequest.setUserClass(userClass);
@@ -121,6 +127,8 @@ public class TicketController {
             HttpSession session = request.getSession(false);
             UserLoginDto loginUser = (UserLoginDto) session.getAttribute("loginUser");
             String companyId = String.valueOf(loginUser.getCompanyId());
+            String companyName = String.valueOf(loginUser.getCompanyName());
+            String userClass = String.valueOf(loginUser.getUserClass());
 
             Map<String, Object> managerInfo = ticketService.getManagerInfo(companyId);
             String managerId = (String) managerInfo.get("MANAGER_ID");
@@ -129,6 +137,7 @@ public class TicketController {
             //완료예정일(접수당일 +7일)셋팅
             String expDate = LocalDate.now().plusDays(7).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 
+            //ticketCreate 객체 바인딩
             TicketDto ticketCreate = new TicketDto();
             ticketCreate.setCreateName(loginUser.getUserName());    //작성자이름
             ticketCreate.setCreateId(loginUser.getUserId());        //작성자ID
@@ -138,7 +147,11 @@ public class TicketController {
             ticketCreate.setManagerName(managerName);       //담당자이름
             ticketCreate.setExpectedCompleteDt(expDate);
 
-            // selectbox 바인딩
+            //model에 데이터 바인딩
+            List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
+            model.addAttribute("companyOptions", companyOptions);
+            model.addAttribute("selectedCompanyId", companyName);
+            model.addAttribute("userClass", userClass); //작성자 레벨
             model.addAttribute("requestTypeCd", commonService.getSelectOptions("t_request"));
             model.addAttribute("supportCd", commonService.getSelectOptions("t_support"));
             model.addAttribute("priorityYn", commonService.getSelectOptions("t_priority"));
@@ -157,17 +170,52 @@ public class TicketController {
     public String saveTicketCreate(@ModelAttribute TicketDto ticketDto, @RequestParam("attachFiles") List<MultipartFile> files, HttpServletRequest request, HttpServletResponse response, Model model) {
         try {
             ticketDto.setStatusCd("OPEN");
-            boolean result = ticketService.saveTicket(ticketDto, files);
-            if (!result) {
+            int savedId = ticketService.saveTicket(ticketDto, files);
+            if (savedId == 0) {
                 LOGGER.error("Failed to save ticket");
                 model.addAttribute("error", "티켓 저장에 실패했습니다.");
                 return "ticketCreate";
             }
+            //첨부파일
+           /* try{
+                List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(ticketDto.getAttachFiles()); // 경로에 저장
+                fileService.insertFile(uploadFiles, savedId); //DB 에 저장
+
+            }catch (Exception e){
+                LOGGER.info(e.toString());
+                return null;
+            }*/
         } catch (Exception e) {
             LOGGER.error("An error occurred while saving ticket", e);
             model.addAttribute("errorMessage", "티켓 저장 중 오류가 발생했습니다.");
             return "common/error"; // error 페이지로 이동
         }
         return "redirect:ticketList";
+    }
+    /*
+     * 티켓 상세보기
+     * 설명 :
+     * */
+
+    @GetMapping("/ticketView")
+    public String getTicketsView( @RequestParam(value = "id", required = false) Integer id,@ModelAttribute PagingRequest pagingRequest, HttpServletRequest request, Model model) {
+        try {
+            HttpSession session = request.getSession(false);
+            UserLoginDto loginUser = (UserLoginDto) session.getAttribute("loginUser");
+
+            String companyId = String.valueOf(loginUser.getCompanyId());
+            String userClass = String.valueOf(loginUser.getUserClass());
+
+            // 티켓 상세 정보 조회
+            TicketDto ticketDetails = ticketService.getTicketDetails(id);
+            model.addAttribute("statusCd", ticketDetails.getStatusCd());
+            model.addAttribute("ticketinfo", ticketDetails);
+            return "ticketView";
+        } catch (Exception e) {
+            // 오류 로그 기록
+            e.printStackTrace();
+            model.addAttribute("error", "데이터를 불러오는 중 오류가 발생했습니다. 다시 시도해주세요.");
+            return "errorPage";  // 에러 페이지로 이동 (필요 시 별도의 오류 페이지 생성)
+        }
     }
 }

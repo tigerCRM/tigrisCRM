@@ -4,8 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -45,5 +47,5 @@ public class TicketDto {
     private String parentTicketCd;       // PARENT_TICKET_CD
     private String supportCd;            // SUPPORT_CD
     private String requestTypeCd;        // requestCd
-
+    private List<MultipartFile> attachFiles;
 }

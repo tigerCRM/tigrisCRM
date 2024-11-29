@@ -33,19 +33,12 @@ public class TicketServiceImpl implements TicketService {
     }
 
     //티켓저장
-    public boolean saveTicket(TicketDto ticketDto, List<MultipartFile> files) {
-        try {
-            ticketMapper.insertTicketInfo(ticketDto);
-            for (MultipartFile file : files) {
-                if (!file.isEmpty()) {
-                    String fileName = file.getOriginalFilename();
-                    //첨부파일 저장 로직 추가 예정
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("티켓 저장 중 오류가 발생했습니다.", e);  // 예외를 던짐
+    public int saveTicket(TicketDto ticketDto, List<MultipartFile> files) {
+        int resultCount =  ticketMapper.insertTicketInfo(ticketDto);
+        if(resultCount != 1){
+            return 0;
         }
-        return true;
+        return ticketDto.getTicketId();
     }
 
     //담당자(PM)정보
@@ -58,5 +51,9 @@ public class TicketServiceImpl implements TicketService {
             throw new IllegalArgumentException("No managers found for company ID: " + companyId);
         }
         return managerInfo;
+    }
+
+    public TicketDto getTicketDetails(int ticketId) {
+        return ticketMapper.selectTicketDetails(ticketId);
     }
 }

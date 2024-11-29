@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width" />
-    <title>요청 관리</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width"/>
+    <title>요청 등록 상세</title>
     <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/common.css?v2">
     <link rel="stylesheet" type="text/css" href="/assets/css/layout.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
     <script src="/lib/jquery/jquery-2.2.2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <!--toast ui 설정-->
-    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <!--datepicker 관련 -->
     <script src="/lib/picker/datepicker.min.js"></script>
@@ -24,14 +24,15 @@
 <body>
 <div class="wrapper">
     <!-- 왼쪽 메뉴  -->
-    <div th:replace="~{common/frame_left_menu :: frame_left_menu}" />
+    <div th:replace="~{common/frame_left_menu :: frame_left_menu}"/>
     <!-- 상단 메뉴  -->
-    <div th:replace="~{common/frame_top_menu :: frame_top_menu}" />
+    <div th:replace="~{common/frame_top_menu :: frame_top_menu}"/>
     <!-- 컨텐츠 영역 -->
     <div class="main-area">
         <!-- 내용 영역 -->
         <main class="form-content">
             <div class="container">
+                <!--왼쪽화면-->
                 <div class="main-widget-wrap">
                     <div class="content">
                         <!-- 헤더 영역 -->
@@ -39,14 +40,15 @@
                             <div class="content-header">
                                 <h2 class="text-body1">
                                     <div class="flex flex-align_center gap--8">
-                                        <b>요청 등록</b>
+                                        <b>요청 등록 상세</b>
                                     </div>
                                 </h2>
                             </div>
                         </div>
                         <!-- //헤더 영역 -->
                         <!-- form 영역 -->
-                        <form id= "boardSubmitArea" action="/ticketCreate"  method="post" enctype="multipart/form-data" th:object="${ticketCreate}">
+                        <form action="/ticketCreate" method="post" enctype="multipart/form-data"
+                              th:object="${ticketinfo}">
                             <div>
                                 <!--사용자 입력 영역-->
                                 <table class="table table03 table--h table--xs">
@@ -58,82 +60,103 @@
                                     </colgroup>
                                     <tbody>
                                     <tr>
+                                        <input type="hidden" id="statusCd" th:field="*{statusCd}">
+                                        <!--진행사항 progress bar-->
+                                        <div class="step-progress">
+                                            <div class="step">
+                                                <div class="step-number">OPEN</div>
+                                                <div class="step-label">등록</div>
+                                            </div>
+                                            <div class="separator"></div>
+                                            <div class="step">
+                                                <div class="step-number">RECEIPT</div>
+                                                <div class="step-label">접수</div>
+                                            </div>
+                                            <div class="separator"></div>
+                                            <div class="step">
+                                                <div class="step-number">PROGRESS</div>
+                                                <div class="step-label">진행</div>
+                                            </div>
+                                            <div class="separator"></div>
+                                            <div class="step">
+                                                <div class="step-number">CLOSED</div>
+                                                <div class="step-label">완료</div>
+                                            </div>
+                                        </div>
+                                    </tr>
+                                    <tr>
                                         <th>제목</th>
                                         <td colspan="3">
-                                            <input type="text" id="title" class="input--xs input01 input--full" th:field="*{title}" required>
+                                            <span id="title" th:text="*{title}"></span>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>작성자</th>
-                                        <td th:text="${user.userName}"></td>
-                                        <th>작성일자</th>
-                                        <td th:text="${ticketCreate.createDt}"></td>
-                                    </tr>
-                                    <tr>
-                                        <th>담당자(PM)</th>
+                                        <th>요청자</th>
                                         <td>
-                                            <div class="dropdown dropdown--xs" aria-expanded="false" tabindex="0">
-                                                <input type="text" id="managerName"  class="input--xs input01 input--full" th:value="*{managerName}">
-                                                <input type="hidden" id="managerId" th:field="*{managerId}">
-                                            </div>
+                                            <span id="createName" th:text="*{createName}"></span>
                                         </td>
                                         <th>고객사</th>
                                         <td>
-                                            <div class="dropdown dropdown--xs" aria-expanded="false" tabindex="0">
-                                                <input type="text" id="companyName"  class="input--xs input01 input--full"  th:value="${user.companyName}">
-                                                <input type="hidden" id="companyId"  th:value="${user.companyId}" >
-                                            </div>
+                                            <span id="companyName" th:text="*{companyName}"></span>
                                         </td>
+                                    </tr>
+                                    <tr>
+                                        <th>담당자(PM)</th>
+                                        <td colspan="3">
+                                            <span id="managerName" th:text="*{managerName}"></span>
+                                            <input type="hidden" id="managerId" th:field="*{managerId}">
+                                        </td>
+
                                     </tr>
                                     <tr>
                                         <th>작업구분</th>
                                         <td>
-                                            <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
-                                                <select class="dropdown__selected" id="requestType" th:value="${requestType}">
-                                                    <option th:each="op : ${requestType}"
-                                                            th:value="${op.key}"
-                                                            th:text="${op.value}"></option>
-                                                </select>
-                                            </div>
+                                            <span th:switch="*{requestTypeCd}">
+                                                <span th:case="'QA'">문의답변</span>
+                                                <span th:case="'ERR'">오류수정</span>
+                                                <span th:case="'ADD'">기능추가</span>
+                                                <span th:case="'CH'">기능변경</span>
+                                                <span th:case="'SP'">기술지원</span>
+                                                <span th:case="'ETC'">기타</span>
+                                            </span>
                                         </td>
                                         <th>지원범위</th>
                                         <td>
-                                            <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
-                                                <select class="dropdown__selected" id="supportType" th:value="${supportType}">
-                                                    <option th:each="op : ${supportType}"
-                                                            th:value="${op.key}"
-                                                            th:text="${op.value}"></option>
-                                                </select>
-                                            </div>
+                                            <span th:switch="*{supportCd}">
+                                                <span th:case="'ST'">기본</span>
+                                                <span th:case="'ADD'">추가</span>
+                                            </span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>중요도</th>
                                         <td>
-                                            <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
-                                                <select class="dropdown__selected" id="priorityType" th:value="${priorityType}">
-                                                    <option th:each="op : ${priorityType}"
-                                                            th:value="${op.key}"
-                                                            th:text="${op.value}"></option>
-                                                </select>
-                                            </div>
+                                            <span th:switch="*{priorityYn}">
+                                                <span th:case="'Y'">긴급</span>
+                                                <span th:case="'N'">일반</span>
+                                            </span>
                                         </td>
                                         <th>희망완료일</th>
                                         <td>
-                                            <div th:include="fragments/datepicker :: datepickersingle('Date')" th:value="${Date}"></div>
+                                            <span id="expectedCompleteDt" th:text="*{expectedCompleteDt}"></span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>작업완료일</th>
-                                        <td th:text="${ticketCreate.completeDt}"></td>
+                                        <td>
+                                            <span id="completeDt" th:text="*{completeDt}"></span>
+                                        </td>
                                         <th>처리일수</th>
-                                        <td th:text="${ticketCreate.md}"></td>
+                                        <td>
+                                            <span id="md" th:text="*{md}"></span>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td colspan="4">
                                             <div class="editor-wrap">
-                                                <div id="editorContent"></div>
-                                                <input type="hidden" name="content" id="content" th:field="*{content}">
+                                                <div id="editorContent">
+                                                    <span id="content" th:text="*{content}"></span>
+                                                </div>
                                             </div>
                                         </td>
                                     </tr>
@@ -141,11 +164,7 @@
                                         <th>첨부파일</th>
                                         <td colspan="3">
                                             <div class="attachment-wrapper">
-                                                <div class="flex gap--4">
-                                                    <label for="attachFiles" class="btn btn--xs mono-outline-btn">추가</label>
-                                                    <input type="file" multiple="multiple" id="attachFiles" name="attachFiles" class="file_attach_input">
-                                                    <button type="button" id="fileDelete" class="btn btn--xs mono-outline-btn">삭제</button>
-                                                </div>
+
                                                 <div class="attachment-file">
                                                     <ul class="list01">
                                                     </ul>
@@ -158,16 +177,20 @@
                                 <!--//사용자 입력 영역-->
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
-                                    <button type="submit" class="btn btn--m  primary-btn">글등록</button>
-                                    <button type="button" class="btn btn--m  secondary-btn" onclick="location.href='/ticketList';">목록으로</button>
+                                    <button type="submit" class="btn btn--m  primary-btn">글수정</button>
+                                    <button type="button" class="btn btn--m  secondary-btn"
+                                            onclick="location.href='/ticketList';">목록으로
+                                    </button>
                                 </div>
                                 <!--//버튼그룹-->
                             </div>
                         </form>
                         <!-- //form 영역 -->
-
-
                     </div>
+                </div>
+                <!--오른쪽화면-->
+                <div class="main-widget-wrap">
+
                 </div>
             </div>
         </main>
@@ -177,59 +200,27 @@
 </div>
 
 <script>
-    //1. editor load 및 초기화
-    const editor = new toastui.Editor({
-        el: document.querySelector('#editorContent'), // 에디터를 적용할 요소 (컨테이너)
-        height: 'auto',                        // 에디터 영역의 높이 값 (OOOpx || auto)
-        initialEditType: 'wysiwyg',            // 최초로 보여줄 에디터 타입 (markdown || wysiwyg)
-        initialValue: '내용을 입력해 주세요.',     // 내용의 초기 값으로, 반드시 마크다운 문자열 형태여야 함
-        previewStyle: 'vertical',                // 마크다운 프리뷰 스타일 (tab || vertical)
-        hideModeSwitch: true
-    });
+    document.addEventListener("DOMContentLoaded", function () {
+        const stepProgress = document.querySelector('.step-progress');
+        const statusCd = $("#statusCd").val();
 
-    //2. form submit 시 toast editor 영역 안의 값을 content 안에 넣음
-    document.querySelector('#boardSubmitArea').addEventListener('submit', function (e) {
-            const content = editor.getHTML(); // 에디터 안의 html 콘텐츠를 가져옴
-            document.querySelector('#content').value = content; // hidden input 안에 입력한 데이터를 넣고 전송
+        const steps = stepProgress.querySelectorAll('.step');
+        const statusOrder = ['OPEN', 'RECEIPT', 'PROGRESS', 'CLOSED'];
 
-            const selectElement = document.querySelector('.dropdown__selected');
-            const selectedOption = selectElement.options[selectElement.selectedIndex];
-            const companyNameInput = document.querySelector('#companyName');
-            companyNameInput.value = selectedOption.textContent.trim();
-    });
+        steps.forEach((step, index) => {
+            const stepNumber = step.querySelector('.step-number').textContent;
 
-    //3. 첨부파일 등록 시 밑에 있는 영역에 파일 이름 넣음
-    $("#attachFiles").on('change',function(){
-        const files = this.files;
-        const list = $(".list01");
-
-        // 기존 리스트 초기화
-        list.empty();
-        Array.from(files).forEach(file => {
-            const fileName = file.name;
-            const listItem = `
-                <li class="list__item">
-                    <div class="item__title">
-                        <svg class="icon icon--20 color-gray700">
-                            <use href="/assets/images/icon/sprite-sheet.svg#attachment"></use>
-                        </svg>
-                        <span>${fileName}</span>
-                    </div>
-                </li>
-            `;
-            list.append(listItem);
+            if (statusOrder.indexOf(stepNumber) < statusOrder.indexOf(statusCd)) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+            } else if (statusOrder.indexOf(stepNumber) === statusOrder.indexOf(statusCd)) {
+                step.classList.add('active');
+                step.classList.remove('completed');
+            } else {
+                step.classList.remove('active', 'completed');
+            }
         });
-
     });
-
-    //4. 첨부파일 전체 삭제
-    $("#fileDelete").on('click', function () {
-            // 파일 입력 값 초기화
-            $("#attachFiles").val('');
-
-            // 동적 리스트 초기화
-            $(".list01").empty();
-        });
 </script>
 </body>
 </html>

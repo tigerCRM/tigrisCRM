@@ -13,9 +13,11 @@ public interface TicketService {
     // 페이징 객체를 사용한 리스트
     PagingResponse<Map<String, Object>> getTicketList(PagingRequest pagingRequest);
 
-    boolean saveTicket(TicketDto ticketDto, List<MultipartFile> files);
+    int saveTicket(TicketDto ticketDto, List<MultipartFile> files);
 
     Map<String, Object> getManagerInfo(String companyId);
+
+    TicketDto getTicketDetails(int ticketId);
 }
 
 

@@ -156,7 +156,7 @@
                                                 <td><span th:if="${ticket['PRIORITY_YN'] == 'Y'}" class="tag tag--red">긴급</span>
                                                 </td>
                                                 <td class="text-left">
-                                                    <span th:text="${ticket['TITLE']}"></span>
+                                                    <a th:text="${ticket['TITLE']}" th:href="@{/ticketView(id=${ticket['TICKET_ID']})}"></a>
                                                 </td>
                                                 <td><span th:switch="${ticket['REQUEST_TYPE_CD']}">
                                                     <span th:case="'QA'">문의답변</span>
@@ -192,7 +192,7 @@
                             <!-- //리스트 영역 -->
                             <!-- 페이징 버튼 템플릿 -->
                             <div class="board-footer">
-                                <div th:replace="~{fragments/pagination :: pagination(${ticketList}, '/ticketlist')}"/>
+                                <div th:replace="~{fragments/pagination :: pagination(${ticketList}, '/ticketList')}"/>
                             </div>
                             <!-- //페이징 버튼 템플릿 -->
                         </div>
