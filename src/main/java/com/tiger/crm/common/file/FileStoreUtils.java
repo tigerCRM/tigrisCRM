@@ -1,6 +1,8 @@
 package com.tiger.crm.common.file;
 
 import com.tiger.crm.repository.dto.file.UploadFileDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +23,7 @@ public class FileStoreUtils {
     //application.yml 에 파일 위치 명시되어 있음
     @Value("${file.dir}")
     private String fileDir;
+    private Logger LOGGER = LoggerFactory.getLogger(getClass());
     
     //파일 전체 경로 찾기
     public String getFullPath(String filename){

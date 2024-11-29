@@ -20,4 +20,6 @@ public interface FileMapper {
 
     //첨부파일 아이디로 첨부파일들 삭제
     void deleteFilesByFileId(String fileId);
+
+    void deleteFileByFileName(String fileName);
 }

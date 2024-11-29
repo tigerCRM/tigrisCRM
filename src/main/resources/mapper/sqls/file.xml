@@ -52,4 +52,10 @@
         WHERE FILE_ID = #{FILE_ID}
     </update>
 
+    <update id="deleteFileByFileName" parameterType="java.util.Map">
+        UPDATE T_FILE
+        SET DELETE_YN = 'Y'
+        WHERE FILE_NAME = #{FILE_NAME}
+    </update>
+
 </mapper>

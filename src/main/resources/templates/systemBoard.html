@@ -110,12 +110,14 @@
                                         <td colspan="3">
                                             <div class="attachment-wrapper">
                                                 <div class="flex gap--4">
-                                                    <label for="attachFiles" class="btn btn--xs mono-outline-btn">추가</label>
+                                                    <button type="button" id="uploadButton" class="btn btn--xs mono-outline-btn" th:if="${mode != 'read'}">파일 추가</button>
+                                                    <input type="file" multiple="multiple" id="attachFilesTemp" name="attachFilesTemp" class="file_attach_input">
                                                     <input type="file" multiple="multiple" id="attachFiles" name="attachFiles" class="file_attach_input">
-                                                    <button type="button" id="fileDelete" class="btn btn--xs mono-outline-btn">삭제</button>
+                                                    <button type="button" id="fileDelete" class="btn btn--xs mono-outline-btn" th:if="${mode != 'read'}">전체삭제</button>
                                                 </div>
                                                 <div class="attachment-file">
-                                                    <ul class="list01">
+                                                    <!--기존에 있었던 첨부파일-->
+                                                    <ul id="fileAttach1" class="list01">
                                                         <li class="list__item" th:each="file : ${uploadFiles}">
                                                             <div class="item__title">
                                                                 <svg class="icon icon--20 color-gray700">
@@ -124,9 +126,23 @@
                                                                 <a th:href="@{/fileDownload(fileName=${file.fileName})}"
                                                                    th:text="${file.originFileName}"
                                                                    class="file-link">파일 이름 sample</a>
+                                                                <button type="button"
+                                                                        class="icon icon--20 just-icon deleteFileButton"
+                                                                        th:if="${mode != 'read'}"
+                                                                        th:data-filename="${file.fileName}">
+                                                                    <svg class="icon">
+                                                                        <use href="/assets/images/icon/sprite-sheet.svg#close" ></use>
+                                                                    </svg>
+                                                                </button>
                                                             </div>
                                                         </li>
                                                     </ul>
+                                                    <!--//기존에 있었던 첨부파일-->
+                                                    <!--추가하는 첨부파일-->
+                                                    <ul id="fileAttach2" class="list01">
+                                                    </ul>
+                                                    <!--//추가하는 첨부파일-->
+
                                                 </div>
                                             </div>
                                         </td>
@@ -162,14 +178,17 @@
 <script>
     var boardId = document.querySelector('#boardId').value;
     var mode = document.querySelector('#mode').value;
+    var fileInput = document.getElementById('attachFilesTemp'); //file input tag
+    var selectedFiles = [];
+    var deleteSavedAttachFiles = [];
 
     //1. editor load 및 초기화
     var editor = common.loadOrInitializeEditor(editor , mode);
 
-    //2. form submit 시 toast editor 영역 안의 값을 content 안에 넣음
+    //2. form submit 전 작업
     document.querySelector('#boardSubmitArea').addEventListener('submit', function (e) {
         // 에디터 안의 html 콘텐츠를 가져와서 hidden input 안에 데이터를 넣고 전송
-        const content = editor.getHTML();
+        var content = editor.getHTML();
         document.querySelector('#content').value = content;
 
         //선택한 회사 옵션 관련 설정
@@ -177,17 +196,59 @@
         const selectedOption = selectElement.options[selectElement.selectedIndex];
         const companyNameInput = document.querySelector('#companyName');
         companyNameInput.value = selectedOption.textContent.trim();
+
+        //첨부파일 설정
+        attachFileWorks();
     });
 
-    //3. 첨부파일 등록 시 밑에 있는 영역에 파일 이름 넣음
-    $("#attachFiles").on('change',function(){
-        const files = this.files;
-        const list = $(".list01");
+    //3. 첨부파일 작업
+    function attachFileWorks(){
+        const realFileInput = document.getElementById('attachFiles');
+        if (!realFileInput) {
+            console.error('요소를 찾을 수 없습니다.');
+            return;
+        }
+        // DataTransfer 객체를 활용해 selectedFiles를 설정
+        const dataTransfer = new DataTransfer();
+        selectedFiles.forEach(file => {
+            dataTransfer.items.add(file);
+        });
+        // 기존 attachFilesTemp에 파일 설정
+        realFileInput.files = dataTransfer.files;
+        console.log('첨부 파일이 업데이트되었습니다:', selectedFiles);
 
-        // 기존 리스트 초기화
-        list.empty();
-        Array.from(files).forEach(file => {
+    }
+
+    //4. 첨부파일 추가 버튼을 누르면 파일 선택창이 열림
+    document.querySelector('#uploadButton').addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    //5. 첨부파일 조작에 따라 전송할 파일들의 배열을 수정함
+    fileInput.addEventListener('change', () => {
+        console.log("파일 선택 완료");
+        console.log(fileInput.files);
+        const files = Array.from(fileInput.files); // 새로운 파일 배열
+        files.forEach(file => {
+            // 동일한 파일명이 있으면 추가하지 않음
+            if (!selectedFiles.some(f => f.name === file.name)) {
+                selectedFiles.push(file);
+            }
+        });
+        fileInput.value = ''; // 파일 선택창 초기화
+        renderFileList(); // 목록 업데이트
+    });
+
+    //6. 첨부파일 조작에 따라 보여지는 리스트를 다르게 그림
+    function renderFileList(){
+        const list = document.querySelector('#fileAttach2');
+        list.innerHTML = ''; // 기존 목록 초기화
+
+        selectedFiles.forEach((file, index) => {
+        // 파일 이름
             const fileName = file.name;
+
+            // 동적으로 생성할 HTML 문자열
             const listItem = `
                 <li class="list__item">
                     <div class="item__title">
@@ -195,28 +256,44 @@
                             <use href="/assets/images/icon/sprite-sheet.svg#attachment"></use>
                         </svg>
                         <span>${fileName}</span>
+                        <button type="button" class="icon icon--20 just-icon" data-index="${index}">
+                            <svg class="icon">
+                                <use href="/assets/images/icon/sprite-sheet.svg#close"></use>
+                            </svg>
+                        </button>
                     </div>
                 </li>
             `;
-            list.append(listItem);
+
+            // 문자열을 DOM 요소로 변환
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = listItem;
+            const listItemElement = tempDiv.firstElementChild;
+
+            // 삭제 버튼에 이벤트 리스너 추가
+            const deleteButton = listItemElement.querySelector('button');
+            deleteButton.addEventListener('click', () => {
+                selectedFiles.splice(index, 1); // 파일 삭제
+                renderFileList(); // 목록 다시 렌더링
+            });
+
+            // 리스트에 추가
+            list.appendChild(listItemElement);
         });
+    }
 
-    });
-
-    //4. 첨부파일 전체 삭제
+    //7. 첨부파일 전체 삭제
     $("#fileDelete").on('click', function () {
         // 파일 입력 값 초기화
         $("#attachFiles").val('');
-
         // 동적 리스트 초기화
         $(".list01").empty();
+        selectedFiles = [];
     });
 
-    //5. 글 삭제
+    //8. 글 삭제
     function deleteBoard() {
-
         var url = `/systemBoard`;
-
         if (confirm('정말로 삭제하시겠습니까?')) {
             fetch(url, {
                 method: 'DELETE',
@@ -241,15 +318,22 @@
             });
         }
     }
-    //6. 글 수정 페이지로 전환
+    //9. 글 수정 페이지로 전환
     function getModifyBoard() {
         var url = '/systemBoard?boardId=' + boardId + '&mode=modify';
         window.location.href = url;
     }
 
-    //7. 글 수정후 저장
+    //10. 글 수정후 저장
     function submitModifiedBoard() {
+        var content = editor.getHTML();
+        document.querySelector('#content').value = content;
+
+        attachFileWorks();
+
         const formData = new FormData(document.getElementById('boardSubmitArea'));
+        formData.append('deleteSavedAttachFiles', JSON.stringify(deleteSavedAttachFiles));
+
         var url = '/systemBoard';
 
         // Fetch API로 서버에 요청 전송
@@ -270,6 +354,19 @@
             alert('서버 요청 중 문제가 발생했습니다.');
         });
     }
+
+    //11. 글 수정 시 이미 저장된 파일은 지우기 리스트에 추가하여 지움
+    document.querySelectorAll('.deleteFileButton').forEach(button => {
+        button.addEventListener('click', function() {
+            var fileName = this.dataset.filename; // data-filename 속성 읽기
+
+            deleteSavedAttachFiles.push(fileName);
+
+            this.closest('li').remove();
+
+        });
+    });
+
 
 </script>
 </body>

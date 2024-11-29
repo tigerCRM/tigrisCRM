@@ -16,4 +16,6 @@ public interface FileService {
 
     void deleteFiles(String type, int id);
 
+    void deleteFileByFileName(String fileName);
+
 }

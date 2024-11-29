@@ -1,5 +1,7 @@
 package com.tiger.crm.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiger.crm.common.context.ConfigProperties;
 import com.tiger.crm.common.file.FileStoreUtils;
 import com.tiger.crm.repository.dto.board.BoardOpenCompanyDto;
@@ -115,7 +117,11 @@ public class SystemBoardController {
      * POST 시스템 정보 신규 등록
      * */
     @PostMapping("/systemBoard")
-    public String postSystemBoard(@ModelAttribute("systemBoard") SystemBoardDto systemBoard, @RequestParam("selectedCompany") int companyId, @RequestParam("companyName") String companyName, HttpServletRequest request, HttpServletResponse response){
+    public String postSystemBoard(@ModelAttribute("systemBoard") SystemBoardDto systemBoard,
+                                  @RequestParam("selectedCompany") int companyId,
+                                  @RequestParam("companyName") String companyName,
+                                  HttpServletRequest request,
+                                  HttpServletResponse response){
 
         HttpSession session = request.getSession(false);
         UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
@@ -165,20 +171,43 @@ public class SystemBoardController {
      * PUT 시스템 정보 수정저장
      * */
     @PutMapping("/systemBoard")
-    public ResponseEntity<?> updateSystemBoard(@ModelAttribute("systemBoard") SystemBoardDto systemBoard, HttpServletRequest request, HttpServletResponse response){
-        LOGGER.info("#########수정으로 인입 : " + systemBoard.toString());
-        LOGGER.info("#########파일 좀 보자 : " + systemBoard.getAttachFiles().toString());
+    public ResponseEntity<?> updateSystemBoard(
+            @ModelAttribute("systemBoard") SystemBoardDto systemBoard,
+            @RequestParam String deleteSavedAttachFiles,
+            HttpServletRequest request,
+            HttpServletResponse response){
+
         HttpSession session = request.getSession(false);
         UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
         systemBoard.setUpdateId(loginUser.getUserId());
 
+        ObjectMapper objectMapper = new ObjectMapper();
+        List<String> deleteFilesList = null;
+
         try{
             //게시글에 대한 작업
             systemBoardService.updateSystemBoard(systemBoard);
-            
-            //파일 변동사항이 있는지 체크하고 첨부파일에 대한 작업
-        }catch (Exception e){
 
+            //이전 첨부파일 중 삭제 된 파일들 삭제 작업
+            if(!deleteSavedAttachFiles.isEmpty()){
+                deleteFilesList = objectMapper.readValue(deleteSavedAttachFiles, new TypeReference<List<String>>() {});
+                for (String fileName : deleteFilesList) {
+                    fileService.deleteFileByFileName(fileName);
+                }
+            }
+            //신규로 추가된 파일이 있으면 첨부 작업
+            //첨부파일?
+            try{
+                List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(systemBoard.getAttachFiles()); // 경로에 저장
+                fileService.insertFile(uploadFiles, systemBoard.getBoardId()); //DB 에 저장
+
+            }catch (Exception e){
+                LOGGER.info(e.toString());
+                return null;
+            }
+
+        }catch (Exception e){
+            LOGGER.info("뭔가가 잘못된듯...");
         }
 
         return null;

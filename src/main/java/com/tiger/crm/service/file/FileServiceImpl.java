@@ -85,4 +85,8 @@ public class FileServiceImpl implements FileService{
         fileMapper.deleteFilesByFileId(fileId);
 
     }
+    @Override
+    public void deleteFileByFileName(String fileName){
+        fileMapper.deleteFileByFileName(fileName);
+    };
 }
