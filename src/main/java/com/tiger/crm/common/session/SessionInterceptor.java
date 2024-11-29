@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 @Component
 public class SessionInterceptor implements HandlerInterceptor {
@@ -40,9 +41,22 @@ public class SessionInterceptor implements HandlerInterceptor {
             response.getWriter().flush();
             return false;
         }
+        if (user != null) {
+            // 로그인 정보를 request attribute에 추가 (모든 컨트롤러에서 접근 가능)
+            request.setAttribute("user", user);
+        }
 
         // 권한이 있다면 요청을 계속 진행
         return true;
     }
-
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        // 요청이 컨트롤러에서 처리된 후 (뷰를 렌더링하기 전)에 추가 작업이 필요하다면
+        if (modelAndView != null) {
+            Object user = request.getAttribute("user");
+            if (user != null) {
+                modelAndView.addObject("user", user);  // model에 추가
+            }
+        }
+    }
 }

@@ -1,8 +1,6 @@
 <body>
     <div th:fragment="frame_left_menu" id="sidebar" class="main-sidebar main-sidebar--expand">
-        <button type="button" class="btn btn--l icon-btn menu-btn menu__btn">
-            <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#menu}"/></svg>
-        </button>
+        <div style="padding-top: 70px;"></div>
         <div class="profile">
             <div class="profile__img profile__img--48">
                 <a href="#">
@@ -11,10 +9,10 @@
             </div>
             <div class="profile__info">
                 <p class="name">
-                    <span class="text-body3 text-ellipsis" th:text="'userName'"></span>
+                    <span class="text-body3 text-ellipsis" th:text="${user.userName}"></span>
                 </p>
                 <p class="team">
-                    <span class="text-caption1" th:text="'department'"></span>
+                    <span class="text-caption1" th:text="${user.companyName}"></span>
                 </p>
             </div>
         </div>
@@ -22,7 +20,7 @@
             <ul>
                 <ul>
                     <li>
-                        <a href="ticketlist" class="menu-item">
+                        <a href="ticketList" class="menu-item">
                                 <span class="menu-icon">
                                     <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#mail}"/></svg>
                                 </span>

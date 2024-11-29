@@ -16,7 +16,7 @@
             </a>
         </li>
         <!-- 페이지 번호 버튼 -->
-        <li th:each="i : ${#numbers.sequence(1, list.totalPages)}">
+        <li th:if="${list.totalPages > 0}" th:each="i : ${#numbers.sequence(1, list.totalPages)}">
             <a class="btn paging-btn"
                th:href="@{|${paginationUrl}?page=${i}|}"
                th:classappend="${list.currentPage == i} ? 'active' : ''">

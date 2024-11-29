@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error Page</title>
+    <link rel="stylesheet" href="/assets/css/style.css"> <!-- 스타일시트 링크 (옵션) -->
+</head>
+<body>
+<div class="error-container">
+    <p th:text="${errorMessage}">Something went wrong!</p> <!-- 에러 메시지 -->
+    <a href="/main" class="btn">Go Back to Home</a> <!-- 홈으로 돌아가기 버튼 -->
+</div>
+</body>
+</html>

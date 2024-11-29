@@ -13,6 +13,9 @@ public class PagingRequest {
     private String startDt;
     private String endDt;
     private String searchStatus;            //티켓상태
+    private String userClass;
+    private String userId;
+    private String companyId;
     private int totalcnt;
 
     public PagingRequest() {

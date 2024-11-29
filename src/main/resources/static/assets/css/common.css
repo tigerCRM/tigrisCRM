@@ -3276,3 +3276,56 @@ ul[class*='list-tree--'] {
     width: 78%;
     color: #999999;
 }
+/* 진행사항 progress bar*/
+.step-progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.step-number {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e0e0e0;
+  color: #000;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.step-label {
+  font-size: 14px;
+  color: #777;
+}
+
+.step.active .step-number {
+  background-color: #007bff;
+ /* color: #fff;*/
+}
+
+.step.completed .step-number {
+  background-color: #d9f2fc;
+/*  color: #007bff;*/
+  border: 2px solid #007bff;
+}
+
+.separator {
+  flex: 1;
+  height: 2px;
+  background-color: #e0e0e0;
+}
+
+.step.completed + .separator {
+  background-color: #007bff;
+}

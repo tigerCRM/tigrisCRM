@@ -3,23 +3,28 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.tiger.crm.repository.mapper.TicketMapper">
-    <select id="getTicketList"  resultType="java.util.HashMap">
+    <select id="getTicketList" resultType="java.util.HashMap">
         SELECT TICKET_ID,
-               COMPANY_NAME,
-               STATUS_CD,
-               REQUEST_TYPE_CD,
-               SUPPORT_CD,
-               IFNULL(MD, '') as MD,
-               TITLE,
-               U.USER_NAME,
-               DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d') as CREATE_DT,
-               IFNULL(DATE_FORMAT(IFNULL(REAL_COMPLETE_DT, ''), '%Y-%m-%d'),'') as REAL_COMPLETE_DT
+        PRIORITY_YN,
+        COMPANY_NAME,
+        STATUS_CD,
+        REQUEST_TYPE_CD,
+        SUPPORT_CD,
+        IFNULL(MD, '') as MD,
+        TITLE,
+        U.USER_NAME,
+        DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d') as CREATE_DT,
+        IFNULL(DATE_FORMAT(IFNULL(REAL_COMPLETE_DT, ''), '%Y-%m-%d'),'') as REAL_COMPLETE_DT
         FROM T_TICKET_INFO as T
         LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
         <where>
             DELETE_YN = 'N'
+            <!-- userClass가 고객인 경우 -->
+            <if test="userClass == 'USER'">
+                AND T.COMPANY_ID = #{companyId}
+            </if>
             <!-- 검색어 조건 (검색어가 존재하는 경우 제목, 내용 필드에서 LIKE 검색) -->
-            <if test="searchStatus == '' and searchType == '' and (searchKeyword != null or searchKeyword != '')" >
+            <if test="searchStatus == '' and searchType == '' and (searchKeyword != null or searchKeyword != '')">
                 AND (TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
                 OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%'))
             </if>
@@ -57,7 +62,7 @@
 
         <!-- 페이지 처리 (페이징 처리) -->
         <if test="page != null">
-            LIMIT  #{offset}, #{size} <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
+            LIMIT #{offset}, #{size} <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
         </if>
     </select>
 
@@ -68,7 +73,7 @@
         <where>
             DELETE_YN = 'N'
             <!-- 검색어 조건 (검색어가 존재하는 경우 제목, 내용 필드에서 LIKE 검색) -->
-            <if test="searchStatus == '' and searchType == '' and (searchKeyword != null or searchKeyword != '')" >
+            <if test="searchStatus == '' and searchType == '' and (searchKeyword != null or searchKeyword != '')">
                 AND (TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
                 OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%'))
             </if>
@@ -104,22 +109,42 @@
 
     </select>
 
-    <insert id="insertTicketInfo" parameterType="com.tiger.crm.repository.dto.ticket.TicketDto">
+    <insert id="insertTicketInfo" parameterType="com.tiger.crm.repository.dto.ticket.TicketDto"  useGeneratedKeys="true" keyProperty="ticketId">
         INSERT INTO t_ticket_info
-        (TICKET_ID, COMPANY_ID, COMPANY_NAME, STATUS_CD, REQUEST_TYPE_CD, EXPECTED_COMPLETE_DT, REAL_COMPLETE_DT, MD, PRIORITY_YN,
-        TITLE, CONTENT, DELETE_YN, MANAGER_ID, CREATE_ID, CREATE_DT, UPDATE_ID, UPDATE_DT, FILE_ID, PARENT_TICKET_CD, SUPPORT_CD)
-        VALUES (#{ticketId}, #{companyId}, #{companyName}, #{statusCd}, #{requestTypeCd}, #{expectedCompleteDt},
-        #{realCompleteDt}, #{md}, #{priorityYn}, #{title}, #{content}, #{deleteYn}, #{managerId},
-        #{createId}, sysdate(), #{updateId}, sysdate(), #{fileId}, #{parentTicketCd}, #{supportCd});
+        (COMPANY_ID, COMPANY_NAME, STATUS_CD, REQUEST_TYPE_CD, EXPECTED_COMPLETE_DT,
+        REAL_COMPLETE_DT, PRIORITY_YN, TITLE, CONTENT, MANAGER_ID, CREATE_ID,CREATE_NAME,
+        CREATE_DT, UPDATE_ID, UPDATE_DT, FILE_ID, PARENT_TICKET_CD, SUPPORT_CD)
+        VALUES (#{companyId}, #{companyName}, #{statusCd}, #{requestTypeCd}, #{expectedCompleteDt},
+        #{realCompleteDt}, #{priorityYn}, #{title}, #{content}, #{managerId}, #{createId}, #{createName},
+        sysdate(), #{updateId}, sysdate(), #{fileId}, #{parentTicketCd}, #{supportCd});
     </insert>
 
-    <select id="getManagerInfo"  resultType="java.util.HashMap">
+    <select id="getManagerInfo" resultType="java.util.HashMap">
         SELECT U.USER_ID as MANAGER_ID,
-            U.USER_NAME as MANAGER_NAME
+        U.USER_NAME as MANAGER_NAME
         FROM T_USER_INFO as U
         LEFT JOIN T_COMPANY_INFO as C
-        on C.MANAGER_ID  = U.USER_ID
+        on C.MANAGER_ID = U.USER_ID
         WHERE C.COMPANY_ID = #{companyId}
     </select>
 
+    <!-- 티켓 상세 정보 조회 -->
+    <select id="selectTicketDetails" parameterType="int" resultType="com.tiger.crm.repository.dto.ticket.TicketDto">
+        SELECT TICKET_ID,
+        CREATE_NAME,
+        PRIORITY_YN,
+        COMPANY_NAME,
+        STATUS_CD,
+        REQUEST_TYPE_CD,
+        SUPPORT_CD,
+        IFNULL(MD, '') as MD,
+        TITLE,
+        CONTENT,
+        U.USER_NAME as MANAGER_NAME,
+        DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d') as CREATE_DT,
+        IFNULL(DATE_FORMAT(IFNULL(REAL_COMPLETE_DT, ''), '%Y-%m-%d'),'') as REAL_COMPLETE_DT
+        FROM T_TICKET_INFO as T
+        LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
+        WHERE TICKET_ID = #{ticketId} and  DELETE_YN = 'N'
+    </select>
 </mapper>

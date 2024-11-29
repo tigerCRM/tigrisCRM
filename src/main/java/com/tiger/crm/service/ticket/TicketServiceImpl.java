@@ -23,40 +23,37 @@ public class TicketServiceImpl implements TicketService {
         // 전체 티켓 수 조회 (null 체크 포함)
         int totalRecords = getTicketListCount(pagingRequest);
 
-        // 페이징 응답 객체 생성
         return new PagingResponse<>(ticketList, totalRecords, pagingRequest);
     }
+
     // 전체 티켓 수를 조회하는 메서드
     private int getTicketListCount(PagingRequest pagingRequest) {
         Integer count = ticketMapper.getTicketListCount(pagingRequest);  // Integer로 받아서 null 체크
         return count != null ? count : 0;  // null일 경우 0 반환
     }
 
-    public boolean saveTicket(TicketDto ticketDto, List<MultipartFile> files) {
-        // Save ticketDto data to the database
-        ticketMapper.insertTicketInfo(ticketDto);
-        for (MultipartFile file : files) {
-            if (!file.isEmpty()) {
-                // Save each file, e.g., save to a directory or database
-                String fileName = file.getOriginalFilename();
-                // Save logic here
-            }
+    //티켓저장
+    public int saveTicket(TicketDto ticketDto, List<MultipartFile> files) {
+        int resultCount =  ticketMapper.insertTicketInfo(ticketDto);
+        if(resultCount != 1){
+            return 0;
         }
-
-        return true;
+        return ticketDto.getTicketId();
     }
 
+    //담당자(PM)정보
     public Map<String, Object> getManagerInfo(String companyId) {
         if (companyId == null || companyId.isEmpty()) {
             throw new IllegalArgumentException("Company ID must not be null or empty");
         }
-
         Map<String, Object> managerInfo = ticketMapper.getManagerInfo(companyId);
-
         if (managerInfo.isEmpty()) {
             throw new IllegalArgumentException("No managers found for company ID: " + companyId);
         }
-
         return managerInfo;
+    }
+
+    public TicketDto getTicketDetails(int ticketId) {
+        return ticketMapper.selectTicketDetails(ticketId);
     }
 }
