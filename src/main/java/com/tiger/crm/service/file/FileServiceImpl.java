@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class FileServiceImpl implements FileService{
@@ -26,22 +27,40 @@ public class FileServiceImpl implements FileService{
     private SystemBoardService systemBoardService;
 
     @Override
-    public void insertFile(List<UploadFileDto> uploadFiles, int savedBoardId) {
-
+    public String insertFile(List<UploadFileDto> uploadFiles, int savedId, String category) {
+        String prefix;
+        String fileId;
         if(uploadFiles == null){
-            return;
+            return null;
         }
+        switch (category){
+            case "시스템관리" :
+            case "공지사항"   :
+                prefix = "B";
+                break;
+            case "티켓관리"   :
+                prefix = "T";
+                break;
+            default:
+                LOGGER.info("error : 정의되지 않은 카테고리");
+                return null;
+        }
+
+        fileId = prefix + Integer.toString(savedId);
+
+        int lastSequence = Optional.ofNullable(fileMapper.getLastSequenceByFileId(fileId)).orElse(0);
+
         for(int i = 0 ; i < uploadFiles.size();i++){
             UploadFileDto uploadFile = new UploadFileDto(uploadFiles.get(i).getOriginFileName(),uploadFiles.get(i).getFileName());
-            uploadFile.setFileId("B" + savedBoardId);
-            uploadFile.setSeq(i+1);
-            uploadFile.setCategory("시스템관리");
+            uploadFile.setFileId(fileId);
+            uploadFile.setSeq(lastSequence + i + 1);
+            uploadFile.setCategory(category);
             uploadFile.setFilePath(fileDir);
 
             fileMapper.insertFile(uploadFile);
-            systemBoardService.setSystemBoardFileId(uploadFile.getFileId(),savedBoardId);
         }
 
+        return fileId;
     }
 
     /*

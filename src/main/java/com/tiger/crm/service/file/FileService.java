@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface FileService {
 
-    void insertFile(List<UploadFileDto> uploadFiles, int savedBoardId);
+    String insertFile(List<UploadFileDto> uploadFiles, int savedBoardId, String category);
 
     List<UploadFileDto> getFilesById(String type, int id);
 

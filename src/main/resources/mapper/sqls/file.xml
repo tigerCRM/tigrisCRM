@@ -58,4 +58,11 @@
         WHERE FILE_NAME = #{FILE_NAME}
     </update>
 
+    <select id="getLastSequenceByFileId" resultType="Integer">
+        SELECT SEQ
+        FROM T_FILE
+        WHERE FILE_ID = #{FILE_ID}
+        ORDER BY SEQ DESC
+        LIMIT 1
+    </select>
 </mapper>

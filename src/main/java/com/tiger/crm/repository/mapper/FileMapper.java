@@ -22,4 +22,7 @@ public interface FileMapper {
     void deleteFilesByFileId(String fileId);
 
     void deleteFileByFileName(String fileName);
+
+    //첨부파일 아이디로 제일 마지막 시퀀스 가져오기
+    Integer getLastSequenceByFileId(String fileId);
 }
