@@ -6,6 +6,7 @@ import java.util.List;
 
 @Mapper
 public interface LoginMapper {
+    //아이디 패스워드로 사용자 조회(로그인)
     UserLoginDto getUser(String id, String password);
 
     // 비밀번호 초기화

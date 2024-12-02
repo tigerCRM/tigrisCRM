@@ -38,6 +38,8 @@ public class SystemBoardServiceImpl implements SystemBoardService{
 
         return new PagingResponse<>(systemBoardList, totalRecords, pagingRequest);
     }
+
+    //게시글 갯수 가져오기
     @Override
     public int getSystemBoardListCount(PagingRequest pagingRequest) {
         Integer count = systemBoardMapper.getSystemBoardListCount(pagingRequest);  // Integer로 받아서 null 체크
@@ -63,12 +65,14 @@ public class SystemBoardServiceImpl implements SystemBoardService{
     public void setSystemBoardFileId(String fileId,int boardId) {
         systemBoardMapper.updateSystemBoardFileId(fileId,boardId);
     }
-
+    
+    //게시글번호로 게시글 상세 조회
     @Override
     public SystemBoardDto getSystemBoardByBoardId(int boardId) {
         return systemBoardMapper.getSystemBoardByBoardId(boardId);
     }
-
+    
+    //게시글삭제
     @Override
     public void deleteSystemBoardByBoardId(int boardId){
         //게시글 삭제
@@ -76,7 +80,8 @@ public class SystemBoardServiceImpl implements SystemBoardService{
         //t_open_company 삭제
         boardOpenCompanyMapper.deleteBoardOpenCompany(boardId);
     }
-
+    
+    //게시글수정
     @Override
     public void updateSystemBoard(SystemBoardDto systemBoardDto){
         systemBoardMapper.updateSystemBoard(systemBoardDto);

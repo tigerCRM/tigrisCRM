@@ -5,7 +5,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
-
+/*
+* SystemBoardDto
+* 작성자 : 제예솔
+* 설명 : 시스템관리 게시판 dto
+* */
 @Data
 public class SystemBoardDto {
     private int boardId;

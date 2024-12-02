@@ -40,7 +40,8 @@ public class LoginController
 
 	/*로그인 페이지 이동
 	* 작성자 : 제예솔
-	* 설명 : 로그인 페이지로 이동 */
+	* 설명 : 로그인 페이지로 이동
+	* */
 	@RequestMapping(value = {"/login"}, method = RequestMethod.GET)
 	public String loginPage(@ModelAttribute("user") UserLoginDto user, HttpServletRequest request, HttpServletResponse response)
 	{

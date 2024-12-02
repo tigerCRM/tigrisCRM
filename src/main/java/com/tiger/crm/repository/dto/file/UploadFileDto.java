@@ -2,7 +2,7 @@ package com.tiger.crm.repository.dto.file;
 
 import lombok.Data;
 /*
-* 파일 업로드 dto
+* UploadFileDto
 * 작성자 : 제예솔
 * */
 @Data

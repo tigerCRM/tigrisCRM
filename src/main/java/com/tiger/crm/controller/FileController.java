@@ -26,7 +26,7 @@ public class FileController {
     /*
      * 파일컨트롤러
      * 작성자 : 제예솔
-     * 설명 : 파일 다운로드 용으로 만들었어요
+     * 설명 : 파일 다운로드 및 기타 기능 수행
      * */
     @Autowired
     private ConfigProperties config;
@@ -40,7 +40,8 @@ public class FileController {
     //application.yml 에 파일 위치 명시되어 있음
     @Value("${file.dir}")
     private String fileDir;
-
+    
+    //파일 다운로드
     @GetMapping("/fileDownload")
     public ResponseEntity<Resource> downloadFile(@RequestParam("fileName") String fileName){
 

@@ -8,8 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 /*
-시스템관리 매퍼
+SystemBoardMapper
 * 작성자 : 제예솔
+* 설명 : 시스템게시판 관련 DB 처리
 */
 @Mapper
 public interface SystemBoardMapper {

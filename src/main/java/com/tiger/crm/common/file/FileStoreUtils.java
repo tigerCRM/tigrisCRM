@@ -16,6 +16,7 @@ import java.util.UUID;
 /*
 * 파일 저장 관련 기능들
 * 작성자 : 제예솔
+* 설명 : 첨부파일 업로드 기능 지원
 * */
 @Component
 public class FileStoreUtils {

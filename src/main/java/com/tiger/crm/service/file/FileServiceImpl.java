@@ -26,6 +26,15 @@ public class FileServiceImpl implements FileService{
     @Autowired
     private SystemBoardService systemBoardService;
 
+    /*
+    * insertFile
+    * 작성자 : 제예솔
+    * 설명 :
+    *   (input) 업로드 파일 리스트, 대상 글 아이디, 한글 타입의 카테고리
+    *   (output) t_file 의 file_id
+    * t_file 에 첨부파일 데이터를 추가한다.
+    * 이외의 첨부파일 로드 경로가 있을 시 category switch 문에 추가할것
+    * */
     @Override
     public String insertFile(List<UploadFileDto> uploadFiles, int savedId, String category) {
         String prefix;
@@ -91,6 +100,8 @@ public class FileServiceImpl implements FileService{
     public UploadFileDto getFileByFileName(String fileName){
         return fileMapper.getFileByFileName(fileName);
     };
+
+    //첨부파일 복수 삭제
     @Override
     public void deleteFiles(String type, int id){
         String fileId = null;
@@ -104,6 +115,8 @@ public class FileServiceImpl implements FileService{
         fileMapper.deleteFilesByFileId(fileId);
 
     }
+    
+    //첨부파일 삭제
     @Override
     public void deleteFileByFileName(String fileName){
         fileMapper.deleteFileByFileName(fileName);
