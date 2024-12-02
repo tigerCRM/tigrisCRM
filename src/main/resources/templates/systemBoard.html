@@ -67,14 +67,21 @@
                                     <tr>
                                         <th>제목</th>
                                         <td colspan="3">
-                                            <input type="text" id="title" name="title" class="input--xs input01 input--full" th:field="*{title}" th:readonly="${mode == 'read'}">
+                                            <input type="text"
+                                                   id="title"
+                                                   name="title"
+                                                   class="input--xs input01 input--full"
+                                                   th:errorclass="'input--error'"
+                                                   th:field="*{title}"
+                                                   th:readonly="${mode == 'read'}">
+                                            <span th:errors="*{title}" class="board_validation">error message area</span>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>회사</th>
                                         <td colspan="3">
                                             <div class="dropdown dropdown--xs" aria-expanded="false" tabindex="0">
-                                                <select class="dropdown__selected" name="selectedCompany" th:attr="disabled=${mode != 'write'}">
+                                                <select class="dropdown__selected" name="companyId" th:attr="disabled=${mode == 'read'}">
                                                     <!-- 기본 옵션 -->
                                                     <option value=""
                                                             th:selected="${systemBoard.boardId == 0}"
@@ -84,7 +91,7 @@
                                                     <option th:if="${systemBoard.boardId != 0}"
                                                             th:value="${systemBoard.companyId}"
                                                             th:text="${systemBoard.companyName}"
-                                                            selected disabled>
+                                                            selected>
                                                     </option>
                                                     <!-- 회사 목록 옵션 -->
                                                     <option th:each="option : ${companyOptions}"
@@ -94,6 +101,7 @@
                                                     </option>
                                                 </select>
                                                 <input type="hidden" name="companyName" id="companyName">
+                                                <span th:errors="*{companyId}" class="board_validation">error message area</span>
                                             </div>
                                         </td>
                                     </tr>
@@ -114,6 +122,7 @@
                                                     <input type="file" multiple="multiple" id="attachFilesTemp" name="attachFilesTemp" class="file_attach_input">
                                                     <input type="file" multiple="multiple" id="attachFiles" name="attachFiles" class="file_attach_input">
                                                     <button type="button" id="fileDelete" class="btn btn--xs mono-outline-btn" th:if="${mode != 'read'}">전체삭제</button>
+                                                    <span th:errors="*{attachFiles}" class="board_validation">error message area</span>
                                                 </div>
                                                 <div class="attachment-file">
                                                     <!--기존에 있었던 첨부파일-->
@@ -330,6 +339,9 @@
         attachFileWorks();
 
         const formData = new FormData(document.getElementById('boardSubmitArea'));
+
+        console.log(formData);
+
         formData.append('deleteSavedAttachFiles', JSON.stringify(deleteSavedAttachFiles));
 
         var url = '/systemBoard';
@@ -344,7 +356,11 @@
                 alert('처리가 완료되었습니다.');
                 window.location.href = '/systemBoardList'; // 완료 후 이동할 URL
             } else {
-                alert('처리 중 오류가 발생했습니다.');
+                return response.json().then(errorMessages => {
+                    // 에러 메시지를 alert()으로 표시
+                    const message = Object.values(errorMessages).join('\n'); // 각 에러 메시지를 줄바꿈으로 연결
+                    alert(`처리 중 다음 오류가 발생했습니다:\n${message}`);
+                });
             }
         })
         .catch(error => {
@@ -357,9 +373,7 @@
     document.querySelectorAll('.deleteFileButton').forEach(button => {
         button.addEventListener('click', function() {
             var fileName = this.dataset.filename; // data-filename 속성 읽기
-
             deleteSavedAttachFiles.push(fileName);
-
             this.closest('li').remove();
 
         });

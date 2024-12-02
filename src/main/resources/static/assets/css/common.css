@@ -3036,6 +3036,13 @@ ul[class*='list-tree--'] {
     /*background-color: #f8d7da;*/
 }
 
+/*예솔 추가 : 시스템 정보 작성 페이지 첨부파일 검증 실패시 뜨는 안내 문구 */
+.board_validation{
+    color: #E02C1E;              /* 빨간색 글씨 */
+    font-weight: bold;       /* 글자 강조 */
+    /*background-color: #f8d7da;*/
+}
+
 /* 사용자 상세 정보 */
 .user-detail-info .table th,
 .user-detail-info .table td {

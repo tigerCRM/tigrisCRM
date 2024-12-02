@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiger.crm.common.context.ConfigProperties;
 import com.tiger.crm.common.file.FileStoreUtils;
+import com.tiger.crm.common.validation.SystemBoardValidator;
+import com.tiger.crm.common.validation.UserLoginValidator;
 import com.tiger.crm.repository.dto.board.BoardOpenCompanyDto;
 import com.tiger.crm.repository.dto.board.SystemBoardDto;
 import com.tiger.crm.repository.dto.company.CompanyOptionDto;
@@ -18,6 +20,7 @@ import com.tiger.crm.service.ticket.TicketService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +29,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Controller
+@RequiredArgsConstructor
 public class SystemBoardController {
     
     /*
@@ -51,12 +60,20 @@ public class SystemBoardController {
     @Autowired
     private FileStoreUtils fileStoreUtils;
 
+    private final SystemBoardValidator systemBoardValidator;
+
     //application.yml 에 파일 위치 명시되어 있음
     @Value("${file.dir}")
     private String fileDir;
 
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
-    
+
+    @InitBinder("systemBoard")
+    public void init(WebDataBinder dataBinder) {
+        LOGGER.info("init binder {}", dataBinder);
+        dataBinder.addValidators(systemBoardValidator);
+    }
+
     /*
     * GET 시스템 정보 리스트 페이지
     * */
@@ -89,8 +106,6 @@ public class SystemBoardController {
 
             List<UploadFileDto> uploadFiles = fileService.getFilesById("board",boardId);
 
-            LOGGER.info("test : " + uploadFiles.toString());
-
             model.addAttribute("user", loginUser);//사용자 정보 가져오기
             model.addAttribute("companyOptions", companyOptions);//회사 옵션 정보 가져오기
             model.addAttribute("systemBoard",loadSystemBoard);//시스템 정보 가져오기
@@ -117,20 +132,29 @@ public class SystemBoardController {
      * POST 시스템 정보 신규 등록
      * */
     @PostMapping("/systemBoard")
-    public String postSystemBoard(@ModelAttribute("systemBoard") SystemBoardDto systemBoard,
-                                  @RequestParam("selectedCompany") int companyId,
-                                  @RequestParam("companyName") String companyName,
+    public String postSystemBoard(@Validated @ModelAttribute("systemBoard") SystemBoardDto systemBoard,
+                                  BindingResult bindingResult,
                                   HttpServletRequest request,
-                                  HttpServletResponse response){
+                                  HttpServletResponse response,
+                                  Model model){
 
         HttpSession session = request.getSession(false);
         UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
-        
+
+        //최초 인입된 dto 에 대해 validation 수행 후 반환
+        if (bindingResult.hasErrors()) {
+            LOGGER.info("validation error 발생={}",bindingResult);
+            List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
+            model.addAttribute("mode", "write");//글작성
+            model.addAttribute("companyOptions", companyOptions);
+            return "systemBoard";
+        }
+
         //작성자 저장
         systemBoard.setCreateId(loginUser.getUserId());
         
         //정보 저장 로직. Board 와 OpenCompany DB 저장 후 BoardId 리턴받음
-        int savedBoardId = systemBoardService.insertSystemBoard(systemBoard, new BoardOpenCompanyDto(companyId,companyName));
+        int savedBoardId = systemBoardService.insertSystemBoard(systemBoard, new BoardOpenCompanyDto(Integer.parseInt(systemBoard.getCompanyId()),systemBoard.getCompanyName()));
 
         if(savedBoardId ==0 ){
             LOGGER.info("postSystemBoard ERROR occured!");
@@ -174,13 +198,34 @@ public class SystemBoardController {
      * */
     @PutMapping("/systemBoard")
     public ResponseEntity<?> updateSystemBoard(
-            @ModelAttribute("systemBoard") SystemBoardDto systemBoard,
+            @Validated @ModelAttribute("systemBoard") SystemBoardDto systemBoard,
+            BindingResult bindingResult,
             @RequestParam String deleteSavedAttachFiles,
             HttpServletRequest request,
-            HttpServletResponse response){
+            HttpServletResponse response,
+            Model model){
+
+        //최초 인입된 dto 에 대해 validation 수행 후 반환
+        if (bindingResult.hasErrors()) {
+            LOGGER.info("validation error 발생={}",bindingResult);
+
+            // 오류 메시지 추출
+            Map<String, String> errorMessages = new HashMap<>();
+
+            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+            for (FieldError error : fieldErrors) {
+
+                LOGGER.info("작업중" + error);
+                //errorMessages.put(error.getField(), errorMessage);
+            }
+
+            // HTTP 400 Bad Request와 오류 메시지 반환
+            return ResponseEntity.badRequest().body(errorMessages);
+        }
 
         HttpSession session = request.getSession(false);
         UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
+
         systemBoard.setUpdateId(loginUser.getUserId());
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -197,24 +242,19 @@ public class SystemBoardController {
                     fileService.deleteFileByFileName(fileName);
                 }
             }
-            //신규로 추가된 파일이 있으면 첨부 작업
-            //첨부파일?
-            try{
-                LOGGER.info("새로 들어온 파일의 크기 : " + systemBoard.getAttachFiles().size());
-                List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(systemBoard.getAttachFiles()); // 경로에 저장
-                String fileId = fileService.insertFile(uploadFiles, systemBoard.getBoardId(), "시스템관리"); //DB 에 저장
-                systemBoardService.setSystemBoardFileId(fileId,systemBoard.getBoardId());//DB에 저장
 
-            }catch (Exception e){
-                LOGGER.info(e.toString());
-                return null;
-            }
+            //신규로 추가된 파일이 있으면 첨부 작업
+            LOGGER.info("새로 들어온 파일의 크기 : " + systemBoard.getAttachFiles().size());
+            List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(systemBoard.getAttachFiles()); // 경로에 저장
+            String fileId = fileService.insertFile(uploadFiles, systemBoard.getBoardId(), "시스템관리"); //DB 에 저장
+            systemBoardService.setSystemBoardFileId(fileId,systemBoard.getBoardId());//DB에 저장
 
         }catch (Exception e){
-            LOGGER.info("뭔가가 잘못된듯...");
+            LOGGER.info("게시물 수정 오류 발생 : " + e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
         }
 
-        return null;
+        return ResponseEntity.ok("수정이 완료되었습니다");
     }
 
 }
