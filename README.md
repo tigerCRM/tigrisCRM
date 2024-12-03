@@ -5,8 +5,7 @@ tigris-crm 서비스 개발
 <br/><br/>
 
 
-# 개발 반영방법 (crmdevuser 로만 반영 가능)(젠킨스 사용시 불필요) 
-> 로컬(.jar) 파일 개발서버에 반영
+> 로컬(.jar)파일을 개발서버에 반영방법 (crmdevuser 로만 반영 가능)(젠킨스 사용시 불필요) 
 1. 로컬의 jar 최신화 : ``` ./gradlew clean bootJar ``` 
 2. jar파일 서버에 업로드 : 
    powerShell > ``` scp "C:/Users/user/Desktop/crm-0.0.1-SNAPSHOT.jar" crmdevuser@192.168.0.240:/home/crmdevuser ```
@@ -33,7 +32,8 @@ tigris-crm 서비스 개발
 
 
 > 개발서버 URL
-  ``` http://192.168.0.240:8081/login ```
+
+     ``` http://192.168.0.240:8081/login ```
 
 
 <br/><br/>
