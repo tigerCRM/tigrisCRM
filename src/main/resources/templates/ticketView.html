@@ -20,6 +20,8 @@
     <script src="/lib/picker/datepicker.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/lib/picker/datepicker.min.css">
     <script src="/js/datepicker.js"></script>
+    <!--기타 전역에서 쓸 공통javascript 설정. commit-->
+    <script src="/js/common.js"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -154,8 +156,9 @@
                                     <tr>
                                         <td colspan="4">
                                             <div class="editor-wrap">
-                                                <div id="editorContent">
-                                                    <span id="content" th:text="*{content}"></span>
+                                                <div class="editor-wrap">
+                                                    <div id="editorContent"></div>
+                                                    <input type="hidden" name="content" id="content" th:field="*{content}">
                                                 </div>
                                             </div>
                                         </td>
@@ -200,27 +203,31 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const stepProgress = document.querySelector('.step-progress');
-        const statusCd = $("#statusCd").val();
+    var mode = "read";
+    var editor = common.loadOrInitializeEditor(editor , mode);
 
-        const steps = stepProgress.querySelectorAll('.step');
-        const statusOrder = ['OPEN', 'RECEIPT', 'PROGRESS', 'CLOSED'];
 
-        steps.forEach((step, index) => {
-            const stepNumber = step.querySelector('.step-number').textContent;
+   document.addEventListener("DOMContentLoaded", function () {
+       const stepProgress = document.querySelector('.step-progress');
+       const statusCd = $("#statusCd").val();
 
-            if (statusOrder.indexOf(stepNumber) < statusOrder.indexOf(statusCd)) {
-                step.classList.add('completed');
-                step.classList.remove('active');
-            } else if (statusOrder.indexOf(stepNumber) === statusOrder.indexOf(statusCd)) {
-                step.classList.add('active');
-                step.classList.remove('completed');
-            } else {
-                step.classList.remove('active', 'completed');
-            }
-        });
-    });
+       const steps = stepProgress.querySelectorAll('.step');
+       const statusOrder = ['OPEN', 'RECEIPT', 'PROGRESS', 'CLOSED'];
+
+       steps.forEach((step, index) => {
+           const stepNumber = step.querySelector('.step-number').textContent;
+
+           if (statusOrder.indexOf(stepNumber) < statusOrder.indexOf(statusCd)) {
+               step.classList.add('completed');
+               step.classList.remove('active');
+           } else if (statusOrder.indexOf(stepNumber) === statusOrder.indexOf(statusCd)) {
+               step.classList.add('active');
+               step.classList.remove('completed');
+           } else {
+               step.classList.remove('active', 'completed');
+           }
+       });
+   });
 </script>
 </body>
 </html>

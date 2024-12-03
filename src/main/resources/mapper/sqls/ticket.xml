@@ -57,9 +57,8 @@
             <if test="startDt != '' and startDt != null and endDt != '' and endDt != null ">
                 AND T.CREATE_DT BETWEEN #{startDt} AND #{endDt}
             </if>
-
         </where>
-
+        order by TICKET_ID desc
         <!-- 페이지 처리 (페이징 처리) -->
         <if test="page != null">
             LIMIT #{offset}, #{size} <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
@@ -72,6 +71,10 @@
         LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
         <where>
             DELETE_YN = 'N'
+            <!-- userClass가 고객인 경우 -->
+            <if test="userClass == 'USER'">
+                AND T.COMPANY_ID = #{companyId}
+            </if>
             <!-- 검색어 조건 (검색어가 존재하는 경우 제목, 내용 필드에서 LIKE 검색) -->
             <if test="searchStatus == '' and searchType == '' and (searchKeyword != null or searchKeyword != '')">
                 AND (TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
@@ -134,6 +137,7 @@
         CREATE_NAME,
         PRIORITY_YN,
         COMPANY_NAME,
+        T.COMPANY_ID as COMPANY_ID,
         STATUS_CD,
         REQUEST_TYPE_CD,
         SUPPORT_CD,

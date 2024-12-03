@@ -150,7 +150,7 @@ public class TicketController {
             //model에 데이터 바인딩
             List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
             model.addAttribute("companyOptions", companyOptions);
-            model.addAttribute("selectedCompanyId", companyName);
+            model.addAttribute("selectedCompanyName", companyName);
             model.addAttribute("userClass", userClass); //작성자 레벨
             model.addAttribute("requestTypeCd", commonService.getSelectOptions("t_request"));
             model.addAttribute("supportCd", commonService.getSelectOptions("t_support"));
@@ -198,7 +198,7 @@ public class TicketController {
      * */
 
     @GetMapping("/ticketView")
-    public String getTicketsView( @RequestParam(value = "id", required = false) Integer id,@ModelAttribute PagingRequest pagingRequest, HttpServletRequest request, Model model) {
+    public String getTicketsView( @RequestParam(value = "id", required = false) Integer id,@ModelAttribute PagingRequest pagingRequest, HttpServletRequest request, HttpServletResponse response, Model model) {
         try {
             HttpSession session = request.getSession(false);
             UserLoginDto loginUser = (UserLoginDto) session.getAttribute("loginUser");
@@ -206,8 +206,16 @@ public class TicketController {
             String companyId = String.valueOf(loginUser.getCompanyId());
             String userClass = String.valueOf(loginUser.getUserClass());
 
-            // 티켓 상세 정보 조회
+            // 티켓 상세 정보 조회 - 로그인한 본인 회사만 볼수있음
             TicketDto ticketDetails = ticketService.getTicketDetails(id);
+            if (!String.valueOf(ticketDetails.getCompanyId()).equals(companyId) && userClass.equals("USER")) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);  // 403 상태 코드 반환
+                response.setContentType("text/html; charset=UTF-8");  // 응답 내용 타입과 문자 인코딩 설정
+                response.getWriter().write("<script>alert('접근권한이 없습니다.'); window.history.back();</script>");
+                response.getWriter().flush();
+                return "ticketList";
+            }
+
             model.addAttribute("statusCd", ticketDetails.getStatusCd());
             model.addAttribute("ticketinfo", ticketDetails);
             return "ticketView";

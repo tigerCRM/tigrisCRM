@@ -20,6 +20,8 @@
     <script src="/lib/picker/datepicker.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/lib/picker/datepicker.min.css">
     <script src="/js/datepicker.js"></script>
+    <!--기타 전역에서 쓸 공통javascript 설정. commit-->
+    <script src="/js/common.js"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -31,7 +33,7 @@
     <div class="main-area">
         <!-- 내용 영역 -->
         <main class="form-content">
-            <div class="container" style="width:868px">
+            <div class="container">
                 <div class="main-widget-wrap">
                     <div class="content">
                         <!-- 헤더 영역 -->
@@ -46,7 +48,7 @@
                         </div>
                         <!-- //헤더 영역 -->
                         <!-- form 영역 -->
-                        <form action="/ticketCreate" method="post" enctype="multipart/form-data"
+                        <form id= "SubmitArea" action="/ticketCreate" method="post" enctype="multipart/form-data"
                               th:object="${ticketCreate}">
                             <div>
                                 <!--사용자 입력 영역-->
@@ -74,16 +76,16 @@
                                         <th>고객사</th>
                                         <td>
                                             <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
-                                                <select class="dropdown__selected" name="companyId" id="companyId" onchange="updateCompanyName(this)"   th:disabled="${userClass == 'USER'}">
+                                                <select class="dropdown__selected" onchange="updateCompanyName(this)"   th:disabled="${userClass == 'USER'}">
                                                     <option th:each="op : ${companyOptions}"
                                                             th:value="${op.companyId}"
                                                             th:data-name="${op.companyName}"
                                                             th:text="${op.companyName}"
-                                                            th:selected="${op.companyName == selectedCompanyId}">
+                                                            th:selected="${op.companyName == selectedCompanyName}">
                                                     </option>
                                                 </select>
                                             </div>
-
+                                            <input type="hidden" name="companyName" id="companyId" th:field="*{companyId}">
                                             <input type="hidden" name="companyName" id="companyName" th:field="*{companyName}">
                                         </td>
                                     </tr>
@@ -196,17 +198,11 @@
 
 <script>
     //1. editor load 및 초기화
-    const editor = new toastui.Editor({
-        el: document.querySelector('#editorContent'), // 에디터를 적용할 요소 (컨테이너)
-        height: 'auto',                        // 에디터 영역의 높이 값 (OOOpx || auto)
-        initialEditType: 'wysiwyg',            // 최초로 보여줄 에디터 타입 (markdown || wysiwyg)
-        initialValue: '',     // 내용의 초기 값으로, 반드시 마크다운 문자열 형태여야 함
-        previewStyle: 'vertical',                // 마크다운 프리뷰 스타일 (tab || vertical)
-        hideModeSwitch: true
-    });
+    var mode = "write";
+    var editor = common.loadOrInitializeEditor(editor , mode);
 
     //2. form submit 시 toast editor 영역 안의 값을 content 안에 넣음
-    document.querySelector('#boardSubmitArea').addEventListener('submit', function (e) {
+    document.querySelector('#SubmitArea').addEventListener('submit', function (e) {
             const content = editor.getHTML(); // 에디터 안의 html 콘텐츠를 가져옴
             document.querySelector('#content').value = content; // hidden input 안에 입력한 데이터를 넣고 전송
 
@@ -248,8 +244,10 @@
     function updateCompanyName(selectElement) {
         const selectedOption = selectElement.options[selectElement.selectedIndex];
         const companyName = selectedOption.getAttribute("data-name");
+        const companyId = selectedOption.getAttribute("value");
 
         // hidden 필드에 선택된 회사명 설정
+        document.getElementById("companyId").value = companyId;
         document.getElementById("companyName").value = companyName;
     }
 </script>
