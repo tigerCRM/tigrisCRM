@@ -189,8 +189,10 @@
     var selectedFiles = [];
     var deleteSavedAttachFiles = [];
 
+    var contentValue = document.getElementById('content').value;
+
     //1. editor load 및 초기화
-    var editor = common.loadOrInitializeEditor(editor , mode);
+    var editor = common.loadOrInitializeEditor(editor , mode, contentValue);
 
     //2. form submit 전 작업
     document.querySelector('#boardSubmitArea').addEventListener('submit', function (e) {
@@ -356,10 +358,12 @@
                 alert('처리가 완료되었습니다.');
                 window.location.href = '/systemBoardList'; // 완료 후 이동할 URL
             } else {
-                return response.json().then(errorMessages => {
-                    // 에러 메시지를 alert()으로 표시
-                    const message = Object.values(errorMessages).join('\n'); // 각 에러 메시지를 줄바꿈으로 연결
-                    alert(`처리 중 다음 오류가 발생했습니다:\n${message}`);
+                return response.json().then(data => {
+                    if (data.errors) {
+                        alert(data.errors.join('\n')); // 오류 메시지 출력
+                    } else {
+                        alert('알 수 없는 오류가 발생했습니다.');
+                    }
                 });
             }
         })

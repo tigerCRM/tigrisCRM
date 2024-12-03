@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,23 +51,19 @@ public class SystemBoardController {
     * 작성자 : 제예솔
     * 설명 : 시스템관리 리스트, 글작성, 수정 및 삭제
     * */
-    @Autowired
-    private ConfigProperties config;
-    @Autowired
-    private CommonService commonService;
-    @Autowired
-    private SystemBoardService systemBoardService;
-    @Autowired
-    private FileService fileService;
-    @Autowired
-    private FileStoreUtils fileStoreUtils;
+    private final ConfigProperties config;
+    private final CommonService commonService;
+    private final SystemBoardService systemBoardService;
+    private final FileService fileService;
+    private final FileStoreUtils fileStoreUtils;
+
+    private final MessageSource messageSource;
 
     private final SystemBoardValidator systemBoardValidator;
 
     //application.yml 에 파일 위치 명시되어 있음
     @Value("${file.dir}")
     private String fileDir;
-
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     @InitBinder("systemBoard")
@@ -209,18 +207,15 @@ public class SystemBoardController {
         if (bindingResult.hasErrors()) {
             LOGGER.info("validation error 발생={}",bindingResult);
 
-            // 오류 메시지 추출
-            Map<String, String> errorMessages = new HashMap<>();
+            List<String> errorMessages = new ArrayList<>();
 
-            List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-            for (FieldError error : fieldErrors) {
-
-                LOGGER.info("작업중" + error);
-                //errorMessages.put(error.getField(), errorMessage);
+            for (FieldError error : bindingResult.getFieldErrors()) {
+                String errorMessage = messageSource.getMessage(error.getCode(), null, null);
+                errorMessages.add(errorMessage);
             }
 
             // HTTP 400 Bad Request와 오류 메시지 반환
-            return ResponseEntity.badRequest().body(errorMessages);
+            return ResponseEntity.badRequest().body(Map.of("errors", errorMessages));
         }
 
         HttpSession session = request.getSession(false);
