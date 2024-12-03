@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width" />
-    <title>시스템 정보</title>
+    <title>공지사항</title>
     <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
@@ -15,8 +15,13 @@
     <!--toast ui 설정-->
     <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+
     <!--기타 전역에서 쓸 공통javascript 설정. commit-->
     <script src="/js/common.js"></script>
+    <!--datepicker 관련 -->
+    <script src="/lib/picker/datepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/lib/picker/datepicker.min.css">
+    <script src="/js/datepicker.js"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -38,15 +43,15 @@
                             <div class="content-header">
                                 <h2 class="text-body1">
                                     <div class="flex flex-align_center gap--8">
-                                        <b th:text="${mode == 'write' ? '시스템 정보 작성' : (mode == 'modify' ? '시스템 정보 수정' : '시스템 정보 상세')}"></b>
+                                        <b th:text="${mode == 'write' ? '공지사항 작성' : (mode == 'modify' ? '공지사항 수정' : '공지사항 상세')}"></b>
                                     </div>
                                 </h2>
                             </div>
                         </div>
                         <!-- //헤더 영역 -->
                         <!-- form 영역 -->
-                        <form id= "boardSubmitArea" action="/systemBoard"  method="post" enctype="multipart/form-data" th:object="${systemBoard}">
-                            <input type="hidden" id="boardId" th:value="${systemBoard.boardId}" name="boardId">
+                        <form id= "boardSubmitArea" action="/noticeBoard"  method="post" enctype="multipart/form-data" th:object="${noticeBoard}">
+                            <input type="hidden" id="boardId" th:value="${noticeBoard.boardId}" name="boardId">
                             <input type="hidden" id="mode" th:value="${mode}" name="mode">
                             <div>
                                 <!--사용자 입력 영역-->
@@ -60,13 +65,13 @@
                                     <tbody>
                                     <tr>
                                         <th>작성자</th>
-                                        <td th:text="${systemBoard.boardId != 0 ? systemBoard.userName : user.userName}"></td>
+                                        <td th:text="${noticeBoard.boardId != 0 ? noticeBoard.userName : user.userName}"></td>
                                         <th>작성일자</th>
-                                        <td th:text="${systemBoard.createDt}" class="convertDateFormat">0000-00-00</td>
+                                        <td th:text="${noticeBoard.createDt}" class="convertDateFormat">0000-00-00</td>
                                     </tr>
                                     <tr>
-                                        <th>서버명</th>
-                                        <td colspan="3">
+                                        <th>제목</th>
+                                        <td>
                                             <input type="text"
                                                    id="title"
                                                    name="title"
@@ -76,32 +81,44 @@
                                                    th:readonly="${mode == 'read'}">
                                             <span th:errors="*{title}" class="board_validation">error message area</span>
                                         </td>
+                                        <th>상단 공지 여부</th>
+                                        <td>
+                                            <div class="input-list--h">
+                                                <label class="checkbox02">
+                                                    <input type="checkbox">
+                                                    <span>상단공지</span>
+                                                </label>
+                                            </div>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <th>회사</th>
+                                        <th>팝업여부</th>
                                         <td colspan="3">
-                                            <div class="dropdown dropdown--xs" aria-expanded="false" tabindex="0">
-                                                <select class="dropdown__selected" name="companyId" th:attr="disabled=${mode == 'read'}">
-                                                    <!-- 기본 옵션 -->
-                                                    <option value=""
-                                                            th:selected="${systemBoard.boardId == 0}"
-                                                            selected disabled>==회사 선택==
-                                                    </option>
-                                                    <!-- 상세보기 상태에서 선택된 회사 -->
-                                                    <option th:if="${systemBoard.boardId != 0}"
-                                                            th:value="${systemBoard.companyId}"
-                                                            th:text="${systemBoard.companyName}"
-                                                            selected>
-                                                    </option>
-                                                    <!-- 회사 목록 옵션 -->
-                                                    <option th:each="option : ${companyOptions}"
-                                                            th:value="${option.companyId}"
-                                                            th:text="${option.companyName}"
-                                                            th:if="${systemBoard.boardId == 0}">
-                                                    </option>
-                                                </select>
-                                                <input type="hidden" name="companyName" id="companyName">
-                                                <span th:errors="*{companyId}" class="board_validation">error message area</span>
+                                            <div class="element-horizontal-arrangement">
+                                                <label class="checkbox02 ml8">
+                                                    <input type="checkbox" checked>
+                                                    <span>팝업등록</span>
+                                                </label>
+                                                <label class="checkbox02 ml8">
+                                                    <input type="checkbox">
+                                                    <span>항상노출</span>
+                                                </label>
+                                                <div th:include="fragments/datepicker :: datepicker('startDate', 'endDate')"></div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>열람대상</th>
+                                        <td colspan="3">
+                                            <div class="input-list--h">
+                                                <label class="radio02">
+                                                    <input type="radio" name="group1" checked="">
+                                                    <span>전체열람</span>
+                                                </label>
+                                                <label class="radio02">
+                                                    <input type="radio" name="group1">
+                                                    <span>지정 고객사 열람</span>
+                                                </label>
                                             </div>
                                         </td>
                                     </tr>
@@ -167,7 +184,7 @@
                                             th:if="${mode == 'read'}"
                                             onclick="getModifyBoard()">글수정</button>
                                     <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'read'}" onclick="deleteBoard()">글삭제</button>
-                                    <button type="button" class="btn btn--m  secondary-btn" onclick="location.href='/systemBoardList';">목록으로</button>
+                                    <button type="button" class="btn btn--m  secondary-btn" onclick="location.href='/noticeBoardList';">목록으로</button>
                                 </div>
                                 <!--//버튼그룹-->
                             </div>
@@ -302,7 +319,7 @@
 
     //8. 글 삭제
     function deleteBoard() {
-        var url = `/systemBoard`;
+        var url = `/noticeBoard`;
         if (confirm('정말로 삭제하시겠습니까?')) {
             fetch(url, {
                 method: 'DELETE',
@@ -314,7 +331,7 @@
             .then(response => {
                 if (response.ok) {
                     alert('삭제되었습니다.');
-                    window.location.href = '/systemBoardList'; // 삭제 후 이동할 페이지
+                    window.location.href = '/noticeBoardList'; // 삭제 후 이동할 페이지
                 } else {
                     response.text().then(message => {
                         alert(`서버응답실패: ${message}`);
@@ -329,7 +346,7 @@
     }
     //9. 글 수정 페이지로 전환
     function getModifyBoard() {
-        var url = '/systemBoard?boardId=' + boardId + '&mode=modify';
+        var url = '/noticeBoard?boardId=' + boardId + '&mode=modify';
         window.location.href = url;
     }
 
@@ -346,7 +363,7 @@
 
         formData.append('deleteSavedAttachFiles', JSON.stringify(deleteSavedAttachFiles));
 
-        var url = '/systemBoard';
+        var url = '/noticeBoard';
 
         // Fetch API로 서버에 요청 전송
         fetch(url, {
@@ -356,7 +373,7 @@
         .then(response => {
             if (response.ok) {
                 alert('처리가 완료되었습니다.');
-                window.location.href = '/systemBoardList'; // 완료 후 이동할 URL
+                window.location.href = '/noticeBoardList'; // 완료 후 이동할 URL
             } else {
                 return response.json().then(data => {
                     if (data.errors) {

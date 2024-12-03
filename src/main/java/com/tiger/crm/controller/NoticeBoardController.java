@@ -4,26 +4,23 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiger.crm.common.context.ConfigProperties;
 import com.tiger.crm.common.file.FileStoreUtils;
-import com.tiger.crm.common.validation.SystemBoardValidator;
-import com.tiger.crm.common.validation.UserLoginValidator;
+import com.tiger.crm.common.validation.NoticeBoardValidator;
 import com.tiger.crm.repository.dto.board.BoardOpenCompanyDto;
-import com.tiger.crm.repository.dto.board.SystemBoardDto;
+import com.tiger.crm.repository.dto.board.NoticeBoardDto;
 import com.tiger.crm.repository.dto.company.CompanyOptionDto;
 import com.tiger.crm.repository.dto.file.UploadFileDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
-import com.tiger.crm.service.board.SystemBoardService;
+import com.tiger.crm.service.board.NoticeBoardService;
 import com.tiger.crm.service.common.CommonService;
 import com.tiger.crm.service.file.FileService;
-import com.tiger.crm.service.ticket.TicketService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -35,53 +32,51 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
-public class SystemBoardController {
+public class NoticeBoardController {
     
     /*
-    * 시스템관리
+    * 공지사항
     * 작성자 : 제예솔
-    * 설명 : 시스템관리 리스트, 글작성, 수정 및 삭제
+    * 설명 : 공지사항 리스트, 글작성, 수정 및 삭제
     * */
     private final ConfigProperties config;
     private final CommonService commonService;
-    private final SystemBoardService systemBoardService;
+    private final NoticeBoardService noticeBoardService;
     private final FileService fileService;
     private final FileStoreUtils fileStoreUtils;
 
     private final MessageSource messageSource;
 
-    private final SystemBoardValidator systemBoardValidator;
+    private final NoticeBoardValidator noticeBoardValidator;
 
     //application.yml 에 파일 위치 명시되어 있음
     @Value("${file.dir}")
     private String fileDir;
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-    @InitBinder("systemBoard")
+    @InitBinder("noticeBoard")
     public void init(WebDataBinder dataBinder) {
         LOGGER.info("init binder {}", dataBinder);
-        dataBinder.addValidators(systemBoardValidator);
+        dataBinder.addValidators(noticeBoardValidator);
     }
 
     /*
     * GET 시스템 정보 리스트 페이지
     * */
-    @GetMapping("/systemBoardList")
-    public String getSystemBoardListPage(PagingRequest pagingRequest, HttpServletRequest request, HttpServletResponse response, Model model)
+    @GetMapping("/noticeBoardList")
+    public String getNoticeBoardListPage(PagingRequest pagingRequest, HttpServletRequest request, HttpServletResponse response, Model model)
     {
         model.addAttribute("searchOptions", commonService.getSelectOptions("b_search"));
-        PagingResponse<Map<String, Object>> pageResponse = systemBoardService.getSystemBoardList(pagingRequest);
-        model.addAttribute("systemBoardList", pageResponse);
-        return "systemBoardList";
+        PagingResponse<Map<String, Object>> pageResponse = noticeBoardService.getNoticeBoardList(pagingRequest);
+        model.addAttribute("noticeBoardList", pageResponse);
+        return "noticeBoardList";
     }
 
     /*
@@ -89,14 +84,14 @@ public class SystemBoardController {
      * 설명 : 요청관리 페이지 검색
      * * 스크립트단에서 ajax로 호출하여 PagingRequest data를 받아서 처리
      * */
-    @PostMapping("/systemBoardList")
-    public String searchSystemBoardListPage(@ModelAttribute PagingRequest pagingRequest, Model model) {
+    @PostMapping("/noticeBoardList")
+    public String searchNoticeBoardListPage(@ModelAttribute PagingRequest pagingRequest, Model model) {
         try {
             // 티켓 조회
-            PagingResponse<Map<String, Object>> pageResponse = systemBoardService.getSystemBoardList(pagingRequest);
-            model.addAttribute("systemBoardList", pageResponse);
+            PagingResponse<Map<String, Object>> pageResponse = noticeBoardService.getNoticeBoardList(pagingRequest);
+            model.addAttribute("noticeBoardList", pageResponse);
             // 부분 뷰 렌더링 (리스트 부분만 갱신)
-            return "systemBoardList :: systemBoardListFragment";
+            return "noticeBoardList :: noticeBoardListFragment";
         } catch (IllegalArgumentException e) {
             // 입력 값에 대한 오류 처리 (예: 유효하지 않은 파라미터)
             model.addAttribute("error", "잘못된 입력 값이 있습니다. 다시 확인해 주세요.");
@@ -108,17 +103,17 @@ public class SystemBoardController {
         }
 
         // 오류 발생 시 전체 페이지로 돌아가도록 처리
-        return "systemBoardList";  // 기본 화면으로 이동
+        return "noticeBoardList";  // 기본 화면으로 이동
     }
 
     /*
      * GET 시스템 정보 입력창 페이지
      * */
-    @GetMapping("/systemBoard")
-    public String getSystemBoardPage(
+    @GetMapping("/noticeBoard")
+    public String getNoticeBoardPage(
             @RequestParam(value = "boardId", required = false) Integer boardId,
             @RequestParam(value = "mode", required = false) String mode,
-            @ModelAttribute("systemBoard") SystemBoardDto systemBoard,
+            @ModelAttribute("noticeBoard") NoticeBoardDto noticeBoard,
             HttpServletRequest request,
             HttpServletResponse response,
             Model model
@@ -127,13 +122,13 @@ public class SystemBoardController {
         UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
         List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
         if(boardId != null ){ //글 불러오기 로직
-            SystemBoardDto loadSystemBoard = systemBoardService.getSystemBoardByBoardId(boardId);
+            NoticeBoardDto loadNoticeBoard = noticeBoardService.getNoticeBoardByBoardId(boardId);
 
             List<UploadFileDto> uploadFiles = fileService.getFilesById("board",boardId);
 
             model.addAttribute("user", loginUser);//사용자 정보 가져오기
             model.addAttribute("companyOptions", companyOptions);//회사 옵션 정보 가져오기
-            model.addAttribute("systemBoard",loadSystemBoard);//시스템 정보 가져오기
+            model.addAttribute("noticeBoard",loadNoticeBoard);//시스템 정보 가져오기
             model.addAttribute("uploadFiles",uploadFiles);//첨부파일 정보 가져오기
 
             if("modify".equals(mode)){
@@ -150,14 +145,14 @@ public class SystemBoardController {
             model.addAttribute("uploadFiles",null);
         }
 
-        return "systemBoard";
+        return "noticeBoard";
     }
     
     /*
      * POST 시스템 정보 신규 등록
      * */
-    @PostMapping("/systemBoard")
-    public String postSystemBoard(@Validated @ModelAttribute("systemBoard") SystemBoardDto systemBoard,
+    @PostMapping("/noticeBoard")
+    public String postNoticeBoard(@Validated @ModelAttribute("noticeBoard") NoticeBoardDto noticeBoard,
                                   BindingResult bindingResult,
                                   HttpServletRequest request,
                                   HttpServletResponse response,
@@ -172,25 +167,25 @@ public class SystemBoardController {
             List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
             model.addAttribute("mode", "write");//글작성
             model.addAttribute("companyOptions", companyOptions);
-            return "systemBoard";
+            return "noticeBoard";
         }
 
         //작성자 저장
-        systemBoard.setCreateId(loginUser.getUserId());
+        noticeBoard.setCreateId(loginUser.getUserId());
         
         //정보 저장 로직. Board 와 OpenCompany DB 저장 후 BoardId 리턴받음
-        int savedBoardId = systemBoardService.insertSystemBoard(systemBoard, new BoardOpenCompanyDto(Integer.parseInt(systemBoard.getCompanyId()),systemBoard.getCompanyName()));
+        int savedBoardId = noticeBoardService.insertNoticeBoard(noticeBoard, new BoardOpenCompanyDto(Integer.parseInt(noticeBoard.getCompanyId()),noticeBoard.getCompanyName()));
 
         if(savedBoardId ==0 ){
-            LOGGER.info("postSystemBoard ERROR occured!");
+            LOGGER.info("postNoticeBoard ERROR occured!");
             return null;
         }
         
         //첨부파일
         try{
-            List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(systemBoard.getAttachFiles()); // 경로에 저장
+            List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(noticeBoard.getAttachFiles()); // 경로에 저장
             String fileId = fileService.insertFile(uploadFiles, savedBoardId, "시스템관리"); //DB 에 저장
-            systemBoardService.setSystemBoardFileId(fileId,savedBoardId);//DB에 저장
+            noticeBoardService.setNoticeBoardFileId(fileId,savedBoardId);//DB에 저장
 
 
         }catch (Exception e){
@@ -198,18 +193,18 @@ public class SystemBoardController {
             return null;
         }
 
-        return "redirect:systemBoardList";
+        return "redirect:noticeBoardList";
     }
 
     /*
      * DELETE 시스템 정보 삭제
      * */
-    @DeleteMapping("/systemBoard")
-    public ResponseEntity<?> deleteSystemBoard(@RequestBody Map<String, Object> data){
+    @DeleteMapping("/noticeBoard")
+    public ResponseEntity<?> deleteNoticeBoard(@RequestBody Map<String, Object> data){
         int boardId = Integer.parseInt((String) data.get("boardId"));
 
         try{
-            systemBoardService.deleteSystemBoardByBoardId(boardId); //t_board 안의 정보 삭제, t_board_open_company 정보 삭제(deleteYn = Y)
+            noticeBoardService.deleteNoticeBoardByBoardId(boardId); //t_board 안의 정보 삭제, t_board_open_company 정보 삭제(deleteYn = Y)
             fileService.deleteFiles("board",boardId); //t_board 에 물려있는 첨부파일들 삭제(deleteYn = y)
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
@@ -221,9 +216,9 @@ public class SystemBoardController {
     /*
      * PUT 시스템 정보 수정저장
      * */
-    @PutMapping("/systemBoard")
-    public ResponseEntity<?> updateSystemBoard(
-            @Validated @ModelAttribute("systemBoard") SystemBoardDto systemBoard,
+    @PutMapping("/noticeBoard")
+    public ResponseEntity<?> updateNoticeBoard(
+            @Validated @ModelAttribute("noticeBoard") NoticeBoardDto noticeBoard,
             BindingResult bindingResult,
             @RequestParam String deleteSavedAttachFiles,
             HttpServletRequest request,
@@ -248,14 +243,14 @@ public class SystemBoardController {
         HttpSession session = request.getSession(false);
         UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
 
-        systemBoard.setUpdateId(loginUser.getUserId());
+        noticeBoard.setUpdateId(loginUser.getUserId());
 
         ObjectMapper objectMapper = new ObjectMapper();
         List<String> deleteFilesList = null;
 
         try{
             //게시글에 대한 작업
-            systemBoardService.updateSystemBoard(systemBoard);
+            noticeBoardService.updateNoticeBoard(noticeBoard);
 
             //이전 첨부파일 중 삭제 된 파일들 삭제 작업
             if(!deleteSavedAttachFiles.isEmpty()){
@@ -266,10 +261,10 @@ public class SystemBoardController {
             }
 
             //신규로 추가된 파일이 있으면 첨부 작업
-            LOGGER.info("새로 들어온 파일의 크기 : " + systemBoard.getAttachFiles().size());
-            List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(systemBoard.getAttachFiles()); // 경로에 저장
-            String fileId = fileService.insertFile(uploadFiles, systemBoard.getBoardId(), "시스템관리"); //DB 에 저장
-            systemBoardService.setSystemBoardFileId(fileId,systemBoard.getBoardId());//DB에 저장
+            LOGGER.info("새로 들어온 파일의 크기 : " + noticeBoard.getAttachFiles().size());
+            List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(noticeBoard.getAttachFiles()); // 경로에 저장
+            String fileId = fileService.insertFile(uploadFiles, noticeBoard.getBoardId(), "시스템관리"); //DB 에 저장
+            noticeBoardService.setNoticeBoardFileId(fileId,noticeBoard.getBoardId());//DB에 저장
 
         }catch (Exception e){
             LOGGER.info("게시물 수정 오류 발생 : " + e);
