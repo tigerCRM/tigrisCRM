@@ -43,3 +43,6 @@ tigris-crm 서비스 개발
 
 5. webHook 쓰려면 ngrok써야함. 
 ngrok 사용이유 > 아이피 제한을 걸어뒀기에,  우회하는 시스템을 써야지 push시 반응함.
+      - 1) ngrok 서버접속 : ```https://ngrok.com/```
+      - 2) ngrok 다운로드 후 exe실행
+      - 3) 명령어 실행 : ``` ngrok http 192.168.0.240:8081 ```
