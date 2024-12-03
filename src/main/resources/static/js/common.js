@@ -60,13 +60,13 @@ var common = {
     isViewerMode 가 false = 글 신규작성 = 토스트 에디터모드
     초기화 해준 후 editor 를 리턴 합니다.
     */
-    loadOrInitializeEditor : function(editor , mode){
+    loadOrInitializeEditor : function(editor , mode, contentValue){
 
         editor = new toastui.Editor.factory({
             el: document.querySelector('#editorContent'),      // viewer와 editor 컨테이너 구분
             viewer: mode == 'read',                              // boardId 값에 따라 viewer 모드 설정
             height: 'auto',                                    // 높이 설정
-            initialValue: mode == 'write'? '내용을 입력해 주세요.' : document.querySelector('#content').value ,
+            initialValue: mode == 'write'? contentValue : document.querySelector('#content').value ,
             initialEditType: mode == 'read' ? undefined : 'wysiwyg', // viewer 모드일 때 편집 타입 생략
             previewStyle: 'vertical',
             hideModeSwitch: mode != 'read',                      // editor 모드일 때만 모드 전환 숨김

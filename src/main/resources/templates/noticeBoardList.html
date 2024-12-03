@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width" />
-    <title>메인</title>
+    <title>공지사항</title>
     <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
@@ -34,7 +34,7 @@
                             <div class="content-header">
                                 <h2 class="text-body1">
                                     <div class="flex flex-align_center gap--8">
-                                        <b>시스템 관리</b>
+                                        <b>공지사항</b>
                                     </div>
                                 </h2>
                                 <!-- 검색영역 -->
@@ -63,16 +63,16 @@
                         </div>
 
                         <!-- 리스트 영역 -->
-                        <div th:fragment="systemBoardListFragment" id="systemBoardListContainer">
+                        <div th:fragment="noticeBoardListFragment" id="noticeBoardListContainer">
                         <!-- 리스트 상단 영역 -->
                             <div class="flex flex-justify_between flex-align_center ">
                                 <div class="flex gap--4">
-                                    <button type="button" class="btn btn--s primary-btn" th:onclick="'window.location.href=\'' + @{/systemBoard} + '\''">작성</button>
+                                    <button type="button" class="btn btn--s primary-btn" th:onclick="'window.location.href=\'' + @{/noticeBoard} + '\''">작성</button>
                                 </div>
                             </div>
                             <div class="pageinfo">
                                 <div class="pagetotal">
-                                    <span class="text-body4">전체 <strong class="color-navy500"  th:text="${systemBoardList.totalcnt}"></strong>건</span>
+                                    <span class="text-body4">전체 <strong class="color-navy500"  th:text="${noticeBoardList.totalcnt}"></strong>건</span>
                                 </div>
                             </div>
                             <!-- //리스트 상단 영역 -->
@@ -90,26 +90,26 @@
                                         <tr>
                                             <th>글번호</th>
                                             <th>고객사</th>
-                                            <th class="board-title">서버명</th>
+                                            <th class="board-title">제목</th>
                                             <th>작성자</th>
                                             <th>등록일시</th>
                                         </tr>
                                         </thead>
                                         <div>
                                             <tbody>
-                                                <tr th:if="${systemBoardList == null or #lists.isEmpty(systemBoardList)}">
+                                                <tr th:if="${noticeBoardList == null or #lists.isEmpty(noticeBoardList)}">
                                                     <td colspan="10" style="text-align:center;">등록된 시스템 정보가 없습니다.</td>
                                                 </tr>
-                                                <tr th:each="systemBoard : ${systemBoardList.dataList}">
-                                                    <td><span th:text="${systemBoard['BOARD_ID']}"></span></td>
-                                                    <td><span th:text="${systemBoard['COMPANY_NAME']}"></span></td>
+                                                <tr th:each="noticeBoard : ${noticeBoardList.dataList}">
+                                                    <td><span th:text="${noticeBoard['BOARD_ID']}"></span></td>
+                                                    <td><span th:text="${noticeBoard['COMPANY_NAME']}"></span></td>
                                                     <td>
-                                                        <a th:href="@{/systemBoard(boardId=${systemBoard['BOARD_ID']})}"
-                                                           th:text="${systemBoard['TITLE']}"></a>
+                                                        <a th:href="@{/noticeBoard(boardId=${noticeBoard['BOARD_ID']})}"
+                                                           th:text="${noticeBoard['TITLE']}"></a>
                                                     </td>
 
-                                                    <td><span th:text="${systemBoard['USER_NAME']}"></span></td>
-                                                    <td><span th:text="${systemBoard['CREATE_DT']}"></span></td>
+                                                    <td><span th:text="${noticeBoard['USER_NAME']}"></span></td>
+                                                    <td><span th:text="${noticeBoard['CREATE_DT']}"></span></td>
                                                 </tr>
                                             </tbody>
                                         </div>
@@ -119,7 +119,7 @@
                             <!-- //리스트 영역 -->
                             <div class="board-footer">
                                 <!-- 페이징 버튼 템플릿 호출 -->
-                                <div th:replace="~{fragments/pagination :: pagination(${systemBoardList}, '/systemBoardList')}" />
+                                <div th:replace="~{fragments/pagination :: pagination(${noticeBoardList}, '/noticeBoardList')}" />
                             </div>
                         </div>
                     </div>
@@ -151,7 +151,7 @@
         });
 
         // Ajax 요청
-        fetch('/systemBoardList', {
+        fetch('/noticeBoardList', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
@@ -161,7 +161,7 @@
         .then(response => response.text())
         .then(data => {
           // 응답받은 HTML을 페이지에 삽입
-          document.getElementById('systemBoardListContainer').innerHTML = data;
+          document.getElementById('noticeBoardListContainer').innerHTML = data;
         })
         .catch(error => console.error('검색 중 오류 발생:', error));
 

@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.tiger.crm.repository.mapper.SystemBoardMapper">
-    <select id="getSystemBoardList"  resultType="java.util.HashMap">
+<mapper namespace="com.tiger.crm.repository.mapper.NoticeBoardMapper">
+    <select id="getNoticeBoardList"  resultType="java.util.HashMap">
         SELECT
             B.BOARD_ID,
             B.CATEGORY_CD,
@@ -19,7 +19,7 @@
         LEFT JOIN T_USER_INFO U
             ON B.CREATE_ID = U.USER_ID
         <where>
-            CATEGORY_CD = 'SYSTEM'
+            CATEGORY_CD = 'NOTICE'
             AND DELETE_YN = 'N'
             <!-- 검색 유형 (searchType이 제목, 내용, 담당자, 등 선택된 경우) -->
             <if test="searchType != null and searchType != ''">
@@ -48,7 +48,7 @@
 
     </select>
 
-    <select id="getSystemBoardListCount" resultType="java.lang.Integer">
+    <select id="getNoticeBoardListCount" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM T_BOARD B
         LEFT JOIN T_BOARD_OPEN_COMPANY OC
@@ -56,7 +56,7 @@
         LEFT JOIN T_USER_INFO U
             ON B.CREATE_ID = U.USER_ID
         <where>
-            CATEGORY_CD = 'SYSTEM'
+            CATEGORY_CD = 'NOTICE'
             AND DELETE_YN = 'N'
 
             <!-- 검색 유형 (searchType이 제목, 내용, 담당자, 등 선택된 경우) -->
@@ -80,7 +80,7 @@
         </where>
     </select>
 
-    <insert id="insertSystemBoard" parameterType="com.tiger.crm.repository.dto.board.SystemBoardDto" useGeneratedKeys="true" keyProperty="boardId">
+    <insert id="insertNoticeBoard" parameterType="com.tiger.crm.repository.dto.board.NoticeBoardDto" useGeneratedKeys="true" keyProperty="boardId">
         INSERT INTO T_BOARD (
             CATEGORY_CD,
             TITLE,
@@ -90,7 +90,7 @@
             DELETE_YN,
             FILE_ID
         ) VALUES (
-            'SYSTEM',
+            'NOTICE',
             #{title},
             #{content},
             #{createId},
@@ -100,13 +100,13 @@
         )
     </insert>
 
-    <update id="updateSystemBoardFileId" parameterType="java.util.Map">
+    <update id="updateNoticeBoardFileId" parameterType="java.util.Map">
         UPDATE T_BOARD
         SET FILE_ID = #{fileId}
         WHERE BOARD_ID = #{boardId}
     </update>
 
-    <select id="getSystemBoardByBoardId"  resultType="com.tiger.crm.repository.dto.board.SystemBoardDto">
+    <select id="getNoticeBoardByBoardId"  resultType="com.tiger.crm.repository.dto.board.NoticeBoardDto">
         SELECT
         B.BOARD_ID,
         B.CATEGORY_CD,
@@ -125,13 +125,13 @@
         WHERE B.BOARD_ID = #{boardId}
     </select>
 
-    <update id="deleteSystemBoardByBoardId" parameterType="java.util.Map">
+    <update id="deleteNoticeBoardByBoardId" parameterType="java.util.Map">
         UPDATE T_BOARD
         SET DELETE_YN = 'Y'
         WHERE BOARD_ID = #{boardId}
     </update>
 
-    <update id="updateSystemBoard" parameterType="com.tiger.crm.repository.dto.board.SystemBoardDto">
+    <update id="updateNoticeBoard" parameterType="com.tiger.crm.repository.dto.board.NoticeBoardDto">
         UPDATE T_BOARD
         SET
             TITLE = #{title},

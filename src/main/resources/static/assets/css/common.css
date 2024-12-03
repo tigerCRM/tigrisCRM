@@ -3042,6 +3042,12 @@ ul[class*='list-tree--'] {
     font-weight: bold;       /* 글자 강조 */
     /*background-color: #f8d7da;*/
 }
+/*예솔 추가 :  */
+.element-horizontal-arrangement{
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    gap: 10px; /* 요소 간 간격 설정 */
+}
 
 /* 사용자 상세 정보 */
 .user-detail-info .table th,
