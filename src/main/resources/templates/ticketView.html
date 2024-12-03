@@ -7,7 +7,7 @@
     <title>요청 등록 상세</title>
     <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/common.css?v2">
+    <link rel="stylesheet" type="text/css" href="/assets/css/common.css?v4">
     <link rel="stylesheet" type="text/css" href="/assets/css/layout.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
@@ -178,6 +178,18 @@
                                     </tbody>
                                 </table>
                                 <!--//사용자 입력 영역-->
+                                <!--댓글 영역-->
+                                <div class="message">
+                                    <p style="display:inline-block;">의견이 있습니당 의견이 있습니당</p>
+                                </div>
+                                <div class="comment__write">
+                                    <!-- (확인) 댓글 입력 전에는 댓글 작성 버튼 비활성화 -->
+                                    <textarea name="" id="" cols="30" rows="10" class="textarea01 input--full" placeholder="댓글을 입력해주세요"></textarea>
+                                    <div class="flex flex-justify_end mt8">
+                                        <button type="button" class="btn btn--s primary-btn">댓글 작성</button>
+                                    </div>
+                                </div>
+                                <!--//댓글 영역-->
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
                                     <button type="submit" class="btn btn--m  primary-btn">글수정</button>

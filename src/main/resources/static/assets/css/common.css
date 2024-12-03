@@ -3336,3 +3336,16 @@ ul[class*='list-tree--'] {
 .step.completed + .separator {
   background-color: #007bff;
 }
+
+
+.comment__write {
+    border-top: 1px solid var(--gray-300);
+    padding: 2.4rem;
+    margin-top: 10px;
+}
+
+.comment__write > .textarea01 {
+    height: 8rem;
+}
+
+.message {border-radius:0 10px 10px; background-color:var(--BG-UI);}
