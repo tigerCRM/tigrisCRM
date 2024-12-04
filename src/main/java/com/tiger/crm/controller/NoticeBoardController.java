@@ -73,7 +73,7 @@ public class NoticeBoardController {
     @GetMapping("/noticeBoardList")
     public String getNoticeBoardListPage(PagingRequest pagingRequest, HttpServletRequest request, HttpServletResponse response, Model model)
     {
-        model.addAttribute("searchOptions", commonService.getSelectOptions("b_search"));
+        model.addAttribute("searchOptions", commonService.getSelectOptions("b_search_notice"));
         PagingResponse<Map<String, Object>> pageResponse = noticeBoardService.getNoticeBoardList(pagingRequest);
         model.addAttribute("noticeBoardList", pageResponse);
         return "noticeBoardList";
@@ -162,7 +162,8 @@ public class NoticeBoardController {
         UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
 
         //최초 인입된 dto 에 대해 validation 수행 후 반환
-        if (bindingResult.hasErrors()) {
+        //if (bindingResult.hasErrors()) {
+        if (true) {
             LOGGER.info("validation error 발생={}",bindingResult);
             List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
             model.addAttribute("mode", "write");//글작성

@@ -1,11 +1,11 @@
 <!-- 날짜 두울 -->
 <div th:fragment="datepicker(startDateId, endDateId)" >
-    <input type="text" class="input--s input01 datepicker-input start-date" placeholder="시작 날짜" th:id="${startDateId}">
+    <input type="text" class="input--s input01 datepicker-input start-date" placeholder="시작 날짜" th:id="${startDateId}" th:name="${startDateId}">
     <button type="button" class="btn just-icon btn--24 calendar-btn">
         <svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use></svg>
     </button>
     ~
-    <input type="text" class="input--s input01 datepicker-input end-date" placeholder="종료 날짜" th:id="${endDateId}">
+    <input type="text" class="input--s input01 datepicker-input end-date" placeholder="종료 날짜" th:id="${endDateId}" th:name="${endDateId}">
     <button type="button" class="btn just-icon btn--24 calendar-btn">
         <svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use></svg>
     </button>
