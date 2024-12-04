@@ -12,7 +12,7 @@
             C.COMPANY_NAME as COMPANY_NAME,
             U.USER_CLASS as USER_CLASS
             FROM T_USER_INFO as U
-            LEFT JOIN t_company_info as C
+            LEFT JOIN T_COMPANY_INFO as C
         on U.COMPANY_ID = C.COMPANY_ID
         WHERE USER_ID = #{id}
     </select>
