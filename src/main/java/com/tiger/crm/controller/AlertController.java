@@ -51,7 +51,7 @@ public class AlertController {
     @PutMapping("/{id}")
     public ResponseEntity<List<AlertDto>> updateAlertList(@PathVariable("id") String alertId) {
         try {
-            System.out.println("jenkins test3");
+            System.out.println("jenkins test4");
             return null;
 
         } catch (Exception e) {
