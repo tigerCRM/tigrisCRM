@@ -3,24 +3,29 @@
         <header class="header">
             <div class="container">
                 <div class="logo" onclick="location.href='/main';" style="cursor: pointer;">
-                    <span class="hidden">뭐냐이건</span>
+                    <span class="hidden"></span>
                 </div>
 
                 <nav id="utilMenu" class="main-util-menu">
                     <ul>
                         <li>
-                            <button type="button" class="btn btn--l icon-btn menu-btn">
-                                <span class="badge"></span>
+                            <!-- 알림(종) 아이콘 버튼 -->
+                            <button type="button" class="btn btn--l icon-btn menu-btn" id="alertMenuBtn">
+                                <span class="badge" id="alertBadge"></span>
                                 <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#notification}"/></svg>
                             </button>
+                            <!-- 알림 드롭다운 메뉴 -->
+                            <ul class="dropdown-menu2" id="alertDropdownMenu">
+                                <!-- 알림 내용이 동적으로 추가됨 -->
+                            </ul>
                         </li>
                         <li>
+                            <!-- 설정(톱니바퀴) 아이콘 버튼 -->
                             <button type="button" class="btn btn--l icon-btn menu-btn setting-btn" id="settingMenuBtn">
                                 <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#setting}"/></svg>
                             </button>
-                            <!-- 드롭다운 메뉴 추가 -->
+                            <!-- 설정(톱니바퀴) 드롭다운 메뉴 추가 -->
                             <ul class="dropdown-menu" id="settingDropdownMenu">
-                                <li><a href="/test">접근권한 테스트</a></li>
                                 <li id="resetPassword"><a href="/resetPassword">비밀번호 초기화</a></li>
                                 <li id="logout">
                                     <a href="#" onclick="if(confirm('로그아웃 하시겠습니까?')) window.location.href='/logout'; else alert('취소하였습니다.'); return false;">로그아웃</a>
@@ -35,26 +40,125 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
             $(document).ready(function () {
+                // -------------------
+                // alert 호출 및 갱신
+                // -------------------
+                $.ajax({
+                    url: '/alert',
+                    method: 'GET',
+                    success: function(data) {
+                        // 알림 목록 데이터를 받아옴
+                        const alertCount = data.length; // 알림 개수
+                        const $alertBadge = $('#alertBadge');
+                        const $alertDropdownMenu = $('#alertDropdownMenu'); // 알림 드롭다운 메뉴
+
+                        // 알림 배지 표시
+                        if (alertCount > 0) {
+                            $alertBadge.text(alertCount).addClass('active');
+                        } else {
+                            $alertBadge.text('').removeClass('active');
+                        }
+
+                        // 드롭다운 내용 추가
+                        if (alertCount > 0) {
+                            let alertListHtml = '';
+                            data.forEach(alert => {
+                                alertListHtml += `
+                                    <li>
+                                        <span class="alert-link" data-id="${alert.alertId}">
+                                            <span>${alert.userName}</span> : <span>${alert.content}</span><br/>
+                                            <span class="alert-time">${alert.alertDt}</span>
+                                        </span>
+                                    </li>
+                                `;
+                            });
+                            // 알림 리스트를 드롭다운에 추가
+                            $alertDropdownMenu.html(alertListHtml);
+                        } else {
+                            // 알림이 없으면 "알림 없음" 표시
+                            $alertDropdownMenu.html('<li><a href="#">알림이 없습니다.</a></li>');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching frame_top_menu:', error);
+                    }
+                });
 
                 // -------------------
-                // 드롭 다운 바 작동
+                // 알림 메뉴 토글
+                // -------------------
+                const $alertMenuBtn = $('#alertMenuBtn');
+                const $alertDropdownMenu = $('#alertDropdownMenu'); // 알림 드롭다운 메뉴
+
+                // 알림 버튼 클릭 시 알림 드롭다운 토글
+                $alertMenuBtn.on('click', function(event) {
+                    event.stopPropagation(); // 이벤트 전파 방지
+                    $alertDropdownMenu.toggle(); // 알림 드롭다운 토글
+                    $('#settingDropdownMenu').hide(); // 설정 드롭다운이 열려있다면 닫기
+                });
+
+
+                // -------------------
+                // 설정 메뉴 토글
                 // -------------------
                 const $settingMenuBtn = $("#settingMenuBtn");
-                const $settingDropdownMenu = $("#settingDropdownMenu");
-                // 설정 버튼 클릭 시 드롭다운 토글
+                const $settingDropdownMenu = $("#settingDropdownMenu"); // 설정 드롭다운 메뉴
+
+                // 설정 버튼 클릭 시 설정 드롭다운 토글
                 $settingMenuBtn.on("click", function(event) {
-                    // 이벤트 전파 방지
-                    event.stopPropagation();
-                    // 드롭다운 메뉴 토글 (보이거나 숨기기)
-                    $settingDropdownMenu.toggle();
+                    event.stopPropagation(); // 이벤트 전파 방지
+                    $settingDropdownMenu.toggle(); // 설정 드롭다운 토글
+                    $('#alertDropdownMenu').hide(); // 알림 드롭다운이 열려있다면 닫기
                 });
-                // 드롭다운 외부를 클릭하면 드롭다운 숨기기
+
+                // -------------------
+                // 드롭다운 외부 클릭 시 숨기기
+                // -------------------
                 $(document).on("click", function(event) {
-                    // 드롭다운 메뉴가 열려있고 클릭한 곳이 드롭다운 메뉴가 아니면 숨기기
-                    if (!$settingDropdownMenu.is(event.target) && !$settingMenuBtn.is(event.target) && !$settingDropdownMenu.has(event.target).length) {
+                    // 알림 드롭다운이 열려있고 클릭한 곳이 알림 드롭다운 메뉴가 아니면 숨기기
+                    if (!$(event.target).closest('#alertMenuBtn, #alertDropdownMenu').length) {
+                        $alertDropdownMenu.hide();
+                    }
+
+                    // 설정 드롭다운이 열려있고 클릭한 곳이 설정 드롭다운 메뉴가 아니면 숨기기
+                    if (!$(event.target).closest('#settingMenuBtn, #settingDropdownMenu').length) {
                         $settingDropdownMenu.hide();
                     }
                 });
+
+
             });
+
+            // -------------------
+            // 종 알림 클릭 시 -1
+            // ------------------
+            $(document).on('click', '.alert-link', function (e) {
+                e.preventDefault(); // 기본 동작(페이지 이동)을 방지
+                const alertId = $(this).data('id'); // 알림 ID 가져오기
+                alert("remove:" + alertId);
+                $.ajax({
+                    url: '/alert/${alertId}',
+                    method: 'PUT',
+                    success: () => {
+                        // 빨간 뱃지 숫자 감소
+                        const $badge = $('#notification-badge');
+                        let count = parseInt($badge.text() || '0', 10);
+                        if (count > 0) {
+                            $badge.text(count - 1);
+                        }
+                        // 클릭된 알림을 스타일 변경 (리스트에서 제거 대신 색상 변경)
+                        $(this).closest('li').addClass('read-alert');
+                        // 페이지로 이동
+                        window.location.href = $(this).attr('href');
+
+                        // 페이지로 이동 (알림에 대한 상세 페이지로 이동)
+                        //window.location.href = `/ticketView?id=${alertId}`;
+                    },
+                    error: (xhr, status, error) => {
+                        console.error('알림상태를 읽음으로 변경 실패.', error);
+                    }
+                });
+            });
+
         </script>
 </body>
