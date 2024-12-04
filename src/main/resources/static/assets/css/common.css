@@ -1429,6 +1429,12 @@ label.checkbox02 input[type="checkbox"]:disabled+span {
     color: var(--error-500);
 }
 
+.tag.tag--green {
+    background-color: var(--error-50);
+    color: var(--success-400);
+}
+
+
 .tag.tag--navy {
     background-color: var(--primary-navy-50);
     color: var(--primary-navy-500);
@@ -3296,6 +3302,10 @@ ul[class*='list-tree--'] {
   justify-content: space-between;
 }
 
+.step-status {
+  display: none;
+}
+
 .step {
   display: flex;
   flex-direction: column;
@@ -3315,6 +3325,7 @@ ul[class*='list-tree--'] {
   color: #000;
   font-weight: bold;
   margin-bottom: 5px;
+  cursor: pointer;
 }
 
 .step-label {
@@ -3324,12 +3335,12 @@ ul[class*='list-tree--'] {
 
 .step.active .step-number {
   background-color: #007bff;
- /* color: #fff;*/
+  color: #fff;
 }
 
 .step.completed .step-number {
   background-color: #d9f2fc;
-/*  color: #007bff;*/
+  color: #007bff;
   border: 2px solid #007bff;
 }
 
@@ -3337,6 +3348,8 @@ ul[class*='list-tree--'] {
   flex: 1;
   height: 2px;
   background-color: #e0e0e0;
+  margin-bottom: 15px;
+
 }
 
 .step.completed + .separator {
@@ -3354,4 +3367,63 @@ ul[class*='list-tree--'] {
     height: 8rem;
 }
 
-.message {border-radius:0 10px 10px; background-color:var(--BG-UI);}
+.message {
+    border-radius:8px 8px 8px 8px;
+    background-color:#F4F6FA;
+    position:relative;
+    margin-top:4px;
+    padding:8px 16px;
+    padding-left: 10px;
+    width: max-content;
+    display: table-cell;
+}
+
+.sendmessage {
+    border-radius:8px 8px 8px 8px;
+    background-color:#BDE3FF;
+    position:relative;
+    margin-top:4px;
+    padding:8px 16px;
+    width: max-content;
+    display: table-cell;
+}
+
+.comment__write .message p {
+    font-size:15px;
+    color:#000;
+    word-break: break-all;
+    line-height: 1.25em;
+}
+.comment__write .sendmessage p {
+    font-size:15px;
+    color:#000;
+    word-break: break-all;
+    line-height: 1.25em;
+}
+
+.comment__write .user_name {
+    padding-top:3px;
+    font-size:15px;
+    color:#27353F;
+    padding-bottom: 3px;
+
+}
+
+.message_time {
+    color:#9BA5B1;
+    font-size:10px;
+    display: table-cell;
+    padding-left: 10px;
+}
+
+.message_box {
+    display:table;
+    padding-left:8px;
+    padding-top:8px;
+}
+
+.message_info{
+    max-width: 500px;
+}
+
+h2 { margin-bottom: 1rem; font-weight: 700; font-size: 2.4rem; }

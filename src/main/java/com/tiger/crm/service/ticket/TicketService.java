@@ -18,6 +18,8 @@ public interface TicketService {
     Map<String, Object> getManagerInfo(String companyId);
 
     TicketDto getTicketDetails(int ticketId);
+
+    int changeStatus(int ticketId, String newStatus, String updateId);
 }
 
 

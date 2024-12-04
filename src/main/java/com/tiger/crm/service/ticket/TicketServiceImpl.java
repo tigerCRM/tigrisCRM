@@ -56,4 +56,10 @@ public class TicketServiceImpl implements TicketService {
     public TicketDto getTicketDetails(int ticketId) {
         return ticketMapper.selectTicketDetails(ticketId);
     }
+
+    public int changeStatus(int ticketId, String newStatus, String updateId) {
+        // Update the status
+        return ticketMapper.updateTicketStatus(ticketId,newStatus,updateId);
+    }
+
 }

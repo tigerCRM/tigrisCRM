@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -224,6 +226,34 @@ public class TicketController {
             e.printStackTrace();
             model.addAttribute("error", "데이터를 불러오는 중 오류가 발생했습니다. 다시 시도해주세요.");
             return "errorPage";  // 에러 페이지로 이동 (필요 시 별도의 오류 페이지 생성)
+        }
+    }
+
+    @PutMapping("/changeStatus")
+    public ResponseEntity<Map<String, String>> updateStepStatus(HttpServletRequest request, @RequestBody Map<String, String> RequestBody) {
+        try {
+            String updateId = "";
+            String newStatus = RequestBody.get("status");
+            int id = Integer.parseInt(RequestBody.get("id")); // id는 String으로 전달되므로 변환
+            UserLoginDto user = (UserLoginDto) request.getAttribute("user");
+            if (user != null) {
+                updateId = user.getUserId(); // getUserId() 메서드를 통해 userId 추출
+                System.out.println("update ID: " + updateId);
+            } else {
+                System.out.println("User not found");
+            }
+
+            // 서비스 호출
+            ticketService.changeStatus(id, newStatus, updateId);
+            // JSON 응답
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Step status updated successfully");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            // 오류 처리
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("message", "Error updating status");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 }

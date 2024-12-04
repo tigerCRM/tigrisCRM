@@ -20,4 +20,7 @@ public interface TicketMapper {
 
     // 티켓 상세 정보 조회
     TicketDto selectTicketDetails(int ticketId);
+
+    //티켓 상태 업데이트
+    int updateTicketStatus(int ticketId, String newStatus, String updateId);
 }
