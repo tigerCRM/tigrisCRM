@@ -85,9 +85,10 @@
                                         <td>
                                             <div class="input-list--h">
                                                 <label class="checkbox02">
-                                                    <input type="checkbox">
+                                                    <input type="checkbox" id="topYnCheckbox">
                                                     <span>상단공지</span>
                                                 </label>
+                                                <input type="hidden" id="topYn" name="topYn" value="Y">
                                             </div>
                                         </td>
                                     </tr>
@@ -96,14 +97,15 @@
                                         <td colspan="3">
                                             <div class="element-horizontal-arrangement">
                                                 <label class="checkbox02 ml8">
-                                                    <input type="checkbox" checked>
+                                                    <input type="checkbox" id="popupYnCheckbox">
                                                     <span>팝업등록</span>
                                                 </label>
+                                                <input type="hidden" id="popupYn" name="popupYn">
                                                 <label class="checkbox02 ml8">
-                                                    <input type="checkbox">
+                                                    <input type="checkbox" id="alwaysDisplay">
                                                     <span>항상노출</span>
                                                 </label>
-                                                <div th:include="fragments/datepicker :: datepicker('startDate', 'endDate')"></div>
+                                                <div th:include="fragments/datepicker :: datepicker('popupStartDt', 'popupEndDt')"></div>
                                             </div>
                                         </td>
                                     </tr>
@@ -112,11 +114,11 @@
                                         <td colspan="3">
                                             <div class="input-list--h">
                                                 <label class="radio02">
-                                                    <input type="radio" name="group1" checked="">
+                                                    <input type="radio" name="viewAllYn" checked="">
                                                     <span>전체열람</span>
                                                 </label>
                                                 <label class="radio02">
-                                                    <input type="radio" name="group1">
+                                                    <input type="radio" name="viewAllYn">
                                                     <span>지정 고객사 열람</span>
                                                 </label>
                                             </div>
@@ -213,18 +215,36 @@
 
     //2. form submit 전 작업
     document.querySelector('#boardSubmitArea').addEventListener('submit', function (e) {
+
         // 에디터 안의 html 콘텐츠를 가져와서 hidden input 안에 데이터를 넣고 전송
         var content = editor.getHTML();
         document.querySelector('#content').value = content;
 
         //선택한 회사 옵션 관련 설정
-        const selectElement = document.querySelector('.dropdown__selected');
-        const selectedOption = selectElement.options[selectElement.selectedIndex];
-        const companyNameInput = document.querySelector('#companyName');
-        companyNameInput.value = selectedOption.textContent.trim();
+        //const selectElement = document.querySelector('.dropdown__selected');
+        //const selectedOption = selectElement.options[selectElement.selectedIndex];
+        //const companyNameInput = document.querySelector('#companyName');
+        //companyNameInput.value = selectedOption.textContent.trim();
 
         //첨부파일 설정
         attachFileWorks();
+
+        //체크박스,라디오버튼 변환
+        const topYnCheckbox = document.getElementById('topYnCheckbox');
+        const topYn = document.getElementById('topYn');
+        const popupYnCheckbox = document.getElementById('popupYnCheckbox');
+        const popupYn = document.getElementById('popupYn');
+
+        popupYn.value = popupYnCheckbox.checked ? 'Y' : 'N';
+        topYn.value = topYnCheckbox.checked ? 'Y' : 'N';
+
+        //팝업여부 : 항상 노출 시 날짜 지정
+        if (document.querySelector('#alwaysDisplay').checked) {
+            document.querySelector('#popupStartDt').value='1999-01-01';
+            document.querySelector('#popupEndDt').value='2999-12-31';
+        }
+
+
     });
 
     //3. 첨부파일 작업
@@ -398,6 +418,15 @@
             this.closest('li').remove();
 
         });
+    });
+
+    //12.
+    document.querySelector('#alwaysDisplay').addEventListener('change', function () {
+        if (document.querySelector('#alwaysDisplay').checked) {
+            //데이트 피커 잠기게
+        } else {
+            //데이트 피커 안잠기게
+        }
     });
 
 

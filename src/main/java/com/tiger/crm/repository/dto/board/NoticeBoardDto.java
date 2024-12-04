@@ -20,8 +20,8 @@ public class NoticeBoardDto {
     private char openYn;
     private char topYn;
     private char popupYn;
-    private Date popupStartDt;
-    private Date popupEndDt;
+    private String popupStartDt;
+    private String popupEndDt;
     private String title;
     private String content;
     private String createId;
