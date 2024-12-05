@@ -1,5 +1,6 @@
 package com.tiger.crm.controller;
 
+import com.tiger.crm.common.exception.CustomException;
 import com.tiger.crm.common.file.FileStoreUtils;
 import com.tiger.crm.repository.dto.company.CompanyOptionDto;
 import com.tiger.crm.repository.dto.file.UploadFileDto;
@@ -9,6 +10,7 @@ import com.tiger.crm.repository.dto.ticket.TicketDto;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.repository.mapper.TicketMapper;
 import com.tiger.crm.service.common.CommonService;
+
 import com.tiger.crm.service.file.FileService;
 import com.tiger.crm.service.ticket.TicketService;
 
@@ -19,6 +21,7 @@ import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -44,7 +47,9 @@ public class TicketController {
     @Autowired
     private FileStoreUtils fileStoreUtils;
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
+    @Autowired
     private FileService fileService;
+
     /*
      * 요청관리(티켓관리)
      * 설명 : 요청관리 페이지 초기화면
@@ -52,9 +57,7 @@ public class TicketController {
     @GetMapping("/ticketList")
     public String getTickets(@ModelAttribute PagingRequest pagingRequest, HttpServletRequest request, Model model) {
         try {
-            HttpSession session = request.getSession(false);
-            UserLoginDto loginUser = (UserLoginDto) session.getAttribute("loginUser");
-
+            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
             String companyId = String.valueOf(loginUser.getCompanyId());
             String userClass = String.valueOf(loginUser.getUserClass());
             pagingRequest.setUserClass(userClass);
@@ -67,10 +70,7 @@ public class TicketController {
             model.addAttribute("ticketList", pageResponse);
             return "ticketList";
         } catch (Exception e) {
-            // 오류 로그 기록
-            e.printStackTrace();
-            model.addAttribute("error", "데이터를 불러오는 중 오류가 발생했습니다. 다시 시도해주세요.");
-            return "errorPage";  // 에러 페이지로 이동 (필요 시 별도의 오류 페이지 생성)
+            throw new CustomException("데이터를 불러오는 중 오류가 발생했습니다.", e);
         }
     }
 
@@ -87,18 +87,9 @@ public class TicketController {
             model.addAttribute("ticketList", pageResponse);
             // 부분 뷰 렌더링 (리스트 부분만 갱신)
             return "ticketList :: ticketListFragment";
-        } catch (IllegalArgumentException e) {
-            // 입력 값에 대한 오류 처리 (예: 유효하지 않은 파라미터)
-            model.addAttribute("error", "잘못된 입력 값이 있습니다. 다시 확인해 주세요.");
-            e.printStackTrace();
         } catch (Exception e) {
-            // 데이터 조회 중 발생한 일반적인 오류 처리
-            model.addAttribute("error", "데이터를 불러오는 중 오류가 발생했습니다. 다시 시도해주세요.");
-            e.printStackTrace();
+            throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
         }
-
-        // 오류 발생 시 전체 페이지로 돌아가도록 처리
-        return "ticketList";  // 기본 화면으로 이동
     }
 
     /*
@@ -116,9 +107,10 @@ public class TicketController {
             // 공통 Excel 다운로드 서비스 호출
             commonService.downloadExcel(dataList, response, "ticketList");
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
         }
     }
+
     /*
      * 티켓등록 이동
      * 설명 : 신규 티켓 등록시 초기화면 바인딩
@@ -160,10 +152,11 @@ public class TicketController {
 
             model.addAttribute("ticketCreate", ticketCreate);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
         }
         return "ticketCreate";
     }
+
     /*
      * 티켓 등록(신규)
      * 설명 : 신규 티켓 등록시 초기화면 바인딩
@@ -171,26 +164,22 @@ public class TicketController {
     @PostMapping("/ticketCreate")
     public String saveTicketCreate(@ModelAttribute TicketDto ticketDto, @RequestParam("attachFiles") List<MultipartFile> files, HttpServletRequest request, HttpServletResponse response, Model model) {
         try {
+            // 티켓 저장
             ticketDto.setStatusCd("OPEN");
-            int savedId = ticketService.saveTicket(ticketDto, files);
-            if (savedId == 0) {
-                LOGGER.error("Failed to save ticket");
-                model.addAttribute("error", "티켓 저장에 실패했습니다.");
-                return "ticketCreate";
+            int ticketId = ticketService.saveTicket(ticketDto, files);
+            if (ticketId == 0) {
+                throw new CustomException("티켓 저장에 실패했습니다.");
             }
-            //첨부파일
-           /* try{
-                List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(ticketDto.getAttachFiles()); // 경로에 저장
-                fileService.insertFile(uploadFiles, savedId); //DB 에 저장
-
-            }catch (Exception e){
-                LOGGER.info(e.toString());
-                return null;
-            }*/
+            // 첨부파일 처리
+            try {
+                List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(ticketDto.getAttachFiles());
+                String fileId = fileService.insertFile(uploadFiles, ticketId, "티켓관리");
+                ticketService.setTicketFileId(fileId, ticketId);
+            } catch (Exception fileException) {
+                throw new CustomException("첨부파일 저장 중 오류가 발생했습니다.", fileException);
+            }
         } catch (Exception e) {
-            LOGGER.error("An error occurred while saving ticket", e);
-            model.addAttribute("errorMessage", "티켓 저장 중 오류가 발생했습니다.");
-            return "common/error"; // error 페이지로 이동
+            throw new CustomException("티켓 저장 중 오류가 발생했습니다.", e);
         }
         return "redirect:ticketList";
     }
@@ -200,7 +189,7 @@ public class TicketController {
      * */
 
     @GetMapping("/ticketView")
-    public String getTicketsView( @RequestParam(value = "id", required = false) Integer id,@ModelAttribute PagingRequest pagingRequest, HttpServletRequest request, HttpServletResponse response, Model model) {
+    public String getTicketsView(@RequestParam(value = "id", required = false) Integer id, @ModelAttribute PagingRequest pagingRequest, HttpServletRequest request, HttpServletResponse response, Model model) {
         try {
             HttpSession session = request.getSession(false);
             UserLoginDto loginUser = (UserLoginDto) session.getAttribute("loginUser");
@@ -222,13 +211,11 @@ public class TicketController {
             model.addAttribute("ticketinfo", ticketDetails);
             return "ticketView";
         } catch (Exception e) {
-            // 오류 로그 기록
-            e.printStackTrace();
-            model.addAttribute("error", "데이터를 불러오는 중 오류가 발생했습니다. 다시 시도해주세요.");
-            return "errorPage";  // 에러 페이지로 이동 (필요 시 별도의 오류 페이지 생성)
+            throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
         }
     }
 
+    //첨부파일 업로드후 파일ID저장
     @PutMapping("/changeStatus")
     public ResponseEntity<Map<String, String>> updateStepStatus(HttpServletRequest request, @RequestBody Map<String, String> RequestBody) {
         try {
@@ -250,10 +237,7 @@ public class TicketController {
             response.put("message", "Step status updated successfully");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            // 오류 처리
-            Map<String, String> errorResponse = new HashMap<>();
-            errorResponse.put("message", "Error updating status");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+            throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
         }
     }
 }

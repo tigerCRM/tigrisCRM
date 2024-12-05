@@ -3,13 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error Page</title>
-    <link rel="stylesheet" href="/assets/css/style.css"> <!-- 스타일시트 링크 (옵션) -->
+    <title>Oops! Something went wrong</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .error-container {
+            text-align: center;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-container h1 {
+            font-size: 72px;
+            margin: 0;
+            color: #ff6b6b;
+        }
+
+        .error-container p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .error-container .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 15px;
+            background: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .error-container .btn:hover {
+            background: #0056b3;
+        }
+
+        .error-container img {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
 <div class="error-container">
-    <p th:text="${errorMessage}">Something went wrong!</p> <!-- 에러 메시지 -->
-    <a href="/main" class="btn">Go Back to Home</a> <!-- 홈으로 돌아가기 버튼 -->
+    <img src="/assets/images/common/error-icon.png" alt="Error Icon">
+    <h1>Oops!</h1>
+    <h1 class="error-title"  th:text="${errorcode}">404</h1>
+    <p th:text="${errorMessage}">Something went wrong on our end.</p> <!-- 동적 에러 메시지 -->
+    <a href="/main" class="btn">Go Back to Home</a>
 </div>
 </body>
 </html>

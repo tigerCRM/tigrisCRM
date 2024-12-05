@@ -113,7 +113,7 @@
     </select>
 
     <insert id="insertTicketInfo" parameterType="com.tiger.crm.repository.dto.ticket.TicketDto"  useGeneratedKeys="true" keyProperty="ticketId">
-        INSERT INTO t_ticket_info
+        INSERT INTO T_TICKET_INFO
         (COMPANY_ID, COMPANY_NAME, STATUS_CD, REQUEST_TYPE_CD, EXPECTED_COMPLETE_DT,
         REAL_COMPLETE_DT, PRIORITY_YN, TITLE, CONTENT, MANAGER_ID, CREATE_ID,CREATE_NAME,
         CREATE_DT, UPDATE_ID, UPDATE_DT, FILE_ID, PARENT_TICKET_CD, SUPPORT_CD)
@@ -159,4 +159,11 @@
         UPDATE_ID = #{updateId}
         WHERE TICKET_ID = #{ticketId}
     </update>
+
+    <update id="updateTicketFileId" parameterType="map">
+        UPDATE T_TICKET_INFO
+        SET FILE_ID = #{fileId}
+        WHERE TICKET_ID = #{ticketId}
+    </update>
+
 </mapper>

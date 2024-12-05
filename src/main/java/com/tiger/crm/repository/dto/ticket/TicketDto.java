@@ -14,38 +14,36 @@ import java.util.List;
 @ToString
 public class TicketDto {
     //검색조건
-    private String searchKeyword;
-    private String searchStatus;
-    private String searchType;
-    private String totalcnt;
-    private String startDt;
-    private String endDt;
+    private String searchKeyword;   //검색어
+    private String searchStatus;    //상태
+    private String searchType;      //검색조건
+    private String totalcnt;        //전체건수
+    private String startDt;         //시작일자
+    private String endDt;           //종료일자
     //페이지
-
-    private String title;  //제목
-    private String content;  //내용
-    private String createId;   //작성자ID
-    private String createName;   //작성자ID
-    private String managerName;  //담당자이름
-    private String managerId;  //담당자ID
-    private String companyName;  //고객사명
-    private String companyId;  //고객사code
-    private String completeDt; //실제완료일
-    private String md;        //작업공수
+    private String title;           //제목
+    private String content;         //내용
+    private String createId;        //작성자ID
+    private String createName;      //작성자이름
+    private String managerId;       //담당자ID
+    private String managerName;     //담당자이름
+    private String companyName;     //고객사명
+    private String companyId;       //고객사code
+    private String completeDt;      //실제완료일
+    private String md;              //작업공수
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate createDt;
-  //  private String createDt;
-    private String updateId;
-    private String updateDt;
-    private char deleteYn;
-    private String fileId;
-    private Integer ticketId;           // TICKET_ID
-    private String statusCd;             // STATUS_CD
-    private String expectedCompleteDt; // EXPECTED_COMPLETE_DT
-    private String realCompleteDt;    // REAL_COMPLETE_DT
-    private String priorityYn;           // PRIORITY_YN
-    private String parentTicketCd;       // PARENT_TICKET_CD
-    private String supportCd;            // SUPPORT_CD
-    private String requestTypeCd;        // requestCd
-    private List<MultipartFile> attachFiles;
+    private LocalDate createDt;     //등록일
+    private String updateId;        //수정자ID
+    private String updateDt;        //수정일자
+    private char deleteYn;          //삭제여부
+    private String fileId;          //파일 ID
+    private Integer ticketId;       // 티켓ID
+    private String statusCd;            //진행상태코드
+    private String expectedCompleteDt;  //희망완료일
+    private String realCompleteDt;      //완료일
+    private String priorityYn;          // 중요도
+    private String parentTicketCd;      //연관티켓
+    private String supportCd;           //지원범위
+    private String requestTypeCd;       //작업구분
+    private List<MultipartFile> attachFiles;    //첨부파일
 }

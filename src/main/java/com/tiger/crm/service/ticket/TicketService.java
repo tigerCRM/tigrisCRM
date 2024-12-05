@@ -10,7 +10,7 @@ import java.util.Map;
 
 
 public interface TicketService {
-    // 페이징 객체를 사용한 리스트
+
     PagingResponse<Map<String, Object>> getTicketList(PagingRequest pagingRequest);
 
     int saveTicket(TicketDto ticketDto, List<MultipartFile> files);
@@ -20,6 +20,8 @@ public interface TicketService {
     TicketDto getTicketDetails(int ticketId);
 
     int changeStatus(int ticketId, String newStatus, String updateId);
+
+    void setTicketFileId(String fileId, int ticketId);
 }
 
 

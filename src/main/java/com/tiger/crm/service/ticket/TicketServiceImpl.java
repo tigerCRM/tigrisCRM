@@ -15,12 +15,12 @@ import java.util.Map;
 public class TicketServiceImpl implements TicketService {
     @Autowired
     private TicketMapper ticketMapper;
-
+    // 전체 티켓 수 조회 (null 체크 포함)
     @Override
     public PagingResponse<Map<String, Object>> getTicketList(PagingRequest pagingRequest) {
 
         List<Map<String, Object>> ticketList = ticketMapper.getTicketList(pagingRequest);
-        // 전체 티켓 수 조회 (null 체크 포함)
+
         int totalRecords = getTicketListCount(pagingRequest);
 
         return new PagingResponse<>(ticketList, totalRecords, pagingRequest);
@@ -58,8 +58,11 @@ public class TicketServiceImpl implements TicketService {
     }
 
     public int changeStatus(int ticketId, String newStatus, String updateId) {
-        // Update the status
         return ticketMapper.updateTicketStatus(ticketId,newStatus,updateId);
     }
 
+    //첨부파일 저장 후 boardTable 에 첨부파일 아이디 업데이트
+    public void setTicketFileId(String fileId,int ticketId) {
+        ticketMapper.updateTicketFileId(fileId,ticketId);
+    }
 }
