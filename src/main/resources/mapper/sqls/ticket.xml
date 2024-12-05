@@ -151,4 +151,12 @@
         LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
         WHERE TICKET_ID = #{ticketId} and  DELETE_YN = 'N'
     </select>
+
+    <update id="updateTicketStatus" parameterType="map">
+        UPDATE T_TICKET_INFO
+        SET STATUS_CD = #{newStatus},
+        UPDATE_DT = NOW(),
+        UPDATE_ID = #{updateId}
+        WHERE TICKET_ID = #{ticketId}
+    </update>
 </mapper>

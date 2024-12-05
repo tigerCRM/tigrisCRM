@@ -7,7 +7,7 @@
     <title>요청 등록 상세</title>
     <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/common.css?v4">
+    <link rel="stylesheet" type="text/css" href="/assets/css/common.css?v8">
     <link rel="stylesheet" type="text/css" href="/assets/css/layout.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
@@ -62,26 +62,37 @@
                                     </colgroup>
                                     <tbody>
                                     <tr>
+                                        <input type="hidden" id="ticketId" th:field="*{ticketId}">
                                         <input type="hidden" id="statusCd" th:field="*{statusCd}">
                                         <!--진행사항 progress bar-->
                                         <div class="step-progress">
                                             <div class="step">
-                                                <div class="step-number">OPEN</div>
+                                                <div class="step-number" onclick="changeStatus('OPEN')">1</div>
+                                                <div class="step-status">OPEN</div>
                                                 <div class="step-label">등록</div>
                                             </div>
                                             <div class="separator"></div>
                                             <div class="step">
-                                                <div class="step-number">RECEIPT</div>
+                                                <div class="step-number" onclick="changeStatus('RECEIPT')">2</div>
+                                                <div class="step-status">RECEIPT</div>
                                                 <div class="step-label">접수</div>
                                             </div>
                                             <div class="separator"></div>
                                             <div class="step">
-                                                <div class="step-number">PROGRESS</div>
+                                                <div class="step-number" onclick="changeStatus('PROGRESS')">3</div>
+                                                <div class="step-status">PROGRESS</div>
                                                 <div class="step-label">진행</div>
                                             </div>
                                             <div class="separator"></div>
                                             <div class="step">
-                                                <div class="step-number">CLOSED</div>
+                                                <div class="step-number" onclick="changeStatus('REVIEW')">4</div>
+                                                <div class="step-status">REVIEW</div>
+                                                <div class="step-label">검토</div>
+                                            </div>
+                                            <div class="separator"></div>
+                                            <div class="step">
+                                                <div class="step-number" onclick="changeStatus('CLOSED')">5</div>
+                                                <div class="step-status">CLOSED</div>
                                                 <div class="step-label">완료</div>
                                             </div>
                                         </div>
@@ -179,8 +190,30 @@
                                 </table>
                                 <!--//사용자 입력 영역-->
                                 <!--댓글 영역-->
-                                <div class="message">
-                                    <p style="display:inline-block;">의견이 있습니당 의견이 있습니당</p>
+                                <!--의견 영역-->
+                                <div class="comment__write">
+                                    <div>
+                                        <h2>코멘트</h2>
+                                    </div>
+                                    <div class="message_box" >
+                                        <div class="message_info">
+                                            <div class="user_name">남루니</div>
+
+                                            <div class="message">
+                                                <p style="display:inline-block;">이것도 안되고 저것도 안되고 다안됩니다.</p>
+                                            </div>
+                                            <div class="message_time">24/12/04 07:52</div>
+                                        </div>
+                                    </div>
+                                    <div class="message_box" >
+                                        <div class="message_info">
+                                            <div class="user_name">담당자</div>
+                                            <div class="sendmessage">
+                                                <p style="display:inline-block;">이거랑 저거랑 요거랑 저거 수정했으니 확인 부탁드립니다.</p>
+                                            </div>
+                                            <div class="message_time">24/12/04 07:52</div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="comment__write">
                                     <!-- (확인) 댓글 입력 전에는 댓글 작성 버튼 비활성화 -->
@@ -219,27 +252,62 @@
     var editor = common.loadOrInitializeEditor(editor , mode);
 
 
-   document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
        const stepProgress = document.querySelector('.step-progress');
        const statusCd = $("#statusCd").val();
 
        const steps = stepProgress.querySelectorAll('.step');
-       const statusOrder = ['OPEN', 'RECEIPT', 'PROGRESS', 'CLOSED'];
+       const statusOrder = ['OPEN', 'RECEIPT', 'PROGRESS', 'REVIEW', 'CLOSED'];
 
        steps.forEach((step, index) => {
-           const stepNumber = step.querySelector('.step-number').textContent;
+           const stepStatus = step.querySelector('.step-status').textContent;
 
-           if (statusOrder.indexOf(stepNumber) < statusOrder.indexOf(statusCd)) {
+           if (statusOrder.indexOf(stepStatus) < statusOrder.indexOf(statusCd)) {
                step.classList.add('completed');
                step.classList.remove('active');
-           } else if (statusOrder.indexOf(stepNumber) === statusOrder.indexOf(statusCd)) {
+           } else if (statusOrder.indexOf(stepStatus) === statusOrder.indexOf(statusCd)) {
                step.classList.add('active');
-               step.classList.remove('completed');
+              step.classList.remove('completed');
            } else {
                step.classList.remove('active', 'completed');
            }
        });
-   });
+    });
+
+    function changeStatus(newStatus) {
+      // 요청 보낼 URL 설정
+      const url = `/changeStatus`;
+      var id = $("#ticketId").val();
+      // 서버로 보낼 데이터 준비
+      const requestData = { status: newStatus,id : id};
+
+      // 비동기 요청 (POST 방식)
+      fetch(url, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData), // 데이터를 JSON 형식으로 변환
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then(text => { throw new Error(text); }); // 서버에서 반환한 메시지를 추출하여 에러 처리
+        }
+        return response.json(); // 서버에서 반환된 데이터를 JSON으로 변환
+      })
+          .then(data => {
+            console.log('Status updated successfully:', data);
+            // 성공 시 상태 업데이트 로직 추가 (UI 갱신 등)
+            alert('요청 등록 상태가 변경되었습니다.');
+            // 예: 페이지 리로드 또는 특정 UI 요소 업데이트
+            // location.reload(); // 페이지 새로고침 (필요한 경우)
+          })
+          .catch(error => {
+            console.error('Error updating status:', error);
+            alert('상태 업데이트 중 오류가 발생했습니다: ' + error.message);
+          });
+    }
+
 </script>
 </body>
 </html>
