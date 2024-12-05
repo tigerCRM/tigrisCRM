@@ -17,11 +17,19 @@
         FROM T_ALERT TA
         LEFT JOIN T_USER_INFO TUI ON TUI.USER_ID = TA.SENDER_ID
         WHERE TA.RECEIVER_ID = #{userId}
+    </select>
+
+    <!-- 알림 갯수 조회 -->
+    <select id="getAlertCnt" resultType="int">
+        SELECT COUNT(*)
+        FROM T_ALERT TA
+        LEFT JOIN T_USER_INFO TUI ON TUI.USER_ID = TA.SENDER_ID
+        WHERE TA.RECEIVER_ID = #{userId}
           AND TA.READ_YN = 'N'
     </select>
 
-    <!-- 알림 읽음 상태로 업데이트 -->
-    <update id="updateAlertAsRead" parameterType="long">
+    <!-- 알림 읽음 처리 -->
+    <update id="updateAlertReadStatus">
         UPDATE T_ALERT
         SET READ_YN = 'Y'
         WHERE ALERT_ID = #{alertId}

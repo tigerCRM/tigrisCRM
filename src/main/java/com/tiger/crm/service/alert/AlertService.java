@@ -10,4 +10,10 @@ public interface AlertService {
     // 알림 목록 조회
     List<AlertDto> getAlertList(UserLoginDto loginUser);
 
+    // 알림 갯수 조회
+    int getAlertCnt(UserLoginDto loginUser);
+
+    // 알림 읽음 처리
+    void updateAlertReadStatus(String alertId);
+
 }
