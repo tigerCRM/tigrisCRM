@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class AlertServiceImpl implements AlertService {
@@ -15,24 +14,23 @@ public class AlertServiceImpl implements AlertService {
     @Autowired
     private AlertMapper alertMapper;
 
-    // 안읽은 알림 개수 조회
-//    @Override
-//    public int unReadAlerts(UserLoginDto loginUser) {
-//        return alertMapper.unReadAlerts(loginUser);
-//    }
-
+    // 알림 목록 조회
     @Override
     public List<AlertDto> getAlertList(UserLoginDto loginUser) {
         List<AlertDto> alertLists = alertMapper.getAlertList(loginUser);
-
         return alertLists;
     }
 
-    // 메인 페이지 완료내역 조회
-//    @Override
-//    public List<Map<String, Object>> getCloseList(UserLoginDto user) {
-//        List<Map<String, Object>> ticketList = mainMapper.getCloseList(user);
-//        return ticketList;
-//    }
+    // 알림 갯수 조회
+    @Override
+    public int getAlertCnt(UserLoginDto loginUser) {
+        return alertMapper.getAlertCnt(loginUser);
+    }
+
+    // 알림 읽음 처리
+    @Override
+    public void updateAlertReadStatus(String alertId) {
+        alertMapper.updateAlertReadStatus(alertId);
+    }
 
 }
