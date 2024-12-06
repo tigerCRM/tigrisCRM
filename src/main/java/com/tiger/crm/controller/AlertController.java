@@ -59,7 +59,7 @@ public class AlertController {
      * 설명 : 헤더 상단 종아이콘에 알림을 읽음 처리
      * */
     @PutMapping
-    public ResponseEntity<Void> updateAlertList(@RequestParam("alertId") String alertId) {
+    public ResponseEntity<Void> updateAlertReadStatus(@RequestParam("alertId") String alertId) {
         try {
 
             // 알림 읽음 처리
