@@ -7,6 +7,9 @@ import java.util.List;
 
 public interface AlertService {
 
+    // 알림 생성
+    void createAlert(AlertDto alertDto);
+
     // 알림 목록 조회
     List<AlertDto> getAlertList(UserLoginDto loginUser);
 

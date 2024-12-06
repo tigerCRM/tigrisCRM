@@ -1,8 +1,10 @@
 package com.tiger.crm.service.ticket;
 
+import com.tiger.crm.repository.dto.alert.AlertDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.mapper.TicketMapper;
+import com.tiger.crm.service.alert.AlertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.tiger.crm.repository.dto.ticket.TicketDto;
@@ -15,6 +17,8 @@ import java.util.Map;
 public class TicketServiceImpl implements TicketService {
     @Autowired
     private TicketMapper ticketMapper;
+    @Autowired
+    private AlertService alertService;
 
     @Override
     public PagingResponse<Map<String, Object>> getTicketList(PagingRequest pagingRequest) {
@@ -38,6 +42,20 @@ public class TicketServiceImpl implements TicketService {
         if(resultCount != 1){
             return 0;
         }
+        // 고유번호가 TicketDto에 저장됨
+        int ticketId = ticketDto.getTicketId();
+
+        // 알림 발송
+        if(resultCount > 0){
+            AlertDto alertDto = new AlertDto();
+            alertDto.setAlertType(ticketDto.getStatusCd()); // 상태코드
+            alertDto.setAlertObjectId(ticketId); // 요청사항 고유번호
+            alertDto.setContent(ticketDto.getContent()); // 내용
+            alertDto.setSenderId(ticketDto.getCreateId()); // 발송인 아이디
+            alertDto.setReceiverId(ticketDto.getManagerId()); // 수령인 아이디
+            alertService.createAlert(alertDto);
+        }
+
         return ticketDto.getTicketId();
     }
 

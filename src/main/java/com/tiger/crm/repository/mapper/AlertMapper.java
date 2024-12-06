@@ -9,6 +9,9 @@ import java.util.List;
 @Mapper
 public interface AlertMapper {
 
+    // 알림 생성
+    void createAlert(AlertDto alertDto);
+
     // 알림 목록 조회
     List<AlertDto> getAlertList(UserLoginDto loginUser);
 

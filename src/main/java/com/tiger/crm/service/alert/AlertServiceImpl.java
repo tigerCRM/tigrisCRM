@@ -14,6 +14,12 @@ public class AlertServiceImpl implements AlertService {
     @Autowired
     private AlertMapper alertMapper;
 
+    // 알림 생성
+    @Override
+    public void createAlert(AlertDto alertDto) {
+        alertMapper.createAlert(alertDto);
+    }
+
     // 알림 목록 조회
     @Override
     public List<AlertDto> getAlertList(UserLoginDto loginUser) {
