@@ -1,6 +1,7 @@
 package com.tiger.crm.repository.mapper;
 
 import com.tiger.crm.repository.dto.alert.AlertDto;
+import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,7 +14,7 @@ public interface AlertMapper {
     void createAlert(AlertDto alertDto);
 
     // 알림 목록 조회
-    List<AlertDto> getAlertList(UserLoginDto loginUser);
+    List<AlertDto> getAlertList(PagingRequest pagingRequest);
 
     // 알림 갯수 조회
     int getAlertCnt(UserLoginDto loginUser);
@@ -21,4 +22,5 @@ public interface AlertMapper {
     // 알림 읽음 처리
     void updateAlertReadStatus(String alertId);
 
+    void deleteAlertStatus(String alertId);
 }

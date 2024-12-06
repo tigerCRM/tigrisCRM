@@ -311,6 +311,31 @@ div::-webkit-scrollbar-button:end:increment {
     background-color: #f0f0f0; /* 어두운 배경색 */
     color: #888; /* 텍스트 색상 변경 (선택 사항) */
 }
+/* li 요소 스타일 */
+#alertDropdownMenu li {
+    position: relative; /* 각 li를 기준 컨테이너로 설정 */
+    padding: 10px; /* 알림 내용과 버튼 사이 간격 */
+    border-bottom: 1px solid #ddd; /* 항목 구분선 */
+}
+/* x 버튼 스타일 */
+.close-alert-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    font-weight: bold;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+.close-alert-btn:hover {
+    color: #333;
+}
+
+/* // main > header alert badge */
+
 
 /* icon */
 .icon {

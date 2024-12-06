@@ -1,6 +1,7 @@
 package com.tiger.crm.service.alert;
 
 import com.tiger.crm.repository.dto.alert.AlertDto;
+import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.repository.mapper.AlertMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,8 @@ public class AlertServiceImpl implements AlertService {
 
     // 알림 목록 조회
     @Override
-    public List<AlertDto> getAlertList(UserLoginDto loginUser) {
-        List<AlertDto> alertLists = alertMapper.getAlertList(loginUser);
+    public List<AlertDto> getAlertList(PagingRequest pagingRequest) {
+        List<AlertDto> alertLists = alertMapper.getAlertList(pagingRequest);
         return alertLists;
     }
 
@@ -37,6 +38,12 @@ public class AlertServiceImpl implements AlertService {
     @Override
     public void updateAlertReadStatus(String alertId) {
         alertMapper.updateAlertReadStatus(alertId);
+    }
+
+    // 알림 삭제 처리
+    @Override
+    public void deleteAlertStatus(String alertId) {
+        alertMapper.deleteAlertStatus(alertId);
     }
 
 }

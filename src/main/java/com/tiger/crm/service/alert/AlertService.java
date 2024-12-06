@@ -1,6 +1,7 @@
 package com.tiger.crm.service.alert;
 
 import com.tiger.crm.repository.dto.alert.AlertDto;
+import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 
 import java.util.List;
@@ -11,7 +12,7 @@ public interface AlertService {
     void createAlert(AlertDto alertDto);
 
     // 알림 목록 조회
-    List<AlertDto> getAlertList(UserLoginDto loginUser);
+    List<AlertDto> getAlertList(PagingRequest pagingRequest);
 
     // 알림 갯수 조회
     int getAlertCnt(UserLoginDto loginUser);
@@ -19,4 +20,6 @@ public interface AlertService {
     // 알림 읽음 처리
     void updateAlertReadStatus(String alertId);
 
+    // 알림 삭제 처리
+    void deleteAlertStatus(String alertId);
 }

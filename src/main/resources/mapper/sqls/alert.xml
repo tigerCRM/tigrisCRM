@@ -37,6 +37,10 @@
         FROM T_ALERT TA
         LEFT JOIN T_USER_INFO TUI ON TUI.USER_ID = TA.SENDER_ID
         WHERE TA.RECEIVER_ID = #{userId}
+        ORDER BY TA.ALERT_DT DESC
+        <if test="page != null">
+            LIMIT #{offset}, #{size} <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
+        </if>
     </select>
 
     <!-- 알림 갯수 조회 -->
@@ -47,6 +51,11 @@
         WHERE TA.RECEIVER_ID = #{userId}
           AND TA.READ_YN = 'N'
     </select>
+
+    <!-- 알림 삭제 처리 -->
+    <update id="deleteAlertStatus">
+        DELETE FROM T_ALERT WHERE ALERT_ID = #{alertId}
+    </update>
 
     <!-- 알림 읽음 처리 -->
     <update id="updateAlertReadStatus">

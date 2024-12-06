@@ -162,26 +162,5 @@
 </div>
 
 </body>
-<script>
-    $(document).ready(function() {
-        var swiper = new Swiper('.widget-edit-list', {
-            direction: 'vertical', // 슬라이드 방향을 수직으로 설정
-            loop: true,             // 루프를 활성화하여 무한 반복
-            autoplay: {
-                delay: 5000,          // 슬라이드가 자동으로 넘어가는 시간 (밀리초)
-                disableOnInteraction: false, // 사용자가 슬라이드를 건드려도 자동 재생 유지
-            },
-            slidesPerView: 1,       // 한 번에 하나의 슬라이드만 표시
-            spaceBetween: 3,       // 슬라이드 사이의 간격
-            pagination: {
-                el: '.swiper-pagination',
-                clickable: true,
-            },
-            navigation: {
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-            },
-        });
-    });
-</script>
+
 </html>
