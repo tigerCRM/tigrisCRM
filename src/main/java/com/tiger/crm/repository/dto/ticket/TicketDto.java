@@ -45,5 +45,5 @@ public class TicketDto {
     private String parentTicketCd;      //연관티켓
     private String supportCd;           //지원범위
     private String requestTypeCd;       //작업구분
-    private List<MultipartFile> attachFiles;    //첨부파일
+    private List<MultipartFile> attachFiles;
 }

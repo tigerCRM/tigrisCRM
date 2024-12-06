@@ -77,3 +77,38 @@ var common = {
 
 //end
 }
+    /*
+    * 메세지창 공통 구현
+    */
+    function showMessage(type, title, text) {
+        Swal.fire({
+                icon: type,  // 'success', 'error', 'warning', 'info', 'question'
+                title: title,
+                text: text,
+                confirmButtonText: '확인',
+                confirmButtonColor: '#3085d6',
+                 html: `<span style="font-size: 15px; font-weight: bold;">${text}</span>`,  // 메시지 텍스트 스타일
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    //확인 버튼을 누른 후 페이지 새로 고침
+                    //화면마다 다르게 해야할지 고민중
+                    location.reload();
+                }
+            });
+    }
+
+    function showSuccess(title, text) {
+        showMessage('success', title, text);
+    }
+
+    function showError(title, text) {
+        showMessage('error', title, text);
+    }
+
+    function showWarning(title, text) {
+        showMessage('warning', title, text);
+    }
+
+    function showInfo(title, text) {
+        showMessage('info', title, text);
+    }

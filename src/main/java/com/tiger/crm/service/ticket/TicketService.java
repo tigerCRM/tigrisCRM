@@ -2,6 +2,7 @@ package com.tiger.crm.service.ticket;
 
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
+import com.tiger.crm.repository.dto.ticket.CommentDto;
 import com.tiger.crm.repository.dto.ticket.TicketDto;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +23,10 @@ public interface TicketService {
     int changeStatus(int ticketId, String newStatus, String updateId);
 
     void setTicketFileId(String fileId, int ticketId);
+
+    void addComment(int ticketId,String comment,String createId,String statusCd);
+
+    List<CommentDto> getCommentsByTicketId(int ticketId);
 }
 
 

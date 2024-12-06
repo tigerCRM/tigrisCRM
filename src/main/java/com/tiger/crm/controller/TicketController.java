@@ -6,9 +6,9 @@ import com.tiger.crm.repository.dto.company.CompanyOptionDto;
 import com.tiger.crm.repository.dto.file.UploadFileDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
+import com.tiger.crm.repository.dto.ticket.CommentDto;
 import com.tiger.crm.repository.dto.ticket.TicketDto;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
-import com.tiger.crm.repository.mapper.TicketMapper;
 import com.tiger.crm.service.common.CommonService;
 
 import com.tiger.crm.service.file.FileService;
@@ -17,17 +17,13 @@ import com.tiger.crm.service.ticket.TicketService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
@@ -118,8 +114,7 @@ public class TicketController {
     @GetMapping("/ticketCreate")
     public String goTicketCreatePage(HttpServletRequest request, HttpServletResponse response, Model model) {
         try {
-            HttpSession session = request.getSession(false);
-            UserLoginDto loginUser = (UserLoginDto) session.getAttribute("loginUser");
+            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
             String companyId = String.valueOf(loginUser.getCompanyId());
             String companyName = String.valueOf(loginUser.getCompanyName());
             String userClass = String.valueOf(loginUser.getUserClass());
@@ -140,7 +135,7 @@ public class TicketController {
             ticketCreate.setManagerId(managerId);               //담당자ID
             ticketCreate.setManagerName(managerName);       //담당자이름
             ticketCreate.setExpectedCompleteDt(expDate);
-
+            ticketCreate.setStatusCd("OPEN");
             //model에 데이터 바인딩
             List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
             model.addAttribute("companyOptions", companyOptions);
@@ -149,7 +144,7 @@ public class TicketController {
             model.addAttribute("requestTypeCd", commonService.getSelectOptions("t_request"));
             model.addAttribute("supportCd", commonService.getSelectOptions("t_support"));
             model.addAttribute("priorityYn", commonService.getSelectOptions("t_priority"));
-
+            model.addAttribute("statusCd", commonService.getSelectOptions("t_status"));
             model.addAttribute("ticketCreate", ticketCreate);
         } catch (Exception e) {
             throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
@@ -165,7 +160,6 @@ public class TicketController {
     public String saveTicketCreate(@ModelAttribute TicketDto ticketDto, @RequestParam("attachFiles") List<MultipartFile> files, HttpServletRequest request, HttpServletResponse response, Model model) {
         try {
             // 티켓 저장
-            ticketDto.setStatusCd("OPEN");
             int ticketId = ticketService.saveTicket(ticketDto, files);
             if (ticketId == 0) {
                 throw new CustomException("티켓 저장에 실패했습니다.");
@@ -191,12 +185,10 @@ public class TicketController {
     @GetMapping("/ticketView")
     public String getTicketsView(@RequestParam(value = "id", required = false) Integer id, @ModelAttribute PagingRequest pagingRequest, HttpServletRequest request, HttpServletResponse response, Model model) {
         try {
-            HttpSession session = request.getSession(false);
-            UserLoginDto loginUser = (UserLoginDto) session.getAttribute("loginUser");
 
+            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
             String companyId = String.valueOf(loginUser.getCompanyId());
             String userClass = String.valueOf(loginUser.getUserClass());
-
             // 티켓 상세 정보 조회 - 로그인한 본인 회사만 볼수있음
             TicketDto ticketDetails = ticketService.getTicketDetails(id);
             if (!String.valueOf(ticketDetails.getCompanyId()).equals(companyId) && userClass.equals("USER")) {
@@ -206,8 +198,13 @@ public class TicketController {
                 response.getWriter().flush();
                 return "ticketList";
             }
-
-            model.addAttribute("statusCd", ticketDetails.getStatusCd());
+            //첨부파일 정보 가져오기
+            List<UploadFileDto> uploadFiles = fileService.getFilesById("ticket",id);
+            model.addAttribute("uploadFiles",uploadFiles);
+            //댓글 정보 가져오기
+            List<CommentDto> commentList = ticketService.getCommentsByTicketId(id);
+            model.addAttribute("commentList",commentList);
+            model.addAttribute("statusCd", commonService.getSelectOptions("t_status"));
             model.addAttribute("ticketinfo", ticketDetails);
             return "ticketView";
         } catch (Exception e) {
@@ -229,13 +226,44 @@ public class TicketController {
             } else {
                 System.out.println("User not found");
             }
-
             // 서비스 호출
             ticketService.changeStatus(id, newStatus, updateId);
             // JSON 응답
             Map<String, String> response = new HashMap<>();
             response.put("message", "Step status updated successfully");
             return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
+        }
+    }
+
+    @PostMapping("/comments")
+    public ResponseEntity<String> addComment(HttpServletRequest request, @RequestBody Map<String, String> RequestBody) {
+        try {
+            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
+            String createId = loginUser.getUserId();
+            int ticketId = Integer.parseInt(RequestBody.get("ticketId"));
+            String comment = RequestBody.get("comment");
+            String statusCd = RequestBody.get("statusCd");
+            ticketService.addComment(ticketId, comment, createId, statusCd);
+
+            return ResponseEntity.ok("댓글이 저장되었습니다.");
+        } catch (Exception e) {
+            throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
+        }
+    }
+
+    @GetMapping("/comments")
+    public ResponseEntity<String> getComment(HttpServletRequest request, @RequestBody Map<String, String> RequestBody) {
+        try {
+            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
+            String createId = loginUser.getUserId();
+            int ticketId = Integer.parseInt(RequestBody.get("ticketId"));
+            String comment = RequestBody.get("comment");
+            String statusCd = RequestBody.get("statusCd");
+            ticketService.addComment(ticketId, comment, createId, statusCd);
+
+            return ResponseEntity.ok("댓글이 저장되었습니다.");
         } catch (Exception e) {
             throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
         }

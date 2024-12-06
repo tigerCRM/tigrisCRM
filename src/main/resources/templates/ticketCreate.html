@@ -91,12 +91,21 @@
                                     </tr>
                                     <tr>
                                         <th>담당자(PM)</th>
-                                        <td colspan="3">
+                                        <td>
                                             <input type="text" id="managerName" th:field="*{managerName}" readonly>
                                             <input type="hidden" id="managerId" th:field="*{managerId}">
-
                                         </td>
-
+                                        <th>중요도</th>
+                                        <td>
+                                            <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
+                                                <select class="dropdown__selected" id="priorityYn"
+                                                        th:field="*{priorityYn}">
+                                                    <option th:each="op : ${priorityYn}"
+                                                            th:value="${op.key}"
+                                                            th:text="${op.value}"></option>
+                                                </select>
+                                            </div>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>작업구분</th>
@@ -123,21 +132,21 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>중요도</th>
+                                        <th>희망완료일</th>
+                                        <td>
+                                            <div th:insert="~{fragments/datepicker :: datepickersingle('expectedCompleteDt')}"
+                                                 th:field="*{expectedCompleteDt}"></div>
+                                        </td>
+                                        <th>진행상태</th>
                                         <td>
                                             <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
-                                                <select class="dropdown__selected" id="priorityYn"
-                                                        th:field="*{priorityYn}">
-                                                    <option th:each="op : ${priorityYn}"
+                                                <select class="dropdown__selected" id="statusCd" name="statusCd" th:field="*{statusCd}" th:disabled="${userClass == 'USER'}">
+                                                    <option th:each="op : ${statusCd}"
                                                             th:value="${op.key}"
                                                             th:text="${op.value}"></option>
                                                 </select>
                                             </div>
                                         </td>
-                                        <th>희망완료일</th>
-                                        <td>
-                                            <div th:insert="~{fragments/datepicker :: datepickersingle('expectedCompleteDt')}"
-                                                 th:field="*{expectedCompleteDt}"></div>
                                     </tr>
                                     <tr th:if="${userClass != 'USER'}">
                                         <th>작업완료일</th>

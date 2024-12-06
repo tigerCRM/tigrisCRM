@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
         return "common/error"; // 오류 페이지로 이동
     }
 
-    // 다른 예외를 처리할 수도 있습니다.
+    // 다른 예외
     @ExceptionHandler(Exception.class)
     public String handleGeneralException(Exception ex, Model model) {
         model.addAttribute("errorMessage", "알 수 없는 오류가 발생했습니다.");
