@@ -238,12 +238,6 @@
         popupYn.value = popupYnCheckbox.checked ? 'Y' : 'N';
         topYn.value = topYnCheckbox.checked ? 'Y' : 'N';
 
-        //팝업여부 : 항상 노출 시 날짜 지정
-        if (document.querySelector('#alwaysDisplay').checked) {
-            document.querySelector('#popupStartDt').value='1999-01-01';
-            document.querySelector('#popupEndDt').value='2999-12-31';
-        }
-
 
     });
 
@@ -422,13 +416,29 @@
 
     //12.
     document.querySelector('#alwaysDisplay').addEventListener('change', function () {
+
+        const startDateInput = document.querySelector('.start-date');
+        const endDateInput = document.querySelector('.end-date');
+
+
         if (document.querySelector('#alwaysDisplay').checked) {
             //데이트 피커 잠기게
+            startDateInput.disabled = true;
+            endDateInput.disabled = true;
+            startDateInput.classList.add('disabled');
+            endDateInput.classList.add('disabled');
+            document.querySelector('#popupStartDt').value='1999-01-01';
+            document.querySelector('#popupEndDt').value='2999-12-31';
         } else {
             //데이트 피커 안잠기게
+            startDateInput.disabled = false;
+            endDateInput.disabled = false;
+            startDateInput.classList.remove('disabled');
+            endDateInput.classList.remove('disabled');
+            document.querySelector('#popupStartDt').value='';
+            document.querySelector('#popupEndDt').value='';
         }
     });
-
 
 </script>
 </body>

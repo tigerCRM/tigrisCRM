@@ -14,8 +14,11 @@ public class BoardOpenCompanyDto {
         this.companyId = companyId;
         this.companyName = companyName;
     }
-
+    
+    //게시판번호
     private int boardId;
+    //회사번호
     private int companyId;
+    //회사이름
     private String companyName;
 }

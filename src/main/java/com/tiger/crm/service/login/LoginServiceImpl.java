@@ -45,19 +45,18 @@ public class LoginServiceImpl implements LoginService{
         try {
             // 1. 임시 비밀번호 생성
             String tempPassword = generateTempPassword();
-
             user.setUserId(user.getUserId());
-            user.setUserPw(passwordEncoder.encode(generateTempPassword())); // 암호화 후 저장
+            user.setUserPw(passwordEncoder.encode(tempPassword)); // 암호화 후 저장
 
             // 2. 비밀번호 업데이트
             loginMapper.resetPassword(user);
 
             // 3. 메일 발송
             Map<String, Object> model = new HashMap<>();
-            model.put("userName", "안상재");
+            model.put("userName", user.getUserName());
             model.put("password", tempPassword);
 
-            mailService.sendEmail("dkstkdwo93@tigrison.com", "비밀번호 초기화", "password-reset-email", model);
+            mailService.sendEmail(user.getUserId(), "비밀번호 초기화", "password-reset-email", model);
 
         } catch (Exception e) {
             e.getStackTrace();

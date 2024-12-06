@@ -167,11 +167,11 @@
                                                     <span th:case="'ETC'">기타</span>
                                                 </span></td>
                                                 <td><span th:switch="${ticket['STATUS_CD']}">
-                                                    <span th:case="'OPEN'" class="tag tag--navy">등록</span>
+                                                    <span th:case="'OPEN'" class="tag tag--red">등록</span>
                                                     <span th:case="'RECEIPT'" class="tag tag--navy">접수</span>
-                                                    <span th:case="'PROGRESS'" class="tag tag--navy">진행</span>
-                                                    <span th:case="'REVIEW'" class="tag tag--green">검토</span>
-                                                    <span th:case="'CLOSED'" class="tag tag--red">완료</span>
+                                                    <span th:case="'PROGRESS'" class="tag tag--green">진행</span>
+                                                    <span th:case="'REVIEW'" class="tag tag--orange">검토</span>
+                                                    <span th:case="'CLOSED'" class="tag tag--gray">완료</span>
                                                     <span th:case="*"></span> <!-- 기본 값 -->
                                                 </span></td>
                                                 <td><span th:switch="${ticket['SUPPORT_CD']}">

@@ -8,8 +8,11 @@ import lombok.Data;
  * */
 @Data
 public class CompanyOptionDto {
-
+    
+    //회사아이디
     private int companyId;
+    //회사이름
     private String companyName;
+    //사용여부
     private char useYn;
 }

@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -100,7 +102,7 @@ public class LoginController
 	 * 비밀번호 초기화 이메일 발송
 	 */
 	@RequestMapping("/resetPassword")
-	public String resetPassword(UserLoginDto user, HttpSession session) {
+	public ResponseEntity<String> resetPassword(UserLoginDto user, HttpSession session) {
 		try {
 			//세션 로그인 정보 가져옴
 			UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
@@ -108,11 +110,17 @@ public class LoginController
 			// 임시 비밀번호로 업데이트 및 메일 발송
 			loginService.resetPassword(loginUser);
 
+			session.invalidate();  // 세션 무효화(필요시)
+
+			return ResponseEntity.ok("Password reset email sent.");
+
+
+
 		}catch (Exception e){
 			System.out.println(e.getStackTrace());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred.");
 		}
 
-		return "redirect:main";
 	}
 
 }

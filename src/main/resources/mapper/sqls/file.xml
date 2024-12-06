@@ -49,19 +49,19 @@
     <update id="deleteFilesByFileId" parameterType="java.util.Map">
         UPDATE T_FILE
         SET DELETE_YN = 'Y'
-        WHERE FILE_ID = #{FILE_ID}
+        WHERE FILE_ID = #{fileId}
     </update>
 
     <update id="deleteFileByFileName" parameterType="java.util.Map">
         UPDATE T_FILE
         SET DELETE_YN = 'Y'
-        WHERE FILE_NAME = #{FILE_NAME}
+        WHERE FILE_NAME = #{fileName}
     </update>
 
     <select id="getLastSequenceByFileId" resultType="Integer">
         SELECT SEQ
         FROM T_FILE
-        WHERE FILE_ID = #{FILE_ID}
+        WHERE FILE_ID = #{fileId}
         ORDER BY SEQ DESC
         LIMIT 1
     </select>
