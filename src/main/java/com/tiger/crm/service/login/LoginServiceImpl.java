@@ -31,7 +31,13 @@ public class LoginServiceImpl implements LoginService{
 
     @Override
     public UserLoginDto login(String id, String password) {
-        if(!passwordEncoder.matches(password, loginMapper.getUserPwByUserId(id))){
+
+        String userPw = loginMapper.getUserPwByUserId(id);
+        if(userPw == null || userPw.isEmpty()){
+            LOGGER.info("아이디 에러");
+            return null;
+        }
+        if(!passwordEncoder.matches(password, userPw)){
             LOGGER.info("비밀번호 에러");
             return null;
         }
