@@ -311,6 +311,31 @@ div::-webkit-scrollbar-button:end:increment {
     background-color: #f0f0f0; /* 어두운 배경색 */
     color: #888; /* 텍스트 색상 변경 (선택 사항) */
 }
+/* li 요소 스타일 */
+#alertDropdownMenu li {
+    position: relative; /* 각 li를 기준 컨테이너로 설정 */
+    padding: 10px; /* 알림 내용과 버튼 사이 간격 */
+    border-bottom: 1px solid #ddd; /* 항목 구분선 */
+}
+/* x 버튼 스타일 */
+.close-alert-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    font-weight: bold;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+.close-alert-btn:hover {
+    color: #333;
+}
+
+/* // main > header alert badge */
+
 
 /* icon */
 .icon {
@@ -3047,37 +3072,6 @@ ul[class*='list-tree--'] {
     align-items: center; /* 세로 중앙 정렬 */
     gap: 10px; /* 요소 간 간격 설정 */
 }
-/*예솔 추가 spinner*/
-.loading {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.spinner {
-    width: 50px;
-    height: 50px;
-    border: 5px solid #ccc;
-    border-top: 5px solid #3498db;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
 
 /* 사용자 상세 정보 */
 .user-detail-info .table th,
@@ -3127,7 +3121,7 @@ ul[class*='list-tree--'] {
 }
 .attachment-file {
     position: relative;
-    height: 12rem;
+    height: 8rem;
     padding: 0.8rem 0;
     border-radius: 0.4rem;
     border: 1px solid var(--gray-300);
@@ -3349,7 +3343,7 @@ ul[class*='list-tree--'] {
   color: #000;
   font-weight: bold;
   margin-bottom: 5px;
-  cursor: pointer;
+ /* cursor: pointer;*/
 }
 
 .step-label {

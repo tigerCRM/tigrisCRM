@@ -3,6 +3,7 @@ package com.tiger.crm.service.ticket;
 import com.tiger.crm.repository.dto.alert.AlertDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
+import com.tiger.crm.repository.dto.ticket.CommentDto;
 import com.tiger.crm.repository.mapper.TicketMapper;
 import com.tiger.crm.service.alert.AlertService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,7 @@ public class TicketServiceImpl implements TicketService {
         if(resultCount != 1){
             return 0;
         }
+
         // 고유번호가 TicketDto에 저장됨
         int ticketId = ticketDto.getTicketId();
 
@@ -83,5 +85,14 @@ public class TicketServiceImpl implements TicketService {
     //첨부파일 저장 후 boardTable 에 첨부파일 아이디 업데이트
     public void setTicketFileId(String fileId,int ticketId) {
         ticketMapper.updateTicketFileId(fileId,ticketId);
+    }
+
+    //댓글 저장
+    public void addComment(int ticketId, String comment,String createId,String statusCd) {
+        ticketMapper.insertTicketComment(ticketId, comment, createId, statusCd);
+    }
+
+    public List<CommentDto> getCommentsByTicketId(int ticketId) {
+        return ticketMapper.getCommentsByTicketId(ticketId);
     }
 }

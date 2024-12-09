@@ -22,6 +22,8 @@
     <script src="/js/datepicker.js"></script>
     <!--기타 전역에서 쓸 공통javascript 설정. commit-->
     <script src="/js/common.js"></script>
+    <!--메세지-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -63,35 +65,34 @@
                                     <tbody>
                                     <tr>
                                         <input type="hidden" id="ticketId" th:field="*{ticketId}">
-                                        <input type="hidden" id="statusCd" th:field="*{statusCd}">
                                         <!--진행사항 progress bar-->
                                         <div class="step-progress">
                                             <div class="step">
-                                                <div class="step-number" onclick="changeStatus('OPEN')">1</div>
+                                                <div class="step-number">1</div>
                                                 <div class="step-status">OPEN</div>
                                                 <div class="step-label">등록</div>
                                             </div>
                                             <div class="separator"></div>
                                             <div class="step">
-                                                <div class="step-number" onclick="changeStatus('RECEIPT')">2</div>
+                                                <div class="step-number">2</div>
                                                 <div class="step-status">RECEIPT</div>
                                                 <div class="step-label">접수</div>
                                             </div>
                                             <div class="separator"></div>
                                             <div class="step">
-                                                <div class="step-number" onclick="changeStatus('PROGRESS')">3</div>
+                                                <div class="step-number">3</div>
                                                 <div class="step-status">PROGRESS</div>
                                                 <div class="step-label">진행</div>
                                             </div>
                                             <div class="separator"></div>
                                             <div class="step">
-                                                <div class="step-number" onclick="changeStatus('REVIEW')">4</div>
+                                                <div class="step-number">4</div>
                                                 <div class="step-status">REVIEW</div>
                                                 <div class="step-label">검토</div>
                                             </div>
                                             <div class="separator"></div>
                                             <div class="step">
-                                                <div class="step-number" onclick="changeStatus('CLOSED')">5</div>
+                                                <div class="step-number">5</div>
                                                 <div class="step-status">CLOSED</div>
                                                 <div class="step-label">완료</div>
                                             </div>
@@ -115,11 +116,17 @@
                                     </tr>
                                     <tr>
                                         <th>담당자(PM)</th>
-                                        <td colspan="3">
+                                        <td>
                                             <span id="managerName" th:text="*{managerName}"></span>
                                             <input type="hidden" id="managerId" th:field="*{managerId}">
                                         </td>
-
+                                        <th>중요도</th>
+                                        <td>
+                                            <span th:switch="*{priorityYn}">
+                                                <span th:case="'Y'">긴급</span>
+                                                <span th:case="'N'">일반</span>
+                                            </span>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>작업구분</th>
@@ -142,16 +149,28 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>중요도</th>
-                                        <td>
-                                            <span th:switch="*{priorityYn}">
-                                                <span th:case="'Y'">긴급</span>
-                                                <span th:case="'N'">일반</span>
-                                            </span>
-                                        </td>
                                         <th>희망완료일</th>
                                         <td>
                                             <span id="expectedCompleteDt" th:text="*{expectedCompleteDt}"></span>
+                                        </td>
+                                        <th>진행상태</th>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 5px;">
+                                                <div class="dropdown dropdown--s wd130" aria-expanded="false"
+                                                     tabindex="0">
+                                                    <select class="dropdown__selected" id="statusCd" name="statusCd"
+                                                            th:field="*{statusCd}" th:disabled="${userClass == 'USER'}">
+                                                        <option th:each="op : ${statusCd}"
+                                                                th:value="${op.key}"
+                                                                th:text="${op.value}"></option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <button type="button" class="btn btn--s primary-btn"
+                                                            onclick="changeStatus()">상태저장
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                     <tr>
@@ -169,7 +188,8 @@
                                             <div class="editor-wrap">
                                                 <div class="editor-wrap">
                                                     <div id="editorContent"></div>
-                                                    <input type="hidden" name="content" id="content" th:field="*{content}">
+                                                    <input type="hidden" name="content" id="content"
+                                                           th:field="*{content}">
                                                 </div>
                                             </div>
                                         </td>
@@ -178,10 +198,25 @@
                                         <th>첨부파일</th>
                                         <td colspan="3">
                                             <div class="attachment-wrapper">
-
                                                 <div class="attachment-file">
-                                                    <ul class="list01">
+                                                    <!--기존에 있었던 첨부파일-->
+                                                    <ul id="fileAttach" class="list01">
+                                                        <li class="list__item" th:each="file : ${uploadFiles}">
+                                                            <div class="item__title">
+                                                                <svg class="icon icon--20 color-gray700">
+                                                                    <use href="/assets/images/icon/sprite-sheet.svg#attachment"></use>
+                                                                </svg>
+                                                                <a th:href="@{/fileDownload(fileName=${file.fileName})}"
+                                                                   th:text="${file.originFileName}"
+                                                                   class="file-link">파일 이름 sample</a>
+                                                            </div>
+                                                        </li>
                                                     </ul>
+                                                    <!--//기존에 있었던 첨부파일-->
+                                                    <!--추가하는 첨부파일-->
+                                                    <ul id="addfileAttach" class="list01">
+                                                    </ul>
+                                                    <!--//추가하는 첨부파일-->
                                                 </div>
                                             </div>
                                         </td>
@@ -191,35 +226,27 @@
                                 <!--//사용자 입력 영역-->
                                 <!--댓글 영역-->
                                 <!--의견 영역-->
-                                <div class="comment__write">
+                                <div class="comment__write" th:style="${commentList == null or commentList.size() == 0 ? 'display:none;' : ''}">
                                     <div>
                                         <h2>코멘트</h2>
                                     </div>
-                                    <div class="message_box" >
-                                        <div class="message_info">
-                                            <div class="user_name">남루니</div>
-
-                                            <div class="message">
-                                                <p style="display:inline-block;">이것도 안되고 저것도 안되고 다안됩니다.</p>
+                                    <div th:if="${commentList != null and commentList.size() > 0}">
+                                        <div class="message_box" th:each="comment : ${commentList}">
+                                            <div class="message_info">
+                                                <div class="user_name" th:text="${comment.createName}">작성자</div>
+                                                <div th:class="${comment.userClass == 'USER' ? 'message' : 'sendmessage'}">
+                                                    <p style="display:inline-block;" th:text="${comment.content}">댓글 내용</p>
+                                                </div>
+                                                <div class="message_time" th:text="${comment.createDt}">작성일</div>
                                             </div>
-                                            <div class="message_time">24/12/04 07:52</div>
-                                        </div>
-                                    </div>
-                                    <div class="message_box" >
-                                        <div class="message_info">
-                                            <div class="user_name">담당자</div>
-                                            <div class="sendmessage">
-                                                <p style="display:inline-block;">이거랑 저거랑 요거랑 저거 수정했으니 확인 부탁드립니다.</p>
-                                            </div>
-                                            <div class="message_time">24/12/04 07:52</div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="comment__write">
-                                    <!-- (확인) 댓글 입력 전에는 댓글 작성 버튼 비활성화 -->
-                                    <textarea name="" id="" cols="30" rows="10" class="textarea01 input--full" placeholder="댓글을 입력해주세요"></textarea>
+                                <div class="comment__write" >
+                                    <textarea id="comment" cols="30" rows="10" class="textarea01 input--full"
+                                              placeholder="댓글을 입력해주세요"></textarea>
                                     <div class="flex flex-justify_end mt8">
-                                        <button type="button" class="btn btn--s primary-btn">댓글 작성</button>
+                                        <button type="button" class="btn btn--s primary-btn" onclick="addComment()">댓글 작성</button>
                                     </div>
                                 </div>
                                 <!--//댓글 영역-->
@@ -250,8 +277,7 @@
 <script>
     var mode = "read";
     var editor = common.loadOrInitializeEditor(editor , mode);
-
-
+    //상태 progress
     document.addEventListener("DOMContentLoaded", function () {
        const stepProgress = document.querySelector('.step-progress');
        const statusCd = $("#statusCd").val();
@@ -274,47 +300,93 @@
        });
     });
 
+    //상태변경
+    function changeStatus() {
+        const url = `/changeStatus`;
+        var id = $("#ticketId").val();
+        var newStatus = $("#statusCd").val();
+        const requestData = { status: newStatus,id : id};
 
-
-
-
-
-
-
-
-    function changeStatus(newStatus) {
-      // 요청 보낼 URL 설정
-      const url = `/changeStatus`;
-      var id = $("#ticketId").val();
-      // 서버로 보낼 데이터 준비
-      const requestData = { status: newStatus,id : id};
-
-      // 비동기 요청 (POST 방식)
-      fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
+        // 비동기 요청 (POST 방식)
+        fetch(url, {
+            method: 'PUT',
+            headers: {
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify(requestData), // 데이터를 JSON 형식으로 변환
-      })
-      .then(response => {
-        if (!response.ok) {
-          return response.text().then(text => { throw new Error(text); }); // 서버에서 반환한 메시지를 추출하여 에러 처리
+            body: JSON.stringify(requestData),
+        })
+        .then(response => {
+            if (!response.ok) {
+            return response.text().then(text => { throw new Error(text); });
         }
-        return response.json(); // 서버에서 반환된 데이터를 JSON으로 변환
-      })
-          .then(data => {
+        return response.json();
+        })
+        .then(data => {
             console.log('Status updated successfully:', data);
-            // 성공 시 상태 업데이트 로직 추가 (UI 갱신 등)
-            alert('요청 등록 상태가 변경되었습니다.');
-            // 예: 페이지 리로드 또는 특정 UI 요소 업데이트
-            // location.reload(); // 페이지 새로고침 (필요한 경우)
-          })
-          .catch(error => {
+            showMessage('success', '성공', '진행상태가 변경되었습니다.');
+           // location.reload();
+        })
+        .catch(error => {
             console.error('Error updating status:', error);
             alert('상태 업데이트 중 오류가 발생했습니다: ' + error.message);
-          });
+        });
     }
+
+    // 댓글 작성
+    function addComment() {
+        var comment = $('#comment').val();
+        var id = $("#ticketId").val();
+        var statusCd = $("#statusCd").val();
+        if (!comment) {
+            alert("댓글 내용을 입력하세요.");
+            return;
+        }
+
+        $.ajax({
+            url: '/comments', // 서버 컨트롤러 URL
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                comment: comment,
+                ticketId: id,
+                statusCd: statusCd
+            }),
+            success: function(response) {
+                location.reload();
+            },
+            error: function(error) {
+                alert("댓글 등록 중 오류가 발생했습니다.");
+            }
+        });
+    }
+
+<!--    function changeStatus(newStatus) {-->
+<!--      const url = `/changeStatus`;-->
+<!--      var id = $("#ticketId").val();-->
+<!--      const requestData = { status: newStatus,id : id};-->
+<!--      fetch(url, {-->
+<!--        method: 'PUT',-->
+<!--        headers: {-->
+<!--          'Content-Type': 'application/json',-->
+<!--        },-->
+<!--        body: JSON.stringify(requestData),-->
+<!--      })-->
+<!--      .then(response => {-->
+<!--        if (!response.ok) {-->
+<!--          return response.text().then(text => { throw new Error(text); });-->
+<!--        }-->
+<!--        return response.json(); -->
+<!--      })-->
+<!--          .then(data => {-->
+<!--            console.log('Status updated successfully:', data);-->
+<!--            alert('요청 등록 상태가 변경되었습니다.');-->
+<!--            // location.reload(); -->
+<!--          })-->
+<!--          .catch(error => {-->
+<!--            console.error('Error updating status:', error);-->
+<!--            alert('상태 업데이트 중 오류가 발생했습니다: ' + error.message);-->
+<!--          });-->
+<!--    }-->
 
 </script>
 </body>

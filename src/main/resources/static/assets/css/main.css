@@ -719,6 +719,8 @@
     border: 1px solid var(--gray-300);
     z-index: 1000; /* 다른 요소 위에 오도록 */
     font-size: 15px;
+    max-height: 300px;
+    overflow-y: auto;
 }
 /* 드롭다운 항목 스타일 */
 .dropdown-menu li, .dropdown-menu2 li {

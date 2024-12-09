@@ -150,7 +150,7 @@
                                                 <td colspan="11" style="text-align:center;">등록된 티켓이 없습니다.</td>
                                             </tr>
 
-                                            <tr th:each="ticket : ${ticketList.dataList}" th:attr="data-id=${ticket['TICKET_ID']}" onclick="gotoTicket(this)">
+                                            <tr th:each="ticket : ${ticketList.dataList}" th:attr="data-id=${ticket['TICKET_ID']}" style="cursor: pointer;">
                                                 <td><span th:text="${ticket['TICKET_ID']}"></span></td>
                                                 <td><span th:text="${ticket['COMPANY_NAME']}"></span></td>
                                                 <td><span th:if="${ticket['PRIORITY_YN'] == 'Y'}" class="tag tag--red">긴급</span>

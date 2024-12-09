@@ -2,6 +2,7 @@ package com.tiger.crm.repository.mapper;
 
 import com.tiger.crm.repository.dto.page.PagingRequest;
 
+import com.tiger.crm.repository.dto.ticket.CommentDto;
 import com.tiger.crm.repository.dto.ticket.TicketDto;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -31,4 +32,8 @@ public interface TicketMapper {
     //티켓 첨부파일 ID 업데이트
     int updateTicketFileId(String fileId, int ticketId);
 
+    //댓글저장
+    void insertTicketComment(int ticketId, String comment, String createId, String statusCd);
+
+    List<CommentDto> getCommentsByTicketId(int ticketId);
 }

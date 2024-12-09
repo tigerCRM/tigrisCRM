@@ -166,4 +166,19 @@
         WHERE TICKET_ID = #{ticketId}
     </update>
 
+    <insert id="insertTicketComment" parameterType="map">
+        INSERT INTO T_TICKET_ANSWER
+        (TICKET_ID, STATUS_CD, CONTENT, CREATE_ID, CREATE_DT, UPDATE_DT, FILE_ID, DELETE_YN)
+        VALUES(#{ticketId}, #{statusCd}, #{comment}, #{createId}, sysdate(), sysdate(), NULL, 'N');
+    </insert>
+
+    <!-- 티켓 상세 정보 조회 -->
+    <select id="getCommentsByTicketId" resultType="com.tiger.crm.repository.dto.ticket.CommentDto">
+        SELECT ANSWER_ID, TICKET_ID, STATUS_CD, CONTENT, T.CREATE_ID, U.USER_NAME as CREATE_NAME , DATE_FORMAT(T.CREATE_DT, '%y/%m/%d %H:%i') as CREATE_DT , FILE_ID, USER_CLASS
+        FROM T_TICKET_ANSWER as T
+        LEFT JOIN T_USER_INFO as U
+        on T.CREATE_ID = U.USER_ID
+        where TICKET_ID = #{ticketId} and DELETE_YN = 'N'
+    </select>
+
 </mapper>
