@@ -3,17 +3,76 @@
 설명 : 각종 script 코드 여기에. 꼭 주석 달아주세요!
 */
 
-//1. 화면 로드시 실행
+//1. 화면 로드시 실행 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 document.addEventListener("DOMContentLoaded", function () {
     //날짜 값 포맷 변환
     common.convertDateFormat();
 
+    /*
+    event on : 첨부파일 영역의 "파일추가" 버튼 눌렀을 때
+    result : #attachFilesTemp 열림
+    */
+    document.querySelector('#uploadButton').addEventListener('click', () => {
+        document.getElementById('attachFilesTemp').click();
+    });
+    /*
+    event on : "파일추가" 가 되었을 때
+    result : selectedFiles(전송할 파일 배열) 에 파일을 추가, 목록업데이트
+    */
+    document.getElementById('attachFilesTemp').addEventListener('change', () => {
+        const fileInput = document.getElementById('attachFilesTemp');
+        console.log("파일 선택 완료");
+        console.log(fileInput.files);
+        const files = Array.from(fileInput.files); // 새로운 파일 배열
+        files.forEach(file => {
+          // 동일한 파일명이 있으면 추가하지 않음
+          if (!selectedFiles.some(f => f.name === file.name)) {
+              selectedFiles.push(file);
+          }
+        });
+        fileInput.value = ''; // 파일 선택창 초기화
+        common.renderFileList(); // 목록 업데이트
+    });
+    /*
+    event on : "전체삭제" 눌렀을 때
+    result : 파일 입력값 및 html 요소 삭제
+    */
+    $("#fileDelete").on('click', function () {
+        // 파일 입력 값 초기화
+        $("#attachFiles").val('');
+
+        // deleteSavedAttachFiles에 모든 파일 이름 추가
+        $(".list01 li").each(function() {
+            var fileName = $(this).find('.deleteFileButton').data('filename'); // data-filename 속성 읽기
+            if (fileName) {
+                deleteSavedAttachFiles.push(fileName);
+            }
+        });
+
+        // 동적 리스트 초기화
+        $(".list01").empty();
+        selectedFiles = [];
+    });
+    /*
+    event on : 첨부파일 개별 "X" 자 버튼 눌렀을때
+    result : 전송할 파일에서 지운 파일 삭제하고 html 요소 삭제
+    */
+    document.querySelectorAll('.deleteFileButton').forEach(button => {
+        button.addEventListener('click', function() {
+            var fileName = this.dataset.filename; // data-filename 속성 읽기
+            deleteSavedAttachFiles.push(fileName);
+            this.closest('li').remove();
+
+        });
+    });
 });
 
-//2. event listener
 
 
-//3. 함수 저장소
+
+
+
+//2. 함수 저장소  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var common = {
 
     /*
@@ -73,6 +132,75 @@ var common = {
         });
 
         return editor;
+    },
+    /*
+    attachFileWorks(글제출전 첨부파일 묶음처리)
+    작성자 : 제예솔
+    설명 : 문서에 하기 태그를 필요로 합니다. 글 제출 전 첨부파일 리스트 변동사항을 반영합니다
+    <input type="file" multiple="multiple" id="attachFilesTemp" name="attachFilesTemp" class="file_attach_input">
+    <input type="file" multiple="multiple" id="attachFiles" name="attachFiles" class="file_attach_input">
+    */
+    attachFileWorks : function(){
+        const realFileInput = document.getElementById('attachFiles');
+        if (!realFileInput) {
+            console.error('요소를 찾을 수 없습니다.');
+            return;
+        }
+        // DataTransfer 객체를 활용해 selectedFiles를 설정
+        const dataTransfer = new DataTransfer();
+        selectedFiles.forEach(file => {
+            dataTransfer.items.add(file);
+        });
+        // 기존 attachFilesTemp에 파일 설정
+        realFileInput.files = dataTransfer.files;
+        console.log('첨부 파일이 업데이트되었습니다:', selectedFiles);
+    },
+    /*
+    renderFileList
+    작성자 : 제예솔
+    설명 : 사용자에게 보이는 첨부파일 리스트 부분을 동적으로 그려줍니다.
+    */
+    renderFileList : function(){
+        const list = document.querySelector('#addFileAttach');
+        list.innerHTML = ''; // 기존 목록 초기화
+
+        selectedFiles.forEach((file, index) => {
+        // 파일 이름
+            const fileName = file.name;
+
+            // 동적으로 생성할 HTML 문자열
+            const listItem = `
+                <li class="list__item">
+                    <div class="item__title">
+                        <svg class="icon icon--20 color-gray700">
+                            <use href="/assets/images/icon/sprite-sheet.svg#attachment"></use>
+                        </svg>
+                        <span>${fileName}</span>
+                        <button type="button" class="icon icon--20 just-icon" data-index="${index}">
+                            <svg class="icon">
+                                <use href="/assets/images/icon/sprite-sheet.svg#close"></use>
+                            </svg>
+                        </button>
+                    </div>
+                </li>
+            `;
+
+            // 문자열을 DOM 요소로 변환
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = listItem;
+            const listItemElement = tempDiv.firstElementChild;
+
+            // 삭제 버튼에 이벤트 리스너 추가
+            const deleteButton = listItemElement.querySelector('button');
+            deleteButton.addEventListener('click', () => {
+                selectedFiles.splice(index, 1); // 파일 삭제
+                common.renderFileList(); // 목록 다시 렌더링
+            });
+
+            // 리스트에 추가
+            list.appendChild(listItemElement);
+        });
+
     },
 
 //end

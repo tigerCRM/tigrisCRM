@@ -148,7 +148,7 @@
                                                     </ul>
                                                     <!--//기존에 있었던 첨부파일-->
                                                     <!--추가하는 첨부파일-->
-                                                    <ul id="fileAttach2" class="list01">
+                                                    <ul id="addFileAttach" class="list01">
                                                     </ul>
                                                     <!--//추가하는 첨부파일-->
 
@@ -185,9 +185,9 @@
 <script>
     var boardId = document.querySelector('#boardId').value;
     var mode = document.querySelector('#mode').value;
-    var fileInput = document.getElementById('attachFilesTemp'); //file input tag
-    var selectedFiles = [];
-    var deleteSavedAttachFiles = [];
+    var fileInput = document.getElementById('attachFilesTemp'); //전송 전 파일 임시 저장하는 태그
+    var selectedFiles = []; //전송 파일 배열
+    var deleteSavedAttachFiles = []; //저장된 파일중에서 지워야 할 파일 배열
 
     var contentValue = document.getElementById('content').value;
 
@@ -207,100 +207,10 @@
         companyNameInput.value = selectedOption.textContent.trim();
 
         //첨부파일 설정
-        attachFileWorks();
+        common.attachFileWorks();
     });
 
-    //3. 첨부파일 작업
-    function attachFileWorks(){
-        const realFileInput = document.getElementById('attachFiles');
-        if (!realFileInput) {
-            console.error('요소를 찾을 수 없습니다.');
-            return;
-        }
-        // DataTransfer 객체를 활용해 selectedFiles를 설정
-        const dataTransfer = new DataTransfer();
-        selectedFiles.forEach(file => {
-            dataTransfer.items.add(file);
-        });
-        // 기존 attachFilesTemp에 파일 설정
-        realFileInput.files = dataTransfer.files;
-        console.log('첨부 파일이 업데이트되었습니다:', selectedFiles);
-
-    }
-
-    //4. 첨부파일 추가 버튼을 누르면 파일 선택창이 열림
-    document.querySelector('#uploadButton').addEventListener('click', () => {
-        fileInput.click();
-    });
-
-    //5. 첨부파일 조작에 따라 전송할 파일들의 배열을 수정함
-    fileInput.addEventListener('change', () => {
-        console.log("파일 선택 완료");
-        console.log(fileInput.files);
-        const files = Array.from(fileInput.files); // 새로운 파일 배열
-        files.forEach(file => {
-            // 동일한 파일명이 있으면 추가하지 않음
-            if (!selectedFiles.some(f => f.name === file.name)) {
-                selectedFiles.push(file);
-            }
-        });
-        fileInput.value = ''; // 파일 선택창 초기화
-        renderFileList(); // 목록 업데이트
-    });
-
-    //6. 첨부파일 조작에 따라 보여지는 리스트를 다르게 그림
-    function renderFileList(){
-        const list = document.querySelector('#fileAttach2');
-        list.innerHTML = ''; // 기존 목록 초기화
-
-        selectedFiles.forEach((file, index) => {
-        // 파일 이름
-            const fileName = file.name;
-
-            // 동적으로 생성할 HTML 문자열
-            const listItem = `
-                <li class="list__item">
-                    <div class="item__title">
-                        <svg class="icon icon--20 color-gray700">
-                            <use href="/assets/images/icon/sprite-sheet.svg#attachment"></use>
-                        </svg>
-                        <span>${fileName}</span>
-                        <button type="button" class="icon icon--20 just-icon" data-index="${index}">
-                            <svg class="icon">
-                                <use href="/assets/images/icon/sprite-sheet.svg#close"></use>
-                            </svg>
-                        </button>
-                    </div>
-                </li>
-            `;
-
-            // 문자열을 DOM 요소로 변환
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = listItem;
-            const listItemElement = tempDiv.firstElementChild;
-
-            // 삭제 버튼에 이벤트 리스너 추가
-            const deleteButton = listItemElement.querySelector('button');
-            deleteButton.addEventListener('click', () => {
-                selectedFiles.splice(index, 1); // 파일 삭제
-                renderFileList(); // 목록 다시 렌더링
-            });
-
-            // 리스트에 추가
-            list.appendChild(listItemElement);
-        });
-    }
-
-    //7. 첨부파일 전체 삭제
-    $("#fileDelete").on('click', function () {
-        // 파일 입력 값 초기화
-        $("#attachFiles").val('');
-        // 동적 리스트 초기화
-        $(".list01").empty();
-        selectedFiles = [];
-    });
-
-    //8. 글 삭제
+    //3. 글 삭제
     function deleteBoard() {
         var url = `/systemBoard`;
         if (confirm('정말로 삭제하시겠습니까?')) {
@@ -327,18 +237,19 @@
             });
         }
     }
-    //9. 글 수정 페이지로 전환
+
+    //4. 글 수정 페이지로 전환
     function getModifyBoard() {
         var url = '/systemBoard?boardId=' + boardId + '&mode=modify';
         window.location.href = url;
     }
 
-    //10. 글 수정후 저장
+    //5. 글 수정후 저장
     function submitModifiedBoard() {
         var content = editor.getHTML();
         document.querySelector('#content').value = content;
 
-        attachFileWorks();
+        common.attachFileWorks();
 
         const formData = new FormData(document.getElementById('boardSubmitArea'));
 
@@ -372,16 +283,6 @@
             alert('서버 요청 중 문제가 발생했습니다.');
         });
     }
-
-    //11. 글 수정 시 이미 저장된 파일은 지우기 리스트에 추가하여 지움
-    document.querySelectorAll('.deleteFileButton').forEach(button => {
-        button.addEventListener('click', function() {
-            var fileName = this.dataset.filename; // data-filename 속성 읽기
-            deleteSavedAttachFiles.push(fileName);
-            this.closest('li').remove();
-
-        });
-    });
 
 
 </script>
