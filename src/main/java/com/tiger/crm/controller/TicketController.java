@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -136,6 +137,7 @@ public class TicketController {
             ticketCreate.setManagerName(managerName);       //담당자이름
             ticketCreate.setExpectedCompleteDt(expDate);
             ticketCreate.setStatusCd("OPEN");
+            ticketCreate.setTicketId(null);
             //model에 데이터 바인딩
             List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
             model.addAttribute("companyOptions", companyOptions);
@@ -145,6 +147,8 @@ public class TicketController {
             model.addAttribute("supportCd", commonService.getSelectOptions("t_support"));
             model.addAttribute("priorityYn", commonService.getSelectOptions("t_priority"));
             model.addAttribute("statusCd", commonService.getSelectOptions("t_status"));
+            model.addAttribute("mode", "write");
+
             model.addAttribute("ticketCreate", ticketCreate);
         } catch (Exception e) {
             throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
@@ -154,13 +158,19 @@ public class TicketController {
 
     /*
      * 티켓 등록(신규)
-     * 설명 : 신규 티켓 등록시 초기화면 바인딩
+     * 설명 : 신규 티켓 저장
      * */
     @PostMapping("/ticketCreate")
-    public String saveTicketCreate(@ModelAttribute TicketDto ticketDto, @RequestParam("attachFiles") List<MultipartFile> files, HttpServletRequest request, HttpServletResponse response, Model model) {
+    public String saveTicketCreate(@ModelAttribute TicketDto ticketDto, HttpServletRequest request, HttpServletResponse response, Model model) {
         try {
+            if( ticketDto.getStatusCd() == null){
+                ticketDto.setStatusCd("OPEN");
+            }
+            if( ticketDto.getMd() == null){
+                ticketDto.setMd(BigDecimal.ZERO);
+            }
             // 티켓 저장
-            int ticketId = ticketService.saveTicket(ticketDto, files);
+            int ticketId = ticketService.saveTicket(ticketDto);
             if (ticketId == 0) {
                 throw new CustomException("티켓 저장에 실패했습니다.");
             }
@@ -177,6 +187,95 @@ public class TicketController {
         }
         return "redirect:ticketList";
     }
+
+    /*
+     * 티켓 수정 이동
+     * 설명 : 티켓 수정시 티켓 정보 바인딩
+     * */
+    @PostMapping("/ticketModify")
+    public String showticketModifyPage(@ModelAttribute TicketDto ticketDto, HttpServletRequest request, HttpServletResponse response, Model model) {
+        try {
+            var id = ticketDto.getTicketId();
+            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
+            String companyId = String.valueOf(loginUser.getCompanyId());
+            String userClass = String.valueOf(loginUser.getUserClass());
+            // 티켓 상세 정보 조회 - 로그인한 본인 회사만 볼수있음
+            TicketDto ticketDetails = ticketService.getTicketDetails(ticketDto.getTicketId());
+            if (!String.valueOf(ticketDetails.getCompanyId()).equals(companyId) && userClass.equals("USER")) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);  // 403 상태 코드 반환
+                response.setContentType("text/html; charset=UTF-8");  // 응답 내용 타입과 문자 인코딩 설정
+                response.getWriter().write("<script>alert('접근권한이 없습니다.'); window.history.back();</script>");
+                response.getWriter().flush();
+                return "ticketList";
+            }
+            //selectbox 데이터 바인딩
+            List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
+            model.addAttribute("companyOptions", companyOptions);
+            model.addAttribute("selectedCompanyName", ticketDetails.getCompanyName());
+            model.addAttribute("userClass", ticketDetails.getClass()); //작성자 레벨
+            model.addAttribute("requestTypeCd", commonService.getSelectOptions("t_request"));
+            model.addAttribute("supportCd", commonService.getSelectOptions("t_support"));
+            model.addAttribute("priorityYn", commonService.getSelectOptions("t_priority"));
+            model.addAttribute("statusCd", commonService.getSelectOptions("t_status"));
+            //첨부파일 정보 가져오기
+            List<UploadFileDto> uploadFiles = fileService.getFilesById("ticket",id);
+            model.addAttribute("uploadFiles",uploadFiles);
+            //댓글 정보 가져오기
+            List<CommentDto> commentList = ticketService.getCommentsByTicketId(id);
+            model.addAttribute("commentList",commentList);
+            model.addAttribute("statusCd", commonService.getSelectOptions("t_status"));
+     //       model.addAttribute("DateId",ticketDetails.getExpectedCompleteDt());
+            model.addAttribute("mode", "modify");
+            model.addAttribute("ticketCreate", ticketDetails);
+        } catch (Exception e) {
+            throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
+        }
+
+        return "ticketCreate"; // ticketCreate.html로 이동
+    }
+
+    /*
+     * 티켓 수정 저장
+     * 설명 : 티켓 수정 후 저장
+     * */
+    @PostMapping("/ticketModifySave")
+    public String ticketModifySave(@ModelAttribute TicketDto ticketDto, HttpServletRequest request, HttpServletResponse response, Model model) {
+        try {
+            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
+            String companyId = String.valueOf(loginUser.getCompanyId());
+            String userClass = String.valueOf(loginUser.getUserClass());
+            //로그인한 본인 회사만 수정가능
+            if (!String.valueOf(ticketDto.getCompanyId()).equals(companyId) && userClass.equals("USER")) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);  // 403 상태 코드 반환
+                response.setContentType("text/html; charset=UTF-8");  // 응답 내용 타입과 문자 인코딩 설정
+                response.getWriter().write("<script>alert('접근권한이 없습니다.'); window.history.back();</script>");
+                response.getWriter().flush();
+                return "ticketList";
+            }
+            if( ticketDto.getMd() == null){
+                ticketDto.setMd(BigDecimal.ZERO);
+            }
+            // 티켓 수정 업데이트
+            int ticketId = ticketService.saveTicketModify(ticketDto);
+
+            if (ticketId == 0) {
+                throw new CustomException("티켓 수정에 실패했습니다.");
+            }
+            // 첨부파일 처리
+            try {
+                List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(ticketDto.getAttachFiles());
+                String fileId = fileService.insertFile(uploadFiles, ticketId, "티켓관리");
+                ticketService.setTicketFileId(fileId, ticketId);
+            } catch (Exception fileException) {
+                throw new CustomException("첨부파일 저장 중 오류가 발생했습니다.", fileException);
+            }
+        } catch (Exception e) {
+            throw new CustomException("티켓 수정 중 오류가 발생했습니다.", e);
+        }
+        return "ticketCreate"; // ticketCreate.html로 이동
+        //return "redirect:ticketList";
+    }
+
     /*
      * 티켓 상세보기
      * 설명 :

@@ -39,15 +39,13 @@ public class TicketServiceImpl implements TicketService {
     }
 
     //티켓저장
-    public int saveTicket(TicketDto ticketDto, List<MultipartFile> files) {
+    public int saveTicket(TicketDto ticketDto) {
         int resultCount =  ticketMapper.insertTicketInfo(ticketDto);
         if(resultCount != 1){
             return 0;
         }
-
         // 고유번호가 TicketDto에 저장됨
         int ticketId = ticketDto.getTicketId();
-
         // 알림 발송
         if(resultCount > 0){
             AlertDto alertDto = new AlertDto();
@@ -59,7 +57,29 @@ public class TicketServiceImpl implements TicketService {
             alertService.createAlert(alertDto);
         }
 
-        return ticketDto.getTicketId();
+        return ticketId;
+    }
+
+    //티켓저장
+    public int saveTicketModify(TicketDto ticketDto) {
+        int resultCount =  ticketMapper.updateTicketInfo(ticketDto);
+        if(resultCount != 1){
+            return 0;
+        }
+        // 고유번호가 TicketDto에 저장됨
+        int ticketId = ticketDto.getTicketId();
+        // 알림 발송
+        if(resultCount > 0){
+            AlertDto alertDto = new AlertDto();
+            alertDto.setAlertType(ticketDto.getStatusCd()); // 상태코드
+            alertDto.setAlertObjectId(ticketId); // 요청사항 고유번호
+            alertDto.setContent(ticketDto.getContent()); // 내용
+            alertDto.setSenderId(ticketDto.getCreateId()); // 발송인 아이디
+            alertDto.setReceiverId(ticketDto.getManagerId()); // 수령인 아이디
+            alertService.createAlert(alertDto);
+        }
+
+        return ticketId;
     }
 
     //담당자(PM)정보

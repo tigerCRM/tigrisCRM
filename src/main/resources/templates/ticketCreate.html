@@ -41,15 +41,17 @@
                             <div class="content-header">
                                 <h2 class="text-body1">
                                     <div class="flex flex-align_center gap--8">
-                                        <b>요청 등록</b>
+                                        <b th:text="${mode == 'write' ? '요청 등록' : (mode == 'modify' ? '요청 수정' : '요청 정보 상세')}"></b>
                                     </div>
                                 </h2>
                             </div>
                         </div>
                         <!-- //헤더 영역 -->
+                        <input type="hidden" id="mode" th:field="*{mode}">
                         <!-- form 영역 -->
-                        <form id= "SubmitArea" action="/ticketCreate" method="post" enctype="multipart/form-data"
+                        <form id= "SubmitArea" th:action="@{${mode == 'write' ? '/ticketCreate' : '/ticketModifySave'}}" method="post" enctype="multipart/form-data"
                               th:object="${ticketCreate}">
+                            <input type="hidden" id="ticketId" th:field="*{ticketId}">
                             <div>
                                 <!--사용자 입력 영역-->
                                 <table class="table table03 table--h table--xs">
@@ -85,7 +87,7 @@
                                                     </option>
                                                 </select>
                                             </div>
-                                            <input type="hidden" name="companyName" id="companyId" th:field="*{companyId}">
+                                            <input type="hidden" name="companyId" id="companyId" th:field="*{companyId}">
                                             <input type="hidden" name="companyName" id="companyName" th:field="*{companyName}">
                                         </td>
                                     </tr>
@@ -134,8 +136,7 @@
                                     <tr>
                                         <th>희망완료일</th>
                                         <td>
-                                            <div th:insert="~{fragments/datepicker :: datepickersingle('expectedCompleteDt')}"
-                                                 th:field="*{expectedCompleteDt}"></div>
+                                            <div th:insert="~{fragments/datepicker :: datepickersingle('expectedCompleteDt')}"></div>
                                         </td>
                                         <th>진행상태</th>
                                         <td>
@@ -149,10 +150,19 @@
                                         </td>
                                     </tr>
                                     <tr th:if="${userClass != 'USER'}">
-                                        <th>작업완료일</th>
-                                        <td th:text="${ticketCreate.completeDt}"></td>
+                                        <th>완료일</th>
+                                        <td>
+                                            <div th:fragment="datepickersingle(DateId)" >
+                                                <input type="text" class="input--s input01 datepicker-input" placeholder="" th:id="${completeDt}" th:name="${completeDt}" th:field="*{completeDt}">
+                                                <button type="button" class="btn just-icon btn--24 calendar-btn">
+                                                    <svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use></svg>
+                                                </button>
+                                            </div>
+                                        </td>
                                         <th>처리일수</th>
-                                        <td th:text="${ticketCreate.md}"></td>
+                                        <td>
+                                            <input type="text"  class="input--xs input01 input--full" id="md" th:name="${md}" th:field="*{md}">
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td colspan="4">
@@ -197,7 +207,7 @@
                                                     </ul>
                                                     <!--//기존에 있었던 첨부파일-->
                                                     <!--추가하는 첨부파일-->
-                                                    <ul id="fileAttach2" class="list01">
+                                                    <ul id="addFileAttach" class="list01">
                                                     </ul>
                                                     <!--//추가하는 첨부파일-->
 
@@ -210,7 +220,9 @@
                                 <!--//사용자 입력 영역-->
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
-                                    <button type="submit" class="btn btn--m  primary-btn">글등록</button>
+                                    <button type="submit" class="btn btn--m primary-btn" th:if="${mode == 'write'}">등록</button>
+                                    <button type="submit" class="btn btn--m primary-btn" th:if="${mode == 'modify'}">저장</button>
+                                    <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'modify'}" onclick="deleteTicket()">삭제</button>
                                     <button type="button" class="btn btn--m  secondary-btn"
                                             onclick="location.href='/ticketList';">목록으로
                                     </button>
@@ -229,110 +241,20 @@
 </div>
 
 <script>
-    var fileInput = document.getElementById('attachFilesTemp'); //file input tag
-    var selectedFiles = [];
-    var deleteSavedAttachFiles = [];
-
+    var fileInput = document.getElementById('attachFilesTemp'); //전송 전 파일 임시 저장하는 태그
+    var selectedFiles = []; //전송 파일 배열
+    var deleteSavedAttachFiles = []; //저장된 파일중에서 지워야 할 파일 배열
+    var contentValue = document.getElementById('content').value;
     //1. editor load 및 초기화
-    var mode = "write";
-    var editor = common.loadOrInitializeEditor(editor , mode);
+    var mode = document.getElementById('mode').value;
+    var editor = common.loadOrInitializeEditor(editor , mode, contentValue);
 
     //2. form submit 시 toast editor 영역 안의 값을 content 안에 넣음
     document.querySelector('#SubmitArea').addEventListener('submit', function (e) {
-            const content = editor.getHTML(); // 에디터 안의 html 콘텐츠를 가져옴
-            document.querySelector('#content').value = content; // hidden input 안에 입력한 데이터를 넣고 전송
-        //첨부파일 설정
-        attachFileWorks();
-    });
-
-    //3. 첨부파일 작업
-    function attachFileWorks(){
-        const realFileInput = document.getElementById('attachFiles');
-        if (!realFileInput) {
-            console.error('요소를 찾을 수 없습니다.');
-            return;
-        }
-        // DataTransfer 객체를 활용해 selectedFiles를 설정
-        const dataTransfer = new DataTransfer();
-        selectedFiles.forEach(file => {
-            dataTransfer.items.add(file);
-        });
-        // 기존 attachFilesTemp에 파일 설정
-        realFileInput.files = dataTransfer.files;
-        console.log('첨부 파일이 업데이트되었습니다:', selectedFiles);
-
-    }
-
-    //4. 첨부파일 추가 버튼을 누르면 파일 선택창이 열림
-    document.querySelector('#uploadButton').addEventListener('click', () => {
-        fileInput.click();
-    });
-
-    //5. 첨부파일 조작에 따라 전송할 파일들의 배열을 수정함
-    fileInput.addEventListener('change', () => {
-        console.log("파일 선택 완료");
-        console.log(fileInput.files);
-        const files = Array.from(fileInput.files); // 새로운 파일 배열
-        files.forEach(file => {
-            // 동일한 파일명이 있으면 추가하지 않음
-            if (!selectedFiles.some(f => f.name === file.name)) {
-                selectedFiles.push(file);
-            }
-        });
-        fileInput.value = ''; // 파일 선택창 초기화
-        renderFileList(); // 목록 업데이트
-    });
-
-    //6. 첨부파일 조작에 따라 보여지는 리스트를 다르게 그림
-    function renderFileList(){
-        const list = document.querySelector('#fileAttach2');
-        list.innerHTML = ''; // 기존 목록 초기화
-
-        selectedFiles.forEach((file, index) => {
-        // 파일 이름
-            const fileName = file.name;
-
-            // 동적으로 생성할 HTML 문자열
-            const listItem = `
-                <li class="list__item">
-                    <div class="item__title">
-                        <svg class="icon icon--20 color-gray700">
-                            <use href="/assets/images/icon/sprite-sheet.svg#attachment"></use>
-                        </svg>
-                        <span>${fileName}</span>
-                        <button type="button" class="icon icon--20 just-icon" data-index="${index}">
-                            <svg class="icon">
-                                <use href="/assets/images/icon/sprite-sheet.svg#close"></use>
-                            </svg>
-                        </button>
-                    </div>
-                </li>
-            `;
-
-            // 문자열을 DOM 요소로 변환
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = listItem;
-            const listItemElement = tempDiv.firstElementChild;
-
-            // 삭제 버튼에 이벤트 리스너 추가
-            const deleteButton = listItemElement.querySelector('button');
-            deleteButton.addEventListener('click', () => {
-                selectedFiles.splice(index, 1); // 파일 삭제
-                renderFileList(); // 목록 다시 렌더링
-            });
-
-            // 리스트에 추가
-            list.appendChild(listItemElement);
-        });
-    }
-
-    //7. 첨부파일 전체 삭제
-    $("#fileDelete").on('click', function () {
-        // 파일 입력 값 초기화
-        $("#attachFiles").val('');
-        // 동적 리스트 초기화
-        $(".list01").empty();
-        selectedFiles = [];
+         const content = editor.getHTML(); // 에디터 안의 html 콘텐츠를 가져옴
+         document.querySelector('#content').value = content; // hidden input 안에 입력한 데이터를 넣고 전송
+         //첨부파일 설정
+         common.attachFileWorks();
     });
 
     function updateCompanyName(selectElement) {
@@ -344,6 +266,19 @@
         document.getElementById("companyId").value = companyId;
         document.getElementById("companyName").value = companyName;
     }
+
+    //수정 저장
+    function modifiedTicket(){
+       // var id = $("#ticketId").val();
+       // window.location.href = '/ticketCreate/'+id;
+    }
+
+    //삭제
+    function deleteTicket(){
+       // var id = $("#ticketId").val();
+       // window.location.href = '/ticketCreate/'+id;
+    }
+
 </script>
 </body>
 </html>

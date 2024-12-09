@@ -13,8 +13,8 @@
         IFNULL(MD, '') as MD,
         TITLE,
         U.USER_NAME,
-        DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d') as CREATE_DT,
-        IFNULL(DATE_FORMAT(IFNULL(REAL_COMPLETE_DT, ''), '%Y-%m-%d'),'') as REAL_COMPLETE_DT
+        DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d %H:%i') AS CREATE_DT,
+        IFNULL(DATE_FORMAT(IFNULL(COMPLETE_DT, ''), '%Y-%m-%d %H:%i'),'') as COMPLETE_DT
         FROM T_TICKET_INFO as T
         LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
         <where>
@@ -115,12 +115,29 @@
     <insert id="insertTicketInfo" parameterType="com.tiger.crm.repository.dto.ticket.TicketDto"  useGeneratedKeys="true" keyProperty="ticketId">
         INSERT INTO T_TICKET_INFO
         (COMPANY_ID, COMPANY_NAME, STATUS_CD, REQUEST_TYPE_CD, EXPECTED_COMPLETE_DT,
-        REAL_COMPLETE_DT, PRIORITY_YN, TITLE, CONTENT, MANAGER_ID, CREATE_ID,CREATE_NAME,
-        CREATE_DT, UPDATE_ID, UPDATE_DT, FILE_ID, PARENT_TICKET_CD, SUPPORT_CD)
+        COMPLETE_DT, PRIORITY_YN, TITLE, CONTENT, MANAGER_ID, CREATE_ID,CREATE_NAME,
+        CREATE_DT, UPDATE_ID, UPDATE_DT, FILE_ID, PARENT_TICKET_CD, SUPPORT_CD, MD)
         VALUES (#{companyId}, #{companyName}, #{statusCd}, #{requestTypeCd}, #{expectedCompleteDt},
-        #{realCompleteDt}, #{priorityYn}, #{title}, #{content}, #{managerId}, #{createId}, #{createName},
-        sysdate(), #{updateId}, sysdate(), #{fileId}, #{parentTicketCd}, #{supportCd});
+        #{completeDt}, #{priorityYn}, #{title}, #{content}, #{managerId}, #{createId}, #{createName},
+        sysdate(), #{updateId}, sysdate(), #{fileId}, #{parentTicketCd}, #{supportCd}, #{md});
     </insert>
+
+    <update id="updateTicketInfo" parameterType="com.tiger.crm.repository.dto.ticket.TicketDto"  useGeneratedKeys="true" keyProperty="ticketId">
+        UPDATE T_TICKET_INFO SET
+            TITLE = #{title},
+            CONTENT = #{content},
+            STATUS_CD = #{statusCd},
+            REQUEST_TYPE_CD = #{requestTypeCd},
+            SUPPORT_CD = #{supportCd},
+            PRIORITY_YN = #{priorityYn},
+            EXPECTED_COMPLETE_DT = #{expectedCompleteDt},
+            COMPLETE_DT = #{completeDt},
+            MD = #{md},
+            PARENT_TICKET_CD = #{parentTicketCd},
+            UPDATE_ID = #{updateId},
+            UPDATE_DT = sysdate()
+        WHERE TICKET_ID = #{ticketId};
+    </update>
 
     <select id="getManagerInfo" resultType="java.util.HashMap">
         SELECT U.USER_ID as MANAGER_ID,
@@ -146,7 +163,8 @@
         CONTENT,
         U.USER_NAME as MANAGER_NAME,
         DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d') as CREATE_DT,
-        IFNULL(DATE_FORMAT(IFNULL(REAL_COMPLETE_DT, ''), '%Y-%m-%d'),'') as REAL_COMPLETE_DT
+        DATE_FORMAT(T.EXPECTED_COMPLETE_DT, '%Y-%m-%d') as EXPECTED_COMPLETE_DT,
+        IFNULL(DATE_FORMAT(IFNULL(COMPLETE_DT, ''), '%Y-%m-%d'),'') as COMPLETE_DT
         FROM T_TICKET_INFO as T
         LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
         WHERE TICKET_ID = #{ticketId} and  DELETE_YN = 'N'
@@ -172,7 +190,7 @@
         VALUES(#{ticketId}, #{statusCd}, #{comment}, #{createId}, sysdate(), sysdate(), NULL, 'N');
     </insert>
 
-    <!-- 티켓 상세 정보 조회 -->
+    <!-- 티켓 댓글 정보 조회 -->
     <select id="getCommentsByTicketId" resultType="com.tiger.crm.repository.dto.ticket.CommentDto">
         SELECT ANSWER_ID, TICKET_ID, STATUS_CD, CONTENT, T.CREATE_ID, U.USER_NAME as CREATE_NAME , DATE_FORMAT(T.CREATE_DT, '%y/%m/%d %H:%i') as CREATE_DT , FILE_ID, USER_CLASS
         FROM T_TICKET_ANSWER as T

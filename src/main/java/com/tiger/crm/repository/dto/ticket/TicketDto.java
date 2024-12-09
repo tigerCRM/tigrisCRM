@@ -6,6 +6,7 @@ import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class TicketDto {
     private String companyName;     //고객사명
     private String companyId;       //고객사code
     private String completeDt;      //실제완료일
-    private String md;              //작업공수
+    private BigDecimal md;              //작업공수
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate createDt;     //등록일
     private String updateId;        //수정자ID
@@ -40,7 +41,6 @@ public class TicketDto {
     private Integer ticketId;       // 티켓ID
     private String statusCd;            //진행상태코드
     private String expectedCompleteDt;  //희망완료일
-    private String realCompleteDt;      //완료일
     private String priorityYn;          // 중요도
     private String parentTicketCd;      //연관티켓
     private String supportCd;           //지원범위

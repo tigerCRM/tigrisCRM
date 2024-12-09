@@ -14,7 +14,9 @@ public interface TicketService {
 
     PagingResponse<Map<String, Object>> getTicketList(PagingRequest pagingRequest);
 
-    int saveTicket(TicketDto ticketDto, List<MultipartFile> files);
+    int saveTicket(TicketDto ticketDto);
+
+    int saveTicketModify(TicketDto ticketDto);
 
     Map<String, Object> getManagerInfo(String companyId);
 
