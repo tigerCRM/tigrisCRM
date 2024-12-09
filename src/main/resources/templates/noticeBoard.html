@@ -25,11 +25,15 @@
 </head>
 <body>
 <div class="wrapper">
+
     <!-- 왼쪽 메뉴  -->
     <div th:replace="~{common/frame_left_menu :: frame_left_menu}" />
 
     <!-- 상단 메뉴  -->
     <div th:replace="~{common/frame_top_menu :: frame_top_menu}" />
+
+    <!--팝업시 주변 어둡게-->
+    <div class="layer-wrap dimmed" style="display: block;"></div>
 
     <!-- 컨텐츠 영역 -->
     <div class="main-area">
@@ -114,11 +118,11 @@
                                         <td colspan="3">
                                             <div class="input-list--h">
                                                 <label class="radio02">
-                                                    <input type="radio" name="viewAllYn" checked="">
+                                                    <input type="radio" name="viewAllYn" checked="" value="y">
                                                     <span>전체열람</span>
                                                 </label>
                                                 <label class="radio02">
-                                                    <input type="radio" name="viewAllYn">
+                                                    <input type="radio" name="viewAllYn" value="n">
                                                     <span>지정 고객사 열람</span>
                                                 </label>
                                             </div>
@@ -167,7 +171,7 @@
                                                     </ul>
                                                     <!--//기존에 있었던 첨부파일-->
                                                     <!--추가하는 첨부파일-->
-                                                    <ul id="fileAttach2" class="list01">
+                                                    <ul id="addFileAttach" class="list01">
                                                     </ul>
                                                     <!--//추가하는 첨부파일-->
 
@@ -192,6 +196,7 @@
                             </div>
                         </form>
                         <!-- //form 영역 -->
+
                     </div>
                 </div>
             </div>
@@ -199,6 +204,54 @@
         <!-- //내용 영역 -->
     </div>
     <!-- //컨텐츠 영역 -->
+    <!--모달 영역-->
+    <div class="layerpopup-wrap layerpopup--xl layerpopup--center contact-layer" style="display: block;">
+        <div class="layerpopup__header">
+            <h1 class="layerpopup__title">열람 회사 선택</h1>
+            <button class="btn icon-btn close-btn"><svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#close"/></svg></button>
+        </div>
+        <div class="layerpopup__content">
+            <div id="left-wrap" class="left-wrap">
+                <div class="contact__user-list">
+                    <ul class="list01 employee-list">
+                        <li class="list__item">
+                            <div class="item__title">
+                                <div class="item__title-text">
+                                    <span><strong>영업팀</strong></span>
+                                    <span class="color-gray600">부서명</span>
+                                    <span class="color-navy500">직장명(조직도명)</span>
+                                </div>
+                            </div>
+                            <button type="button" class="icon icon--20 just-icon"><svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#close"></use></svg></button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="right-wrap" class="right-wrap">
+                <div class="contact__user-list">
+                    <ul class="list01 employee-list">
+                        <li class="list__item">
+                            <div class="item__title">
+                                <div class="item__title-text">
+                                    <span><strong>영업팀</strong></span>
+                                    <span class="color-gray600">부서명</span>
+                                    <span class="color-navy500">직장명(조직도명)</span>
+                                </div>
+                            </div>
+                            <button type="button" class="icon icon--20 just-icon"><svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#close"></use></svg></button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="layerpopup__footer">
+            <div class="flex flex-justify_center gap--8 btn-wrap">
+                <button type="button" class="btn btn--s mono-outline-btn">취소</button>
+                <button type="button" class="btn btn--s primary-btn">선택</button>
+            </div>
+        </div>
+    </div>
+    <!--//모달 영역-->
 </div>
 
 <script>
@@ -227,7 +280,7 @@
         //companyNameInput.value = selectedOption.textContent.trim();
 
         //첨부파일 설정
-        attachFileWorks();
+        common.attachFileWorks();
 
         //체크박스,라디오버튼 변환
         const topYnCheckbox = document.getElementById('topYnCheckbox');
@@ -241,97 +294,7 @@
 
     });
 
-    //3. 첨부파일 작업
-    function attachFileWorks(){
-        const realFileInput = document.getElementById('attachFiles');
-        if (!realFileInput) {
-            console.error('요소를 찾을 수 없습니다.');
-            return;
-        }
-        // DataTransfer 객체를 활용해 selectedFiles를 설정
-        const dataTransfer = new DataTransfer();
-        selectedFiles.forEach(file => {
-            dataTransfer.items.add(file);
-        });
-        // 기존 attachFilesTemp에 파일 설정
-        realFileInput.files = dataTransfer.files;
-        console.log('첨부 파일이 업데이트되었습니다:', selectedFiles);
-
-    }
-
-    //4. 첨부파일 추가 버튼을 누르면 파일 선택창이 열림
-    document.querySelector('#uploadButton').addEventListener('click', () => {
-        fileInput.click();
-    });
-
-    //5. 첨부파일 조작에 따라 전송할 파일들의 배열을 수정함
-    fileInput.addEventListener('change', () => {
-        console.log("파일 선택 완료");
-        console.log(fileInput.files);
-        const files = Array.from(fileInput.files); // 새로운 파일 배열
-        files.forEach(file => {
-            // 동일한 파일명이 있으면 추가하지 않음
-            if (!selectedFiles.some(f => f.name === file.name)) {
-                selectedFiles.push(file);
-            }
-        });
-        fileInput.value = ''; // 파일 선택창 초기화
-        renderFileList(); // 목록 업데이트
-    });
-
-    //6. 첨부파일 조작에 따라 보여지는 리스트를 다르게 그림
-    function renderFileList(){
-        const list = document.querySelector('#fileAttach2');
-        list.innerHTML = ''; // 기존 목록 초기화
-
-        selectedFiles.forEach((file, index) => {
-        // 파일 이름
-            const fileName = file.name;
-
-            // 동적으로 생성할 HTML 문자열
-            const listItem = `
-                <li class="list__item">
-                    <div class="item__title">
-                        <svg class="icon icon--20 color-gray700">
-                            <use href="/assets/images/icon/sprite-sheet.svg#attachment"></use>
-                        </svg>
-                        <span>${fileName}</span>
-                        <button type="button" class="icon icon--20 just-icon" data-index="${index}">
-                            <svg class="icon">
-                                <use href="/assets/images/icon/sprite-sheet.svg#close"></use>
-                            </svg>
-                        </button>
-                    </div>
-                </li>
-            `;
-
-            // 문자열을 DOM 요소로 변환
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = listItem;
-            const listItemElement = tempDiv.firstElementChild;
-
-            // 삭제 버튼에 이벤트 리스너 추가
-            const deleteButton = listItemElement.querySelector('button');
-            deleteButton.addEventListener('click', () => {
-                selectedFiles.splice(index, 1); // 파일 삭제
-                renderFileList(); // 목록 다시 렌더링
-            });
-
-            // 리스트에 추가
-            list.appendChild(listItemElement);
-        });
-    }
-
-    //7. 첨부파일 전체 삭제
-    $("#fileDelete").on('click', function () {
-        // 파일 입력 값 초기화
-        $("#attachFiles").val('');
-        // 동적 리스트 초기화
-        $(".list01").empty();
-        selectedFiles = [];
-    });
-
-    //8. 글 삭제
+    //3. 글 삭제
     function deleteBoard() {
         var url = `/noticeBoard`;
         if (confirm('정말로 삭제하시겠습니까?')) {
@@ -358,18 +321,18 @@
             });
         }
     }
-    //9. 글 수정 페이지로 전환
+    //4. 글 수정 페이지로 전환
     function getModifyBoard() {
         var url = '/noticeBoard?boardId=' + boardId + '&mode=modify';
         window.location.href = url;
     }
 
-    //10. 글 수정후 저장
+    //5. 글 수정후 저장
     function submitModifiedBoard() {
         var content = editor.getHTML();
         document.querySelector('#content').value = content;
 
-        attachFileWorks();
+        common.attachFileWorks();
 
         const formData = new FormData(document.getElementById('boardSubmitArea'));
 
@@ -404,17 +367,7 @@
         });
     }
 
-    //11. 글 수정 시 이미 저장된 파일은 지우기 리스트에 추가하여 지움
-    document.querySelectorAll('.deleteFileButton').forEach(button => {
-        button.addEventListener('click', function() {
-            var fileName = this.dataset.filename; // data-filename 속성 읽기
-            deleteSavedAttachFiles.push(fileName);
-            this.closest('li').remove();
-
-        });
-    });
-
-    //12.
+    //6. 항상노출 클릭시 datepicker 날짜 고정
     document.querySelector('#alwaysDisplay').addEventListener('change', function () {
 
         const startDateInput = document.querySelector('.start-date');
@@ -439,6 +392,21 @@
             document.querySelector('#popupEndDt').value='';
         }
     });
+
+    //7. 지정고객사 열람 radio button
+    document.querySelectorAll('input[name="viewAllYn"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value === 'n' && this.checked) {
+
+                console.log("지정열람");
+                document.getElementById('modal').style.display = 'flex'; // 모달 보이기
+
+            }else if (this.value === 'y' && this.checked) {
+                console.log("모두열람");
+            }
+        });
+    });
+
 
 </script>
 </body>

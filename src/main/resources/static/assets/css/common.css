@@ -3304,6 +3304,9 @@ ul[class*='list-tree--'] {
 .editor-wrap{
     width: 850px;
 }
+/*예솔 모달 만들기 추가*/
+/*END 예솔 모달 만들기 추가*/
+
 .upload-name {
     display: inline-block;
     height: 40px;
