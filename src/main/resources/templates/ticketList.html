@@ -291,6 +291,20 @@
         });
     }
 
+    // -------------------
+    // main > 완료내역 > tickeList로 넘어 올 시
+    // -------------------
+    $(document).ready(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchStatus = urlParams.get('searchStatus');
+
+        if(searchStatus != null && searchStatus == "CLOSED"){
+            $("#searchStatus").val(searchStatus);
+        }
+
+    });
+
+
 </script>
 
 </body>
