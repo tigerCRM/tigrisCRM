@@ -115,7 +115,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>담당자(PM)</th>
+                                        <th>담당자</th>
                                         <td>
                                             <span id="managerName" th:text="*{managerName}"></span>
                                             <input type="hidden" id="managerId" th:field="*{managerId}">
@@ -228,7 +228,7 @@
                                 <!--의견 영역-->
                                 <div class="comment__write" th:style="${commentList == null or commentList.size() == 0 ? 'display:none;' : ''}">
                                     <div>
-                                        <h2>코멘트</h2>
+                                        <h2>피드백</h2>
                                     </div>
                                     <div th:if="${commentList != null and commentList.size() > 0}">
                                         <div class="message_box" th:each="comment : ${commentList}">
@@ -369,38 +369,34 @@
 
     //삭제
     function deleteTicket(){
-       // var id = $("#ticketId").val();
-       // window.location.href = '/ticketCreate/'+id;
+        if (showConfirm("question","삭제하시겠습니까?","")) {}
     }
 
-<!--    function changeStatus(newStatus) {-->
-<!--      const url = `/changeStatus`;-->
-<!--      var id = $("#ticketId").val();-->
-<!--      const requestData = { status: newStatus,id : id};-->
-<!--      fetch(url, {-->
-<!--        method: 'PUT',-->
-<!--        headers: {-->
-<!--          'Content-Type': 'application/json',-->
-<!--        },-->
-<!--        body: JSON.stringify(requestData),-->
-<!--      })-->
-<!--      .then(response => {-->
-<!--        if (!response.ok) {-->
-<!--          return response.text().then(text => { throw new Error(text); });-->
-<!--        }-->
-<!--        return response.json(); -->
-<!--      })-->
-<!--          .then(data => {-->
-<!--            console.log('Status updated successfully:', data);-->
-<!--            alert('요청 등록 상태가 변경되었습니다.');-->
-<!--            // location.reload(); -->
-<!--          })-->
-<!--          .catch(error => {-->
-<!--            console.error('Error updating status:', error);-->
-<!--            alert('상태 업데이트 중 오류가 발생했습니다: ' + error.message);-->
-<!--          });-->
-<!--    }-->
-
+    //확인창에서 호출하는 함수
+    function afterConfirm(){
+        var id = $("#ticketId").val();
+        var url = `/deleteTicket`;
+        fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ Id: id }),
+        })
+        .then(response => {
+            if (response.ok) {
+                showMessage('success', '삭제', '해당 티켓 정보가 삭제되었습니다.');
+            } else {
+                response.text().then(message => {
+                    showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showMessage('error', '실패', '오류가 발생해 서버로 요청을 전송하지 못했습니다');
+        });
+    }
 </script>
 </body>
 </html>

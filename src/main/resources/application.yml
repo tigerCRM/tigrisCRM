@@ -1,27 +1,48 @@
 spring:
   application:
     name: crm
-#  mvc:
-#    view:
-#      prefix: /WEB-INF/views/
-#      suffix: .jsp
+  #  mvc:
+  #    view:
+  #      prefix: /WEB-INF/views/
+  #      suffix: .jsp
+  messages:
+    basename:messages
+    encoding:UTF-8
 
   thymeleaf:
     prefix: classpath:/templates/  # 템플릿 경로 설정
     suffix: .html                  # 파일 확장자 설정
-
+    cache: false
   # maria DB setting
   datasource:
+    # url: jdbc:mariadb://localhost:3306/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
+    # driver-class-name: org.mariadb.jdbc.Driver
+    # username: root
+    # password: Xkdlrj@2024!
     url: jdbc:mariadb://192.168.0.240:3306/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
     driver-class-name: org.mariadb.jdbc.Driver
-    username: crmadmin
-    password: Xkdlrj@2024!
+    username: crmservice
+    password: mp$0wnEgq*d(0CzH
     hikari:
       maximum-pool-size: 5
 
+  servlet:
+    multipart:
+      max-file-size: 30MB #파일 하나의 최대 크기
+      max-request-size: 30MB #한번에 최대 업로드 가능용량
+
   profiles:
     active: local
-
+  mail:
+    # host: smtp.sirteam.net # SMTP 서버
+    host: smtp.naver.com # SMTP 서버
+    port: 465 # 포트
+    username: dkstkdwo93@naver.com # 발송자 이메일
+    password: LXQVXWQXU631 # 발송자 이메일 비밀번호
+    properties:
+      mail.smtp.auth: true # SMTP 인증
+      mail.smtp.starttls.enable: false # STARTTLS 사용
+      mail.smtp.ssl.enable: true # SSL활성화
 # mybatis path setting
 mybatis:
   mapper-locations: classpath:/mapper/sqls/**/*.xml # mapper XML 파일 경로
@@ -29,6 +50,9 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true  # underscore_to_camel_case 설정
 
+    cache-enabled: true        # MyBatis 캐시 사용 여부
+    lazy-loading-enabled: true # Lazy Loading 사용 여부
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # MyBatis SQL 로그 활성화
 
 aes128:
   secret:
@@ -37,6 +61,11 @@ aes:
   secret:
     key: 330ed346c97712232ba447f49b8846eb
 
+
+  #logging:
+#  level:
+  #    org.mybatis: DEBUG
+  #   jdbc.sqlonly: DEBUG
 
 #  config:
 #    activate:
@@ -57,11 +86,15 @@ aes:
 #  url: http://211.47.7.48:8080/file
 #  size: 100
 
-
+file:
+  # dir: C:\\Temp\\fileUpload\\
+  dir: /home/crmdevuser/files/Temp/
 # Cookie
 cookie:
   domain: localhost
   name: _crmSystem
+#server
+
 
 # Email
 #mail:
