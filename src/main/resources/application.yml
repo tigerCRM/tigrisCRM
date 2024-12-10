@@ -1,34 +1,57 @@
+# server
+server:
+  port: 8081
+
 spring:
   application:
     name: crm
-#  mvc:
-#    view:
-#      prefix: /WEB-INF/views/
-#      suffix: .jsp
+
+  messages:
+    basename:messages
 
   thymeleaf:
     prefix: classpath:/templates/  # 템플릿 경로 설정
     suffix: .html                  # 파일 확장자 설정
+    cache: false
 
-  # maria DB setting
   datasource:
-    url: jdbc:mariadb://192.168.0.240:3306/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
+#    url: jdbc:mariadb://192.168.0.240:3306/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
+#    driver-class-name: org.mariadb.jdbc.Driver
+#    username: crmadmin
+#    password: Xkdlrj@2024!
+    url: jdbc:mariadb://localhost:3307/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
     driver-class-name: org.mariadb.jdbc.Driver
-    username: crmadmin
-    password: Xkdlrj@2024!
+    username: root
+    password: 1111
     hikari:
       maximum-pool-size: 5
+
+  servlet:
+    multipart:
+      max-file-size: 10MB #파일 하나의 최대 크기
+      max-request-size: 10MB #한번에 최대 업로드 가능용량
 
   profiles:
     active: local
 
+  mail:
+    # host: smtp.sirteam.net  # SMTP 서버
+    host:  smtp.naver.com  # SMTP 서버
+    port: 465  # 포트
+    username: dkstkdwo93@naver.com  # 발송자 이메일
+    password: LXQVXWQXU631 # 발송자 이메일 비밀번호
+    properties:
+      mail.smtp.auth: true  # SMTP 인증
+      mail.smtp.starttls.enable: false  # STARTTLS 사용
+      mail.smtp.ssl.enable: true # SSL활성화
+
 # mybatis path setting
 mybatis:
   mapper-locations: classpath:/mapper/sqls/**/*.xml # mapper XML 파일 경로
-  type-aliases-package: com.example.project.model # 도메인 모델 클래스가 있는 패키지 경로
+  type-aliases-package: com.tiger.project.model # 도메인 모델 클래스가 있는 패키지 경로
   configuration:
     map-underscore-to-camel-case: true  # underscore_to_camel_case 설정
-
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # MyBatis SQL 로그 활성화
 
 aes128:
   secret:
@@ -37,77 +60,12 @@ aes:
   secret:
     key: 330ed346c97712232ba447f49b8846eb
 
-
-#  config:
-#    activate:
-#      on-profile: "local"
-#    log:
-#      file-path: C:\crm\logs\server.log
-
-#logging:
-#  level:
-#    #    root: warn
-#    org.hibernate.SQL: debug
-#    org.hibernate.type: trace
-
 # File
-#file:
-#  upload:
-#    path: /home/tigris/legalsystem/fileupload
-#  url: http://211.47.7.48:8080/file
-#  size: 100
-
+file:
+  dir: /home/crmdevuser/files
+  # dir: C:\TigerCompany\crm
 
 # Cookie
 cookie:
   domain: localhost
   name: _crmSystem
-
-# Email
-#mail:
-#  link:
-#    prev: http://211.47.7.48:8080/link/
-#  subject:
-#    waitingForApproval: "[법무시스템] 신규 게시물 알림"
-#    requestForReview: "[법무시스템] 검토의뢰 알림"
-#    underReview: "[법무시스템] 검토중 알림"
-#    requestForCorrection: "[법무시스템] 수정요구 알림"
-#    reject: "[법무시스템] 반려 알림"
-#    reviewCompleted: "[법무시스템] 검토완료 알림"
-#    reply: "[법무시스템] 댓글 알림"
-#  content: |
-#    법무시스템 메일 알림입니다. 아래의 [법무시스템 바로가기]를 클릭해주세요.<br/><br/><a href='{mailLink}'>[법무시스템 바로가기]</a>
-#
-#  activation: true
-#  debug: true
-#  transport:
-#    protocol: smtp
-#  smtp:
-#    encoding: EUC-KR
-#    host: smtp.gmail.com
-#    port: 465
-#    starttls:
-#      enable: true
-#    socketFactory:
-#      port: 465
-#      class: javax.net.ssl.SSLSocketFactory
-#      fallback: false
-#    auth: true
-#    auth:
-#      default:
-#        account:
-#          name: TIGRIS
-#          email: tigrison.com@gmail.com
-#          id: tigrison.com@gmail.com
-#          pwd: trnrnzckfwisloke
-
-# server
-#server:
-#  tomcat:
-#    basedir: /home/tigris/legalsystem/basedir
-
-# SSL
-#server:
-#  ssl:
-#    key-store: classpath:key.jks
-#    key-store-password: smf15666500
