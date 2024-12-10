@@ -49,7 +49,7 @@ public class TicketServiceImpl implements TicketService {
         int ticketId = ticketDto.getTicketId();
         // 알림 발송
         if(resultCount > 0){
-            // jenkins test
+            // jenkins tes
             alertService.sendAlert(ticketDto.getStatusCd(), ticketId, ticketDto.getContent(), ticketDto.getCreateId(), ticketDto.getManagerId());
         }
 
