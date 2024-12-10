@@ -44,14 +44,14 @@
                             <div class="content-header">
                                 <h2 class="text-body1">
                                     <div class="flex flex-align_center gap--8">
-                                        <b>요청 등록 상세</b>
+                                        <b>요청 정보 상세</b>
                                     </div>
                                 </h2>
                             </div>
                         </div>
                         <!-- //헤더 영역 -->
                         <!-- form 영역 -->
-                        <form action="/ticketCreate" method="post" enctype="multipart/form-data"
+                        <form action="/ticketModify" method="post" enctype="multipart/form-data"
                               th:object="${ticketinfo}">
                             <div>
                                 <!--사용자 입력 영역-->
@@ -151,7 +151,7 @@
                                     <tr>
                                         <th>희망완료일</th>
                                         <td>
-                                            <span id="expectedCompleteDt" th:text="*{expectedCompleteDt}"></span>
+                                            <span id="expectedCompleteDt" name="expectedCompleteDt" th:text="*{expectedCompleteDt}"></span>
                                         </td>
                                         <th>진행상태</th>
                                         <td>
@@ -252,7 +252,8 @@
                                 <!--//댓글 영역-->
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
-                                    <button type="submit" class="btn btn--m  primary-btn">글수정</button>
+                                    <button type="submit" class="btn btn--m  primary-btn">수정</button>
+                                    <button type="button" class="btn btn--m danger-btn" onclick="deleteTicket()">삭제</button>
                                     <button type="button" class="btn btn--m  secondary-btn"
                                             onclick="location.href='/ticketList';">목록으로
                                     </button>
@@ -328,7 +329,7 @@
         })
         .catch(error => {
             console.error('Error updating status:', error);
-            alert('상태 업데이트 중 오류가 발생했습니다: ' + error.message);
+            showMessage('error', '실패', '상태 업데이트 중 오류가 발생했습니다:');
         });
     }
 
@@ -358,6 +359,18 @@
                 alert("댓글 등록 중 오류가 발생했습니다.");
             }
         });
+    }
+
+    //수정
+    function goModify(){
+        var id = $("#ticketId").val();
+        window.location.href = '/ticketCreate/'+id;
+    }
+
+    //삭제
+    function deleteTicket(){
+       // var id = $("#ticketId").val();
+       // window.location.href = '/ticketCreate/'+id;
     }
 
 <!--    function changeStatus(newStatus) {-->

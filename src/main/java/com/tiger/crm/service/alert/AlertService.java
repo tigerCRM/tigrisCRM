@@ -8,9 +8,6 @@ import java.util.List;
 
 public interface AlertService {
 
-    // 알림 생성
-    void createAlert(AlertDto alertDto);
-
     // 알림 목록 조회
     List<AlertDto> getAlertList(PagingRequest pagingRequest);
 
@@ -22,4 +19,7 @@ public interface AlertService {
 
     // 알림 삭제 처리
     void deleteAlertStatus(String alertId);
+
+    // 알림 발송
+    void sendAlert(String alertType, int objectId, String content, String senderId, String receiverId);
 }

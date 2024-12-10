@@ -20,6 +20,9 @@ public interface TicketMapper {
     //티켓등록
     int insertTicketInfo(TicketDto ticketDto);
 
+    //티켓수정
+    int updateTicketInfo(TicketDto ticketDto);
+
     //고객사 담당자(PM)조회
     Map<String, Object> getManagerInfo(String companyId);
 

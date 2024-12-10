@@ -22,5 +22,6 @@ public interface AlertMapper {
     // 알림 읽음 처리
     void updateAlertReadStatus(String alertId);
 
+    // 알림 삭제 처리
     void deleteAlertStatus(String alertId);
 }

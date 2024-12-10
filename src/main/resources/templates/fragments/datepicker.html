@@ -14,7 +14,7 @@
 <!-- 날짜 하나 (fragment 호출할때 아래와 같이 작성하면 하나만 바인딩됨)-->
 <!--<div th:include="fragments/datepicker :: datepickersingle('Date')"  ></div>-->
 <div th:fragment="datepickersingle(DateId)" >
-    <input type="text" class="input--s input01 datepicker-input" placeholder="" th:id="${DateId}" >
+    <input type="text" class="input--s input01 datepicker-input" placeholder="" th:id="${DateId}" th:name="${DateId}" th:field="*{expectedCompleteDt}">
     <button type="button" class="btn just-icon btn--24 calendar-btn">
         <svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use></svg>
     </button>
