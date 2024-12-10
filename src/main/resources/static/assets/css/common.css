@@ -2436,7 +2436,11 @@ label.checkbox02 input[type="checkbox"]:disabled+span {
     overflow-y: auto;
 }
 .right-wrap .contact__user-list {
-    max-height: 14.8rem;
+    /*max-height: 14.8rem;*/
+    height: 100%;
+}
+.left-wrap .contact__user-list {
+    /*max-height: 14.8rem;*/
     height: 100%;
 }
 
@@ -2468,6 +2472,7 @@ label.checkbox02 input[type="checkbox"]:disabled+span {
 }
 .list01 > .list__item.selected {
     background-color: var(--primary-navy-20);
+    font-weight: bold;
 }
 .list01 > .list__item div {
     display: flex;
@@ -3305,6 +3310,26 @@ ul[class*='list-tree--'] {
     width: 850px;
 }
 /*예솔 모달 만들기 추가*/
+.move-button-area {
+    display: flex;
+    flex-direction: column; /* 요소들을 수직으로 배열 */
+    align-items: center; /* 수직 정렬 */
+    justify-content: center; /* 부모 요소 안에서 수직 영역 중 중간에 위치 */
+    margin: 0 10px; /* 양 옆에 약간의 마진 */
+}
+
+/* 내부 버튼 스타일 (선택 사항: 추가적인 스타일링 가능) */
+.move-button-area .btn {
+    margin-bottom: 10px; /* 버튼들 사이의 간격 */
+}
+
+.move-button-area .btn:last-child {
+    margin-bottom: 0; /* 마지막 버튼은 간격 제거 */
+}
+
+.move-button-area-blank{
+    margin: 10px 0;
+}
 /*END 예솔 모달 만들기 추가*/
 
 .upload-name {

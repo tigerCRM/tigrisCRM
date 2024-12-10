@@ -33,7 +33,7 @@
     <div th:replace="~{common/frame_top_menu :: frame_top_menu}" />
 
     <!--팝업시 주변 어둡게-->
-    <div class="layer-wrap dimmed" style="display: block;"></div>
+    <div class="layer-wrap dimmed" style="display: none;"></div>
 
     <!-- 컨텐츠 영역 -->
     <div class="main-area">
@@ -205,48 +205,44 @@
     </div>
     <!-- //컨텐츠 영역 -->
     <!--모달 영역-->
-    <div class="layerpopup-wrap layerpopup--xl layerpopup--center contact-layer" style="display: block;">
+    <div class="layerpopup-wrap layerpopup--xl layerpopup--center contact-layer" style="display: none;">
         <div class="layerpopup__header">
             <h1 class="layerpopup__title">열람 회사 선택</h1>
-            <button class="btn icon-btn close-btn"><svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#close"/></svg></button>
+            <button class="btn icon-btn close-btn" onclick="closeLayerpopup()"><svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#close"/></svg></button>
         </div>
         <div class="layerpopup__content">
-            <div id="left-wrap" class="left-wrap">
-                <div class="contact__user-list">
-                    <ul class="list01 employee-list">
-                        <li class="list__item">
-                            <div class="item__title">
-                                <div class="item__title-text">
-                                    <span><strong>영업팀</strong></span>
-                                    <span class="color-gray600">부서명</span>
-                                    <span class="color-navy500">직장명(조직도명)</span>
+            <div class="contact-wrap">
+                <div id="left-wrap" class="left-wrap">
+                    <div class="contact__user-list">
+                        <ul class="list01 employee-list" id="ulLeft">
+                            <li class="list__item" th:each="option : ${companyOptions}" th:data-id="${option.companyId}">
+                                <div class="item__title">
+                                    <div class="item__title-text">
+                                        <span th:text="${option.companyName}">회사이름</span>
+                                    </div>
                                 </div>
-                            </div>
-                            <button type="button" class="icon icon--20 just-icon"><svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#close"></use></svg></button>
-                        </li>
-                    </ul>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-            <div id="right-wrap" class="right-wrap">
-                <div class="contact__user-list">
-                    <ul class="list01 employee-list">
-                        <li class="list__item">
-                            <div class="item__title">
-                                <div class="item__title-text">
-                                    <span><strong>영업팀</strong></span>
-                                    <span class="color-gray600">부서명</span>
-                                    <span class="color-navy500">직장명(조직도명)</span>
-                                </div>
-                            </div>
-                            <button type="button" class="icon icon--20 just-icon"><svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#close"></use></svg></button>
-                        </li>
-                    </ul>
+                <div class="move-button-area">
+                    <button class="btn btn--s icon-btn mono-outline-btn tab-arrow-btn" onclick="moveCompanyElements('allToRight')">>></button>
+                    <button class="btn btn--s icon-btn mono-outline-btn tab-arrow-btn" onclick="moveCompanyElements('selectedToRight')"><svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#arrow-right"></use></svg></button>
+                    <div class="move-button-area-blank"></div>
+                    <button class="btn btn--s icon-btn mono-outline-btn tab-arrow-btn" onclick="moveCompanyElements('selectedToLeft')"><svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#arrow-left"></use></svg></button>
+                    <button class="btn btn--s icon-btn mono-outline-btn tab-arrow-btn" onclick="moveCompanyElements('allToLeft')"><<</button>
+                </div>
+                <div id="right-wrap" class="right-wrap">
+                    <div class="contact__user-list">
+                        <ul class="list01 employee-list" id="ulRight">
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="layerpopup__footer">
             <div class="flex flex-justify_center gap--8 btn-wrap">
-                <button type="button" class="btn btn--s mono-outline-btn">취소</button>
+                <button type="button" class="btn btn--s mono-outline-btn" onclick="closeLayerpopup()">취소</button>
                 <button type="button" class="btn btn--s primary-btn">선택</button>
             </div>
         </div>
@@ -395,18 +391,74 @@
 
     //7. 지정고객사 열람 radio button
     document.querySelectorAll('input[name="viewAllYn"]').forEach(radio => {
-        radio.addEventListener('change', function() {
-            if (this.value === 'n' && this.checked) {
+        radio.addEventListener('click', function() {
+            if (this.value === 'n' && this.checked) { //지정고객사열람일 경우
 
-                console.log("지정열람");
-                document.getElementById('modal').style.display = 'flex'; // 모달 보이기
+                const layerpopup = document.querySelector('.layerpopup-wrap'); //모달
+                const dimmedLayer = document.querySelector('.layer-wrap.dimmed'); //어두운 영역
+                if (layerpopup) {
+                    layerpopup.style.display = 'block';
+                }
+                if (dimmedLayer) {
+                    dimmedLayer.style.display = 'block';
+                }
 
-            }else if (this.value === 'y' && this.checked) {
-                console.log("모두열람");
+            }else if (this.value === 'y' && this.checked) { //모두열람일 경우
+
             }
         });
     });
 
+    //8. 팝업창 닫기
+    function closeLayerpopup(){
+        const layerpopup = document.querySelector('.layerpopup-wrap'); //모달
+        const dimmedLayer = document.querySelector('.layer-wrap.dimmed'); //어두운 영역
+        if (layerpopup) {
+            layerpopup.style.display = 'none';
+        }
+        if (dimmedLayer) {
+            dimmedLayer.style.display = 'none';
+        }
+    }
+
+    //9. popuplayer 에서 list 선택 시에 색깔 입힘
+    document.querySelectorAll('.list01 > .list__item').forEach(item => {
+        item.addEventListener('click', function () {
+            if (this.classList.contains('selected')) {
+                this.classList.remove('selected');
+            } else {
+                // selected가 없으면 추가
+                this.classList.add('selected');
+            }
+        });
+    });
+
+    //10. popuplayer 고객사 이동 버튼
+    function moveCompanyElements(direction){
+        const ulLeft = document.getElementById('ulLeft');
+        const ulRight = document.getElementById('ulRight');
+
+        if(direction == 'allToLeft'){
+            while (ulRight.firstChild) {
+                ulLeft.appendChild(ulRight.firstChild);
+            }
+        }else if(direction == 'selectedToLeft'){
+            console.log('dddd');
+            var selectedItemsRight = ulRight.querySelectorAll('.list__item.selected');
+            selectedItemsRight.forEach(item => {
+                ulLeft.appendChild(item);
+            });
+        }else if(direction == 'allToRight'){
+            while (ulLeft.firstChild) {
+                ulRight.appendChild(ulLeft.firstChild);
+            }
+        }else if(direction == 'selectedToRight'){
+            var selectedItemsLeft = ulLeft.querySelectorAll('.list__item.selected');
+            selectedItemsLeft.forEach(item => {
+                ulRight.appendChild(item);
+            });
+        }
+    }
 
 </script>
 </body>
