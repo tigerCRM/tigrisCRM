@@ -12,27 +12,33 @@ document.addEventListener("DOMContentLoaded", function () {
     event on : 첨부파일 영역의 "파일추가" 버튼 눌렀을 때
     result : #attachFilesTemp 열림
     */
-    document.querySelector('#uploadButton').addEventListener('click', () => {
-        document.getElementById('attachFilesTemp').click();
-    });
+    if(document.querySelector('#uploadButton')){
+        document.querySelector('#uploadButton').addEventListener('click', () => {
+            document.getElementById('attachFilesTemp').click();
+        });
+    }
+
     /*
     event on : "파일추가" 가 되었을 때
     result : selectedFiles(전송할 파일 배열) 에 파일을 추가, 목록업데이트
     */
-    document.getElementById('attachFilesTemp').addEventListener('change', () => {
-        const fileInput = document.getElementById('attachFilesTemp');
-        console.log("파일 선택 완료");
-        console.log(fileInput.files);
-        const files = Array.from(fileInput.files); // 새로운 파일 배열
-        files.forEach(file => {
-          // 동일한 파일명이 있으면 추가하지 않음
-          if (!selectedFiles.some(f => f.name === file.name)) {
-              selectedFiles.push(file);
-          }
+    if(document.getElementById('attachFilesTemp')){
+        document.getElementById('attachFilesTemp').addEventListener('change', () => {
+            const fileInput = document.getElementById('attachFilesTemp');
+            console.log("파일 선택 완료");
+            console.log(fileInput.files);
+            const files = Array.from(fileInput.files); // 새로운 파일 배열
+            files.forEach(file => {
+              // 동일한 파일명이 있으면 추가하지 않음
+              if (!selectedFiles.some(f => f.name === file.name)) {
+                  selectedFiles.push(file);
+              }
+            });
+            fileInput.value = ''; // 파일 선택창 초기화
+            common.renderFileList(); // 목록 업데이트
         });
-        fileInput.value = ''; // 파일 선택창 초기화
-        common.renderFileList(); // 목록 업데이트
-    });
+    }
+
     /*
     event on : "전체삭제" 눌렀을 때
     result : 파일 입력값 및 html 요소 삭제
@@ -57,23 +63,22 @@ document.addEventListener("DOMContentLoaded", function () {
     event on : 첨부파일 개별 "X" 자 버튼 눌렀을때
     result : 전송할 파일에서 지운 파일 삭제하고 html 요소 삭제
     */
-    document.querySelectorAll('.deleteFileButton').forEach(button => {
-        button.addEventListener('click', function() {
-            var fileName = this.dataset.filename; // data-filename 속성 읽기
-            deleteSavedAttachFiles.push(fileName);
-            if($("#deleteSavedAttachFiles")!=undefined)
-            {
-                $("#deleteSavedAttachFiles").val(deleteSavedAttachFiles)
-            }
-            this.closest('li').remove();
+    if(document.querySelectorAll('.deleteFileButton')){
+        document.querySelectorAll('.deleteFileButton').forEach(button => {
+            button.addEventListener('click', function() {
+                var fileName = this.dataset.filename; // data-filename 속성 읽기
+                deleteSavedAttachFiles.push(fileName);
+                if($("#deleteSavedAttachFiles")!=undefined)
+                {
+                    $("#deleteSavedAttachFiles").val(deleteSavedAttachFiles)
+                }
+                this.closest('li').remove();
 
+            });
         });
-    });
+    }
+
 });
-
-
-
-
 
 
 //2. 함수 저장소  //////////////////////////////////////////////////////////////////////////////////////////////////////////////

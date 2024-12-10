@@ -128,6 +128,7 @@
                                             </div>
                                         </td>
                                     </tr>
+                                    <!--열람대상 회사 이름 추가-->
                                     <tr id="viewCompanyWrapper" style="display:none;">
                                         <td colspan="4" id="viewCompany"></td>
                                     </tr>
@@ -462,7 +463,7 @@
         }
     }
 
-    //11.
+    //11. 팝업에서 회사들을 고름
     function chooseTargetCompanies(){
         var arr = [];
 
@@ -472,20 +473,23 @@
 
         // 각 selected li 요소에 대해 반복
         selectedItems.forEach(item => {
-            // 각 li 요소에서 data-id와 data-value 값을 가져옴
             var obj = {
                 id: item.getAttribute('data-id'), // th:data-id 값을 id로 설정
                 name: item.getAttribute('data-value') // th:data-value 값을 name으로 설정
             };
 
-            // 객체를 arr 배열에 추가
             arr.push(obj);
         });
 
-        // 결과 배열 출력 (옵션)
-        console.log(arr);
-
         chooseTargetArr = arr ;
+
+        var viewCompanyElement = document.getElementById('viewCompany');
+
+        if (viewCompanyElement) {
+            const names = chooseTargetArr.map(obj => obj.name).join(', ');
+            viewCompanyElement.textContent = names;
+            document.getElementById('viewCompanyWrapper').style.removeProperty('display');
+        }
 
         closeLayerpopup();
 
