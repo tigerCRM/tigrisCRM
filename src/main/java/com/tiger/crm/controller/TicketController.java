@@ -169,6 +169,9 @@ public class TicketController {
             if( ticketDto.getMd() == null){
                 ticketDto.setMd(BigDecimal.ZERO);
             }
+            if( ticketDto.getCompleteDt().isEmpty()){
+                ticketDto.setCompleteDt(null);
+            }
             // 티켓 저장
             int ticketId = ticketService.saveTicket(ticketDto);
             if (ticketId == 0) {
@@ -254,6 +257,9 @@ public class TicketController {
             }
             if( ticketDto.getMd() == null){
                 ticketDto.setMd(BigDecimal.ZERO);
+            }
+            if( ticketDto.getCompleteDt().isEmpty()){
+                ticketDto.setCompleteDt(null);
             }
             // 티켓 수정 업데이트
             int ticketId = ticketService.saveTicketModify(ticketDto);
