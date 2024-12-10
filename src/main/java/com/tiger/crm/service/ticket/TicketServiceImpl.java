@@ -48,13 +48,7 @@ public class TicketServiceImpl implements TicketService {
         int ticketId = ticketDto.getTicketId();
         // 알림 발송
         if(resultCount > 0){
-            AlertDto alertDto = new AlertDto();
-            alertDto.setAlertType(ticketDto.getStatusCd()); // 상태코드
-            alertDto.setAlertObjectId(ticketId); // 요청사항 고유번호
-            alertDto.setContent(ticketDto.getContent()); // 내용
-            alertDto.setSenderId(ticketDto.getCreateId()); // 발송인 아이디
-            alertDto.setReceiverId(ticketDto.getManagerId()); // 수령인 아이디
-            alertService.createAlert(alertDto);
+            alertService.sendAlert(ticketDto.getStatusCd(), ticketId, ticketDto.getContent(), ticketDto.getCreateId(), ticketDto.getManagerId());
         }
 
         return ticketId;
@@ -70,13 +64,7 @@ public class TicketServiceImpl implements TicketService {
         int ticketId = ticketDto.getTicketId();
         // 알림 발송
         if(resultCount > 0){
-            AlertDto alertDto = new AlertDto();
-            alertDto.setAlertType(ticketDto.getStatusCd()); // 상태코드
-            alertDto.setAlertObjectId(ticketId); // 요청사항 고유번호
-            alertDto.setContent(ticketDto.getContent()); // 내용
-            alertDto.setSenderId(ticketDto.getCreateId()); // 발송인 아이디
-            alertDto.setReceiverId(ticketDto.getManagerId()); // 수령인 아이디
-            alertService.createAlert(alertDto);
+            alertService.sendAlert(ticketDto.getStatusCd(), ticketId, ticketDto.getContent(), ticketDto.getCreateId(), ticketDto.getManagerId());
         }
 
         return ticketId;

@@ -15,12 +15,6 @@ public class AlertServiceImpl implements AlertService {
     @Autowired
     private AlertMapper alertMapper;
 
-    // 알림 생성
-    @Override
-    public void createAlert(AlertDto alertDto) {
-        alertMapper.createAlert(alertDto);
-    }
-
     // 알림 목록 조회
     @Override
     public List<AlertDto> getAlertList(PagingRequest pagingRequest) {
@@ -44,6 +38,21 @@ public class AlertServiceImpl implements AlertService {
     @Override
     public void deleteAlertStatus(String alertId) {
         alertMapper.deleteAlertStatus(alertId);
+    }
+
+    // 알림 발송
+    @Override
+    public void sendAlert(String alertType, int objectId, String content, String senderId, String receiverId) {
+        // 알림 객체 생성
+        AlertDto alertDto = new AlertDto();
+        alertDto.setAlertType(alertType);          // 상태코드
+        alertDto.setAlertObjectId(objectId);       // 요청사항 고유번호
+        alertDto.setContent(content);              // 내용
+        alertDto.setSenderId(senderId);            // 발송인 아이디
+        alertDto.setReceiverId(receiverId);        // 수령인 아이디
+
+        // 알림 발송 (DB 저장 등)
+        alertMapper.createAlert(alertDto);
     }
 
 }
