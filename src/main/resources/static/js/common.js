@@ -61,6 +61,10 @@ document.addEventListener("DOMContentLoaded", function () {
         button.addEventListener('click', function() {
             var fileName = this.dataset.filename; // data-filename 속성 읽기
             deleteSavedAttachFiles.push(fileName);
+            if($("#deleteSavedAttachFiles")!=undefined)
+            {
+                $("#deleteSavedAttachFiles").val(deleteSavedAttachFiles)
+            }
             this.closest('li').remove();
 
         });
@@ -214,13 +218,18 @@ var common = {
                 title: title,
                 text: text,
                 confirmButtonText: '확인',
-                confirmButtonColor: '#3085d6',
-                 html: `<span style="font-size: 15px; font-weight: bold;">${text}</span>`,  // 메시지 텍스트 스타일
+                confirmButtonColor: '#3085d6'
+
             }).then((result) => {
                 if (result.isConfirmed) {
-                    //확인 버튼을 누른 후 페이지 새로 고침
-                    //화면마다 다르게 해야할지 고민중
-                    location.reload();
+                    // title에 따라 다른 동작 처리
+                    if (title === '성공') {
+                        location.reload();
+                    } else if (title === '삭제') {
+                        window.location.href = '/ticketList';
+                    } else {
+                        location.reload();
+                    }
                 }
             });
     }
@@ -239,4 +248,26 @@ var common = {
 
     function showInfo(title, text) {
         showMessage('info', title, text);
+    }
+
+    //Confirm 창 공통 구현
+    function showConfirm(type, title, text) {
+        Swal.fire({
+            icon: type,  // 'success', 'error', 'warning', 'info', 'question'
+            title: title,
+            text: text,
+
+            showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+            confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+            cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+            confirmButtonText: '승인', // confirm 버튼 텍스트 지정
+            cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+            html: `<span style="font-size: 15px; font-weight: bold;">${text}</span>`,  // 메시지 텍스트 스타일
+        }).then((result) => {
+            if (result.isConfirmed) {
+                afterConfirm();
+            }else if (result.isDismissed) { // 만약 모달창에서 cancel 버튼을 눌렀다면
+                location.reload();
+             }
+        });
     }

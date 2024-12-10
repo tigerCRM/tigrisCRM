@@ -1,6 +1,7 @@
 package com.tiger.crm.service.ticket;
 
 import com.tiger.crm.repository.dto.alert.AlertDto;
+import com.tiger.crm.repository.dto.company.CompanyOptionDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.dto.ticket.CommentDto;
@@ -47,7 +48,7 @@ public class TicketServiceImpl implements TicketService {
         // 고유번호가 TicketDto에 저장됨
         int ticketId = ticketDto.getTicketId();
         // 알림 발송
-        if(resultCount > 0){
+        /*if(resultCount > 0){
             AlertDto alertDto = new AlertDto();
             alertDto.setAlertType(ticketDto.getStatusCd()); // 상태코드
             alertDto.setAlertObjectId(ticketId); // 요청사항 고유번호
@@ -55,7 +56,7 @@ public class TicketServiceImpl implements TicketService {
             alertDto.setSenderId(ticketDto.getCreateId()); // 발송인 아이디
             alertDto.setReceiverId(ticketDto.getManagerId()); // 수령인 아이디
             alertService.createAlert(alertDto);
-        }
+        }*/
 
         return ticketId;
     }
@@ -69,7 +70,7 @@ public class TicketServiceImpl implements TicketService {
         // 고유번호가 TicketDto에 저장됨
         int ticketId = ticketDto.getTicketId();
         // 알림 발송
-        if(resultCount > 0){
+        /*if(resultCount > 0){
             AlertDto alertDto = new AlertDto();
             alertDto.setAlertType(ticketDto.getStatusCd()); // 상태코드
             alertDto.setAlertObjectId(ticketId); // 요청사항 고유번호
@@ -77,7 +78,7 @@ public class TicketServiceImpl implements TicketService {
             alertDto.setSenderId(ticketDto.getCreateId()); // 발송인 아이디
             alertDto.setReceiverId(ticketDto.getManagerId()); // 수령인 아이디
             alertService.createAlert(alertDto);
-        }
+        }*/
 
         return ticketId;
     }
@@ -94,6 +95,11 @@ public class TicketServiceImpl implements TicketService {
         return managerInfo;
     }
 
+    //전체 담당자 정보
+    public List<TicketDto> getAllManagerOption() {
+        return ticketMapper.getAllManager();
+    }
+
     public TicketDto getTicketDetails(int ticketId) {
         return ticketMapper.selectTicketDetails(ticketId);
     }
@@ -102,7 +108,7 @@ public class TicketServiceImpl implements TicketService {
         return ticketMapper.updateTicketStatus(ticketId,newStatus,updateId);
     }
 
-    //첨부파일 저장 후 boardTable 에 첨부파일 아이디 업데이트
+    //첨부파일 저장 후 티켓정보에 첨부파일 아이디 업데이트
     public void setTicketFileId(String fileId,int ticketId) {
         ticketMapper.updateTicketFileId(fileId,ticketId);
     }
@@ -115,4 +121,13 @@ public class TicketServiceImpl implements TicketService {
     public List<CommentDto> getCommentsByTicketId(int ticketId) {
         return ticketMapper.getCommentsByTicketId(ticketId);
     }
+    public void deleteTicket(int ticketId) {
+        ticketMapper.deleteTicket(ticketId);
+    }
+
+    public void deleteTicketAnswer(int ticketId) {
+        ticketMapper.deleteTicketAnswer(ticketId);
+    }
+
+
 }

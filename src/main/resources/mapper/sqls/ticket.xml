@@ -130,6 +130,7 @@
             REQUEST_TYPE_CD = #{requestTypeCd},
             SUPPORT_CD = #{supportCd},
             PRIORITY_YN = #{priorityYn},
+            MANAGER_ID = #{managerId},
             EXPECTED_COMPLETE_DT = #{expectedCompleteDt},
             COMPLETE_DT = #{completeDt},
             MD = #{md},
@@ -173,6 +174,7 @@
     <update id="updateTicketStatus" parameterType="map">
         UPDATE T_TICKET_INFO
         SET STATUS_CD = #{newStatus},
+        MANAGER_ID = #{updateId},
         UPDATE_DT = NOW(),
         UPDATE_ID = #{updateId}
         WHERE TICKET_ID = #{ticketId}
@@ -199,4 +201,23 @@
         where TICKET_ID = #{ticketId} and DELETE_YN = 'N'
     </select>
 
+    <!--전체 담당자 조회-->
+    <select id="getAllManager" resultType="com.tiger.crm.repository.dto.ticket.TicketDto">
+        SELECT USER_ID as MANAGER_ID,
+        USER_NAME as MANAGER_NAME
+        FROM T_USER_INFO as U
+        WHERE (USER_CLASS = 'ADMIN' OR USER_CLASS ='SYSADMIN') AND USE_YN = 'Y' order by USER_NAME
+    </select>
+
+    <update id="deleteTicket" parameterType="map">
+        UPDATE T_TICKET_INFO
+        SET DELETE_YN = 'Y'
+        WHERE TICKET_ID = #{ticketId};
+    </update>
+
+    <update id="deleteTicketAnswer" parameterType="map">
+        UPDATE T_TICKET_ANSWER
+        SET DELETE_YN = 'Y'
+        WHERE TICKET_ID = #{ticketId};
+    </update>
 </mapper>

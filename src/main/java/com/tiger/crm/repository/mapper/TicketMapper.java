@@ -1,5 +1,6 @@
 package com.tiger.crm.repository.mapper;
 
+import com.tiger.crm.repository.dto.company.CompanyOptionDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 
 import com.tiger.crm.repository.dto.ticket.CommentDto;
@@ -23,8 +24,11 @@ public interface TicketMapper {
     //티켓수정
     int updateTicketInfo(TicketDto ticketDto);
 
-    //고객사 담당자(PM)조회
+    //고객사 담당자조회
     Map<String, Object> getManagerInfo(String companyId);
+
+    //전체 고객사 담당자조회
+    List<TicketDto> getAllManager();
 
     //티켓 상세 정보 조회
     TicketDto selectTicketDetails(int ticketId);
@@ -39,4 +43,8 @@ public interface TicketMapper {
     void insertTicketComment(int ticketId, String comment, String createId, String statusCd);
 
     List<CommentDto> getCommentsByTicketId(int ticketId);
+
+    void deleteTicket(int ticketId);
+
+    void deleteTicketAnswer(int ticketId);
 }

@@ -1,5 +1,7 @@
 package com.tiger.crm.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiger.crm.common.exception.CustomException;
 import com.tiger.crm.common.file.FileStoreUtils;
 import com.tiger.crm.repository.dto.company.CompanyOptionDto;
@@ -20,6 +22,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -67,7 +70,7 @@ public class TicketController {
             model.addAttribute("ticketList", pageResponse);
             return "ticketList";
         } catch (Exception e) {
-            throw new CustomException("데이터를 불러오는 중 오류가 발생했습니다.", e);
+            throw new CustomException("ticketList : 데이터를 불러오는 중 오류가 발생했습니다.", e);
         }
     }
 
@@ -85,7 +88,7 @@ public class TicketController {
             // 부분 뷰 렌더링 (리스트 부분만 갱신)
             return "ticketList :: ticketListFragment";
         } catch (Exception e) {
-            throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
+            throw new CustomException("ticketList : 예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
         }
     }
 
@@ -104,7 +107,7 @@ public class TicketController {
             // 공통 Excel 다운로드 서비스 호출
             commonService.downloadExcel(dataList, response, "ticketList");
         } catch (Exception e) {
-            throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
+            throw new CustomException("exceldownload : 예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
         }
     }
 
@@ -140,6 +143,9 @@ public class TicketController {
             ticketCreate.setTicketId(null);
             //model에 데이터 바인딩
             List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
+            List<TicketDto> ManagerOptions = ticketService.getAllManagerOption();
+            model.addAttribute("ManagerOptions", ManagerOptions);
+            model.addAttribute("selectedManagerName", managerName);
             model.addAttribute("companyOptions", companyOptions);
             model.addAttribute("selectedCompanyName", companyName);
             model.addAttribute("userClass", userClass); //작성자 레벨
@@ -151,7 +157,7 @@ public class TicketController {
 
             model.addAttribute("ticketCreate", ticketCreate);
         } catch (Exception e) {
-            throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
+            throw new CustomException("ticketCreate : 예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
         }
         return "ticketCreate";
     }
@@ -169,7 +175,7 @@ public class TicketController {
             if( ticketDto.getMd() == null){
                 ticketDto.setMd(BigDecimal.ZERO);
             }
-            if( ticketDto.getCompleteDt().isEmpty()){
+            if (ticketDto.getCompleteDt() == null || ticketDto.getCompleteDt().isEmpty()) {
                 ticketDto.setCompleteDt(null);
             }
             // 티켓 저장
@@ -186,7 +192,7 @@ public class TicketController {
                 throw new CustomException("첨부파일 저장 중 오류가 발생했습니다.", fileException);
             }
         } catch (Exception e) {
-            throw new CustomException("티켓 저장 중 오류가 발생했습니다.", e);
+            throw new CustomException("ticketCreate : 티켓 저장 중 오류가 발생했습니다.", e);
         }
         return "redirect:ticketList";
     }
@@ -213,6 +219,9 @@ public class TicketController {
             }
             //selectbox 데이터 바인딩
             List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
+            List<TicketDto> ManagerOptions = ticketService.getAllManagerOption();
+            model.addAttribute("ManagerOptions", ManagerOptions);
+            model.addAttribute("selectedManagerName", ticketDetails.getManagerName());
             model.addAttribute("companyOptions", companyOptions);
             model.addAttribute("selectedCompanyName", ticketDetails.getCompanyName());
             model.addAttribute("userClass", ticketDetails.getClass()); //작성자 레벨
@@ -231,7 +240,7 @@ public class TicketController {
             model.addAttribute("mode", "modify");
             model.addAttribute("ticketCreate", ticketDetails);
         } catch (Exception e) {
-            throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
+            throw new CustomException("ticketModify : 예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
         }
 
         return "ticketCreate"; // ticketCreate.html로 이동
@@ -242,7 +251,8 @@ public class TicketController {
      * 설명 : 티켓 수정 후 저장
      * */
     @PostMapping("/ticketModifySave")
-    public String ticketModifySave(@ModelAttribute TicketDto ticketDto, HttpServletRequest request, HttpServletResponse response, Model model) {
+    public String ticketModifySave(@ModelAttribute TicketDto ticketDto, @RequestParam String deleteSavedAttachFiles, HttpServletRequest request, HttpServletResponse response, Model model) {
+        int ticketId = 0 ;
         try {
             UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
             String companyId = String.valueOf(loginUser.getCompanyId());
@@ -262,13 +272,26 @@ public class TicketController {
                 ticketDto.setCompleteDt(null);
             }
             // 티켓 수정 업데이트
-            int ticketId = ticketService.saveTicketModify(ticketDto);
+            ticketId = ticketService.saveTicketModify(ticketDto);
 
             if (ticketId == 0) {
                 throw new CustomException("티켓 수정에 실패했습니다.");
             }
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<String> deleteFilesList = null;
             // 첨부파일 처리
             try {
+                //이전 첨부파일 중 삭제 된 파일들 삭제 작업
+               if(!deleteSavedAttachFiles.isEmpty()){
+                   String[] files = deleteSavedAttachFiles.split(",");
+                    for (String fileName : files) {
+                        fileService.deleteFileByFileName(fileName);
+                    }
+                }
+
+                //신규로 추가된 파일이 있으면 첨부 작업
+                LOGGER.info("새로 들어온 파일의 크기 : " + ticketDto.getAttachFiles().size());
+
                 List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(ticketDto.getAttachFiles());
                 String fileId = fileService.insertFile(uploadFiles, ticketId, "티켓관리");
                 ticketService.setTicketFileId(fileId, ticketId);
@@ -276,10 +299,10 @@ public class TicketController {
                 throw new CustomException("첨부파일 저장 중 오류가 발생했습니다.", fileException);
             }
         } catch (Exception e) {
-            throw new CustomException("티켓 수정 중 오류가 발생했습니다.", e);
+            throw new CustomException("ticketModifySave : 티켓 수정 중 오류가 발생했습니다.", e);
         }
-        return "ticketCreate"; // ticketCreate.html로 이동
-        //return "redirect:ticketList";
+        return "redirect:/ticketView?id=" + ticketId;
+
     }
 
     /*
@@ -313,11 +336,11 @@ public class TicketController {
             model.addAttribute("ticketinfo", ticketDetails);
             return "ticketView";
         } catch (Exception e) {
-            throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
+            throw new CustomException("ticketView : 예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
         }
     }
 
-    //첨부파일 업로드후 파일ID저장
+    //진행 상태 수정
     @PutMapping("/changeStatus")
     public ResponseEntity<Map<String, String>> updateStepStatus(HttpServletRequest request, @RequestBody Map<String, String> RequestBody) {
         try {
@@ -331,14 +354,38 @@ public class TicketController {
             } else {
                 System.out.println("User not found");
             }
-            // 서비스 호출
+            //진행상태변경
             ticketService.changeStatus(id, newStatus, updateId);
+            //OPEN:등록,RECEIPT:접수,PROGRESS:진행,REVIEW:검토,CLOSED:완료
+            String comment = "";
+            switch (newStatus) {
+                case "OPEN":
+                    comment = "티켓 진행상태를 [진행]으로 변경하였습니다.";
+                    break;
+                case "RECEIPT":
+                    comment = "티켓 진행상태를 [접수]로 변경하였습니다.";
+                    break;
+                case "PROGRESS":
+                    comment = "티켓 진행상태를 [진행]으로 변경하였습니다.";
+                    break;
+                case "REVIEW":
+                    comment = "티켓 진행상태를 [검토]로 변경하였습니다.";
+                    break;
+                case "CLOSED":
+                    comment = "티켓 진행상태를 [완료]로 변경하였습니다.";
+                    break;
+                default:
+                    comment = "알 수 없는 상태입니다.";
+                    break;
+            }
+
+            ticketService.addComment(id, comment, updateId, newStatus);
             // JSON 응답
             Map<String, String> response = new HashMap<>();
             response.put("message", "Step status updated successfully");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
+            throw new CustomException("changeStatus : 예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
         }
     }
 
@@ -354,7 +401,7 @@ public class TicketController {
 
             return ResponseEntity.ok("댓글이 저장되었습니다.");
         } catch (Exception e) {
-            throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
+            throw new CustomException("comments : 예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
         }
     }
 
@@ -370,7 +417,24 @@ public class TicketController {
 
             return ResponseEntity.ok("댓글이 저장되었습니다.");
         } catch (Exception e) {
-            throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
+            throw new CustomException("comments : 예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
         }
+    }
+
+    /*
+     * 티켓 정보, 댓글,첨부 삭제처리(deleteYn = Y)
+     * */
+    @DeleteMapping("/deleteTicket")
+    public ResponseEntity<?> deleteTicket(@RequestBody Map<String, Object> data){
+        int Id = Integer.parseInt((String) data.get("Id"));
+        try{
+            ticketService.deleteTicket(Id);             //티켓정보
+            ticketService.deleteTicketAnswer(Id);       //댓글정보
+            fileService.deleteFiles("ticket",Id);  //첨부파일들
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+        }
+
+        return ResponseEntity.ok("삭제되었습니다.");
     }
 }

@@ -1,5 +1,6 @@
 package com.tiger.crm.service.ticket;
 
+import com.tiger.crm.repository.dto.company.CompanyOptionDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.dto.ticket.CommentDto;
@@ -29,6 +30,13 @@ public interface TicketService {
     void addComment(int ticketId,String comment,String createId,String statusCd);
 
     List<CommentDto> getCommentsByTicketId(int ticketId);
+
+    List<TicketDto> getAllManagerOption();
+
+    void deleteTicket(int ticketId);
+
+    void deleteTicketAnswer(int ticketId);
+
 }
 
 

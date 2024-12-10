@@ -22,6 +22,7 @@
     <script src="/js/datepicker.js"></script>
     <!--기타 전역에서 쓸 공통javascript 설정. commit-->
     <script src="/js/common.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -47,11 +48,13 @@
                             </div>
                         </div>
                         <!-- //헤더 영역 -->
-                        <input type="hidden" id="mode" th:field="*{mode}">
+                        <input type="hidden" id="mode" th:field="*{mode}" th:value="${#fields.hasErrors('mode') ? '' : mode ?: ''}">
+
                         <!-- form 영역 -->
                         <form id= "SubmitArea" th:action="@{${mode == 'write' ? '/ticketCreate' : '/ticketModifySave'}}" method="post" enctype="multipart/form-data"
                               th:object="${ticketCreate}">
                             <input type="hidden" id="ticketId" th:field="*{ticketId}">
+                            <input type="hidden" name="deleteSavedAttachFiles" id="deleteSavedAttachFiles">
                             <div>
                                 <!--사용자 입력 영역-->
                                 <table class="table table03 table--h table--xs">
@@ -92,9 +95,19 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>담당자(PM)</th>
+                                        <th>담당자</th>
                                         <td>
-                                            <input type="text" id="managerName" th:field="*{managerName}" readonly>
+                                            <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
+                                                <select class="dropdown__selected" onchange="updateManagerName(this)"  th:disabled="${userClass == 'USER'}">
+                                                    <option th:each="op : ${ManagerOptions}"
+                                                            th:value="${op.managerId}"
+                                                            th:data-name="${op.managerName}"
+                                                            th:text="${op.managerName}"
+                                                            th:selected="${op.managerName == selectedManagerName}">
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <input type="hidden" id="managerName" th:field="*{managerName}">
                                             <input type="hidden" id="managerId" th:field="*{managerId}">
                                         </td>
                                         <th>중요도</th>
@@ -210,7 +223,6 @@
                                                     <ul id="addFileAttach" class="list01">
                                                     </ul>
                                                     <!--//추가하는 첨부파일-->
-
                                                 </div>
                                             </div>
                                         </td>
@@ -221,7 +233,7 @@
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
                                     <button type="submit" class="btn btn--m primary-btn" th:if="${mode == 'write'}">등록</button>
-                                    <button type="submit" class="btn btn--m primary-btn" th:if="${mode == 'modify'}">저장</button>
+                                    <button class="btn btn--m primary-btn" th:if="${mode == 'modify'}" onclick="modifiedTicket()">저장</button>
                                     <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'modify'}" onclick="deleteTicket()">삭제</button>
                                     <button type="button" class="btn btn--m  secondary-btn"
                                             onclick="location.href='/ticketList';">목록으로
@@ -248,7 +260,7 @@
     //1. editor load 및 초기화
     var mode = document.getElementById('mode').value;
     var editor = common.loadOrInitializeEditor(editor , mode, contentValue);
-
+    //document.querySelector('input[name="deleteSavedAttachFiles"]').value = deleteSavedAttachFiles;
     //2. form submit 시 toast editor 영역 안의 값을 content 안에 넣음
     document.querySelector('#SubmitArea').addEventListener('submit', function (e) {
          const content = editor.getHTML(); // 에디터 안의 html 콘텐츠를 가져옴
@@ -267,16 +279,45 @@
         document.getElementById("companyName").value = companyName;
     }
 
-    //수정 저장
-    function modifiedTicket(){
-       // var id = $("#ticketId").val();
-       // window.location.href = '/ticketCreate/'+id;
+    function updateManagerName(selectElement) {
+        const selectedOption = selectElement.options[selectElement.selectedIndex];
+        const companyName = selectedOption.getAttribute("data-name");
+        const companyId = selectedOption.getAttribute("value");
+
+        // hidden 필드에 선택된 회사명 설정
+        document.getElementById("managerId").value = companyId;
+        document.getElementById("managerName").value = companyName;
     }
 
     //삭제
     function deleteTicket(){
-       // var id = $("#ticketId").val();
-       // window.location.href = '/ticketCreate/'+id;
+        if (showConfirm("question","삭제하시겠습니까?","")) {}
+    }
+
+    //확인창에서 호출하는 함수
+    function afterConfirm(){
+        var id = $("#ticketId").val();
+        var url = `/deleteTicket`;
+        fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ Id: id }),
+        })
+        .then(response => {
+            if (response.ok) {
+                showMessage('success', '삭제', '해당 티켓 정보가 삭제되었습니다.');
+            } else {
+                response.text().then(message => {
+                    showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showMessage('error', '실패', '오류가 발생해 서버로 요청을 전송하지 못했습니다');
+        });
     }
 
 </script>
