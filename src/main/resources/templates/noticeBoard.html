@@ -128,6 +128,9 @@
                                             </div>
                                         </td>
                                     </tr>
+                                    <tr id="viewCompanyWrapper" style="display:none;">
+                                        <td colspan="4" id="viewCompany"></td>
+                                    </tr>
                                     <tr>
                                         <td colspan="4">
                                             <div class="editor-wrap">
@@ -174,7 +177,6 @@
                                                     <ul id="addFileAttach" class="list01">
                                                     </ul>
                                                     <!--//추가하는 첨부파일-->
-
                                                 </div>
                                             </div>
                                         </td>
@@ -215,7 +217,7 @@
                 <div id="left-wrap" class="left-wrap">
                     <div class="contact__user-list">
                         <ul class="list01 employee-list" id="ulLeft">
-                            <li class="list__item" th:each="option : ${companyOptions}" th:data-id="${option.companyId}">
+                            <li class="list__item" th:each="option : ${companyOptions}" th:data-id="${option.companyId}" th:data-value="${option.companyName}">
                                 <div class="item__title">
                                     <div class="item__title-text">
                                         <span th:text="${option.companyName}">회사이름</span>
@@ -243,7 +245,7 @@
         <div class="layerpopup__footer">
             <div class="flex flex-justify_center gap--8 btn-wrap">
                 <button type="button" class="btn btn--s mono-outline-btn" onclick="closeLayerpopup()">취소</button>
-                <button type="button" class="btn btn--s primary-btn">선택</button>
+                <button type="button" class="btn btn--s primary-btn" onclick="chooseTargetCompanies()">선택</button>
             </div>
         </div>
     </div>
@@ -256,6 +258,7 @@
     var fileInput = document.getElementById('attachFilesTemp'); //file input tag
     var selectedFiles = [];
     var deleteSavedAttachFiles = [];
+    var chooseTargetArr = [];
 
     var contentValue = document.getElementById('content').value;
 
@@ -411,8 +414,8 @@
 
     //8. 팝업창 닫기
     function closeLayerpopup(){
-        const layerpopup = document.querySelector('.layerpopup-wrap'); //모달
-        const dimmedLayer = document.querySelector('.layer-wrap.dimmed'); //어두운 영역
+        var layerpopup = document.querySelector('.layerpopup-wrap'); //모달
+        var dimmedLayer = document.querySelector('.layer-wrap.dimmed'); //어두운 영역
         if (layerpopup) {
             layerpopup.style.display = 'none';
         }
@@ -435,15 +438,14 @@
 
     //10. popuplayer 고객사 이동 버튼
     function moveCompanyElements(direction){
-        const ulLeft = document.getElementById('ulLeft');
-        const ulRight = document.getElementById('ulRight');
+        var ulLeft = document.getElementById('ulLeft');
+        var ulRight = document.getElementById('ulRight');
 
         if(direction == 'allToLeft'){
             while (ulRight.firstChild) {
                 ulLeft.appendChild(ulRight.firstChild);
             }
         }else if(direction == 'selectedToLeft'){
-            console.log('dddd');
             var selectedItemsRight = ulRight.querySelectorAll('.list__item.selected');
             selectedItemsRight.forEach(item => {
                 ulLeft.appendChild(item);
@@ -458,6 +460,35 @@
                 ulRight.appendChild(item);
             });
         }
+    }
+
+    //11.
+    function chooseTargetCompanies(){
+        var arr = [];
+
+        // #ulRight에서 selected 클래스를 가진 모든 li 요소를 찾기
+        const ulRight = document.getElementById('ulRight');
+        const selectedItems = ulRight.querySelectorAll('.list__item.selected');
+
+        // 각 selected li 요소에 대해 반복
+        selectedItems.forEach(item => {
+            // 각 li 요소에서 data-id와 data-value 값을 가져옴
+            var obj = {
+                id: item.getAttribute('data-id'), // th:data-id 값을 id로 설정
+                name: item.getAttribute('data-value') // th:data-value 값을 name으로 설정
+            };
+
+            // 객체를 arr 배열에 추가
+            arr.push(obj);
+        });
+
+        // 결과 배열 출력 (옵션)
+        console.log(arr);
+
+        chooseTargetArr = arr ;
+
+        closeLayerpopup();
+
     }
 
 </script>
