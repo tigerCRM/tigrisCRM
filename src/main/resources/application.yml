@@ -62,10 +62,10 @@ aes:
     key: 330ed346c97712232ba447f49b8846eb
 
 
-logging:
-  level:
-    org.mybatis: DEBUG
-    jdbc.sqlonly: DEBUG
+  #logging:
+#  level:
+  #    org.mybatis: DEBUG
+  #   jdbc.sqlonly: DEBUG
 
 #  config:
 #    activate:
