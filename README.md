@@ -44,15 +44,34 @@ tigris-crm 서비스 개발
 
 <br/><br/>
 
-
-5. webHook(jenkins) 쓰려면 ngrok써야함. 
-   ngrok 사용이유 : 개발서버에 아이피 제한을 걸어뒀기에,  우회하는 시스템을 써야지 push시 반응함.
-      > ngrok 실행방법
+> webHook(jenkins) 쓰려면 ngrok써야함. 
+  ngrok 사용이유 : 개발서버에 아이피 제한을 걸어뒀기에,  우회하는 시스템을 써야지 push시 반응함.
+  - ngrok 실행방법
       - ngrok 서버접속 후 로그인: ```https://ngrok.com/```
       - ngrok 설치 후 exe실행
       - 명령어 실행 : ``` ngrok http 192.168.0.240:8080(프로젝트 포트 8081아닌, 젠킨스 8080 포트 등록) ``` 
       - 깃허브 웹훅에 등록 : settings -> webhooks -> ``` https://f4d3-61-74-221-49.ngrok-free.app/github-webhook/ ```
       <br/>
-      
-      > 실행 안될 시
+  - 실행 안될 시
       - 작업관리자 -> 기존 ngrok 프로세스 삭제 후 위 과정 실행
+   
+<br/><br/>
+
+> openssl 관련
+- 버전 : ``` $ openssl version ```
+- 경로 : ``` /usr/local/openssl/bin ```
+- 재발급 :
+  ```
+  1. sudo openssl req -x509 -sha256 -nodes -newkey rsa:2048 -keyout private.key -out public.pem
+  2. openssl pkcs12 -info -in certificate.p12
+  ```
+- 프로젝트 내 인증키 경로 : ``` resources/certificate.p12 ```
+- application.yml
+  ```
+  server:
+  port: 8081
+  ssl:
+    key-store: classpath:certificate.p12
+    key-store-type: PKCS12
+    key-store-password: tiger
+  ```
