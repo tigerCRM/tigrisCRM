@@ -1,5 +1,7 @@
 package com.tiger.crm.repository.dto.board;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.util.StdConverter;
 import lombok.Data;
 
 /*
@@ -14,11 +16,23 @@ public class BoardOpenCompanyDto {
         this.companyId = companyId;
         this.companyName = companyName;
     }
-    
+
     //게시판번호
     private int boardId;
     //회사번호
+    @JsonDeserialize(converter = StringToIntConverter.class)
     private int companyId;
     //회사이름
     private String companyName;
+
+    public static class StringToIntConverter extends StdConverter<String, Integer> {
+        @Override
+        public Integer convert(String value) {
+            try {
+                return Integer.parseInt(value);
+            } catch (NumberFormatException e) {
+                return null;  // 예외처리
+            }
+        }
+    }
 }

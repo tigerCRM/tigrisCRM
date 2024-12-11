@@ -47,16 +47,22 @@ public class NoticeBoardServiceImpl implements NoticeBoardService{
 
     //시스템관리 글 저장
     @Override
-    public int insertNoticeBoard(NoticeBoardDto noticeBoardDto, BoardOpenCompanyDto boardOpenCompanyDto) {
+    public int insertNoticeBoard(NoticeBoardDto noticeBoardDto, List<BoardOpenCompanyDto> boardOpenCompanyList) {
         noticeBoardMapper.insertNoticeBoard(noticeBoardDto);
-        boardOpenCompanyDto.setBoardId(noticeBoardDto.getBoardId());
-        int resultCount = boardOpenCompanyMapper.insertBoardOpenCompany(boardOpenCompanyDto);
+        int boardId = noticeBoardDto.getBoardId();
+        int resultCount = 0;
+        if(boardOpenCompanyList != null){
+            for(BoardOpenCompanyDto boardOpenCompany : boardOpenCompanyList){
+                boardOpenCompany.setBoardId(boardId);
+                resultCount += boardOpenCompanyMapper.insertBoardOpenCompany(boardOpenCompany);
+            }
 
-        if(resultCount != 1){
-            LOGGER.info("insertNoticeBoard ERROR occured!");
-            return 0;
+            if(resultCount == 0){
+                LOGGER.info("insertNoticeBoard ERROR occured!");
+                return 0;
+            }
         }
-        return noticeBoardDto.getBoardId(); // 저장 실패시 0, 저장 성공시 boardId 리턴
+        return boardId; // 저장 실패시 0, 저장 성공시 boardId 리턴
     }
     
     //첨부파일 저장 후 boardTable 에 첨부파일 아이디 업데이트

@@ -125,12 +125,14 @@
                                                     <input type="radio" name="viewAllYn" value="n">
                                                     <span>지정 고객사 열람</span>
                                                 </label>
+                                                <input type="hidden" id="openYn" name="openYn" value="Y">
                                             </div>
                                         </td>
                                     </tr>
                                     <!--열람대상 회사 이름 추가-->
                                     <tr id="viewCompanyWrapper" style="display:none;">
                                         <td colspan="4" id="viewCompany"></td>
+                                        <input type="hidden" name="boardOpenCompanies" id="boardOpenCompanies">
                                     </tr>
                                     <tr>
                                         <td colspan="4">
@@ -274,13 +276,15 @@
         document.querySelector('#content').value = content;
 
         //선택한 회사 옵션 관련 설정
-        //const selectElement = document.querySelector('.dropdown__selected');
-        //const selectedOption = selectElement.options[selectElement.selectedIndex];
-        //const companyNameInput = document.querySelector('#companyName');
-        //companyNameInput.value = selectedOption.textContent.trim();
+        const boardOpenCompanies = document.getElementById('boardOpenCompanies');
+        boardOpenCompanies.value = JSON.stringify(chooseTargetArr);
 
         //첨부파일 설정
         common.attachFileWorks();
+
+        //날짜 disabled 품
+        document.querySelector('.start-date').disabled = false;
+        document.querySelector('.end-date').disabled = false;
 
         //체크박스,라디오버튼 변환
         const topYnCheckbox = document.getElementById('topYnCheckbox');
@@ -398,31 +402,33 @@
         radio.addEventListener('click', function() {
             if (this.value === 'n' && this.checked) { //지정고객사열람일 경우
 
-                const layerpopup = document.querySelector('.layerpopup-wrap'); //모달
-                const dimmedLayer = document.querySelector('.layer-wrap.dimmed'); //어두운 영역
-                if (layerpopup) {
-                    layerpopup.style.display = 'block';
-                }
-                if (dimmedLayer) {
-                    dimmedLayer.style.display = 'block';
-                }
+                document.getElementById('openYn').value = 'N';
+
+                document.querySelector('.layerpopup-wrap').style.display = 'block';
+                document.querySelector('.layer-wrap.dimmed').style.display = 'block';
 
             }else if (this.value === 'y' && this.checked) { //모두열람일 경우
 
+                document.getElementById('openYn').value = 'Y';
+
+                //글씨 보이는 영역 지우기
+                document.getElementById('viewCompanyWrapper').style.display = 'none';
+                //배열 초기화
+                chooseTargetArr = [];
+                //오른쪽에 있는 애들 다 오른쪽으로 옮기기
+                moveCompanyElements('allToLeft');
+                //선택된 회사들 선택풀기
+                document.querySelectorAll('.list__item.selected').forEach(item => {
+                    item.classList.remove('selected');
+                });
             }
         });
     });
 
     //8. 팝업창 닫기
     function closeLayerpopup(){
-        var layerpopup = document.querySelector('.layerpopup-wrap'); //모달
-        var dimmedLayer = document.querySelector('.layer-wrap.dimmed'); //어두운 영역
-        if (layerpopup) {
-            layerpopup.style.display = 'none';
-        }
-        if (dimmedLayer) {
-            dimmedLayer.style.display = 'none';
-        }
+        document.querySelector('.layerpopup-wrap').style.display = 'none';
+        document.querySelector('.layer-wrap.dimmed').style.display = 'none';
     }
 
     //9. popuplayer 에서 list 선택 시에 색깔 입힘
@@ -442,20 +448,20 @@
         var ulLeft = document.getElementById('ulLeft');
         var ulRight = document.getElementById('ulRight');
 
-        if(direction == 'allToLeft'){
+        if(direction == 'allToLeft'){ //모두 왼쪽
             while (ulRight.firstChild) {
                 ulLeft.appendChild(ulRight.firstChild);
             }
-        }else if(direction == 'selectedToLeft'){
+        }else if(direction == 'selectedToLeft'){ //선택항목만 왼쪽
             var selectedItemsRight = ulRight.querySelectorAll('.list__item.selected');
             selectedItemsRight.forEach(item => {
                 ulLeft.appendChild(item);
             });
-        }else if(direction == 'allToRight'){
+        }else if(direction == 'allToRight'){ //모두 오른쪽
             while (ulLeft.firstChild) {
                 ulRight.appendChild(ulLeft.firstChild);
             }
-        }else if(direction == 'selectedToRight'){
+        }else if(direction == 'selectedToRight'){ //선택항목만 오른쪽
             var selectedItemsLeft = ulLeft.querySelectorAll('.list__item.selected');
             selectedItemsLeft.forEach(item => {
                 ulRight.appendChild(item);
@@ -469,13 +475,14 @@
 
         // #ulRight에서 selected 클래스를 가진 모든 li 요소를 찾기
         const ulRight = document.getElementById('ulRight');
-        const selectedItems = ulRight.querySelectorAll('.list__item.selected');
+        //const selectedItems = ulRight.querySelectorAll('.list__item.selected');
+        const selectedItems = ulRight.querySelectorAll('.list__item');
 
         // 각 selected li 요소에 대해 반복
         selectedItems.forEach(item => {
             var obj = {
-                id: item.getAttribute('data-id'), // th:data-id 값을 id로 설정
-                name: item.getAttribute('data-value') // th:data-value 값을 name으로 설정
+                companyId: item.getAttribute('data-id'), // th:data-id 값을 id로 설정
+                companyName: item.getAttribute('data-value') // th:data-value 값을 name으로 설정
             };
 
             arr.push(obj);
@@ -483,10 +490,11 @@
 
         chooseTargetArr = arr ;
 
-        var viewCompanyElement = document.getElementById('viewCompany');
+        var viewCompanyElement = document.getElementById('viewCompany'); //열람대상 회사 이름 나열하는 구역
 
+        //회사 이름 쓰기
         if (viewCompanyElement) {
-            const names = chooseTargetArr.map(obj => obj.name).join(', ');
+            const names = chooseTargetArr.map(obj => `"${obj.companyName}"`).join(', ');
             viewCompanyElement.textContent = names;
             document.getElementById('viewCompanyWrapper').style.removeProperty('display');
         }

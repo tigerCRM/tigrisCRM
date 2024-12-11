@@ -5,6 +5,7 @@ import com.tiger.crm.repository.dto.board.NoticeBoardDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 
+import java.util.List;
 import java.util.Map;
 
 /*
@@ -22,7 +23,7 @@ public interface NoticeBoardService {
     int getNoticeBoardListCount(PagingRequest pagingRequest);
 
     //시스템관리 글 저장
-    int insertNoticeBoard(NoticeBoardDto noticeBoardDto, BoardOpenCompanyDto boardOpenCompanyDto);
+    int insertNoticeBoard(NoticeBoardDto noticeBoardDto, List<BoardOpenCompanyDto> boardOpenCompanyList);
 
     //첨부파일 저장 후 boardTable 에 첨부파일 아이디 업데이트
     void setNoticeBoardFileId(String fileId,int boardId);

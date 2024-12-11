@@ -7,15 +7,11 @@
         SELECT
             B.BOARD_ID,
             B.CATEGORY_CD,
-            OC.COMPANY_ID,
-            OC.COMPANY_NAME,
             B.TITLE,
             B.CREATE_ID,
             U.USER_NAME,
             B.CREATE_DT
         FROM T_BOARD B
-        LEFT JOIN T_BOARD_OPEN_COMPANY OC
-            ON B.BOARD_ID = OC.BOARD_ID
         LEFT JOIN T_USER_INFO U
             ON B.CREATE_ID = U.USER_ID
         <where>
@@ -24,9 +20,6 @@
             <!-- 검색 유형 (searchType이 제목, 내용, 담당자, 등 선택된 경우) -->
             <if test="searchType != null and searchType != ''">
                 <choose>
-                    <when test="searchType == 'COMPANY'">
-                        AND OC.COMPANY_NAME LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 회사로 검색 -->
-                    </when>
                     <when test="searchType == 'TITLE'">
                         AND TITLE LIKE CONCAT('%', #{searchKeyword}, '%') <!-- 제목으로 검색 -->
                     </when>
@@ -51,8 +44,6 @@
     <select id="getNoticeBoardListCount" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM T_BOARD B
-        LEFT JOIN T_BOARD_OPEN_COMPANY OC
-            ON B.BOARD_ID = OC.BOARD_ID
         LEFT JOIN T_USER_INFO U
             ON B.CREATE_ID = U.USER_ID
         <where>
@@ -62,9 +53,6 @@
             <!-- 검색 유형 (searchType이 제목, 내용, 담당자, 등 선택된 경우) -->
             <if test="searchType != null and searchType != ''">
                 <choose>
-                    <when test="searchType == 'COMPANY'">
-                        AND OC.COMPANY_NAME LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 회사로 검색 -->
-                    </when>
                     <when test="searchType == 'TITLE'">
                         AND TITLE LIKE CONCAT('%', #{searchKeyword}, '%') <!-- 제목으로 검색 -->
                     </when>
@@ -83,6 +71,11 @@
     <insert id="insertNoticeBoard" parameterType="com.tiger.crm.repository.dto.board.NoticeBoardDto" useGeneratedKeys="true" keyProperty="boardId">
         INSERT INTO T_BOARD (
             CATEGORY_CD,
+            OPEN_YN,
+            TOP_YN,
+            POPUP_YN,
+            POPUP_START_DT,
+            POPUP_END_DT,
             TITLE,
             CONTENT,
             CREATE_ID,
@@ -91,6 +84,11 @@
             FILE_ID
         ) VALUES (
             'NOTICE',
+            #{openYn},
+            #{topYn},
+            #{popupYn},
+            #{popupStartDt},
+            #{popupEndDt},
             #{title},
             #{content},
             #{createId},

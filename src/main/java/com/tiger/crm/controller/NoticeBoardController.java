@@ -1,5 +1,6 @@
 package com.tiger.crm.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiger.crm.common.context.ConfigProperties;
@@ -154,6 +155,7 @@ public class NoticeBoardController {
     @PostMapping("/noticeBoard")
     public String postNoticeBoard(@Validated @ModelAttribute("noticeBoard") NoticeBoardDto noticeBoard,
                                   BindingResult bindingResult,
+                                  @RequestParam("boardOpenCompanies") String boardOpenCompanies,
                                   HttpServletRequest request,
                                   HttpServletResponse response,
                                   Model model){
@@ -161,9 +163,13 @@ public class NoticeBoardController {
         HttpSession session = request.getSession(false);
         UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
 
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        List<BoardOpenCompanyDto> boardOpenCompanyList = null;
+
+
         //최초 인입된 dto 에 대해 validation 수행 후 반환
-        //if (bindingResult.hasErrors()) {
-        if (true) {
+        if (bindingResult.hasErrors()) {
             LOGGER.info("validation error 발생={}",bindingResult);
             List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
             model.addAttribute("mode", "write");//글작성
@@ -173,10 +179,20 @@ public class NoticeBoardController {
 
         //작성자 저장
         noticeBoard.setCreateId(loginUser.getUserId());
-        
-        //정보 저장 로직. Board 와 OpenCompany DB 저장 후 BoardId 리턴받음
-        int savedBoardId = noticeBoardService.insertNoticeBoard(noticeBoard, new BoardOpenCompanyDto(Integer.parseInt(noticeBoard.getCompanyId()),noticeBoard.getCompanyName()));
 
+        //열람대상 회사 저장
+        try {
+            if(!"[]".equals(boardOpenCompanies)){
+                boardOpenCompanyList = objectMapper.readValue(boardOpenCompanies, new TypeReference<>() {});
+            }
+
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        //정보 저장 로직. Board 와 OpenCompany DB 저장 후 BoardId 리턴받음
+        int savedBoardId = noticeBoardService.insertNoticeBoard(noticeBoard, boardOpenCompanyList);
+        
         if(savedBoardId ==0 ){
             LOGGER.info("postNoticeBoard ERROR occured!");
             return null;
