@@ -1,6 +1,14 @@
 # server
 server:
   port: 8081
+  ssl:
+    key-store: classpath:certificate.p12
+    key-store-type: PKCS12
+    key-store-password: tiger
+  # HTTP 리다이렉트 설정
+  http:
+    enabled: false  # HTTP 포트를 사용하지 않도록 설정
+    redirect-to-https: true # http로 접근시 https로 redirect
 
 spring:
   application:
