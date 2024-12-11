@@ -49,7 +49,7 @@ public class TicketServiceImpl implements TicketService {
         int ticketId = ticketDto.getTicketId();
         // 알림 발송
         if(resultCount > 0){
-            alertService.sendAlert(ticketDto.getStatusCd(), ticketId, ticketDto.getContent(), ticketDto.getCreateId(), ticketDto.getManagerId());
+            alertService.sendAlert(ticketDto.getStatusCd(), ticketId, "", ticketDto.getCreateId(), ticketDto.getManagerId());
         }
 
         return ticketId;
@@ -65,7 +65,7 @@ public class TicketServiceImpl implements TicketService {
         int ticketId = ticketDto.getTicketId();
         // 알림 발송
         if(resultCount > 0){
-            alertService.sendAlert(ticketDto.getStatusCd(), ticketId, ticketDto.getContent(), ticketDto.getCreateId(), ticketDto.getManagerId());
+            alertService.sendAlert(ticketDto.getStatusCd(), ticketId, "", ticketDto.getCreateId(), ticketDto.getManagerId());
         }
 
         return ticketId;
