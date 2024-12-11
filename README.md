@@ -60,5 +60,18 @@ tigris-crm 서비스 개발
 > openssl 관련
 - 버전 : ``` $ openssl version ```
 - 경로 : ``` /usr/local/openssl/bin ```
-- 재발급 : ``` sudo openssl req -x509 -sha256 -nodes -newkey rsa:2048 -keyout private.key -out public.pem ```
-
+- 재발급 :
+  ```
+  1. sudo openssl req -x509 -sha256 -nodes -newkey rsa:2048 -keyout private.key -out public.pem
+  2. openssl pkcs12 -info -in certificate.p12
+  ```
+- 프로젝트 내 인증키 경로 : ``` resources/certificate.p12 ```
+- application.yml
+  ```
+  server:
+  port: 8081
+  ssl:
+    key-store: classpath:certificate.p12
+    key-store-type: PKCS12
+    key-store-password: tiger
+  ```
