@@ -36,4 +36,7 @@ public interface NoticeBoardService {
 
     //게시글수정
     void updateNoticeBoard(NoticeBoardDto noticeBoardDto);
+
+    //게시판 번호로 boardOpenCompany 찾아오기
+    List<BoardOpenCompanyDto> getBoardOpenCompanyByBoardId(int boardId);
 }

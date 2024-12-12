@@ -91,4 +91,10 @@ public class NoticeBoardServiceImpl implements NoticeBoardService{
     public void updateNoticeBoard(NoticeBoardDto noticeBoardDto){
         noticeBoardMapper.updateNoticeBoard(noticeBoardDto);
     }
+
+    //게시판 번호로 boardOpenCompany 찾아오기
+    @Override
+    public List<BoardOpenCompanyDto> getBoardOpenCompanyByBoardId(int boardId){
+        return boardOpenCompanyMapper.selectBoardOpenCompanyByBoardId(boardId);
+    }
 }

@@ -89,7 +89,10 @@
                                         <td>
                                             <div class="input-list--h">
                                                 <label class="checkbox02">
-                                                    <input type="checkbox" id="topYnCheckbox">
+                                                    <input type="checkbox"
+                                                           id="topYnCheckbox"
+                                                           th:checked="${noticeBoard.topYn}"
+                                                           th:disabled="${mode == 'read'}">
                                                     <span>상단공지</span>
                                                 </label>
                                                 <input type="hidden" id="topYn" name="topYn" value="Y">
@@ -101,15 +104,15 @@
                                         <td colspan="3">
                                             <div class="element-horizontal-arrangement">
                                                 <label class="checkbox02 ml8">
-                                                    <input type="checkbox" id="popupYnCheckbox">
+                                                    <input type="checkbox" id="popupYnCheckbox" th:checked="${noticeBoard.popupYn}" th:disabled="${mode == 'read'}" >
                                                     <span>팝업등록</span>
                                                 </label>
                                                 <input type="hidden" id="popupYn" name="popupYn">
                                                 <label class="checkbox02 ml8">
-                                                    <input type="checkbox" id="alwaysDisplay">
+                                                    <input type="checkbox" id="alwaysDisplay" th:disabled="${mode == 'read'}">
                                                     <span>항상노출</span>
                                                 </label>
-                                                <div th:include="fragments/datepicker :: datepicker('popupStartDt', 'popupEndDt')"></div>
+                                                <div th:include="fragments/datepicker :: datepickerBoard('popupStartDt', 'popupEndDt')"></div>
                                             </div>
                                         </td>
                                     </tr>
@@ -118,11 +121,11 @@
                                         <td colspan="3">
                                             <div class="input-list--h">
                                                 <label class="radio02">
-                                                    <input type="radio" name="viewAllYn" checked="" value="y">
+                                                    <input type="radio" name="viewAllYn" value="y" th:attr="checked=${noticeBoard.openYn.toString() == 'Y' ? 'true' : 'false'}" onclick="return false;">
                                                     <span>전체열람</span>
                                                 </label>
                                                 <label class="radio02">
-                                                    <input type="radio" name="viewAllYn" value="n">
+                                                    <input type="radio" name="viewAllYn" value="n" th:attr="checked=${noticeBoard.openYn.toString() == 'N' ? 'true' : 'false'}" onclick="return false;">
                                                     <span>지정 고객사 열람</span>
                                                 </label>
                                                 <input type="hidden" id="openYn" name="openYn" value="Y">
@@ -134,6 +137,7 @@
                                         <td colspan="4" id="viewCompany"></td>
                                         <input type="hidden" name="boardOpenCompanies" id="boardOpenCompanies">
                                     </tr>
+                                    <!--//열람대상 회사 이름 추가-->
                                     <tr>
                                         <td colspan="4">
                                             <div class="editor-wrap">
@@ -258,11 +262,10 @@
 <script>
     var boardId = document.querySelector('#boardId').value;
     var mode = document.querySelector('#mode').value;
-    var fileInput = document.getElementById('attachFilesTemp'); //file input tag
+    var fileInput = document.getElementById('attachFilesTemp'); //파일input 태그
     var selectedFiles = [];
     var deleteSavedAttachFiles = [];
     var chooseTargetArr = [];
-
     var contentValue = document.getElementById('content').value;
 
     //1. editor load 및 초기화
@@ -340,8 +343,6 @@
 
         const formData = new FormData(document.getElementById('boardSubmitArea'));
 
-        console.log(formData);
-
         formData.append('deleteSavedAttachFiles', JSON.stringify(deleteSavedAttachFiles));
 
         var url = '/noticeBoard';
@@ -400,28 +401,31 @@
     //7. 지정고객사 열람 radio button
     document.querySelectorAll('input[name="viewAllYn"]').forEach(radio => {
         radio.addEventListener('click', function() {
-            if (this.value === 'n' && this.checked) { //지정고객사열람일 경우
+            if(mode != 'read'){
+                if (this.value === 'n' && this.checked) { //지정고객사열람일 경우
 
-                document.getElementById('openYn').value = 'N';
+                    document.getElementById('openYn').value = 'N';
 
-                document.querySelector('.layerpopup-wrap').style.display = 'block';
-                document.querySelector('.layer-wrap.dimmed').style.display = 'block';
+                    document.querySelector('.layerpopup-wrap').style.display = 'block';
+                    document.querySelector('.layer-wrap.dimmed').style.display = 'block';
 
-            }else if (this.value === 'y' && this.checked) { //모두열람일 경우
+                }else if (this.value === 'y' && this.checked) { //모두열람일 경우
 
-                document.getElementById('openYn').value = 'Y';
+                    document.getElementById('openYn').value = 'Y';
 
-                //글씨 보이는 영역 지우기
-                document.getElementById('viewCompanyWrapper').style.display = 'none';
-                //배열 초기화
-                chooseTargetArr = [];
-                //오른쪽에 있는 애들 다 오른쪽으로 옮기기
-                moveCompanyElements('allToLeft');
-                //선택된 회사들 선택풀기
-                document.querySelectorAll('.list__item.selected').forEach(item => {
-                    item.classList.remove('selected');
-                });
+                    //글씨 보이는 영역 지우기
+                    document.getElementById('viewCompanyWrapper').style.display = 'none';
+                    //배열 초기화
+                    chooseTargetArr = [];
+                    //오른쪽에 있는 애들 다 오른쪽으로 옮기기
+                    moveCompanyElements('allToLeft');
+                    //선택된 회사들 선택풀기
+                    document.querySelectorAll('.list__item.selected').forEach(item => {
+                        item.classList.remove('selected');
+                    });
+                }
             }
+
         });
     });
 
@@ -502,6 +506,7 @@
         closeLayerpopup();
 
     }
+
 
 </script>
 </body>

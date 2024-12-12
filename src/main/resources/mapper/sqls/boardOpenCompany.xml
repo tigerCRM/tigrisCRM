@@ -20,4 +20,13 @@
         WHERE BOARD_ID = #{boardId}
     </delete>
 
+    <select id="selectBoardOpenCompanyByBoardId" resultType="java.util.HashMap">
+        SELECT
+            BOARD_ID,
+            COMPANY_ID,
+            COMPANY_NAME
+        FROM T_BOARD_OPEN_COMPANY
+        WHERE BOARD_ID = #{boardId}
+    </select>
+
 </mapper>

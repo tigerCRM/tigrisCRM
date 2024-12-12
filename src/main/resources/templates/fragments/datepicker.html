@@ -19,3 +19,16 @@
         <svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use></svg>
     </button>
 </div>
+
+<!-- 날짜 두울(공지사항작성용) -->
+<div th:fragment="datepickerBoard(startDateId, endDateId)" >
+    <input type="text" class="input--s input01 datepicker-input start-date" placeholder="시작 일자" th:id="${startDateId}" th:name="${startDateId}" th:value="${noticeBoard.popupStartDt}" th:disabled="${mode == 'read'}">
+    <button type="button" class="btn just-icon btn--24 calendar-btn">
+        <svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use></svg>
+    </button>
+    ~
+    <input type="text" class="input--s input01 datepicker-input end-date" placeholder="종료 일자" th:id="${endDateId}" th:name="${endDateId}" th:value="${noticeBoard.popupEndDt}" th:disabled="${mode == 'read'}">
+    <button type="button" class="btn just-icon btn--24 calendar-btn">
+        <svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use></svg>
+    </button>
+</div>
