@@ -62,7 +62,10 @@ public class TicketController {
             String userClass = String.valueOf(loginUser.getUserClass());
             pagingRequest.setUserClass(userClass);
             pagingRequest.setCompanyId(companyId);
+            model.addAttribute("userClass",userClass);
             // selectbox 바인딩
+            List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
+            model.addAttribute("companyOptions", companyOptions);//회사 옵션 정보 가져오기
             model.addAttribute("statusOptions", commonService.getSelectOptions("t_status"));
             model.addAttribute("searchOptions", commonService.getSelectOptions("t_search"));
             // 티켓 조회
@@ -80,10 +83,14 @@ public class TicketController {
      * * 스크립트단에서 ajax로 호출하여 PagingRequest data를 받아서 처리
      * */
     @PostMapping("/ticketList")
-    public String searchTickets(@ModelAttribute PagingRequest pagingRequest, Model model) {
+    public String searchTickets(@ModelAttribute PagingRequest pagingRequest, HttpServletRequest request, Model model) {
         try {
+            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
+            String userClass = String.valueOf(loginUser.getUserClass());
+            pagingRequest.setUserClass(userClass);
             // 티켓 조회
             PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
+            model.addAttribute("userClass",userClass);
             model.addAttribute("ticketList", pageResponse);
             // 부분 뷰 렌더링 (리스트 부분만 갱신)
             return "ticketList :: ticketListFragment";
@@ -96,11 +103,16 @@ public class TicketController {
      * 엑셀다운로드
      * 설명 : 공통 쿼리문 사용하기위해서 Page와 Size값 fix로 사용(이후 변경 필요)
      * */
-    @PostMapping("/exceldownload")
-    public void excelDownload(@ModelAttribute PagingRequest pagingRequest, HttpServletResponse response) {
+    @PostMapping("/excelDownload")
+    public void excelDownload(@ModelAttribute PagingRequest pagingRequest, HttpServletRequest request, HttpServletResponse response) {
         try {
             pagingRequest.setPage(1);
             pagingRequest.setSize(1000000);
+            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
+            String userClass = String.valueOf(loginUser.getUserClass());
+            String companyId = String.valueOf(loginUser.getCompanyId());
+            pagingRequest.setUserClass(userClass);
+            pagingRequest.setCompanyId(companyId);
             // 데이터 조회
             PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
             List<Map<String, Object>> dataList = pageResponse.getDataList();
@@ -298,6 +310,10 @@ public class TicketController {
             } catch (Exception fileException) {
                 throw new CustomException("첨부파일 저장 중 오류가 발생했습니다.", fileException);
             }
+            //내용수정시 댓글 추가
+            var comment = "요청 내용이 수정되었습니다.";
+            ticketService.addComment(ticketId, comment, loginUser.getUserId(), ticketDto.getStatusCd());
+
         } catch (Exception e) {
             throw new CustomException("ticketModifySave : 티켓 수정 중 오류가 발생했습니다.", e);
         }
@@ -333,6 +349,7 @@ public class TicketController {
             List<CommentDto> commentList = ticketService.getCommentsByTicketId(id);
             model.addAttribute("commentList",commentList);
             model.addAttribute("statusCd", commonService.getSelectOptions("t_status"));
+            model.addAttribute("user", loginUser);
             model.addAttribute("ticketinfo", ticketDetails);
             return "ticketView";
         } catch (Exception e) {
@@ -344,18 +361,17 @@ public class TicketController {
     @PutMapping("/changeStatus")
     public ResponseEntity<Map<String, String>> updateStepStatus(HttpServletRequest request, @RequestBody Map<String, String> RequestBody) {
         try {
-            String updateId = "";
+
             String newStatus = RequestBody.get("status");
             int id = Integer.parseInt(RequestBody.get("id")); // id는 String으로 전달되므로 변환
             UserLoginDto user = (UserLoginDto) request.getAttribute("user");
-            if (user != null) {
-                updateId = user.getUserId(); // getUserId() 메서드를 통해 userId 추출
-                System.out.println("update ID: " + updateId);
-            } else {
-                System.out.println("User not found");
+            String updateId = user.getUserId();
+            String manageId = updateId;
+            if ("USER".equals(user.getUserClass())){
+                manageId = "";  //사용자가 진행상태 변경한 경우 담당자는 변경되지않음
             }
             //진행상태변경
-            ticketService.changeStatus(id, newStatus, updateId);
+            ticketService.changeStatus(id, newStatus, manageId);
             //OPEN:등록,RECEIPT:접수,PROGRESS:진행,REVIEW:검토,CLOSED:완료
             String comment = "";
             switch (newStatus) {
@@ -423,6 +439,7 @@ public class TicketController {
 
     /*
      * 티켓 정보, 댓글,첨부 삭제처리(deleteYn = Y)
+     * 추후에 댓글의 첨부까지 삭제처리!!!!!!!!!!
      * */
     @DeleteMapping("/deleteTicket")
     public ResponseEntity<?> deleteTicket(@RequestBody Map<String, Object> data){
@@ -431,6 +448,22 @@ public class TicketController {
             ticketService.deleteTicket(Id);             //티켓정보
             ticketService.deleteTicketAnswer(Id);       //댓글정보
             fileService.deleteFiles("ticket",Id);  //첨부파일들
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+        }
+
+        return ResponseEntity.ok("삭제되었습니다.");
+    }
+    /*
+     * 댓글 삭제처리(deleteYn = Y)
+     * 추후에 댓글의 첨부까지 삭제처리!!!!!!!!!!
+     * */
+    @DeleteMapping("/deleteCommentId")
+    public ResponseEntity<?> deleteCommentId(@RequestBody Map<String, Object> data){
+        int Id = Integer.parseInt((String) data.get("Id"));
+        try{
+            ticketService.deleteTicketAnswerById(Id);       //댓글정보
+            //fileService.deleteFiles("ticket",Id);  //첨부파일들
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
         }

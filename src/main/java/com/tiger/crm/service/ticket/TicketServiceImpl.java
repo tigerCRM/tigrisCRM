@@ -117,5 +117,8 @@ public class TicketServiceImpl implements TicketService {
         ticketMapper.deleteTicketAnswer(ticketId);
     }
 
+    public void deleteTicketAnswerById(int Id) {
+        ticketMapper.deleteTicketAnswerById(Id);
+    }
 
 }

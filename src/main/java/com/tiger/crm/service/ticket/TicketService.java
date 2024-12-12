@@ -37,6 +37,8 @@ public interface TicketService {
 
     void deleteTicketAnswer(int ticketId);
 
+    void deleteTicketAnswerById(int Id);
+
 }
 
 

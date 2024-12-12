@@ -7,9 +7,10 @@
     <title>메인</title>
     <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/common.css?v=1.0">
-    <link rel="stylesheet" type="text/css" href="/assets/css/layout.css?v=1.0">
-    <link rel="stylesheet" type="text/css" href="/assets/css/main.css?v=3.0">
+   <link rel="stylesheet" type="text/css" href="/assets/css/common.css?v=1">
+   <!-- <link rel="stylesheet" type="text/css" th:href="@{/assets/css/common.css(v=${#dates.format(#dates.createNow(), 'yyyyMMddHHmmss')})}" />-->
+    <link rel="stylesheet" type="text/css" href="/assets/css/layout.css?v=1">
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css?v=1">
     <script src="/lib/jquery/jquery-2.2.2.min.js"></script>
     <!--datepicker 관련 -->
     <script src="/lib/picker/datepicker.min.js"></script>
@@ -42,7 +43,7 @@
                                 <!-- 검색영역 -->
                                 <div class="searchbar">
                                     <div>
-                                        <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
+                                        <div class="dropdown dropdown--s wd100" aria-expanded="false" tabindex="0">
                                             <select class="dropdown__selected" id="searchStatus" name="searchStatus"
                                                     th:value="${searchStatus}" onchange="searchTickets(this);">
                                                 <option value="">==상태==</option>
@@ -52,8 +53,25 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <div th:if="${userClass != 'USER'}">
+                                        <div class="dropdown dropdown--s wd110" aria-expanded="false" tabindex="0">
+                                            <select class="dropdown__selected" id="searchCompany" name="searchCompany"
+                                                    th:value="${searchCompany}" onchange="searchTickets(this);">
+                                                <option value="">==고객사==</option>
+                                                <option th:each="op : ${companyOptions}"
+                                                        th:value="${op.companyId}"
+                                                        th:text="${op.companyName}"></option>
+                                            </select>
+                                            <!--<input list="companyOptions" name="searchCompany" id="searchCompany" autocomplete="off">
+                                            <datalist id="companyOptions" th:field="*{companyOptions}">
+                                                <option value="">==고객사==</option>
+                                                <option th:each="op : ${companyOptions}" th:value="${op.companyId}" th:utext="${op.companyName}"></option>
+                                            </datalist>-->
+
+                                        </div>
+                                    </div>
                                     <div>
-                                        <div class="dropdown dropdown--s wd160" aria-expanded="false" tabindex="0">
+                                        <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
                                             <select class="dropdown__selected" id="searchType" name="searchType"
                                                     th:value="${searchType}">
                                                 <option value="">==검색조건==</option>
@@ -63,6 +81,7 @@
                                             </select>
                                         </div>
                                     </div>
+
                                     <div>
                                         <div th:include="fragments/datepicker :: datepicker('startDate', 'endDate')"></div>
                                     </div>
@@ -181,7 +200,7 @@
                                                 <td><span th:text="${ticket['USER_NAME']}"></span></td>
                                                 <td><span th:text="${ticket['MD']}"></span></td>
                                                 <td><span th:text="${ticket['CREATE_DT']}"></span></td>
-                                                <td><span th:text="${ticket['REAL_COMPLETE_DT']}"></span></td>
+                                                <td><span th:text="${ticket['COMPLETE_DT']}"></span></td>
                                             </tr>
                                             </tbody>
                                         </div>
@@ -207,6 +226,16 @@
 </div>
 
 <script>
+    function filterOptions() {
+        const searchText = document.getElementById('searchBox').value.toLowerCase();
+        const select = document.getElementById('searchCompany');
+        const options = select.options;
+
+        for (let i = 1; i < options.length; i++) { // 첫 번째 옵션(placeholder)은 제외
+            const optionText = options[i].text.toLowerCase();
+            options[i].style.display = optionText.includes(searchText) ? '' : 'none';
+        }
+    }
     function gotoTicket(row){
         const ticketId = row.getAttribute("data-id");
         window.location.href = `/ticketView?id=${ticketId}`;
@@ -215,21 +244,23 @@
         if (obj.id == "refresh"){
           $("#searchType").val("");
           $("#searchStatus").val("");
+          $("#searchCompany").val("");
           $("#searchKeyword").val("");
           $("#startDate").val("");
           $("#endDate").val("");
         }
         var searchType = $("#searchType").val();
         var searchStatus = $("#searchStatus").val();
+        var searchCompany = $("#searchCompany").val();
         var searchKeyword = $("#searchKeyword").val();
         var startDt = ($("#startDate").val() === undefined || $("#startDate").val() === "") ? '1999-01-01' : $("#startDate").val();
         var endDt = ($("#endDate").val() === undefined || $("#endDate").val() === "") ? '2030-01-01' : $("#endDate").val();
 
         // x-www-form-urlencoded 형식으로 데이터 생성
         const data = new URLSearchParams({
-
           searchType: searchType,
           searchStatus: searchStatus,
+          searchCompany: searchCompany,
           searchKeyword: searchKeyword,
           startDt: startDt,
           endDt: endDt
@@ -252,29 +283,29 @@
     }
 
     function exceldownload(obj){
-        const formData = new FormData();
-       var searchType = $("#searchType").val();
+        var searchType = $("#searchType").val();
         var searchStatus = $("#searchStatus").val();
         var searchKeyword = $("#searchKeyword").val();
+        var searchCompany = $("#searchCompany").val();
         var startDt = ($("#startDate").val() === undefined || $("#startDate").val() === "") ? '1999-01-01' : $("#startDate").val();
         var endDt = ($("#endDate").val() === undefined || $("#endDate").val() === "") ? '2030-01-01' : $("#endDate").val();
 
         const data = new URLSearchParams({
-
           searchType: searchType,
           searchStatus: searchStatus,
           searchKeyword: searchKeyword,
+          searchCompany: searchCompany,
           startDt: startDt,
           endDt: endDt
         });
 
          // Ajax 요청
-        fetch('/exceldownload', {
+        fetch('/excelDownload', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
           },
-          body: data.toString() // URLSearchParams 객체를 문자열로 변환하여 전송
+          body: data.toString()
         })
         .then(response => response.blob())
         .then(blob => {
