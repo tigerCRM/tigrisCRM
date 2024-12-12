@@ -47,4 +47,6 @@ public interface TicketMapper {
     void deleteTicket(int ticketId);
 
     void deleteTicketAnswer(int ticketId);
+
+    void deleteTicketAnswerById(int ticketId);
 }

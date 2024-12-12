@@ -28,8 +28,7 @@ public class WebConfig implements WebMvcConfigurer {
 						"/lib/**",           // 추가: jQuery, 외부 라이브러리 등의 자원 경로
 						"/public/**",        // 외부에 공개된 자원 1
 						"/Style/**",		 // 외부에 공개된 자원 2
-						"/favicon.ico",	     // 파비콘
-						"/exceldownload"     // datepicker.js
+						"/favicon.ico"     // 파비콘
 				);
 	}
 }

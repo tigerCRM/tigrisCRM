@@ -107,8 +107,8 @@
                                                     </option>
                                                 </select>
                                             </div>
-                                            <input type="hidden" id="managerName" th:field="*{managerName}">
-                                            <input type="hidden" id="managerId" th:field="*{managerId}">
+                                            <input type="hidden" id="managerName" name="managerName"  th:field="*{managerName}">
+                                            <input type="hidden" id="managerId" name="managerId"  th:field="*{managerId}">
                                         </td>
                                         <th>중요도</th>
                                         <td>
@@ -233,7 +233,7 @@
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
                                     <button type="submit" class="btn btn--m primary-btn" th:if="${mode == 'write'}">등록</button>
-                                    <button class="btn btn--m primary-btn" th:if="${mode == 'modify'}" onclick="modifiedTicket()">저장</button>
+                                    <button class="btn btn--m primary-btn" th:if="${mode == 'modify'}">저장</button>
                                     <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'modify'}" onclick="deleteTicket()">삭제</button>
                                     <button type="button" class="btn btn--m  secondary-btn"
                                             onclick="location.href='/ticketList';">목록으로
@@ -281,12 +281,12 @@
 
     function updateManagerName(selectElement) {
         const selectedOption = selectElement.options[selectElement.selectedIndex];
-        const companyName = selectedOption.getAttribute("data-name");
-        const companyId = selectedOption.getAttribute("value");
+        const Name = selectedOption.getAttribute("data-name");
+        const Id = selectedOption.getAttribute("value");
 
         // hidden 필드에 선택된 회사명 설정
-        document.getElementById("managerId").value = companyId;
-        document.getElementById("managerName").value = companyName;
+        document.getElementById("managerId").value = Id;
+        document.getElementById("managerName").value = Name;
     }
 
     //삭제

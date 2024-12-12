@@ -17,6 +17,7 @@ public class TicketDto {
     //검색조건
     private String searchKeyword;   //검색어
     private String searchStatus;    //상태
+    private String searchCompany;    //회사검색
     private String searchType;      //검색조건
     private String totalcnt;        //전체건수
     private String startDt;         //시작일자

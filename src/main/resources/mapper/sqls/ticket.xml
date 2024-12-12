@@ -33,7 +33,10 @@
             <if test="searchStatus != null and searchStatus != ''">
                 AND STATUS_CD = #{searchStatus}
             </if>
-
+            <!-- 고객사명 검색  -->
+            <if test="searchCompany != null and searchCompany != ''">
+                AND T.COMPANY_ID = #{searchCompany}
+            </if>
             <!-- 검색 유형 (searchType이 제목, 내용, 담당자, 등 선택된 경우) -->
             <if test="searchType != null and searchType != ''">
                 <choose>
@@ -162,6 +165,7 @@
         IFNULL(MD, '') as MD,
         TITLE,
         CONTENT,
+        T.MANAGER_ID as MANAGER_ID,
         U.USER_NAME as MANAGER_NAME,
         DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d') as CREATE_DT,
         DATE_FORMAT(T.EXPECTED_COMPLETE_DT, '%Y-%m-%d') as EXPECTED_COMPLETE_DT,
@@ -174,9 +178,15 @@
     <update id="updateTicketStatus" parameterType="map">
         UPDATE T_TICKET_INFO
         SET STATUS_CD = #{newStatus},
-        MANAGER_ID = #{updateId},
+        <!-- userClass가 고객아닐경우 -->
+        <if test="updateId != ''">
+            MANAGER_ID = #{updateId},
+        </if>
         UPDATE_DT = NOW(),
         UPDATE_ID = #{updateId}
+        <if test="newStatus == 'CLOSED'"> <!--완료일경우 완료일 update-->
+            , COMPLETE_DT = NOW()
+        </if>
         WHERE TICKET_ID = #{ticketId}
     </update>
 
@@ -220,4 +230,11 @@
         SET DELETE_YN = 'Y'
         WHERE TICKET_ID = #{ticketId};
     </update>
+
+    <update id="deleteTicketAnswerById" parameterType="map">
+        UPDATE T_TICKET_ANSWER
+        SET DELETE_YN = 'Y'
+        WHERE ANSWER_ID = #{Id};
+    </update>
+
 </mapper>

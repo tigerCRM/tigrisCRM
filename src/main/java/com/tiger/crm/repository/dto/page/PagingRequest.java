@@ -10,9 +10,10 @@ public class PagingRequest {
     private int size;                     // 한 페이지에 보여줄 데이터 개수
     private String searchKeyword;         // 검색어
     private String searchType;            // 검색 타입
-    private String startDt;
-    private String endDt;
+    private String startDt;                 //시작일
+    private String endDt;                   //종료일
     private String searchStatus;            //티켓상태
+    private String searchCompany;           //회사 검색
     private String userClass;
     private String userId;
     private String companyId;

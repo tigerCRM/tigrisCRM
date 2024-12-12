@@ -164,6 +164,7 @@
                                                                 th:value="${op.key}"
                                                                 th:text="${op.value}"></option>
                                                     </select>
+
                                                 </div>
                                                 <div>
                                                     <button type="button" class="btn btn--s primary-btn"
@@ -194,7 +195,7 @@
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr>
+                                    <tr th:if="${uploadFiles != null and not uploadFiles.isEmpty()}">
                                         <th>첨부파일</th>
                                         <td colspan="3">
                                             <div class="attachment-wrapper">
@@ -237,7 +238,12 @@
                                                 <div th:class="${comment.userClass == 'USER' ? 'message' : 'sendmessage'}">
                                                     <p style="display:inline-block;" th:text="${comment.content}">댓글 내용</p>
                                                 </div>
-                                                <div class="message_time" th:text="${comment.createDt}">작성일</div>
+                                                <div class="message_time">
+                                                    <span th:text="${comment.createDt}"></span>
+                                                    <button type="button" class="btn btn--xs mono-ghost-btn" onclick="delComment(this)"
+                                                            th:if="${user.userName == comment.createName}"
+                                                            th:attr="data-comment-id=${comment.answerId}">삭제</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -246,15 +252,18 @@
                                     <textarea id="comment" cols="30" rows="10" class="textarea01 input--full"
                                               placeholder="댓글을 입력해주세요"></textarea>
                                     <div class="flex flex-justify_end mt8">
+                                        <svg class="icon icon--20 color-gray700" style="margin-right: 10px;margin-top: 8px;cursor:pointer" onclick="addAttachComment();">
+                                            <use href="/assets/images/icon/sprite-sheet.svg#attachment"></use>
+                                        </svg>
                                         <button type="button" class="btn btn--s primary-btn" onclick="addComment()">댓글 작성</button>
                                     </div>
                                 </div>
                                 <!--//댓글 영역-->
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
-                                    <button type="submit" class="btn btn--m  primary-btn">수정</button>
+                                    <button type="submit" class="btn btn--m primary-btn">수정</button>
                                     <button type="button" class="btn btn--m danger-btn" onclick="deleteTicket()">삭제</button>
-                                    <button type="button" class="btn btn--m  secondary-btn"
+                                    <button type="button" class="btn btn--m secondary-btn"
                                             onclick="location.href='/ticketList';">목록으로
                                     </button>
                                 </div>
@@ -278,6 +287,7 @@
 <script>
     var mode = "read";
     var editor = common.loadOrInitializeEditor(editor , mode);
+
     //상태 progress
     document.addEventListener("DOMContentLoaded", function () {
        const stepProgress = document.querySelector('.step-progress');
@@ -339,7 +349,7 @@
         var id = $("#ticketId").val();
         var statusCd = $("#statusCd").val();
         if (!comment) {
-            alert("댓글 내용을 입력하세요.");
+            showMessage('info', '정보', '댓글 내용을 입력하세요.');
             return;
         }
 
@@ -396,6 +406,37 @@
             console.error('Error:', error);
             showMessage('error', '실패', '오류가 발생해 서버로 요청을 전송하지 못했습니다');
         });
+    }
+
+    function delComment(obj){
+        var id = obj.getAttribute('data-comment-id');
+        console.log("댓글 삭제: ", id);
+        var url = `/deleteCommentId`;
+        fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ Id: id }),
+        })
+        .then(response => {
+            if (response.ok) {
+                showMessage('success', '댓글삭제', '해당 댓글이 삭제되었습니다.');
+            } else {
+                response.text().then(message => {
+                    showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showMessage('error', '실패', '오류가 발생해 서버로 요청을 전송하지 못했습니다');
+        });
+    }
+
+    //댓글 첨부파일추가
+    function addAttachComment(){
+        alert("아직 고민중");
     }
 </script>
 </body>

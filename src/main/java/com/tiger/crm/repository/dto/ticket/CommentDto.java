@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class CommentDto {
-    private Integer commentId;         // 댓글 ID
+    private Integer answerId;         // 댓글 ID
     private Integer ticketId;          // 티켓 ID
     private String content;            // 댓글 내용
     private String createId;           // 작성자 ID

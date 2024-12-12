@@ -985,7 +985,7 @@ div::-webkit-scrollbar-button:end:increment {
     display: flex;
     align-items: center;
     height: 100%;
-    padding: 0 4rem 0 1.6rem;
+    padding: 0 1rem 0 1rem;
     border-radius: 0.8rem;
     border: 1px solid var(--gray-300);
     background-color: var(--white);
@@ -3206,6 +3206,7 @@ ul[class*='list-tree--'] {
 .wd65  { width: 6.5rem; min-width: 6.5rem; }
 .wd80  { width: 8rem; }
 .wd100 { width: 10rem; }
+.wd110 { width: 11rem; }
 .wd120 { width: 12rem; }
 .wd130 { width: 13rem; }
 .wd150 { width: 15rem; }
