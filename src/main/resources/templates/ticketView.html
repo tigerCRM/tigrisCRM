@@ -236,7 +236,7 @@
                                             <div class="message_info">
                                                 <div class="user_name" th:text="${comment.createName}">작성자</div>
                                                 <div th:class="${comment.userClass == 'USER' ? 'message' : 'sendmessage'}">
-                                                    <p style="display:inline-block;" th:text="${comment.content}">댓글 내용</p>
+                                                    <p style="display:inline-block; white-space: pre-wrap;" th:text="${comment.content}"></p>
                                                 </div>
                                                 <div class="message_time">
                                                     <span th:text="${comment.createDt}"></span>
@@ -345,7 +345,7 @@
 
     // 댓글 작성
     function addComment() {
-        var comment = $('#comment').val();
+        const comment = document.getElementById("comment").value;
         var id = $("#ticketId").val();
         var statusCd = $("#statusCd").val();
         if (!comment) {
