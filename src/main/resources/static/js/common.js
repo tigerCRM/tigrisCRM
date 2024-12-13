@@ -209,8 +209,26 @@ var common = {
             // 리스트에 추가
             list.appendChild(listItemElement);
         });
-
     },
+    /*
+    toCamelCase
+    작성자 : 제예솔
+    */
+    toCamelCase : function(snakeCaseObj){
+    const camelCaseObj = {};
+        for (let key in snakeCaseObj) {
+            if (snakeCaseObj.hasOwnProperty(key)) {
+                // Snake Case를 Camel Case로 변환
+                const camelCaseKey = key
+                    .toLowerCase()
+                    .replace(/_([a-z])/g, (_, letter) => letter.toUpperCase());
+                camelCaseObj[camelCaseKey] = snakeCaseObj[key];
+            }
+        }
+        return camelCaseObj;
+    },
+
+
 
 //end
 }

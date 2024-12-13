@@ -26,7 +26,12 @@ public class NoticeBoardValidator implements Validator {
 
 
         //제목 미기입시
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"title","error.required.noticeBoard.title");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors,"title","error.required");
+
+        //팝업등록 체크, 시작일자와 종료일자를 미정했을 경우
+        if( (noticeBoard.getPopupYn() == 'Y' ) && ("".equals(noticeBoard.getPopupStartDt()) || "".equals(noticeBoard.getPopupEndDt()) ) ){
+            errors.rejectValue("popupYn","error.requiredDate");
+        }
 
         //첨부파일 총 용량이 10MB 를 초과할 경우
         final long MAX_TOTAL_FILE_SIZE = 10 * 1024 * 1024;

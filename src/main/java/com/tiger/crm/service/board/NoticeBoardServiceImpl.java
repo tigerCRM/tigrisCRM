@@ -48,6 +48,12 @@ public class NoticeBoardServiceImpl implements NoticeBoardService{
     //시스템관리 글 저장
     @Override
     public int insertNoticeBoard(NoticeBoardDto noticeBoardDto, List<BoardOpenCompanyDto> boardOpenCompanyList) {
+
+        if(noticeBoardDto.getPopupYn() == 'N'){
+            noticeBoardDto.setPopupStartDt(null);
+            noticeBoardDto.setPopupEndDt(null);
+        }
+
         noticeBoardMapper.insertNoticeBoard(noticeBoardDto);
         int boardId = noticeBoardDto.getBoardId();
         int resultCount = 0;
