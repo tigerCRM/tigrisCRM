@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>운영지원보고서</title>
+</head>
+<body>
+    <div th:fragment="opReport" id ="mailHistListContainer">
+        <h2 style="text-align: center">운영지원 보고서</h2>
+        <div th:if="${opReport != null}">
+            <button onclick="printReport()">인쇄</button>
+            <table class="table table03 table--h table--xs">
+                <colgroup>
+                    <col style="width: 18%;">
+                    <col style="width: auto;">
+                    <col style="width: 18%;">
+                    <col style="width: auto;">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th colspan="4" style="text-align: center">고객정보</th>
+                    </tr>
+                    <tr>
+                        <th>고객사</th>
+                        <td><span id="customerCompany" th:text="${opReport.customerCompany}"></span></td>
+                        <th>담당자</th>
+                        <td><span id="customerName" th:text="${opReport.customerUserName}"></span></td>
+                    </tr>
+                    <tr></tr>
+                    <tr>
+                        <th colspan="4" style="text-align: center">지원사 정보</th>
+                    </tr>
+                    <tr>
+                        <th>회사</th>
+                        <td><span id="companyName" th:text="${opReport.supportCompany}"></span></td>
+                        <th>담당자</th>
+                        <td><span id="createName" th:text="${opReport.supportUserName}"></span></td>
+                    </tr>
+                    <tr></tr>
+                    <tr></tr>
+                    <tr>
+                        <th colspan="4" style="text-align: center">상세내역</th>
+                    </tr>
+                    <tr>
+                        <table class="table table04 table--h table--xss">
+                            <span id="opReportStatus">Status : ■ Closed, ▣ In Progress, □ Open</span>
+                            <colgroup>
+                                <col style="width: 20%;">
+                                <col style="width: auto;">
+                                <col style="width: auto;">
+                                <col style="width: auto;">
+                                <col style="width: auto;">
+                                <col style="width: auto;">
+                                <col style="width: auto;">
+                                <col style="width: auto;">
+                            </colgroup>
+                            <tbody>
+                                <tr>
+                                    <th>제목</th>
+                                    <th>구분</th>
+                                    <th>담당자</th>
+                                    <th>요청일</th>
+                                    <th>희망일</th>
+                                    <th>완료일</th>
+                                    <th>지원범위</th>
+                                    <th>MD</th>
+                                </tr>
+                                <tr th:each="items : ${opReport.details}">
+                                    <td><span th:text="${items['TITLE']}"></span></td>
+                                    <td><span th:text="${items['REQUEST_TYPE_CD']}"></span></td>
+                                    <td><span th:text="${items['MANAGER_NM']}"></span></td>
+                                    <td><span th:text="${items['CREATE_DT']}"></span></td>
+                                    <td><span th:text="${items['EXPECTED_COMPLETE_DT']}"></span></td>
+                                    <td><span th:text="${items['COMPLETE_DT']}"></span></td>
+                                    <td><span th:text="${items['SUPPORT_CD']}"></span></td>
+                                    <td><span th:text="${items['MD']}"></span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
