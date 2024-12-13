@@ -1,11 +1,10 @@
 package com.tiger.crm.service.ticket;
 
-import com.tiger.crm.repository.dto.company.CompanyOptionDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.dto.ticket.CommentDto;
 import com.tiger.crm.repository.dto.ticket.TicketDto;
-import org.springframework.web.multipart.MultipartFile;
+import jakarta.mail.MessagingException;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,7 @@ public interface TicketService {
 
     PagingResponse<Map<String, Object>> getTicketList(PagingRequest pagingRequest);
 
-    int saveTicket(TicketDto ticketDto);
+    int saveTicket(TicketDto ticketDto) throws MessagingException;
 
     int saveTicketModify(TicketDto ticketDto);
 

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width" />
+    <title>메인</title>
+    <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/layout.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+    <script src="/lib/jquery/jquery-2.2.2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+</head>
+<body>
+<div class="wrapper">
+    <!-- 왼쪽 메뉴  -->
+    <div th:replace="~{common/frame_left_menu :: frame_left_menu}" />
+
+    <!-- 상단 메뉴  -->
+    <div th:replace="~{common/frame_top_menu :: frame_top_menu}" />
+
+    <!-- 컨텐츠 영역 -->
+    <div class="main-area">
+        <!-- 내용 영역 -->
+        <main class="form-content">
+            <div class="container">
+                <div class="orReport-widget-wrap">
+                    <div class="content">
+                        <!-- 검색 영역 -->
+                        <div class="search--box">
+                            <div class="content-header">
+                                <h2 class="text-body1">
+                                    <div class="flex flex-align_center gap--8">
+                                        <b>운영지원 보고서</b>
+                                    </div>
+                                </h2>
+                                <!-- 검색영역 -->
+                                <div class="searchbar">
+                                    <div>
+                                        <div class="dropdown dropdown--s wd150" aria-expanded="false" tabindex="0">
+                                            <select class="dropdown__selected" onchange="abc(this)" th:disabled="${userClass == 'USER'}">
+                                                <option th:each="op : ${companyOptions}"
+                                                        th:value="${op.companyId}"
+                                                        th:data-name="${op.companyName}"
+                                                        th:text="${op.companyName}"
+                                                        th:selected="${op.companyName == selectedCompanyName}">
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <!--
+                                        <input type="hidden" name="companyId" id="companyId" th:field="*{companyId}">
+                                        <input type="hidden" name="companyName" id="companyName" th:field="*{companyName}">
+                                        -->
+                                    </div>
+
+                                    <!-- 년 셀랙트박스 -->
+                                    <div class="dropdown dropdown--s wd170" aria-expanded="false" tabindex="0">
+                                        <select id="yearSelect" name="yearSelect" class="dropdown__selected">
+                                            <option value="">연도를 선택하세요</option>
+                                            <script>
+                                                const currentYear = new Date().getFullYear();
+                                                for (let year = currentYear; year >= currentYear - 10; year--) {
+                                                    document.write(`<option value="${year}">${year}</option>`);
+                                                }
+                                            </script>
+                                        </select>
+                                    </div>
+
+                                    <!-- 월 셀랙트박스 -->
+                                    <div class="dropdown dropdown--s" aria-expanded="false" tabindex="0">
+                                        <select id="monthSelect" name="monthSelect" class="dropdown__selected">
+                                            <option value="">월을 선택하세요</option>
+                                            <script>
+                                                for (let month = 1; month <= 12; month++) {
+                                                    const paddedMonth = month.toString().padStart(2, '0');
+                                                    document.write(`<option value="${paddedMonth}">${paddedMonth}</option>`);
+                                                }
+                                            </script>
+                                        </select>
+                                    </div>
+                                <!-- //검색영역 -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 리스트 영역 -->
+                        <div class="flex-container">
+                            <div class="flex1 widget-select">
+                                <section id="opReportList" class="opReportList-parts">
+                                    <div class="widget__content">
+                                        <ul class="opReportList-items" id="opReportList-items">
+                                            <!-- 운영지원보고서 리스트 동적 추가 -->
+                                            <li th:each="item : ${opReportList}"
+                                                th:onclick="'loadReport(' + ${item.opReportId} + ', ' + ${item.companyId} + ')'"
+                                                th:text="${#strings.substring(item.opReportId, 0, 4) + '년 ' + #strings.substring(item.opReportId, 4, 6) + '월 운영지원보고서'}"
+                                            >
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="flex1 widget-content">
+                                <section id="opReportDetail" class="opReportList-parts">
+                                    <div class="widget__content"  id="reportContent">
+                                        <!-- 보고서 양식 호출 -->
+                                        <div th:replace="~{fragments/opReportFragment}" />
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- //내용 영역 -->
+    </div>
+    <!-- //컨텐츠 영역 -->
+</div>
+
+<script>
+    // -------------------
+    // 최초 접속 시  운영지원보고서 선택 해야함.
+    // ------------------
+    $(document).ready(function () {
+        $("#reportContent").text("보고서를 선택해 주세요.");
+    });
+    // function searchBoards(obj) {
+    //     if (obj.id == "refresh"){
+    //       $("#searchType").val("");
+    //       $("#searchKeyword").val("");
+    //     }
+    //     var searchType = $("#searchType").val();
+    //     var searchKeyword = $("#searchKeyword").val();
+    //
+    //     console.log(searchType); //COMPANY
+    //     console.log(searchKeyword); //네패스
+    //
+    //     // x-www-form-urlencoded 형식으로 데이터 생성
+    //     const data = new URLSearchParams({
+    //
+    //       searchType: searchType,
+    //       searchKeyword: searchKeyword,
+    //     });
+    //
+    //     // Ajax 요청
+    //     fetch('/systemBoardList', {
+    //       method: 'POST',
+    //       headers: {
+    //           'Content-Type': 'application/x-www-form-urlencoded',
+    //       },
+    //       body: data.toString() // URLSearchParams 객체를 문자열로 변환하여 전송 (POST로 밖에 보낼수 없음)
+    //     })
+    //     .then(response => response.text())
+    //     .then(data => {
+    //       // 응답받은 HTML을 페이지에 삽입
+    //       document.getElementById('systemBoardListContainer').innerHTML = data;
+    //     })
+    //     .catch(error => console.error('검색 중 오류 발생:', error));
+    //
+    // }
+
+
+    // -------------------
+    // 보고서 조회
+    // ------------------
+    function loadReport(opReportId, compnayId) {
+        console.log(">> 보고서 아이디 : ", opReportId, compnayId)
+        const reportContainer = document.getElementById('reportContainer');
+        $.ajax({
+            url: '/opReportContent',
+            method: 'GET',
+            data:{'opReportId': opReportId, 'companyId': compnayId },
+            success: function (data) {
+                // 서버에서 반환된 HTML을 삽입
+                $("#reportContent").html(data);
+            },
+            error: function (xhr, status, error) {
+                console.error('운영지원보고서 조회 실패:', error);
+            }
+        });
+
+    }
+
+
+    // -------------------
+    // 인쇄 기능
+    // ------------------
+    function printReport() {
+        const reportContent = document.getElementById('reportContainer').innerHTML;
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+        <html>
+            <head><title>운영지원보고서</title></head>
+            <body>${reportContent}</body>
+        </html>
+    `);
+        printWindow.document.close();
+        printWindow.print();
+    }
+
+    // -------------------
+    // 클릭 시 css 활성화
+    // ------------------
+    $('#opReportList-items li').on('click', function () {
+        // 모든 항목에서 active 클래스 제거
+        $('#opReportList-items li').removeClass('active');
+
+        // 클릭된 항목에 active 클래스 추가
+        $(this).addClass('active');
+    });
+</script>
+</body>
+</html>
