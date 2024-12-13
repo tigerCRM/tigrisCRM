@@ -1,17 +1,17 @@
 package com.tiger.crm.service.ticket;
 
-import com.tiger.crm.repository.dto.alert.AlertDto;
-import com.tiger.crm.repository.dto.company.CompanyOptionDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.dto.ticket.CommentDto;
+import com.tiger.crm.repository.dto.ticket.TicketDto;
+import com.tiger.crm.repository.mail.MailService;
 import com.tiger.crm.repository.mapper.TicketMapper;
 import com.tiger.crm.service.alert.AlertService;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.tiger.crm.repository.dto.ticket.TicketDto;
-import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +21,8 @@ public class TicketServiceImpl implements TicketService {
     private TicketMapper ticketMapper;
     @Autowired
     private AlertService alertService;
+    @Autowired
+    private MailService mailService;
 
     // 전체 티켓 수 조회 (null 체크 포함)
     @Override
@@ -40,7 +42,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     //티켓저장
-    public int saveTicket(TicketDto ticketDto) {
+    public int saveTicket(TicketDto ticketDto) throws MessagingException {
         int resultCount =  ticketMapper.insertTicketInfo(ticketDto);
         if(resultCount != 1){
             return 0;
@@ -49,6 +51,11 @@ public class TicketServiceImpl implements TicketService {
         int ticketId = ticketDto.getTicketId();
         // 알림 발송
         if(resultCount > 0){
+            // 메일 발송을 위한 데이터
+            Map<String, Object> model = new HashMap<>();
+            model.put("userName",ticketDto.getCreateName());
+
+            mailService.sendEmail(ticketDto.getCreateId(), "요청사항 등록", "password-reset-email", model);
             alertService.sendAlert(ticketDto.getStatusCd(), ticketId, ticketDto.getContent(), ticketDto.getCreateId(), ticketDto.getManagerId());
         }
 

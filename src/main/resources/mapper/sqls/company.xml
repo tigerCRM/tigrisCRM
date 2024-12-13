@@ -10,4 +10,15 @@
         FROM T_COMPANY_INFO
         WHERE USE_YN = 'Y'
     </select>
+
+    <!-- 고객사별 회사 불러오기-->
+    <select id="getAllCompany2" resultType="com.tiger.crm.repository.dto.company.CompanyOptionDto">
+        SELECT COMPANY_ID,
+               COMPANY_NAME
+        FROM T_COMPANY_INFO
+        WHERE USE_YN = 'Y'
+        <if test="companyId != 0">
+            AND COMPANY_ID = #{companyId}
+        </if>
+    </select>
 </mapper>
