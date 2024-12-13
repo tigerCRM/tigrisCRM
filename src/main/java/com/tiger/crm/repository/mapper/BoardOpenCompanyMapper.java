@@ -3,6 +3,9 @@ package com.tiger.crm.repository.mapper;
 import com.tiger.crm.repository.dto.board.BoardOpenCompanyDto;
 import com.tiger.crm.repository.dto.board.SystemBoardDto;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
+
 /*
 * BoardOpenCompanyMapper
 * 작성자 : 제예솔
@@ -16,4 +19,7 @@ public interface BoardOpenCompanyMapper {
     
     //게시판번호 - 회사 삭제
     void deleteBoardOpenCompany(int boardId);
+
+    //게시판번호 - 회사들 찾아오기
+    List<BoardOpenCompanyDto> selectBoardOpenCompanyByBoardId(int boardId);
 }

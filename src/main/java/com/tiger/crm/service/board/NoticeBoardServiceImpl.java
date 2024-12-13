@@ -48,6 +48,12 @@ public class NoticeBoardServiceImpl implements NoticeBoardService{
     //시스템관리 글 저장
     @Override
     public int insertNoticeBoard(NoticeBoardDto noticeBoardDto, List<BoardOpenCompanyDto> boardOpenCompanyList) {
+
+        if(noticeBoardDto.getPopupYn() == 'N'){
+            noticeBoardDto.setPopupStartDt(null);
+            noticeBoardDto.setPopupEndDt(null);
+        }
+
         noticeBoardMapper.insertNoticeBoard(noticeBoardDto);
         int boardId = noticeBoardDto.getBoardId();
         int resultCount = 0;
@@ -90,5 +96,11 @@ public class NoticeBoardServiceImpl implements NoticeBoardService{
     @Override
     public void updateNoticeBoard(NoticeBoardDto noticeBoardDto){
         noticeBoardMapper.updateNoticeBoard(noticeBoardDto);
+    }
+
+    //게시판 번호로 boardOpenCompany 찾아오기
+    @Override
+    public List<BoardOpenCompanyDto> getBoardOpenCompanyByBoardId(int boardId){
+        return boardOpenCompanyMapper.selectBoardOpenCompanyByBoardId(boardId);
     }
 }

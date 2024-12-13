@@ -126,11 +126,13 @@ public class NoticeBoardController {
             NoticeBoardDto loadNoticeBoard = noticeBoardService.getNoticeBoardByBoardId(boardId);
 
             List<UploadFileDto> uploadFiles = fileService.getFilesById("board",boardId);
+            List<BoardOpenCompanyDto> boardOpenCompanies = noticeBoardService.getBoardOpenCompanyByBoardId(boardId);
 
             model.addAttribute("user", loginUser);//사용자 정보 가져오기
             model.addAttribute("companyOptions", companyOptions);//회사 옵션 정보 가져오기
             model.addAttribute("noticeBoard",loadNoticeBoard);//시스템 정보 가져오기
             model.addAttribute("uploadFiles",uploadFiles);//첨부파일 정보 가져오기
+            model.addAttribute("boardOpenCompanies",boardOpenCompanies);//시스템 정보 가져오기
 
             if("modify".equals(mode)){
                 model.addAttribute("mode", "modify"); // 글 수정

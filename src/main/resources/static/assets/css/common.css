@@ -2451,7 +2451,11 @@ label.checkbox02 input[type="checkbox"]:disabled+span {
 .employee-list .item__title-text > span {
     max-width: 15rem;
 }
-
+.horizontal-layout {
+        display: flex; /* 수평 배열 */
+        align-items: center; /* 수직 가운데 정렬 */
+        gap: 1rem; /* 요소 간 간격 */
+    }
 /* 리스트 */
 .list01 > .list__item {
     display: flex;
