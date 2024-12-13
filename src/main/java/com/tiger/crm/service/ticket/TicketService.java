@@ -27,7 +27,7 @@ public interface TicketService {
 
     void setTicketFileId(String fileId, int ticketId);
 
-    void addComment(int ticketId,String comment,String createId,String statusCd);
+    int addComment(CommentDto commentDto);
 
     List<CommentDto> getCommentsByTicketId(int ticketId);
 
@@ -38,6 +38,10 @@ public interface TicketService {
     void deleteTicketAnswer(int ticketId);
 
     void deleteTicketAnswerById(int Id);
+
+    void deleteTicketAnswerFile(int ticketId);
+
+    void deleteTicketAnswerFileById(int Id);
 
 }
 

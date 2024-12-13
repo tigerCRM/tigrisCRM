@@ -7,7 +7,8 @@
     <title>요청 등록 상세</title>
     <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/common.css?v8">
+    <!--<link rel="stylesheet" type="text/css" href="/assets/css/common.css?v9">-->
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/css/common.css(v=${#dates.format(#dates.createNow(), 'yyyyMMddHHmmss')})}" />
     <link rel="stylesheet" type="text/css" href="/assets/css/layout.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
@@ -244,6 +245,14 @@
                                                             th:if="${user.userName == comment.createName}"
                                                             th:attr="data-comment-id=${comment.answerId}">삭제</button>
                                                 </div>
+                                                <div id="commentfile" class="file-preview-container" th:if="${comment.attachFiles != null and comment.attachFiles.size() > 0}">
+                                                    <svg class="icon icon--20 color-gray700">
+                                                        <use href="/assets/images/icon/sprite-sheet.svg#attachment"></use>
+                                                    </svg>
+                                                    <div class="file-preview-item" th:each="file : ${comment.attachFiles}">
+                                                        <a th:href="@{'/fileDownload?fileName=' + ${file.fileName}}" th:text="${file.originFileName}"></a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -252,9 +261,13 @@
                                     <textarea id="comment" cols="30" rows="10" class="textarea01 input--full"
                                               placeholder="댓글을 입력해주세요"></textarea>
                                     <div class="flex flex-justify_end mt8">
+                                        <div id="file-preview" class="file-preview-container">
+                                            <!-- 첨부 파일 미리보기 리스트가 여기에 표시됩니다. -->
+                                        </div>
                                         <svg class="icon icon--20 color-gray700" style="margin-right: 10px;margin-top: 8px;cursor:pointer" onclick="addAttachComment();">
                                             <use href="/assets/images/icon/sprite-sheet.svg#attachment"></use>
                                         </svg>
+                                        <input type="file" multiple="multiple" id="commnetFileInput" name="commnetFileInput" class="file_attach_input" onchange="previewFiles()">
                                         <button type="button" class="btn btn--s primary-btn" onclick="addComment()">댓글 작성</button>
                                     </div>
                                 </div>
@@ -310,7 +323,20 @@
            }
        });
     });
-
+    var selectedFiles = []; //전송 파일 배열
+    document.getElementById('commnetFileInput').addEventListener('change', () => {
+        const fileInput = document.getElementById('commnetFileInput');
+        console.log("파일 선택 완료");
+        console.log(fileInput.files);
+        const files = Array.from(fileInput.files); // 새로운 파일 배열
+        files.forEach(file => {
+          // 동일한 파일명이 있으면 추가하지 않음
+          if (!selectedFiles.some(f => f.name === file.name)) {
+              selectedFiles.push(file);
+          }
+        });
+        fileInput.value = ''; // 파일 선택창 초기화
+    });
     //상태변경
     function changeStatus() {
         const url = `/changeStatus`;
@@ -345,28 +371,44 @@
 
     // 댓글 작성
     function addComment() {
-        const comment = document.getElementById("comment").value;
-        var id = $("#ticketId").val();
-        var statusCd = $("#statusCd").val();
+        const content = document.getElementById("comment").value;
+        var ticketId = $("#ticketId").val();
+        const statusCd = $("#statusCd").val();
+     //   const fileInput = $('#commnetFileInput')[0].files;
         if (!comment) {
             showMessage('info', '정보', '댓글 내용을 입력하세요.');
             return;
         }
+        // JSON 데이터 생성
+        const jsonData = JSON.stringify({
+            content: content,
+            ticketId: ticketId,
+            statusCd: statusCd
+        });
+        // FormData 생성
+        const formData = new FormData();
+        formData.append("data", new Blob([jsonData], { type: "application/json" }));
+        // 다중 파일을 FormData에 추가
+        selectedFiles.forEach(file => {
+            formData.append("file", file);
+        });
 
         $.ajax({
             url: '/comments', // 서버 컨트롤러 URL
             type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                comment: comment,
-                ticketId: id,
-                statusCd: statusCd
-            }),
+            processData: false, // FormData의 기본 처리 방식을 유지
+            contentType: false, // multipart/form-data 형식 사용
+            data: formData,
             success: function(response) {
-                location.reload();
+                if (response.success) {
+                  //  showMessage('success', '성공', '댓글이 등록되었습니다.');
+                    location.reload(); // 페이지 새로고침
+                } else {
+                    showMessage('error', '오류', response.message || '댓글 등록 중 오류가 발생했습니다.');
+                }
             },
             error: function(error) {
-                alert("댓글 등록 중 오류가 발생했습니다.");
+                showMessage('error', '오류', '댓글 등록 중 오류가 발생했습니다.');
             }
         });
     }
@@ -436,8 +478,61 @@
 
     //댓글 첨부파일추가
     function addAttachComment(){
-        alert("아직 고민중");
+         document.getElementById('commnetFileInput').click();
     }
+
+    // 파일 이름 미리보기
+    function previewFiles() {
+        const fileInput = document.getElementById('commnetFileInput');
+        const previewContainer = document.getElementById('file-preview');
+        previewContainer.innerHTML = ''; // 미리보기 초기화
+
+        const files = fileInput.files;
+        if (selectedFiles.length === 0) {
+            // selectedFiles가 비어 있으면 새로운 파일 배열을 할당
+            selectedFiles = Array.from(files);
+        } else {
+            // selectedFiles가 비어 있지 않으면, fileInput의 파일을 selectedFiles에 추가
+            Array.from(files).forEach(file => {
+                // 이미 selectedFiles에 동일한 파일명이 있는지 확인하고 추가
+                if (!selectedFiles.some(f => f.name === file.name)) {
+                    selectedFiles.push(file);
+                }
+            });
+        }
+
+        let previewText = ''; // 콤마로 구분될 미리보기 텍스트
+
+        selectedFiles.forEach((file, index) => {
+            previewText += `
+                <div class="file-preview-item">
+                    ${file.name}
+                    <span class="delete-file" onclick="removeFile(${index})">
+                    <button type="button" class="icon icon--20 just-icon">
+                        <svg class="icon">
+                            <use href="/assets/images/icon/sprite-sheet.svg#close"></use>
+                        </svg>
+                    </button>
+
+                    </span>
+                </div>
+            `;
+        });
+
+        // 미리보기 텍스트를 콤마로 구분하여 표시
+        if (previewText) {
+            previewText = previewText.slice(0, -2); // 마지막 콤마 제거
+            previewContainer.innerHTML = previewText; // 텍스트만 표시
+        }
+    }
+
+    // 파일 삭제 기능
+    function removeFile(index) {
+        // 선택한 파일을 삭제
+        selectedFiles.splice(index, 1);
+        previewFiles();  // 파일 목록 갱신
+    }
+
 </script>
 </body>
 </html>

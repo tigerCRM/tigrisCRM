@@ -1,10 +1,13 @@
 package com.tiger.crm.repository.dto.ticket;
 
+import com.tiger.crm.repository.dto.file.UploadFileDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,4 +21,6 @@ public class CommentDto {
     private String createDt;           // 작성일
     private String fileId;             // 파일ID
     private String userClass;          //사용자 권한
+    private String statusCd;        //진행상태
+    private List<UploadFileDto> attachFiles;
 }

@@ -50,6 +50,9 @@ public class FileServiceImpl implements FileService{
             case "티켓관리"   :
                 prefix = "T";
                 break;
+            case "댓글"   :
+                prefix = "C";
+                break;
             default:
                 LOGGER.info("error : 정의되지 않은 카테고리");
                 return null;
@@ -86,7 +89,10 @@ public class FileServiceImpl implements FileService{
             fileId = "B".concat(String.valueOf(id));
         }else if("ticket".equals(type)){ // 티켓 첨부파일
             fileId = "T".concat(String.valueOf(id));
-        }else{
+        }else if("comment".equals(type)){ // 댓글 첨부파일
+            fileId = "C".concat(String.valueOf(id));
+        }
+        else{
             LOGGER.info("파일 찾기 오류 : 명시 되지 않은 요청 타입");
             return null;
         }

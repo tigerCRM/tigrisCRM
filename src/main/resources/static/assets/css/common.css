@@ -3474,3 +3474,14 @@ ul[class*='list-tree--'] {
 }
 
 h2 { margin-bottom: 1rem; font-weight: 700; font-size: 2.4rem; }
+
+.file-preview-container{
+   padding-right:5px;
+   padding-top:2px;
+   font-size:1.4rem;
+   margin-top: 8px;
+}
+
+.file-preview-item{
+    display: inline-block;
+}

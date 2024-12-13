@@ -102,8 +102,18 @@ public class TicketServiceImpl implements TicketService {
     }
 
     //댓글 저장
-    public void addComment(int ticketId, String comment,String createId,String statusCd) {
-        ticketMapper.insertTicketComment(ticketId, comment, createId, statusCd);
+    public int addComment(CommentDto commentDto) {
+        int result = ticketMapper.insertTicketComment(commentDto);
+        if(result != 1){
+            return 0;
+        }
+        // 고유번호가 TicketDto에 저장됨
+        int commentId = commentDto.getAnswerId();
+        return commentId;
+    }
+    //첨부파일 저장 후 댓글정보에 첨부파일 아이디 업데이트
+    public void setCommentFileId(String fileId,int Id) {
+        ticketMapper.updateCommentFileId(fileId, Id);
     }
 
     public List<CommentDto> getCommentsByTicketId(int ticketId) {
@@ -120,5 +130,15 @@ public class TicketServiceImpl implements TicketService {
     public void deleteTicketAnswerById(int Id) {
         ticketMapper.deleteTicketAnswerById(Id);
     }
+
+    public void deleteTicketAnswerFile(int Id) {
+        ticketMapper.deleteTicketAnswerFile(Id);
+    }
+
+    public void deleteTicketAnswerFileById(int Id) {
+        ticketMapper.deleteTicketAnswerFileById(Id);
+    }
+
+
 
 }

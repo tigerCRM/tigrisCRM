@@ -34,6 +34,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -301,20 +302,25 @@ public class TicketController {
                     }
                 }
 
-                //신규로 추가된 파일이 있으면 첨부 작업
-                LOGGER.info("새로 들어온 파일의 크기 : " + ticketDto.getAttachFiles().size());
-
-                List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(ticketDto.getAttachFiles());
-                String fileId = fileService.insertFile(uploadFiles, ticketId, "티켓관리");
-                ticketService.setTicketFileId(fileId, ticketId);
+                if (ticketDto.getAttachFiles() != null && !ticketDto.getAttachFiles().isEmpty()) {
+                    List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(ticketDto.getAttachFiles());
+                    String fileId = fileService.insertFile(uploadFiles, ticketId, "티켓관리");
+                    ticketService.setTicketFileId(fileId, ticketId);
+                }
             } catch (Exception fileException) {
                 throw new CustomException("첨부파일 저장 중 오류가 발생했습니다.", fileException);
             }
             //내용수정시 댓글 추가
             var comment = "요청 내용이 수정되었습니다.";
-            ticketService.addComment(ticketId, comment, loginUser.getUserId(), ticketDto.getStatusCd());
+            CommentDto commentDto = new CommentDto();
+            commentDto.setTicketId(ticketId);
+            commentDto.setContent(comment);
+            commentDto.setCreateId(loginUser.getUserId());
+            commentDto.setStatusCd(ticketDto.getStatusCd());
+            ticketService.addComment(commentDto);
 
         } catch (Exception e) {
+            LOGGER.error("티켓 수정 중 오류가 발생했습니다.", e);
             throw new CustomException("ticketModifySave : 티켓 수정 중 오류가 발생했습니다.", e);
         }
         return "redirect:/ticketView?id=" + ticketId;
@@ -345,8 +351,9 @@ public class TicketController {
             //첨부파일 정보 가져오기
             List<UploadFileDto> uploadFiles = fileService.getFilesById("ticket",id);
             model.addAttribute("uploadFiles",uploadFiles);
-            //댓글 정보 가져오기
-            List<CommentDto> commentList = ticketService.getCommentsByTicketId(id);
+            //댓글 정보 가져오기 + 댓글에 대한 첨부파일
+          //  List<CommentDto> commentList = ticketService.getCommentsByTicketId(id);
+            List<CommentDto> commentList = getCommentsWithFiles(id);
             model.addAttribute("commentList",commentList);
             model.addAttribute("statusCd", commonService.getSelectOptions("t_status"));
             model.addAttribute("user", loginUser);
@@ -357,9 +364,21 @@ public class TicketController {
         }
     }
 
+    //댓글 정보 가져오기 + 댓글에 대한 첨부파일
+    public List<CommentDto> getCommentsWithFiles(int ticketId) {
+        // 댓글 목록 가져오기
+        List<CommentDto> commentList = ticketService.getCommentsByTicketId(ticketId);
+        // 각 댓글에 대해 첨부파일 리스트 추가
+        for (CommentDto comment : commentList) {
+            List<UploadFileDto> commentFileList = fileService.getFilesById("comment", comment.getAnswerId());
+            comment.setAttachFiles(commentFileList); // 첨부파일 추가
+        }
+        return commentList;
+    }
+
     //진행 상태 수정
     @PutMapping("/changeStatus")
-    public ResponseEntity<Map<String, String>> updateStepStatus(HttpServletRequest request, @RequestBody Map<String, String> RequestBody) {
+    public ResponseEntity<Map<String, String>> updateStepStatus(HttpServletRequest request, @RequestBody Map<String, String> RequestBody,CommentDto commentDto) {
         try {
 
             String newStatus = RequestBody.get("status");
@@ -395,7 +414,11 @@ public class TicketController {
                     break;
             }
 
-            ticketService.addComment(id, comment, updateId, newStatus);
+            commentDto.setTicketId(id);
+            commentDto.setContent(comment);
+            commentDto.setCreateId(updateId);
+            commentDto.setStatusCd(newStatus);
+            ticketService.addComment(commentDto);
             // JSON 응답
             Map<String, String> response = new HashMap<>();
             response.put("message", "Step status updated successfully");
@@ -406,22 +429,37 @@ public class TicketController {
     }
 
     @PostMapping("/comments")
-    public ResponseEntity<String> addComment(HttpServletRequest request, @RequestBody Map<String, String> RequestBody) {
+    public ResponseEntity<Map<String, Object>> addComment(
+            HttpServletRequest request, @RequestPart("data") CommentDto commentDto,@RequestPart(value = "file", required = false) List<MultipartFile> files) {
+
         try {
+            // 로그인 사용자 정보 가져오기
             UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
             String createId = loginUser.getUserId();
-            int ticketId = Integer.parseInt(RequestBody.get("ticketId"));
-            String comment = RequestBody.get("comment");
-            String statusCd = RequestBody.get("statusCd");
-            ticketService.addComment(ticketId, comment, createId, statusCd);
+            commentDto.setCreateId(createId);
+            // 댓글 저장
+            int commentId = ticketService.addComment(commentDto);
 
-            return ResponseEntity.ok("댓글이 저장되었습니다.");
-        } catch (Exception e) {
-            throw new CustomException("comments : 예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
+            // 파일 저장 처리
+            if (files != null) {
+                List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(files);
+                String fileId = fileService.insertFile(uploadFiles, commentId, "댓글");
+                // 댓글 첨부파일 테이블에 저장
+                ticketService.setTicketFileId(fileId, commentId);
+            }
+
+            // 성공 응답
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "댓글이 저장되었습니다.");
+            return ResponseEntity.ok(response);
+
+        }  catch (Exception e) {
+            throw new CustomException("댓글 등록 중 예기치 않은 오류가 발생했습니다.", e);
         }
     }
 
-    @GetMapping("/comments")
+   /* @GetMapping("/comments")
     public ResponseEntity<String> getComment(HttpServletRequest request, @RequestBody Map<String, String> RequestBody) {
         try {
             UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
@@ -435,7 +473,7 @@ public class TicketController {
         } catch (Exception e) {
             throw new CustomException("comments : 예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
         }
-    }
+    }*/
 
     /*
      * 티켓 정보, 댓글,첨부 삭제처리(deleteYn = Y)
@@ -447,6 +485,7 @@ public class TicketController {
         try{
             ticketService.deleteTicket(Id);             //티켓정보
             ticketService.deleteTicketAnswer(Id);       //댓글정보
+            ticketService.deleteTicketAnswerFile(Id);    //댓글첨부파일등
             fileService.deleteFiles("ticket",Id);  //첨부파일들
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
@@ -463,11 +502,40 @@ public class TicketController {
         int Id = Integer.parseInt((String) data.get("Id"));
         try{
             ticketService.deleteTicketAnswerById(Id);       //댓글정보
-            //fileService.deleteFiles("ticket",Id);  //첨부파일들
+            ticketService.deleteTicketAnswerFileById(Id);    //댓글첨부파일등
         }catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
         }
 
         return ResponseEntity.ok("삭제되었습니다.");
     }
+
+
+    /*
+     * 댓글 첨부파일
+     * 설명 : 저장
+     * */
+    @PostMapping("/addAttachComment")
+    public ResponseEntity<String> addAttachComment(HttpServletRequest request, @RequestBody Map<String, String> RequestBody) {
+        try {
+            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
+            String createId = loginUser.getUserId();
+            int commnetId = Integer.parseInt(RequestBody.get("commnetId"));
+            // 첨부파일 처리
+            try {
+                List<MultipartFile> fileDataList = new ObjectMapper().readValue(RequestBody.get("file"), new TypeReference<>() {});
+                List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(fileDataList);
+                String fileId = fileService.insertFile(uploadFiles, commnetId, "댓글");
+                //댓글 첨부파일 테이블에 저장
+                //  ticketService.setTicketFileId(fileId, ticketId);
+            } catch (Exception fileException) {
+                throw new CustomException("첨부파일 저장 중 오류가 발생했습니다.", fileException);
+            }
+        } catch (Exception e) {
+            throw new CustomException("comments : 예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
+        }
+        return ResponseEntity.ok("업로드되었습니다.");
+    }
+
+
 }

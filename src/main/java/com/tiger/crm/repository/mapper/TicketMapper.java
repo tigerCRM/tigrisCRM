@@ -40,7 +40,7 @@ public interface TicketMapper {
     int updateTicketFileId(String fileId, int ticketId);
 
     //댓글저장
-    void insertTicketComment(int ticketId, String comment, String createId, String statusCd);
+    int insertTicketComment(CommentDto commentDto);
 
     List<CommentDto> getCommentsByTicketId(int ticketId);
 
@@ -48,5 +48,11 @@ public interface TicketMapper {
 
     void deleteTicketAnswer(int ticketId);
 
-    void deleteTicketAnswerById(int ticketId);
+    void deleteTicketAnswerFile(int ticketId);
+
+    void deleteTicketAnswerById(int tId);
+
+    void deleteTicketAnswerFileById(int Id);
+
+    int updateCommentFileId(String fileId, int Id);
 }

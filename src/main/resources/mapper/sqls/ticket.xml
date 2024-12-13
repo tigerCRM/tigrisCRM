@@ -51,7 +51,7 @@
                         OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')) <!-- 제목+내용으로 검색 -->
                     </when>
                     <when test="searchType == 'USERNAME'">
-                        AND ASSIGNEE LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 담당자로 검색 -->
+                        AND U.USER_NAME LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 담당자로 검색 -->
                     </when>
                 </choose>
             </if>
@@ -103,7 +103,7 @@
                         OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')) <!-- 제목+내용으로 검색 -->
                     </when>
                     <when test="searchType == 'USERNAME'">
-                        AND ASSIGNEE LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 담당자로 검색 -->
+                        AND U.USER_NAME LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 담당자로 검색 -->
                     </when>
                 </choose>
             </if>
@@ -196,10 +196,10 @@
         WHERE TICKET_ID = #{ticketId}
     </update>
 
-    <insert id="insertTicketComment" parameterType="map">
+    <insert id="insertTicketComment" parameterType="com.tiger.crm.repository.dto.ticket.CommentDto"  useGeneratedKeys="true" keyProperty="answerId">
         INSERT INTO T_TICKET_ANSWER
         (TICKET_ID, STATUS_CD, CONTENT, CREATE_ID, CREATE_DT, UPDATE_DT, FILE_ID, DELETE_YN)
-        VALUES(#{ticketId}, #{statusCd}, #{comment}, #{createId}, sysdate(), sysdate(), NULL, 'N');
+        VALUES(#{ticketId}, #{statusCd}, #{content}, #{createId}, NOW(), NOW(), NULL, 'N');
     </insert>
 
     <!-- 티켓 댓글 정보 조회 -->
@@ -231,10 +231,30 @@
         WHERE TICKET_ID = #{ticketId};
     </update>
 
+    <update id="deleteTicketAnswerFile" parameterType="map">
+        UPDATE T_FILE F
+        JOIN T_TICKET_ANSWER A
+        ON F.FILE_ID = CONCAT('C', A.ANSWER_ID)
+        SET F.DELETE_YN = 'Y'
+        WHERE A.TICKET_ID = #{ticketId}
+    </update>
+
     <update id="deleteTicketAnswerById" parameterType="map">
         UPDATE T_TICKET_ANSWER
         SET DELETE_YN = 'Y'
         WHERE ANSWER_ID = #{Id};
+    </update>
+
+    <update id="updateCommentFileId" parameterType="map">
+        UPDATE T_TICKET_ANSWER
+        SET FILE_ID = #{fileId}
+        WHERE ANSWER_ID = #{Id}
+    </update>
+
+    <update id="deleteTicketAnswerFileById" parameterType="map">
+        UPDATE T_FILE
+        SET DELETE_YN = 'Y'
+        WHERE FILE_ID = CONCAT('C',#{Id});
     </update>
 
 </mapper>
