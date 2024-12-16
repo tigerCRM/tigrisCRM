@@ -98,7 +98,7 @@
                                                 <label class="checkbox02">
                                                     <input type="checkbox"
                                                            id="topYnCheckbox"
-                                                           th:checked="${noticeBoard.topYn}"
+                                                           th:checked="${noticeBoard.topYn == 'Y'}"
                                                            th:onclick="${mode == 'read'} ? 'return false;' : ''">
                                                     <span>상단공지</span>
                                                 </label>
@@ -121,8 +121,8 @@
                                                         <span>항상노출</span>
                                                     </label>
                                                     <div th:include="fragments/datepicker :: datepickerBoard('popupStartDt', 'popupEndDt')"></div>
-                                                    <span th:errors="*{popupYn}" class="board_validation">error message area</span>
                                                 </div>
+                                                <span th:errors="*{popupYn}" id="popupYnErrorMessage" class="board_validation">error message area</span>
                                             </div>
                                         </td>
                                     </tr>
@@ -131,11 +131,11 @@
                                         <td colspan="3">
                                             <div class="input-list--h">
                                                 <label class="radio02">
-                                                    <input type="radio" name="viewAllYn" value="y" th:checked="${mode == 'write' or noticeBoard.openYn.toString() == 'Y'}" th:onclick="${mode == 'read'} ? 'return false;' : ''">
+                                                    <input type="radio" name="viewAllYn" value="y" th:checked="${mode == 'write' or noticeBoard.openYn == 'Y'}" th:onclick="${mode == 'read'} ? 'return false;' : ''">
                                                     <span>전체열람</span>
                                                 </label>
                                                 <label class="radio02">
-                                                    <input type="radio" name="viewAllYn" value="n" th:attr="checked=${noticeBoard.openYn.toString() == 'N' ? 'true' : 'false'}" th:onclick="${mode == 'read'} ? 'return false;' : ''">
+                                                    <input type="radio" name="viewAllYn" value="n" th:attr="checked=${noticeBoard.openYn == 'N' ? 'true' : 'false'}" th:onclick="${mode == 'read'} ? 'return false;' : ''">
                                                     <span>지정 고객사 열람</span>
                                                 </label>
                                                 <input type="hidden" id="openYn" name="openYn" value="Y">
@@ -278,7 +278,6 @@
     var contentValue = document.getElementById('content').value;
 
     var boardOpenCompanies = /*[[${boardOpenCompanies}]]*/ []; //서버에서 가져온 boardOpenCompanies
-
     toggleAlwaysDisplay();
 
     //1. editor load 및 초기화
@@ -530,6 +529,7 @@
         }
     }
 
+    //팝업등록 시 노출일자 표시하는 선택창 보이기
     function toggleAlwaysDisplay() {
         const popupYnCheckbox = document.getElementById('popupYnCheckbox');
         const alwaysDisplaySection = document.getElementById('alwaysDisplaySection');
@@ -537,11 +537,14 @@
         // 체크박스 상태에 따라 섹션을 표시하거나 숨김
         if (popupYnCheckbox.checked) {
             alwaysDisplaySection.style.display = 'flex';
+
         } else {
             alwaysDisplaySection.style.display = 'none';
+            if(document.getElementById("popupYnErrorMessage")){
+                document.getElementById("popupYnErrorMessage").style.display = "none";
+            }
         }
     }
-
 
 
 </script>

@@ -49,7 +49,7 @@ public class NoticeBoardServiceImpl implements NoticeBoardService{
     @Override
     public int insertNoticeBoard(NoticeBoardDto noticeBoardDto, List<BoardOpenCompanyDto> boardOpenCompanyList) {
 
-        if(noticeBoardDto.getPopupYn() == 'N'){
+        if("N".equals(noticeBoardDto.getPopupYn()) ){
             noticeBoardDto.setPopupStartDt(null);
             noticeBoardDto.setPopupEndDt(null);
         }

@@ -20,11 +20,11 @@ public class NoticeBoardDto {
     private String companyId; //이거 지워도 될지 고민중
     private String companyName;//이거 지워도 될지 고민중
     //열람제한
-    private char openYn;
+    private String openYn;
     //상단고정여부
-    private char topYn;
+    private String topYn;
     //팝업여부
-    private char popupYn;
+    private String popupYn;
     //팝업시작일자
     private String popupStartDt;
     //팝업종료일자
