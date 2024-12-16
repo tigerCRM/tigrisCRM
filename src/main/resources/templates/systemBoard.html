@@ -58,7 +58,13 @@
                                         <col style="width: auto;">
                                     </colgroup>
                                     <tbody>
-                                    <tr>
+                                    <!-- mode가 'write'일 때 -->
+                                    <tr th:if="${mode == 'write'}">
+                                        <th>작성자</th>
+                                        <td colspan="3" th:text="${systemBoard.boardId != 0 ? systemBoard.userName : user.userName}"></td>
+                                    </tr>
+                                    <!-- mode가 'write'가 아닐 때 -->
+                                    <tr th:unless="${mode == 'write'}">
                                         <th>작성자</th>
                                         <td th:text="${systemBoard.boardId != 0 ? systemBoard.userName : user.userName}"></td>
                                         <th>작성일자</th>
