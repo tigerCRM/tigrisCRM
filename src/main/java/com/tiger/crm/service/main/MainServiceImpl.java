@@ -27,5 +27,12 @@ public class MainServiceImpl implements MainService {
         List<Map<String, Object>> ticketList = mainMapper.getCloseList(user);
         return ticketList;
     }
+    
+    // 공지사항 목록 조회
+    @Override
+    public List<Map<String, Object>> getNoticeList(UserLoginDto user) {
+        List<Map<String, Object>> noticeList = mainMapper.getNoticeList(user);
+        return noticeList;
+    }
 
 }
