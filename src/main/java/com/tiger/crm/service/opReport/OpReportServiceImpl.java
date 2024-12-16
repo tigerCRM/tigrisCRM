@@ -5,8 +5,6 @@ import com.tiger.crm.repository.mapper.OpReportMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,10 +14,16 @@ public class OpReportServiceImpl implements OpReportService {
     @Autowired
     private OpReportMapper opReportMapper;
 
-    // 년도별 운영지원 보고서 목록 조회
+    // 연도별 운영지원 보고서 목록 조회
     @Override
     public List<Map<String, Object>> getOpReportList(OpReportDto opReportDto) {
         return opReportMapper.getOpReportList(opReportDto);
+    }
+
+    // 년도 셀렉트 박스 조회
+    @Override
+    public List<OpReportDto> getYearList(int year) {
+        return opReportMapper.getYearList(year);
     }
 
     // 운영지원 보고서 내용 조회

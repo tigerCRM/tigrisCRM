@@ -9,15 +9,19 @@ import java.util.Map;
 @Mapper
 public interface OpReportMapper {
 
-    // 년도별 운영지원 보고서 목록 조회
+    // 연도별 운영지원 보고서 목록 조회
     List<Map<String, Object>> getOpReportList(OpReportDto opReportDto);
 
     // 고객 정보 조회
     Map<String, Object> getCustomerInfo(OpReportDto opReportDto);
+
+    // 년도 셀렉트 박스 조회
+    List<OpReportDto> getYearList(int year);
 
     // 지원사 정보 조회
     Map<String, Object> getSupportCompanyInfo(OpReportDto opReportDto);
 
     // 상세 내역 조회
     List<Map<String, Object>> getDetails(OpReportDto opReportDto);
+
 }

@@ -41,7 +41,7 @@
                                 <div class="searchbar">
                                     <div>
                                         <div class="dropdown dropdown--s wd150" aria-expanded="false" tabindex="0">
-                                            <select class="dropdown__selected" onchange="abc(this)" th:disabled="${userClass == 'USER'}">
+                                            <select class="dropdown__selected" id="companySelect" onchange="fetchYearData(this)" th:disabled="${userClass == 'USER'}">
                                                 <option th:each="op : ${companyOptions}"
                                                         th:value="${op.companyId}"
                                                         th:data-name="${op.companyName}"
@@ -58,27 +58,9 @@
 
                                     <!-- 년 셀랙트박스 -->
                                     <div class="dropdown dropdown--s wd170" aria-expanded="false" tabindex="0">
-                                        <select id="yearSelect" name="yearSelect" class="dropdown__selected">
+                                        <select id="yearSelect" name="yearSelect" class="dropdown__selected" onchange="fetchYearData()">
                                             <option value="">연도를 선택하세요</option>
-                                            <script>
-                                                const currentYear = new Date().getFullYear();
-                                                for (let year = currentYear; year >= currentYear - 10; year--) {
-                                                    document.write(`<option value="${year}">${year}</option>`);
-                                                }
-                                            </script>
-                                        </select>
-                                    </div>
-
-                                    <!-- 월 셀랙트박스 -->
-                                    <div class="dropdown dropdown--s" aria-expanded="false" tabindex="0">
-                                        <select id="monthSelect" name="monthSelect" class="dropdown__selected">
-                                            <option value="">월을 선택하세요</option>
-                                            <script>
-                                                for (let month = 1; month <= 12; month++) {
-                                                    const paddedMonth = month.toString().padStart(2, '0');
-                                                    document.write(`<option value="${paddedMonth}">${paddedMonth}</option>`);
-                                                }
-                                            </script>
+                                            <option th:each="year : ${yearList}" th:value="${year.year}" th:text="${year.year}"></option>
                                         </select>
                                     </div>
                                 <!-- //검색영역 -->
@@ -91,8 +73,11 @@
                             <div class="flex1 widget-select">
                                 <section id="opReportList" class="opReportList-parts">
                                     <div class="widget__content">
-                                        <ul class="opReportList-items" id="opReportList-items">
+                                        <ul th:fragment="opReportListFragment" class="opReportList-items" id="opReportList-items">
                                             <!-- 운영지원보고서 리스트 동적 추가 -->
+                                            <li th:if="${opReportList == null or #lists.isEmpty(opReportList)}">
+                                                보고서가 존재하지 않습니다.
+                                            </li>
                                             <li th:each="item : ${opReportList}"
                                                 th:onclick="'loadReport(' + ${item.opReportId} + ', ' + ${item.companyId} + ')'"
                                                 th:text="${#strings.substring(item.opReportId, 0, 4) + '년 ' + #strings.substring(item.opReportId, 4, 6) + '월 운영지원보고서'}"
@@ -125,65 +110,63 @@
     // 최초 접속 시  운영지원보고서 선택 해야함.
     // ------------------
     $(document).ready(function () {
-        $("#reportContent").text("보고서를 선택해 주세요.");
-    });
-    // function searchBoards(obj) {
-    //     if (obj.id == "refresh"){
-    //       $("#searchType").val("");
-    //       $("#searchKeyword").val("");
-    //     }
-    //     var searchType = $("#searchType").val();
-    //     var searchKeyword = $("#searchKeyword").val();
-    //
-    //     console.log(searchType); //COMPANY
-    //     console.log(searchKeyword); //네패스
-    //
-    //     // x-www-form-urlencoded 형식으로 데이터 생성
-    //     const data = new URLSearchParams({
-    //
-    //       searchType: searchType,
-    //       searchKeyword: searchKeyword,
-    //     });
-    //
-    //     // Ajax 요청
-    //     fetch('/systemBoardList', {
-    //       method: 'POST',
-    //       headers: {
-    //           'Content-Type': 'application/x-www-form-urlencoded',
-    //       },
-    //       body: data.toString() // URLSearchParams 객체를 문자열로 변환하여 전송 (POST로 밖에 보낼수 없음)
-    //     })
-    //     .then(response => response.text())
-    //     .then(data => {
-    //       // 응답받은 HTML을 페이지에 삽입
-    //       document.getElementById('systemBoardListContainer').innerHTML = data;
-    //     })
-    //     .catch(error => console.error('검색 중 오류 발생:', error));
-    //
-    // }
 
+        // -------------------
+        // 최초 접속 시 빈값 양식
+        // ------------------
+        $("#reportContent").html('' +
+            '<div style="display: flex; flex-direction: column; align-items: center; height:100%;"">' +
+                '<span>' +
+                    '<img src="../assets/images/common/tiger_logo2.png" style="width: 60px; height: 60px;"/>' +
+                '</span>' +
+                '<span style="font-size: 15px; font-weight: 500; margin-left: 10px;">보고서를 선택해 주세요.</span>' +
+            '</div>' +
+        '');
+
+    });
 
     // -------------------
-    // 보고서 조회
+    // 보고서 상세 조회
     // ------------------
     function loadReport(opReportId, compnayId) {
-        console.log(">> 보고서 아이디 : ", opReportId, compnayId)
-        const reportContainer = document.getElementById('reportContainer');
         $.ajax({
             url: '/opReportContent',
             method: 'GET',
             data:{'opReportId': opReportId, 'companyId': compnayId },
             success: function (data) {
-                // 서버에서 반환된 HTML을 삽입
                 $("#reportContent").html(data);
             },
             error: function (xhr, status, error) {
                 console.error('운영지원보고서 조회 실패:', error);
             }
         });
-
     }
 
+    // -------------------
+    // 연도 선택시 보고서 리스트 자동 변경
+    // ------------------
+    function fetchYearData(){
+        var companyId = $("#companySelect").val();  // 선택된 회사 ID 값
+        var year = $("#yearSelect").val();
+        if(!year){ // 빈값일 경우 최신 년도로
+            year = new Date().getFullYear();
+        }
+        const data = new URLSearchParams({
+            companyId : companyId,
+            year : year
+        });
+        fetch('/opReportList', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: data.toString()
+        })
+        .then(response => response.text())
+        .then(data => {
+            $('#opReportList-items').html(data);
+        })
+        .catch(error => console.error('검색 중 오류 발생:', error));
+
+    }
 
     // -------------------
     // 인쇄 기능

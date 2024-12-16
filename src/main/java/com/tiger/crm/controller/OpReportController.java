@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +39,7 @@ public class OpReportController {
             UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
 
             // 권한 체크
+            // (고객 : 해당 고객사, 관리자: 전체 고객사)
             if(loginUser.getUserClass().equals("USER")){
                 companyOptionDto.setCompanyId(loginUser.getCompanyId()); // 유저의 고객사 정보
             }else{
@@ -47,12 +50,47 @@ public class OpReportController {
             List<CompanyOptionDto> companyOptions = commonService.getCompanyOption2(companyOptionDto);
             model.addAttribute("companyOptions", companyOptions);
 
-            // 년도별 운영지원 보고서 목록 조회
-            opReportDto.setCompanyId(loginUser.getCompanyId()); // 최초 화면 시 기본 고객사번호 저장
+            // 년도 셀렉트 박스 조회
+            LocalDateTime currentTime = LocalDateTime.now();
+            List<OpReportDto> yearList = opReportService.getYearList(currentTime.getYear());
+            model.addAttribute("yearList", yearList);
+
+            // 연도별 운영지원 보고서 목록 조회
+            if( opReportDto.getYear() == 0 ){
+                opReportDto.setCompanyId(loginUser.getCompanyId()); // 로그인유저 고객사번호 고정
+                opReportDto.setYear(currentTime.getYear()); // 현재 년도
+            }
             List<Map<String, Object>> opReportList = opReportService.getOpReportList(opReportDto);
             model.addAttribute("opReportList", opReportList);
 
             return "opReportList";
+
+        } catch (Exception e) {
+            throw new CustomException("운영지원 보고서 데이터를 불러오는 중 오류가 발생했습니다.", e);
+        }
+    }
+
+    /*
+     * 운영지원 보고서 리스트 페이지(검색 조건 변경시)
+     * */
+    @PostMapping("/opReportList")
+    public String getOpReportList2(OpReportDto opReportDto, CompanyOptionDto companyOptionDto, HttpServletRequest request, Model model) {
+        try {
+            // 유저 정보 조회
+            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
+
+            // 년도 셀렉트 박스 조회
+            LocalDateTime currentTime = LocalDateTime.now();
+
+            // 연도별 운영지원 보고서 목록 조회
+            if( opReportDto.getYear() == 0 ){
+                opReportDto.setCompanyId(loginUser.getCompanyId()); // 로그인유저 고객사번호 고정
+                opReportDto.setYear(currentTime.getYear()); // 현재 년도
+            }
+            List<Map<String, Object>> opReportList = opReportService.getOpReportList(opReportDto);
+            model.addAttribute("opReportList", opReportList);
+
+            return "opReportList :: opReportListFragment";
 
         } catch (Exception e) {
             throw new CustomException("운영지원 보고서 데이터를 불러오는 중 오류가 발생했습니다.", e);

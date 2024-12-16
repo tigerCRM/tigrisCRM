@@ -8,6 +8,7 @@ import java.util.Map;
 
 @Data
 public class OpReportDto {
+    private int year;             // 년
     private int opReportId;       // 운영지원보고서 ID
     private int companyId;        // 고객사 코드
     private String createId;      // 생성자 아이디
