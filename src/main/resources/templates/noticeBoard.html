@@ -76,13 +76,14 @@
                                     <tr>
                                         <th>제목</th>
                                         <td>
-                                            <input type="text"
+                                            <span th:if="${mode == 'read'}" th:text="*{title}"></span>
+                                            <input th:unless="${mode == 'read'}"
+                                                   type="text"
                                                    id="title"
                                                    name="title"
                                                    class="input--xs input01 input--full"
                                                    th:errorclass="'input--error'"
-                                                   th:field="*{title}"
-                                                   th:readonly="${mode == 'read'}">
+                                                   th:field="*{title}">
                                             <span th:errors="*{title}" class="board_validation">error message area</span>
                                         </td>
                                         <th>상단 공지 여부</th>
