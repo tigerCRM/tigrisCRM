@@ -29,7 +29,7 @@ public class NoticeBoardValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors,"title","error.required");
 
         //팝업등록 체크, 시작일자와 종료일자를 미정했을 경우
-        if( (noticeBoard.getPopupYn() == 'Y' ) && ("".equals(noticeBoard.getPopupStartDt()) || "".equals(noticeBoard.getPopupEndDt()) ) ){
+        if( ("Y".equals(noticeBoard.getPopupYn())) && ("".equals(noticeBoard.getPopupStartDt()) || "".equals(noticeBoard.getPopupEndDt()) ) ){
             errors.rejectValue("popupYn","error.requiredDate");
         }
 

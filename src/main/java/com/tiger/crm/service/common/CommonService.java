@@ -58,6 +58,11 @@ public class CommonService {
         return companyOptionMapper.getAllCompany();
     }
 
+    // 고객사별 회사 불러오기
+    public List<CompanyOptionDto> getCompanyOption2(CompanyOptionDto companyOptionDto) {
+        return companyOptionMapper.getAllCompany2(companyOptionDto);
+    }
+
 
     public void downloadExcel(List<Map<String, Object>> dataList, HttpServletResponse response, String location) throws IOException {
         // Excel 파일 생성

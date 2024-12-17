@@ -3214,6 +3214,7 @@ ul[class*='list-tree--'] {
 .wd120 { width: 12rem; }
 .wd130 { width: 13rem; }
 .wd150 { width: 15rem; }
+.wd170 { width: 17.5rem; }
 .wd160 { width: 16rem; }
 .wd180 { width: 18rem; }
 .wd240 { width: 24rem; }
@@ -3489,3 +3490,84 @@ h2 { margin-bottom: 1rem; font-weight: 700; font-size: 2.4rem; }
 .file-preview-item{
     display: inline-block;
 }
+
+/* ---------------------------------------------START : 운영지원보고서 css */
+.orReport-widget-wrap{
+    gap: var(--grid-gutter);
+    height: 50%;
+    width: 100%;
+}
+.flex-container {
+    display: flex;
+    justify-content: space-between; /* 양옆으로 배치 */
+    gap: 16px; /* 간격 조정 */
+    margin-top: 20px; /* 상단과 간격 */
+}
+.opReportList-parts {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 1.2rem
+}
+.widget-select {
+    flex: 0 0 20%; /* 고정된 20% 너비 */
+    max-width: 20%; /* 최대 너비도 20%로 제한 */
+}
+.widget-content {
+    flex: 0 0 79%; /* 고정된 80% 너비 */
+    max-width: 79%; /* 최대 너비도 80%로 제한 */
+}
+#opReportList-items li {
+    font-size: 15px;
+    position: relative; /* 각 li를 기준 컨테이너로 설정 */
+    padding: 15px; /* 알림 내용과 버튼 사이 간격 */
+    border-bottom: 1px solid #ddd; /* 항목 구분선 */
+}
+#opReportList-items li:hover {
+    font-size: 17px;
+    cursor: pointer;
+    transform: scale(1.02); /* 약간 확대 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 튀어나온 느낌 */
+    background-color: var(--primary-navy-50);
+    color: var(--primary-navy-500);
+    border-radius: 1.2rem
+}
+#opReportList-items li.active { /* 클릭 시 활성화 효과 */
+    transform: scale(1.05); /* 더 크게 확대 */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* 더 깊은 그림자 */
+    background: #eef5ff; /* 선택된 배경색 */
+    font-weight: 500;
+    background-color: var(--primary-navy-50);
+    color: var(--primary-navy-500);
+    border-radius: 1.2rem
+}
+.table04 tr {
+    height: 20px;
+    transition: .2s ease;
+}
+.table04 th, .table04 td {
+    border-top: 1px solid var(--gray-300);
+}
+.table04 th {
+    background-color: var(--gray-300);
+    font-weight: 400;
+}
+.table04 th, .table04 td {
+    border-left: 1px solid var(--gray-200);
+    border-right: 1px solid var(--gray-200);
+}
+.table--xss{
+    margin-top:0%;
+}
+.table--xss th, .table--xss td {
+    padding: 0.2rem 0.4rem;
+}
+#opReportStatus {
+    margin-top: -1%;
+    font-size: 13px;
+    float: right;
+    background-color: white;
+    border: 0px;
+}
+/* ---------------------------------------------END : 운영지원보고서 css */

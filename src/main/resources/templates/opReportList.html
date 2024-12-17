@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width" />
+    <title>메인</title>
+    <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/layout.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
+    <script src="/lib/jquery/jquery-2.2.2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+</head>
+<body>
+<div class="wrapper">
+    <!-- 왼쪽 메뉴  -->
+    <div th:replace="~{common/frame_left_menu :: frame_left_menu}" />
+
+    <!-- 상단 메뉴  -->
+    <div th:replace="~{common/frame_top_menu :: frame_top_menu}" />
+
+    <!-- 컨텐츠 영역 -->
+    <div class="main-area">
+        <!-- 내용 영역 -->
+        <main class="form-content">
+            <div class="container">
+                <div class="orReport-widget-wrap">
+                    <div class="content">
+                        <!-- 검색 영역 -->
+                        <div class="search--box">
+                            <div class="content-header">
+                                <h2 class="text-body1">
+                                    <div class="flex flex-align_center gap--8">
+                                        <b>운영지원 보고서</b>
+                                    </div>
+                                </h2>
+                                <!-- 검색영역 -->
+                                <div class="searchbar">
+                                    <div>
+                                        <div class="dropdown dropdown--s wd150" aria-expanded="false" tabindex="0">
+                                            <select class="dropdown__selected" id="companySelect" onchange="fetchYearData(this)" th:disabled="${userClass == 'USER'}">
+                                                <option th:each="op : ${companyOptions}"
+                                                        th:value="${op.companyId}"
+                                                        th:data-name="${op.companyName}"
+                                                        th:text="${op.companyName}"
+                                                        th:selected="${op.companyName == selectedCompanyName}">
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <!--
+                                        <input type="hidden" name="companyId" id="companyId" th:field="*{companyId}">
+                                        <input type="hidden" name="companyName" id="companyName" th:field="*{companyName}">
+                                        -->
+                                    </div>
+
+                                    <!-- 년 셀랙트박스 -->
+                                    <div class="dropdown dropdown--s wd170" aria-expanded="false" tabindex="0">
+                                        <select id="yearSelect" name="yearSelect" class="dropdown__selected" onchange="fetchYearData()">
+                                            <option value="">연도를 선택하세요</option>
+                                            <option th:each="year : ${yearList}" th:value="${year.year}" th:text="${year.year}"></option>
+                                        </select>
+                                    </div>
+                                <!-- //검색영역 -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 리스트 영역 -->
+                        <div class="flex-container">
+                            <div class="flex1 widget-select">
+                                <section id="opReportList" class="opReportList-parts">
+                                    <div class="widget__content">
+                                        <ul th:fragment="opReportListFragment" class="opReportList-items" id="opReportList-items">
+                                            <!-- 운영지원보고서 리스트 동적 추가 -->
+                                            <li th:if="${opReportList == null or #lists.isEmpty(opReportList)}">
+                                                보고서가 존재하지 않습니다.
+                                            </li>
+                                            <li th:each="item : ${opReportList}"
+                                                th:onclick="'loadReport(' + ${item.opReportId} + ', ' + ${item.companyId} + ')'"
+                                                th:text="${#strings.substring(item.opReportId, 0, 4) + '년 ' + #strings.substring(item.opReportId, 4, 6) + '월 운영지원보고서'}"
+                                            >
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="flex1 widget-content">
+                                <section id="opReportDetail" class="opReportList-parts">
+                                    <div class="widget__content"  id="reportContent">
+                                        <!-- 보고서 양식 호출 -->
+                                        <div th:replace="~{fragments/opReportFragment}" />
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- //내용 영역 -->
+    </div>
+    <!-- //컨텐츠 영역 -->
+</div>
+
+<script>
+    // -------------------
+    // 최초 접속 시  운영지원보고서 선택 해야함.
+    // ------------------
+    $(document).ready(function () {
+
+        // -------------------
+        // 최초 접속 시 빈값 양식
+        // ------------------
+        $("#reportContent").html('' +
+            '<div style="display: flex; flex-direction: column; align-items: center; height:100%;"">' +
+                '<span>' +
+                    '<img src="../assets/images/common/tiger_logo2.png" style="width: 60px; height: 60px;"/>' +
+                '</span>' +
+                '<span style="font-size: 15px; font-weight: 500; margin-left: 10px;">보고서를 선택해 주세요.</span>' +
+            '</div>' +
+        '');
+
+    });
+
+    // -------------------
+    // 보고서 상세 조회
+    // ------------------
+    function loadReport(opReportId, compnayId) {
+        $.ajax({
+            url: '/opReportContent',
+            method: 'GET',
+            data:{'opReportId': opReportId, 'companyId': compnayId },
+            success: function (data) {
+                $("#reportContent").html(data);
+            },
+            error: function (xhr, status, error) {
+                console.error('운영지원보고서 조회 실패:', error);
+            }
+        });
+    }
+
+    // -------------------
+    // 연도 선택시 보고서 리스트 자동 변경
+    // ------------------
+    function fetchYearData(){
+        var companyId = $("#companySelect").val();  // 선택된 회사 ID 값
+        var year = $("#yearSelect").val();
+        if(!year){ // 빈값일 경우 최신 년도로
+            year = new Date().getFullYear();
+        }
+        const data = new URLSearchParams({
+            companyId : companyId,
+            year : year
+        });
+        fetch('/opReportList', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: data.toString()
+        })
+        .then(response => response.text())
+        .then(data => {
+            $('#opReportList-items').html(data);
+        })
+        .catch(error => console.error('검색 중 오류 발생:', error));
+
+    }
+
+    // -------------------
+    // 인쇄 기능
+    // ------------------
+    function printReport() {
+        const printContent = document.querySelector('#opReportDetail').innerHTML;
+        const printWindow = window.open('', '_blank', 'scrollbars=no,toolbar=no');
+
+        // 새 창에 인쇄할 내용을 작성
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <title>운영지원보고서</title>
+                    <style>
+                        @page { size: auto; margin: 0; }
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { border: 1px solid #ddd; padding: 0px; text-align: left; }
+                        th { background-color: #f2f2f2; }
+                        tr { height: 20px; }
+                        @media print { button, svg {display: none;} }
+                    </style>
+                </head>
+                <body>${printContent}</body>
+            </html>
+        `);
+
+        // 문서 작성 완료 후 인쇄 실행
+        printWindow.document.close();
+        printWindow.focus(); // 일부 브라우저에서 안정성을 위해 포커스 필요
+        printWindow.print();
+
+        // 일정 시간 뒤에 새 창을 닫기
+        setTimeout(() => {
+            printWindow.close();
+        }, 100);
+    }
+
+    // -------------------
+    // 클릭 시 css 활성화
+    // ------------------
+    $('#opReportList-items li').on('click', function () {
+        // 모든 항목에서 active 클래스 제거
+        $('#opReportList-items li').removeClass('active');
+
+        // 클릭된 항목에 active 클래스 추가
+        $(this).addClass('active');
+    });
+</script>
+</body>
+</html>

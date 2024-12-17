@@ -67,7 +67,13 @@
                                         <col style="width: auto;">
                                     </colgroup>
                                     <tbody>
-                                    <tr>
+                                    <!-- mode가 'write'일 때 -->
+                                    <tr th:if="${mode == 'write'}">
+                                        <th>작성자</th>
+                                        <td colspan="3" th:text="${noticeBoard.boardId != 0 ? noticeBoard.userName : user.userName}"></td>
+                                    </tr>
+                                    <!-- mode가 'write'가 아닐 때 -->
+                                    <tr th:unless="${mode == 'write'}">
                                         <th>작성자</th>
                                         <td th:text="${noticeBoard.boardId != 0 ? noticeBoard.userName : user.userName}"></td>
                                         <th>작성일자</th>
@@ -76,13 +82,14 @@
                                     <tr>
                                         <th>제목</th>
                                         <td>
-                                            <input type="text"
+                                            <span th:if="${mode == 'read'}" th:text="*{title}"></span>
+                                            <input th:unless="${mode == 'read'}"
+                                                   type="text"
                                                    id="title"
                                                    name="title"
                                                    class="input--xs input01 input--full"
                                                    th:errorclass="'input--error'"
-                                                   th:field="*{title}"
-                                                   th:readonly="${mode == 'read'}">
+                                                   th:field="*{title}">
                                             <span th:errors="*{title}" class="board_validation">error message area</span>
                                         </td>
                                         <th>상단 공지 여부</th>
@@ -91,7 +98,7 @@
                                                 <label class="checkbox02">
                                                     <input type="checkbox"
                                                            id="topYnCheckbox"
-                                                           th:checked="${noticeBoard.topYn}"
+                                                           th:checked="${noticeBoard.topYn == 'Y'}"
                                                            th:onclick="${mode == 'read'} ? 'return false;' : ''">
                                                     <span>상단공지</span>
                                                 </label>
@@ -114,8 +121,8 @@
                                                         <span>항상노출</span>
                                                     </label>
                                                     <div th:include="fragments/datepicker :: datepickerBoard('popupStartDt', 'popupEndDt')"></div>
-                                                    <span th:errors="*{popupYn}" class="board_validation">error message area</span>
                                                 </div>
+                                                <span th:errors="*{popupYn}" id="popupYnErrorMessage" class="board_validation">error message area</span>
                                             </div>
                                         </td>
                                     </tr>
@@ -124,11 +131,11 @@
                                         <td colspan="3">
                                             <div class="input-list--h">
                                                 <label class="radio02">
-                                                    <input type="radio" name="viewAllYn" value="y" th:checked="${mode == 'write' or noticeBoard.openYn.toString() == 'Y'}" th:onclick="${mode == 'read'} ? 'return false;' : ''">
+                                                    <input type="radio" name="viewAllYn" value="y" th:checked="${mode == 'write' or noticeBoard.openYn == 'Y'}" th:onclick="${mode == 'read'} ? 'return false;' : ''">
                                                     <span>전체열람</span>
                                                 </label>
                                                 <label class="radio02">
-                                                    <input type="radio" name="viewAllYn" value="n" th:attr="checked=${noticeBoard.openYn.toString() == 'N' ? 'true' : 'false'}" th:onclick="${mode == 'read'} ? 'return false;' : ''">
+                                                    <input type="radio" name="viewAllYn" value="n" th:attr="checked=${noticeBoard.openYn == 'N' ? 'true' : 'false'}" th:onclick="${mode == 'read'} ? 'return false;' : ''">
                                                     <span>지정 고객사 열람</span>
                                                 </label>
                                                 <input type="hidden" id="openYn" name="openYn" value="Y">
@@ -271,7 +278,6 @@
     var contentValue = document.getElementById('content').value;
 
     var boardOpenCompanies = /*[[${boardOpenCompanies}]]*/ []; //서버에서 가져온 boardOpenCompanies
-
     toggleAlwaysDisplay();
 
     //1. editor load 및 초기화
@@ -344,6 +350,23 @@
     function submitModifiedBoard() {
         var content = editor.getHTML();
         document.querySelector('#content').value = content;
+
+        //체크박스,라디오버튼 변환
+        const topYnCheckbox = document.getElementById('topYnCheckbox');
+        const topYn = document.getElementById('topYn');
+        const popupYnCheckbox = document.getElementById('popupYnCheckbox');
+        const popupYn = document.getElementById('popupYn');
+
+        popupYn.value = popupYnCheckbox.checked ? 'Y' : 'N';
+        topYn.value = topYnCheckbox.checked ? 'Y' : 'N';
+
+        //선택한 회사 옵션 관련 설정
+        const boardOpenCompanies = document.getElementById('boardOpenCompanies');
+        boardOpenCompanies.value = JSON.stringify(chooseTargetArr);
+
+        //날짜 disabled 품
+        document.querySelector('.start-date').disabled = false;
+        document.querySelector('.end-date').disabled = false;
 
         common.attachFileWorks();
 
@@ -514,15 +537,28 @@
     //12.회사 이름 나열하는 구역에 회사이름 쓰기
     function writeDownCompanyName(){
         var viewCompanyElement = document.getElementById('viewCompany'); //열람대상 회사 이름 나열하는 구역
-
-        //회사 이름 쓰기
-        if (viewCompanyElement) {
-            const names = chooseTargetArr.map(obj => `"${obj.companyName}"`).join(', ');
-            viewCompanyElement.textContent = names;
-            document.getElementById('viewCompanyWrapper').style.removeProperty('display');
+        if(!isViewAllYnChecked()){
+            //회사 이름 쓰기
+            if (viewCompanyElement) {
+                const names = chooseTargetArr.map(obj => `"${obj.companyName}"`).join(', ');
+                viewCompanyElement.textContent = names;
+                document.getElementById('viewCompanyWrapper').style.removeProperty('display');
+            }
+        }
+    }
+    //13. 전체열람인지 부분열람인지 체크
+    function isViewAllYnChecked(){
+        const radioButtons = document.getElementsByName("viewAllYn");
+        for (const radioButton of radioButtons) {
+            if (radioButton.checked && radioButton.value === 'y') {
+                return true; //전체열람
+            }else{
+                return false;//부분열람
+            }
         }
     }
 
+    //14. 팝업등록 시 노출일자 표시하는 선택창 보이기
     function toggleAlwaysDisplay() {
         const popupYnCheckbox = document.getElementById('popupYnCheckbox');
         const alwaysDisplaySection = document.getElementById('alwaysDisplaySection');
@@ -530,11 +566,14 @@
         // 체크박스 상태에 따라 섹션을 표시하거나 숨김
         if (popupYnCheckbox.checked) {
             alwaysDisplaySection.style.display = 'flex';
+
         } else {
             alwaysDisplaySection.style.display = 'none';
+            if(document.getElementById("popupYnErrorMessage")){
+                document.getElementById("popupYnErrorMessage").style.display = "none";
+            }
         }
     }
-
 
 
 </script>
