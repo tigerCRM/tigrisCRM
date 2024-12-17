@@ -3059,6 +3059,10 @@ ul[class*='list-tree--'] {
 .login-layer>.login-form>p {
     margin-top: 1.6rem;
 }
+/*예솔 추가 :  */
+.selected-bold{
+    font-weight: bold;
+}
 
 /*예솔 추가 : 로그인 페이지 검증 실패시 뜨는 안내 문구 */
 .login_validation{

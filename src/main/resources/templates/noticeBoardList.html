@@ -98,7 +98,7 @@
                                                 <tr th:if="${noticeBoardList == null or #lists.isEmpty(noticeBoardList)}">
                                                     <td colspan="10" style="text-align:center;">등록된 시스템 정보가 없습니다.</td>
                                                 </tr>
-                                                <tr th:each="noticeBoard : ${noticeBoardList.dataList}">
+                                                <tr th:classappend="${noticeBoard['TOP_YN'] == 'Y' ? 'selected selected-bold' : ''}" th:each="noticeBoard : ${noticeBoardList.dataList}">
                                                     <td><span th:text="${noticeBoard['BOARD_ID']}"></span></td>
                                                     <td>
                                                         <a th:href="@{/noticeBoard(boardId=${noticeBoard['BOARD_ID']})}"

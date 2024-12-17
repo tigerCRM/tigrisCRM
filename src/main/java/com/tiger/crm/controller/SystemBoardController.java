@@ -268,10 +268,12 @@ public class SystemBoardController {
             }
 
             //신규로 추가된 파일이 있으면 첨부 작업
-            LOGGER.info("새로 들어온 파일의 크기 : " + systemBoard.getAttachFiles().size());
-            List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(systemBoard.getAttachFiles()); // 경로에 저장
-            String fileId = fileService.insertFile(uploadFiles, systemBoard.getBoardId(), "시스템관리"); //DB 에 저장
-            systemBoardService.setSystemBoardFileId(fileId,systemBoard.getBoardId());//DB에 저장
+            if(!systemBoard.getAttachFiles().get(0).isEmpty()){
+                LOGGER.info("새로 들어온 파일의 크기 : " + systemBoard.getAttachFiles().size());
+                List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(systemBoard.getAttachFiles()); // 경로에 저장
+                String fileId = fileService.insertFile(uploadFiles, systemBoard.getBoardId(), "시스템관리"); //DB 에 저장
+                systemBoardService.setSystemBoardFileId(fileId,systemBoard.getBoardId());//DB에 저장
+            }
 
         }catch (Exception e){
             LOGGER.info("게시물 수정 오류 발생 : " + e);
