@@ -520,12 +520,24 @@
     //12.회사 이름 나열하는 구역에 회사이름 쓰기
     function writeDownCompanyName(){
         var viewCompanyElement = document.getElementById('viewCompany'); //열람대상 회사 이름 나열하는 구역
-
-        //회사 이름 쓰기
-        if (viewCompanyElement) {
-            const names = chooseTargetArr.map(obj => `"${obj.companyName}"`).join(', ');
-            viewCompanyElement.textContent = names;
-            document.getElementById('viewCompanyWrapper').style.removeProperty('display');
+        if(!isViewAllYnChecked()){
+            //회사 이름 쓰기
+            if (viewCompanyElement) {
+                const names = chooseTargetArr.map(obj => `"${obj.companyName}"`).join(', ');
+                viewCompanyElement.textContent = names;
+                document.getElementById('viewCompanyWrapper').style.removeProperty('display');
+            }
+        }
+    }
+    //전체열람인지 부분열람인지 체크
+    function isViewAllYnChecked(){
+        const radioButtons = document.getElementsByName("viewAllYn");
+        for (const radioButton of radioButtons) {
+            if (radioButton.checked && radioButton.value === 'y') {
+                return true; //전체열람
+            }else{
+                return false;//부분열람
+            }
         }
     }
 
