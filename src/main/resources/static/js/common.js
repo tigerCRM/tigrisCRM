@@ -294,3 +294,12 @@ var common = {
              }
         });
     }
+
+    function callPage() {
+       const target = event.target.closest("a[data-url][data-page]"); // `data-url` 및 `data-page` 속성이 있는 <a> 태그만 선택
+       if (target) {
+           const url = target.getAttribute("data-url");
+           const page = target.getAttribute("data-page");
+           goPage(url, page); // goPage 함수 호출
+       }
+    }

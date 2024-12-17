@@ -9,6 +9,8 @@ import com.tiger.crm.repository.dto.file.UploadFileDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.dto.ticket.CommentDto;
+
+import com.tiger.crm.repository.dto.ticket.StatusMapper;
 import com.tiger.crm.repository.dto.ticket.TicketDto;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.service.common.CommonService;
@@ -50,7 +52,8 @@ public class TicketController {
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
     @Autowired
     private FileService fileService;
-
+    @Autowired
+    private StatusMapper statusMapper;
     /*
      * 요청관리(티켓관리)
      * 설명 : 요청관리 페이지 초기화면
@@ -129,7 +132,7 @@ public class TicketController {
      * 설명 : 신규 티켓 등록시 초기화면 바인딩
      * */
     @GetMapping("/ticketCreate")
-    public String goTicketCreatePage(HttpServletRequest request, HttpServletResponse response, Model model) {
+    public String goTicketCreatePage(@RequestParam(value = "id", required = false) Integer id, HttpServletRequest request, HttpServletResponse response, Model model) {
         try {
             UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
             String companyId = String.valueOf(loginUser.getCompanyId());
@@ -154,6 +157,19 @@ public class TicketController {
             ticketCreate.setExpectedCompleteDt(expDate);
             ticketCreate.setStatusCd("OPEN");
             ticketCreate.setTicketId(null);
+            if (id!=null){  //연관티켓 요청일경우
+                // 티켓 상세 정보 조회 - 로그인한 본인 회사만 볼수있음
+                TicketDto parentTicketDetails = ticketService.getTicketDetails(id);
+                if (!String.valueOf(parentTicketDetails.getCompanyId()).equals(companyId) && userClass.equals("USER")) {
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);  // 403 상태 코드 반환
+                    response.setContentType("text/html; charset=UTF-8");  // 응답 내용 타입과 문자 인코딩 설정
+                    response.getWriter().write("<script>alert('접근권한이 없습니다.'); window.history.back();</script>");
+                    response.getWriter().flush();
+                    return "ticketList";
+                }
+                ticketCreate.setParentTicketCd(id);
+                ticketCreate.setTitle("["+String.valueOf(id)+"] Re:"+ parentTicketDetails.getTitle());
+            }
             //model에 데이터 바인딩
             List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
             List<TicketDto> ManagerOptions = ticketService.getAllManagerOption();
@@ -237,7 +253,7 @@ public class TicketController {
             model.addAttribute("selectedManagerName", ticketDetails.getManagerName());
             model.addAttribute("companyOptions", companyOptions);
             model.addAttribute("selectedCompanyName", ticketDetails.getCompanyName());
-            model.addAttribute("userClass", ticketDetails.getClass()); //작성자 레벨
+            model.addAttribute("userClass", userClass); //작성자 레벨
             model.addAttribute("requestTypeCd", commonService.getSelectOptions("t_request"));
             model.addAttribute("supportCd", commonService.getSelectOptions("t_support"));
             model.addAttribute("priorityYn", commonService.getSelectOptions("t_priority"));
@@ -249,7 +265,6 @@ public class TicketController {
             List<CommentDto> commentList = ticketService.getCommentsByTicketId(id);
             model.addAttribute("commentList",commentList);
             model.addAttribute("statusCd", commonService.getSelectOptions("t_status"));
-     //       model.addAttribute("DateId",ticketDetails.getExpectedCompleteDt());
             model.addAttribute("mode", "modify");
             model.addAttribute("ticketCreate", ticketDetails);
         } catch (Exception e) {
@@ -281,7 +296,7 @@ public class TicketController {
             if( ticketDto.getMd() == null){
                 ticketDto.setMd(BigDecimal.ZERO);
             }
-            if( ticketDto.getCompleteDt().isEmpty()){
+            if (ticketDto.getCompleteDt() == null || ticketDto.getCompleteDt().isEmpty()) {
                 ticketDto.setCompleteDt(null);
             }
             // 티켓 수정 업데이트
@@ -311,7 +326,9 @@ public class TicketController {
                 throw new CustomException("첨부파일 저장 중 오류가 발생했습니다.", fileException);
             }
             //내용수정시 댓글 추가
-            var comment = "요청 내용이 수정되었습니다.";
+            String statusText =  StatusMapper.getStatusText(ticketDto.getStatusCd());
+            // comment에 변환된 값 넣기
+            var comment = "[" + statusText + "] 요청 내용이 수정되었습니다.";
             CommentDto commentDto = new CommentDto();
             commentDto.setTicketId(ticketId);
             commentDto.setContent(comment);

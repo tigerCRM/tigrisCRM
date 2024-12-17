@@ -59,7 +59,7 @@
                                 <table class="table table03 table--h table--xs">
                                     <colgroup>
                                         <col style="width: 18%;">
-                                        <col style="width: auto;">
+                                        <col style="width: 32%;">
                                         <col style="width: 18%;">
                                         <col style="width: auto;">
                                     </colgroup>
@@ -176,6 +176,12 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <th>연관티켓</th>
+                                        <td colspan="3">
+                                            <input type="text" th:field="*{parentTicketCd}" readonly>
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <th>작업완료일</th>
                                         <td>
                                             <span id="completeDt" th:text="*{completeDt}"></span>
@@ -274,6 +280,8 @@
                                 <!--//댓글 영역-->
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
+                                    <button type="button" class="btn btn--m secondary-btn"
+                                            onclick="goReRequest()">연관요청</button>
                                     <button type="submit" class="btn btn--m primary-btn">수정</button>
                                     <button type="button" class="btn btn--m danger-btn" onclick="deleteTicket()">삭제</button>
                                     <button type="button" class="btn btn--m secondary-btn"
@@ -531,6 +539,12 @@
         // 선택한 파일을 삭제
         selectedFiles.splice(index, 1);
         previewFiles();  // 파일 목록 갱신
+    }
+
+    //재요청
+    function goReRequest(){
+        var ticketId = $("#ticketId").val()
+        location.href = '/ticketCreate?id=' + ticketId;
     }
 
 </script>

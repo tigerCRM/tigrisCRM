@@ -9,7 +9,9 @@
         <li>
             <a class="btn paging-btn arrow-btn"
                th:if="${list.currentPage > 1}"
-               th:href="@{|${paginationUrl}?page=${list.currentPage - 1}|}">
+               th:data-url="${paginationUrl}"
+               th:data-page="${list.currentPage - 1}"
+               onclick="callPage()">
                 <svg class="icon">
                     <use href="./assets/images/icon/sprite-sheet.svg#arrow-left"></use>
                 </svg>
@@ -18,8 +20,10 @@
         <!-- 페이지 번호 버튼 -->
         <li th:if="${list.totalPages > 0}" th:each="i : ${#numbers.sequence(1, list.totalPages)}">
             <a class="btn paging-btn"
-               th:href="@{|${paginationUrl}?page=${i}|}"
-               th:classappend="${list.currentPage == i} ? 'active' : ''">
+               th:data-url="${paginationUrl}"
+               th:data-page="${i}"
+               th:classappend="${list.currentPage == i} ? 'active' : ''"
+                onclick="callPage()">
                 <span th:text="${i}"></span>
             </a>
         </li>
@@ -27,7 +31,9 @@
         <li>
             <a class="btn paging-btn arrow-btn"
                th:if="${list.currentPage < list.totalPages}"
-               th:href="@{|${paginationUrl}?page=${list.currentPage + 1}|}">
+               th:data-url="${paginationUrl}"
+               th:data-page="${list.currentPage + 1}"
+               onclick="callPage()">
                 <svg class="icon">
                     <use href="./assets/images/icon/sprite-sheet.svg#arrow-right"></use>
                 </svg>

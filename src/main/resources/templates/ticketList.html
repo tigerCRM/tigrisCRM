@@ -16,7 +16,7 @@
     <script src="/lib/picker/datepicker.min.js"></script>
     <link rel="stylesheet" type="text/css" href="/lib/picker/datepicker.min.css">
     <script src="/js/datepicker.js"></script>
-
+    <script src="/js/common.js"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -136,13 +136,13 @@
                                 <div class="board-list board--m list-wrap ">
                                     <table class="table table01 table-ellipsis">
                                         <colgroup>
+                                            <col style="width: 10%;">
+                                            <col style="width: 10%;">
+                                            <col style="width: 4%;">
+                                            <col style="width: 21%;">
+                                            <col style="width: 8%;">
+                                            <col style="width: 10%;">
                                             <col style="width: 5%;">
-                                            <col style="width: 10%;">
-                                            <col style="width: 3%;">
-                                            <col style="width: 20%;">
-                                            <col style="width: 10%;">
-                                            <col style="width: 10%;">
-                                            <col style="width: 10%;">
                                             <col style="width: 10%;">
                                             <col style="width: 7%;">
                                             <col style="width: 10%;">
@@ -212,8 +212,10 @@
                             <!-- //리스트 영역 -->
                             <!-- 페이징 버튼 템플릿 -->
                             <div class="board-footer">
-                                <div th:replace="~{fragments/pagination :: pagination(${ticketList}, '/ticketList')}"/>
+                                <div th:replace="~{fragments/pagination :: pagination(${ticketList}, 'ticketList')}"/>
                             </div>
+                            <input type="hidden" id ="currentPage"  th:field="${ticketList.currentPage}" readonly>
+
                             <!-- //페이징 버튼 템플릿 -->
                         </div>
                     </div>
@@ -255,7 +257,7 @@
         var searchKeyword = $("#searchKeyword").val();
         var startDt = ($("#startDate").val() === undefined || $("#startDate").val() === "") ? '1999-01-01' : $("#startDate").val();
         var endDt = ($("#endDate").val() === undefined || $("#endDate").val() === "") ? '2030-01-01' : $("#endDate").val();
-
+        var page = ($("#currentPage").val() === undefined || $("#currentPage").val() === "") ? '' : $("#currentPage").val();
         // x-www-form-urlencoded 형식으로 데이터 생성
         const data = new URLSearchParams({
           searchType: searchType,
@@ -263,7 +265,8 @@
           searchCompany: searchCompany,
           searchKeyword: searchKeyword,
           startDt: startDt,
-          endDt: endDt
+          endDt: endDt,
+          page: page
         });
 
         // Ajax 요청
@@ -298,7 +301,15 @@
           startDt: startDt,
           endDt: endDt
         });
-
+        // 다운로드 파일 이름 설정
+        const now = new Date();
+        const formattedDate = now.getFullYear() +
+        ("0" + (now.getMonth() + 1)).slice(-2) +
+        ("0" + now.getDate()).slice(-2) + "_" +
+        ("0" + now.getHours()).slice(-2) +
+        ("0" + now.getMinutes()).slice(-2) +
+        ("0" + now.getSeconds()).slice(-2);
+        const fileName = `ticket_${formattedDate}.xlsx`;
          // Ajax 요청
         fetch('/excelDownload', {
           method: 'POST',
@@ -312,7 +323,7 @@
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = "data.xlsx"; // 다운로드할 파일명 설정
+            a.download = fileName; // 다운로드할 파일명 설정
             document.body.appendChild(a);
             a.click();
             a.remove();
@@ -335,6 +346,12 @@
 
     });
 
+    function goPage(url, page) {
+        console.log(`Navigating to URL: ${url} with Page: ${page}`);
+        $("#currentPage").val(page);
+        // 실제 페이지 이동 로직 구현
+        searchTickets(this);
+    }
 
 </script>
 

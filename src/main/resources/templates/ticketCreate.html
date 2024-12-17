@@ -154,12 +154,18 @@
                                         <th>진행상태</th>
                                         <td>
                                             <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
-                                                <select class="dropdown__selected" id="statusCd" name="statusCd" th:field="*{statusCd}" th:disabled="${userClass == 'USER'}">
+                                                <select class="dropdown__selected" id="statusCd" name="statusCd" th:field="*{statusCd}">
                                                     <option th:each="op : ${statusCd}"
                                                             th:value="${op.key}"
                                                             th:text="${op.value}"></option>
                                                 </select>
                                             </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>연관티켓</th>
+                                        <td colspan="3">
+                                            <input type="text" th:field="*{parentTicketCd}" readonly>
                                         </td>
                                     </tr>
                                     <tr th:if="${userClass != 'USER'}">

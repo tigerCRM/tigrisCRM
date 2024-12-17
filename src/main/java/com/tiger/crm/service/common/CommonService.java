@@ -1,6 +1,7 @@
 package com.tiger.crm.service.common;
 
 import com.tiger.crm.repository.dto.company.CompanyOptionDto;
+import com.tiger.crm.repository.dto.ticket.StatusMapper;
 import com.tiger.crm.repository.mapper.CompanyOptionMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.poi.ss.usermodel.*;
@@ -13,10 +14,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /*공통 서비스
  * 설명 : 공통서비스 모음집
@@ -91,17 +89,26 @@ public class CommonService {
             for (Map<String, Object> data : dataList) {
                 Row row = sheet.createRow(rowNum++);
                 int cellIndex = 0;
+
+                String requestTypeCd = data.get("REQUEST_TYPE_CD") != null ? data.get("REQUEST_TYPE_CD").toString() : "";
+                String displayRequestTypeCd = StatusMapper.getRequestText(requestTypeCd);
+
+                String statusCd = data.get("STATUS_CD") != null ? data.get("STATUS_CD").toString() : "";
+                String displayProcessCd = StatusMapper.getStatusText(statusCd);
+
+                String supportCd = data.get("SUPPORT_CD") != null ? data.get("SUPPORT_CD").toString() : "";
+                String displaySupportCd = StatusMapper.getSupportText(supportCd);
                 // 각 열의 순서대로 데이터를 넣기
                 row.createCell(cellIndex++).setCellValue(data.get("TICKET_ID") != null ? data.get("TICKET_ID").toString() : "");
                 row.createCell(cellIndex++).setCellValue(data.get("COMPANY_NAME") != null ? data.get("COMPANY_NAME").toString() : "");
                 row.createCell(cellIndex++).setCellValue(data.get("TITLE") != null ? data.get("TITLE").toString() : "");
-                row.createCell(cellIndex++).setCellValue(data.get("REQUEST_TYPE_CD") != null ? data.get("REQUEST_TYPE_CD").toString() : "");
-                row.createCell(cellIndex++).setCellValue(data.get("REQUEST_TYPE_CD") != null ? data.get("REQUEST_TYPE_CD").toString() : "");
-                row.createCell(cellIndex++).setCellValue(data.get("STATUS_CD") != null ? data.get("STATUS_CD").toString() : "");
+                row.createCell(cellIndex++).setCellValue(displayRequestTypeCd);
+                row.createCell(cellIndex++).setCellValue(displayProcessCd);
+                row.createCell(cellIndex++).setCellValue(displaySupportCd);
                 row.createCell(cellIndex++).setCellValue(data.get("USER_NAME") != null ? data.get("USER_NAME").toString() : "");
                 row.createCell(cellIndex++).setCellValue(data.get("MD") != null ? data.get("MD").toString() : "");
                 row.createCell(cellIndex++).setCellValue(data.get("CREATE_DT") != null ? data.get("CREATE_DT").toString() : "");
-                row.createCell(cellIndex++).setCellValue(data.get("REAL_COMPLETE_DT") != null ? data.get("REAL_COMPLETE_DT").toString() : "");
+                row.createCell(cellIndex++).setCellValue(data.get("COMPLETE_DT") != null ? data.get("COMPLETE_DT").toString() : "");
             }
         }else{
             if (!dataList.isEmpty()) {

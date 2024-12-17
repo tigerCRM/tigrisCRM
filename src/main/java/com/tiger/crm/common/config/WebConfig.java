@@ -24,11 +24,12 @@ public class WebConfig implements WebMvcConfigurer {
 						"/logout",           // 로그아웃 호출
 						"/error",            // 에러 페이지
 						"/assets/**",        // 정적 자원 (CSS, JS, 이미지 등)
-						"/js/**",			// 공통 JS
+						"/js/**",			 // 공통 JS
 						"/lib/**",           // 추가: jQuery, 외부 라이브러리 등의 자원 경로
 						"/public/**",        // 외부에 공개된 자원 1
 						"/Style/**",		 // 외부에 공개된 자원 2
-						"/favicon.ico"     // 파비콘
+						"/favicon.ico",      // 파비콘
+						"/main**"  			 // /main과 /main;jsessionid= 모두 예외 처리
 				);
 	}
 }
