@@ -75,6 +75,11 @@
                                     <th>지원범위</th>
                                     <th>MD</th>
                                 </tr>
+                                <!-- 데이터가 없을 때 -->
+                                <tr th:if="${opReport.details == null or #lists.isEmpty(opReport.details)}">
+                                    <td colspan="10" style="text-align: center;">데이터가 없습니다.</td>
+                                </tr>
+                                <!-- 데이터가 있을 때 -->
                                 <tr th:each="items, iterStat : ${opReport.details}">
                                     <td style="text-align: center">
                                         <span th:text="${iterStat.index + 1}"></span>
