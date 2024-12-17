@@ -57,7 +57,7 @@ public class NoticeBoardServiceImpl implements NoticeBoardService{
         noticeBoardMapper.insertNoticeBoard(noticeBoardDto);
         int boardId = noticeBoardDto.getBoardId();
         int resultCount = 0;
-        if(boardOpenCompanyList != null){
+        if("N".equals(noticeBoardDto.getOpenYn()) && boardOpenCompanyList != null){ //공개여부 N 이고, 공개회사 리스트를 받았을 경우
             for(BoardOpenCompanyDto boardOpenCompany : boardOpenCompanyList){
                 boardOpenCompany.setBoardId(boardId);
                 resultCount += boardOpenCompanyMapper.insertBoardOpenCompany(boardOpenCompany);
@@ -94,7 +94,21 @@ public class NoticeBoardServiceImpl implements NoticeBoardService{
     
     //게시글수정
     @Override
-    public void updateNoticeBoard(NoticeBoardDto noticeBoardDto){
+    public void updateNoticeBoard(NoticeBoardDto noticeBoardDto, List<BoardOpenCompanyDto> boardOpenCompanyList){
+        int resultCount = 0;
+        if("N".equals(noticeBoardDto.getPopupYn()) ){
+            noticeBoardDto.setPopupStartDt(null);
+            noticeBoardDto.setPopupEndDt(null);
+        }
+        if("Y".equals(noticeBoardDto.getOpenYn())){ //공개여부 Y 일 경우, 공개 회사 리스트를 지운다
+            boardOpenCompanyMapper.deleteBoardOpenCompany(noticeBoardDto.getBoardId());
+        }else if("N".equals(noticeBoardDto.getOpenYn()) && boardOpenCompanyList != null){//공개여부 N 이고, 공개회사 리스트를 받았을 경우
+            boardOpenCompanyMapper.deleteBoardOpenCompany(noticeBoardDto.getBoardId());//초기화
+            for(BoardOpenCompanyDto boardOpenCompany : boardOpenCompanyList){
+                boardOpenCompany.setBoardId(noticeBoardDto.getBoardId());
+                resultCount += boardOpenCompanyMapper.insertBoardOpenCompany(boardOpenCompany);
+            }
+        }
         noticeBoardMapper.updateNoticeBoard(noticeBoardDto);
     }
 
