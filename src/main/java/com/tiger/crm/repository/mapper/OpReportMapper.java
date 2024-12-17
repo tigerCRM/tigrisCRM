@@ -9,9 +9,6 @@ import java.util.Map;
 @Mapper
 public interface OpReportMapper {
 
-    // 연도별 운영지원 보고서 목록 조회
-    List<Map<String, Object>> getOpReportList(OpReportDto opReportDto);
-
     // 고객 정보 조회
     Map<String, Object> getCustomerInfo(OpReportDto opReportDto);
 
