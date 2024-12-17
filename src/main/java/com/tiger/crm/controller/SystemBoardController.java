@@ -79,6 +79,8 @@ public class SystemBoardController {
     public String getSystemBoardListPage(PagingRequest pagingRequest, HttpServletRequest request, HttpServletResponse response, Model model)
     {
         model.addAttribute("searchOptions", commonService.getSelectOptions("b_search"));
+        List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
+        model.addAttribute("companyOptions", companyOptions);
         PagingResponse<Map<String, Object>> pageResponse = systemBoardService.getSystemBoardList(pagingRequest);
         model.addAttribute("systemBoardList", pageResponse);
         return "systemBoardList";

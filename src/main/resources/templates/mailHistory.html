@@ -30,22 +30,11 @@
                                 <!-- 검색영역 -->
                                 <div class="searchbar">
                                     <div>
-                                        <div class="dropdown dropdown--s wd80" aria-expanded="false" tabindex="0">
-                                            <select class="dropdown__selected" id="searchStatus" name="searchStatus" th:value="${searchStatus}" disabled readonly>
-                                                <option value="">상태</option>
-                                                <option value="NUM">등록</option>
-                                                <option value="TITLE">요청</option>
-                                                <option value="TITLEANDCONTENTS">진행</option>
-                                                <option value="USERNAME">완료</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div>
                                         <div class="dropdown dropdown--s wd100" aria-expanded="false" tabindex="0">
                                             <select class="dropdown__selected" id="searchType" name="searchType" th:value="${searchType}" >
                                                 <option value="">검색조건</option>
                                                 <option value="TITLE">제목</option>
-                                                <option value="TITLEANDCONTENTS">제목+내용</option>
+                                                <option value="SENDER_ADDR">발신자</option>
                                                 <option value="RECEIVER_ADDR">수신자</option>
                                             </select>
                                         </div>
@@ -102,7 +91,7 @@
                                         </thead>
                                         <div>
                                             <tbody>
-                                                <tr th:if="${mailHistList == null or #lists.isEmpty(mailHistList)}">
+                                                <tr th:if="${mailHistList == null or mailHistList.dataList == null or #lists.isEmpty(mailHistList.dataList)}">
                                                     <td colspan="7" style="text-align:center;">내역이 없습니다</td>
                                                 </tr>
                                                 <tr th:each="mailHist : ${mailHistList.dataList}">
@@ -123,7 +112,8 @@
 
                             <!-- 페이징 버튼 템플릿 호출 -->
                             <div class="board-footer">
-                                <div th:replace="~{fragments/pagination :: pagination(${mailHistList}, '/mailHistory')}" />
+                                <div th:replace="~{fragments/pagination :: pagination(${mailHistList}, 'mailHistory')}" />
+                                <input type="hidden" id ="currentPage"  th:field="${mailHistList.currentPage}" readonly>
                             </div>
                         </div>
                     </div>
@@ -148,8 +138,8 @@
             $("#endDate").val("");
         }
 
-        var page = 1;
-        var size = 5;
+        var page = ($("#currentPage").val() === undefined || $("#currentPage").val() === "") ? '' : $("#currentPage").val();
+       //var size = 5;
         var searchType = $("#searchType").val();
         var searchStatus = $("#searchStatus").val();
         var searchKeyword = $("#searchKeyword").val();
@@ -157,7 +147,7 @@
         // x-www-form-urlencoded 형식으로 데이터 생성
         const data = new URLSearchParams({
             page: page,
-            size: size,
+          //  size: size,
             searchType: searchType,
             searchStatus: searchStatus,
             searchKeyword: searchKeyword
@@ -175,6 +165,12 @@
         .catch(error => console.error('검색 중 오류 발생:', error));
     }
 
+    function goPage(url, page) {
+        console.log(`Navigating to URL: ${url} with Page: ${page}`);
+        $("#currentPage").val(page);
+        // 실제 페이지 이동 로직 구현
+        searchMailHist(this);
+    }
 </script>
 </body>
 </html>

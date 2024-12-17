@@ -30,6 +30,7 @@
                     <when test="searchType == 'TITLE'">
                         AND TITLE LIKE CONCAT('%', #{searchKeyword}, '%') <!-- 제목으로 검색 -->
                     </when>
+
                     <when test="searchType == 'TITLEANDCONTENTS'">
                         AND (TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
                         OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')) <!-- 제목+내용으로 검색 -->
@@ -38,6 +39,10 @@
                         AND U.USER_NAME LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 작성자로 검색 -->
                     </when>
                 </choose>
+            </if>
+            <!-- 고객사 selectbox 선택시  -->
+            <if test="searchCompany != null and searchCompany != ''">
+                AND OC.COMPANY_ID = #{searchCompany}
             </if>
         </where>
         ORDER BY B.CREATE_DT DESC
@@ -76,6 +81,10 @@
                         AND U.USER_NAME LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 작성자로 검색 -->
                     </when>
                 </choose>
+            </if>
+            <!-- 고객사 selectbox 선택시  -->
+            <if test="searchCompany != null and searchCompany != ''">
+                AND OC.COMPANY_ID = #{searchCompany}
             </if>
         </where>
     </select>
