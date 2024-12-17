@@ -43,7 +43,8 @@
     <!-- 상세 내역 조회 -->
     <select id="getDetails" resultType="java.util.Map">
     <![CDATA[
-        SELECT TTI.TITLE,
+        SELECT TTI.STATUS_CD,
+               TTI.TITLE,
                TTI.REQUEST_TYPE_CD,
                (SELECT USER_NAME FROM T_USER_INFO WHERE USER_ID = MANAGER_ID) AS MANAGER_NM,
                TO_CHAR(TTI.CREATE_DT, 'YYYY-MM-dd') AS CREATE_DT,

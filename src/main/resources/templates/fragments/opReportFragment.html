@@ -47,9 +47,10 @@
                     </tr>
                     <tr>
                         <table class="table table04 table--h table--xss">
-                            <span id="opReportStatus">Status : ■ Closed, ▣ In Progress, □ Open</span>
                             <colgroup>
-                                <col style="width: 42%;">
+                                <col style="width: 2%;">
+                                <col style="width: 5%;">
+                                <col style="width: 40%;">
                                 <col style="width: 5%;">
                                 <col style="width: 6%;">
                                 <col style="width: 9%;">
@@ -59,7 +60,12 @@
                                 <col style="width: 3%;">
                             </colgroup>
                             <tbody>
+                            <div class="pagetotal" style="margin-top: -30px">
+                                <span class="text-body4">전체 <strong class="color-navy500"  th:text="${opReportCnt}"></strong>건</span>
+                            </div>
                                 <tr>
+                                    <th>no</th>
+                                    <th style="text-align: center">상태</th>
                                     <th>제목</th>
                                     <th>구분</th>
                                     <th>담당자</th>
@@ -69,14 +75,40 @@
                                     <th>지원범위</th>
                                     <th>MD</th>
                                 </tr>
-                                <tr th:each="items : ${opReport.details}">
+                                <tr th:each="items, iterStat : ${opReport.details}">
+                                    <td style="text-align: center">
+                                        <span th:text="${iterStat.index + 1}"></span>
+                                    </td>
+                                    <td style="text-align: center">
+                                        <span th:switch="${items['STATUS_CD']}">
+                                            <span th:case="'OPEN'" class="tag tag--red">등록</span>
+                                            <span th:case="'RECEIPT'" class="tag tag--navy">접수</span>
+                                            <span th:case="'PROGRESS'" class="tag tag--green">진행</span>
+                                            <span th:case="'REVIEW'" class="tag tag--orange">검토</span>
+                                            <span th:case="'CLOSED'" class="tag tag--gray">완료</span>
+                                        </span>
+                                    </td>
                                     <td><span th:text="${items['TITLE']}"></span></td>
-                                    <td><span th:text="${items['REQUEST_TYPE_CD']}"></span></td>
+                                    <td>
+                                        <span th:switch="${items['REQUEST_TYPE_CD']}">
+                                            <span th:case="'QA'">문의답변</span>
+                                            <span th:case="'ERR'">오류수정</span>
+                                            <span th:case="'ADD'">기능추가</span>
+                                            <span th:case="'CH'">기능변경</span>
+                                            <span th:case="'SP'">기술지원</span>
+                                            <span th:case="'ETC'">기타</span>
+                                        </span>
+                                    </td>
                                     <td><span th:text="${items['MANAGER_NM']}"></span></td>
                                     <td><span th:text="${items['CREATE_DT']}"></span></td>
                                     <td><span th:text="${items['EXPECTED_COMPLETE_DT']}"></span></td>
                                     <td><span th:text="${items['COMPLETE_DT']}"></span></td>
-                                    <td><span th:text="${items['SUPPORT_CD']}"></span></td>
+                                    <td>
+                                        <span th:switch="${items['SUPPORT_CD']}">
+                                            <span th:case="'ST'">기본</span>
+                                            <span th:case="'ADD'">추가</span>
+                                        </span>
+                                    </td>
                                     <td><span th:text="${items['MD']}"></span></td>
                                 </tr>
                             </tbody>

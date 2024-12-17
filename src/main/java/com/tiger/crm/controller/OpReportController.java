@@ -106,6 +106,7 @@ public class OpReportController {
 
             // 운영지원 보고서 조회 > 등록일 기준 (ex : 2024.06.01~2024.06.30)
             OpReportDto resultDto  = opReportService.getOpReportContent(opReportDto);
+            model.addAttribute("opReportCnt", resultDto.getDetails().size());
             model.addAttribute("opReport", resultDto);
 
             return "fragments/opReportFragment :: opReport";
