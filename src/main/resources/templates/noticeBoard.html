@@ -310,6 +310,7 @@
         popupYn.value = popupYnCheckbox.checked ? 'Y' : 'N';
         topYn.value = topYnCheckbox.checked ? 'Y' : 'N';
 
+        document.getElementById('openYn').value = isViewAllYnChecked() ? 'Y' : 'N';
 
     });
 
@@ -359,6 +360,8 @@
 
         popupYn.value = popupYnCheckbox.checked ? 'Y' : 'N';
         topYn.value = topYnCheckbox.checked ? 'Y' : 'N';
+
+        document.getElementById('openYn').value = isViewAllYnChecked() ? 'Y' : 'N';
 
         //선택한 회사 옵션 관련 설정
         const boardOpenCompanies = document.getElementById('boardOpenCompanies');
