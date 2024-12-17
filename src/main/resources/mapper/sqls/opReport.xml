@@ -46,16 +46,16 @@
         SELECT TTI.TITLE,
                TTI.REQUEST_TYPE_CD,
                (SELECT USER_NAME FROM T_USER_INFO WHERE USER_ID = MANAGER_ID) AS MANAGER_NM,
-               TTI.CREATE_DT,
-               TTI.EXPECTED_COMPLETE_DT,
-               TTI.COMPLETE_DT,
+               TO_CHAR(TTI.CREATE_DT, 'YYYY-MM-dd') AS CREATE_DT,
+               TO_CHAR(TTI.EXPECTED_COMPLETE_DT, 'YYYY-MM-dd') AS EXPECTED_COMPLETE_DT,
+               TO_CHAR(TTI.COMPLETE_DT, 'YYYY-MM-dd') AS COMPLETE_DT,
                TTI.SUPPORT_CD,
                TTI.MD
         FROM T_OP_REPORTS TOR
         LEFT JOIN T_TICKET_INFO TTI ON TOR.COMPANY_ID = TTI.COMPANY_ID
-        WHERE TOR.OP_REPORT_ID = 202407
-        AND TOR.COMPANY_ID = 1
-        AND TO_CHAR(TTI.CREATE_DT, 'YYYYMM') >= '202407' AND  TO_CHAR(TTI.CREATE_DT, 'YYYYMM') < '202408'
+        WHERE TOR.OP_REPORT_ID = #{opReportId}
+          AND TOR.COMPANY_ID = #{companyId}
+          AND TO_CHAR(TTI.CREATE_DT, 'YYYYMM') = #{opReportId}
     ]]>
     </select>
 </mapper>

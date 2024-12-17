@@ -172,16 +172,37 @@
     // 인쇄 기능
     // ------------------
     function printReport() {
-        const reportContent = document.getElementById('reportContainer').innerHTML;
-        const printWindow = window.open('', '_blank');
+        const printContent = document.querySelector('#opReportDetail').innerHTML;
+        const printWindow = window.open('', '_blank', 'scrollbars=no,toolbar=no');
+
+        // 새 창에 인쇄할 내용을 작성
         printWindow.document.write(`
-        <html>
-            <head><title>운영지원보고서</title></head>
-            <body>${reportContent}</body>
-        </html>
-    `);
+            <html>
+                <head>
+                    <title>운영지원보고서</title>
+                    <style>
+                        @page { size: auto; margin: 0; }
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { border: 1px solid #ddd; padding: 0px; text-align: left; }
+                        th { background-color: #f2f2f2; }
+                        tr { height: 20px; }
+                        @media print { button, svg {display: none;} }
+                    </style>
+                </head>
+                <body>${printContent}</body>
+            </html>
+        `);
+
+        // 문서 작성 완료 후 인쇄 실행
         printWindow.document.close();
+        printWindow.focus(); // 일부 브라우저에서 안정성을 위해 포커스 필요
         printWindow.print();
+
+        // 일정 시간 뒤에 새 창을 닫기
+        setTimeout(() => {
+            printWindow.close();
+        }, 100);
     }
 
     // -------------------

@@ -153,7 +153,11 @@
                                             </tr>
                                             <tr th:each="item : ${noticeList}">
                                                 <td><span th:text="${item.BOARD_ID}"></span></td>
-                                                <td><span th:text="${item.TITLE}"></span></td>
+                                                <td>
+                                                    <a th:href="@{/noticeBoard(boardId=${item.BOARD_ID})}">
+                                                        <span th:text="${item.TITLE}"></span>
+                                                    </a>
+                                                </td>
                                                 <td><span th:text="${item.USER_NAME}"></span></td>
                                                 <td><span th:text="${item.CREATE_DT}"></span></td>
                                             </tr>
