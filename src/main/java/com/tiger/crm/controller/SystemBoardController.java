@@ -188,11 +188,11 @@ public class SystemBoardController {
         
         //첨부파일
         try{
-            List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(systemBoard.getAttachFiles()); // 경로에 저장
-            String fileId = fileService.insertFile(uploadFiles, savedBoardId, "시스템관리"); //DB 에 저장
-            systemBoardService.setSystemBoardFileId(fileId,savedBoardId);//DB에 저장
-
-
+            if(!systemBoard.getAttachFiles().get(0).isEmpty()){
+                List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(systemBoard.getAttachFiles()); // 경로에 저장
+                String fileId = fileService.insertFile(uploadFiles, savedBoardId, "시스템관리"); //DB 에 저장
+                systemBoardService.setSystemBoardFileId(fileId,savedBoardId);//DB에 저장
+            }
         }catch (Exception e){
             LOGGER.info(e.toString());
             return null;
