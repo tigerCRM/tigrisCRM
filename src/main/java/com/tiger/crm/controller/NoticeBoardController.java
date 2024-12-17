@@ -239,10 +239,16 @@ public class NoticeBoardController {
     public ResponseEntity<?> updateNoticeBoard(
             @Validated @ModelAttribute("noticeBoard") NoticeBoardDto noticeBoard,
             BindingResult bindingResult,
+            @RequestParam("boardOpenCompanies") String boardOpenCompanies,
             @RequestParam String deleteSavedAttachFiles,
             HttpServletRequest request,
             HttpServletResponse response,
             Model model){
+
+        ObjectMapper objectMapperOpenCompany = new ObjectMapper();
+        ObjectMapper objectMapperDeleteFile = new ObjectMapper();
+        List<BoardOpenCompanyDto> boardOpenCompanyList = null;
+        List<String> deleteFilesList = null;
 
         //최초 인입된 dto 에 대해 validation 수행 후 반환
         if (bindingResult.hasErrors()) {
@@ -264,16 +270,22 @@ public class NoticeBoardController {
 
         noticeBoard.setUpdateId(loginUser.getUserId());
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        List<String> deleteFilesList = null;
+        //열람대상 회사 저장
+        try {
+            if(!"[]".equals(boardOpenCompanies)){
+                boardOpenCompanyList = objectMapperOpenCompany.readValue(boardOpenCompanies, new TypeReference<>() {});
+            }
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
 
         try{
             //게시글에 대한 작업
-            noticeBoardService.updateNoticeBoard(noticeBoard);
+            noticeBoardService.updateNoticeBoard(noticeBoard, boardOpenCompanyList);
 
             //이전 첨부파일 중 삭제 된 파일들 삭제 작업
             if(!deleteSavedAttachFiles.isEmpty()){
-                deleteFilesList = objectMapper.readValue(deleteSavedAttachFiles, new TypeReference<List<String>>() {});
+                deleteFilesList = objectMapperDeleteFile.readValue(deleteSavedAttachFiles, new TypeReference<List<String>>() {});
                 for (String fileName : deleteFilesList) {
                     fileService.deleteFileByFileName(fileName);
                 }

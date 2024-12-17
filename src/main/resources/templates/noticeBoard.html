@@ -351,6 +351,23 @@
         var content = editor.getHTML();
         document.querySelector('#content').value = content;
 
+        //체크박스,라디오버튼 변환
+        const topYnCheckbox = document.getElementById('topYnCheckbox');
+        const topYn = document.getElementById('topYn');
+        const popupYnCheckbox = document.getElementById('popupYnCheckbox');
+        const popupYn = document.getElementById('popupYn');
+
+        popupYn.value = popupYnCheckbox.checked ? 'Y' : 'N';
+        topYn.value = topYnCheckbox.checked ? 'Y' : 'N';
+
+        //선택한 회사 옵션 관련 설정
+        const boardOpenCompanies = document.getElementById('boardOpenCompanies');
+        boardOpenCompanies.value = JSON.stringify(chooseTargetArr);
+
+        //날짜 disabled 품
+        document.querySelector('.start-date').disabled = false;
+        document.querySelector('.end-date').disabled = false;
+
         common.attachFileWorks();
 
         const formData = new FormData(document.getElementById('boardSubmitArea'));
@@ -529,7 +546,7 @@
             }
         }
     }
-    //전체열람인지 부분열람인지 체크
+    //13. 전체열람인지 부분열람인지 체크
     function isViewAllYnChecked(){
         const radioButtons = document.getElementsByName("viewAllYn");
         for (const radioButton of radioButtons) {
@@ -541,7 +558,7 @@
         }
     }
 
-    //팝업등록 시 노출일자 표시하는 선택창 보이기
+    //14. 팝업등록 시 노출일자 표시하는 선택창 보이기
     function toggleAlwaysDisplay() {
         const popupYnCheckbox = document.getElementById('popupYnCheckbox');
         const alwaysDisplaySection = document.getElementById('alwaysDisplaySection');

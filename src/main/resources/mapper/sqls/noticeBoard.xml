@@ -133,6 +133,11 @@
     <update id="updateNoticeBoard" parameterType="com.tiger.crm.repository.dto.board.NoticeBoardDto">
         UPDATE T_BOARD
         SET
+            OPEN_YN = #{openYn},
+            TOP_YN = #{topYn},
+            POPUP_YN = #{popupYn},
+            POPUP_START_DT = #{popupStartDt},
+            POPUP_END_DT = #{popupEndDt},
             TITLE = #{title},
             CONTENT = #{content},
             UPDATE_ID = #{updateId},
