@@ -1,19 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" >
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width" />
-    <title>공지사항</title>
-    <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/layout.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
-    <script src="/lib/jquery/jquery-2.2.2.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-</head>
+<head th:replace="~{common/frame_head :: head('공지사항')}"></head>
 <body>
 <div class="wrapper">
     <!-- 왼쪽 메뉴  -->
@@ -40,7 +27,7 @@
                                 <!-- 검색영역 -->
                                 <div class="searchbar">
                                     <div>
-                                        <div class="dropdown dropdown--s wd160" aria-expanded="false" tabindex="0">
+                                        <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
                                             <select class="dropdown__selected" id="searchType" name="searchType" th:value="${searchType}" >
                                                 <option value="">==검색조건==</option>
                                                 <option th:each="op : ${searchOptions}"
@@ -116,7 +103,8 @@
                             <!-- //리스트 영역 -->
                             <div class="board-footer">
                                 <!-- 페이징 버튼 템플릿 호출 -->
-                                <div th:replace="~{fragments/pagination :: pagination(${noticeBoardList}, '/noticeBoardList')}" />
+                                <div th:replace="~{fragments/pagination :: pagination(${noticeBoardList}, 'noticeBoardList')}" />
+                                <input type="hidden" id ="currentPage"  th:field="${noticeBoardList.currentPage}" readonly>
                             </div>
                         </div>
                     </div>
@@ -136,15 +124,15 @@
         }
         var searchType = $("#searchType").val();
         var searchKeyword = $("#searchKeyword").val();
-
+        var page = ($("#currentPage").val() === undefined || $("#currentPage").val() === "") ? '' : $("#currentPage").val();
         console.log(searchType); //COMPANY
         console.log(searchKeyword); //네패스
 
         // x-www-form-urlencoded 형식으로 데이터 생성
         const data = new URLSearchParams({
-
-          searchType: searchType,
-          searchKeyword: searchKeyword,
+            page:page,
+            searchType: searchType,
+            searchKeyword: searchKeyword,
         });
 
         // Ajax 요청
@@ -164,6 +152,11 @@
 
     }
 
+    function goPage(url, page) {
+        $("#currentPage").val(page);
+        // 실제 페이지 이동 로직 구현
+        searchBoards(this);
+    }
 
 </script>
 </body>

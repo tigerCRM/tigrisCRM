@@ -169,6 +169,9 @@ public class TicketController {
                 }
                 ticketCreate.setParentTicketCd(id);
                 ticketCreate.setTitle("["+String.valueOf(id)+"] Re:"+ parentTicketDetails.getTitle());
+                ticketCreate.setContent(System.lineSeparator()+"===========================연관티켓==========================="+System.lineSeparator()
+                        + "["+String.valueOf(id)+"] Re:"+ parentTicketDetails.getTitle()
+                        + System.lineSeparator()  +parentTicketDetails.getContent());
             }
             //model에 데이터 바인딩
             List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
@@ -214,7 +217,7 @@ public class TicketController {
             }
             // 첨부파일 처리
             try {
-                List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(ticketDto.getAttachFiles());
+                List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(ticketDto.getAttachFiles(),"T");
                 String fileId = fileService.insertFile(uploadFiles, ticketId, "티켓관리");
                 ticketService.setTicketFileId(fileId, ticketId);
             } catch (Exception fileException) {
@@ -318,7 +321,7 @@ public class TicketController {
                 }
 
                 if (ticketDto.getAttachFiles() != null && !ticketDto.getAttachFiles().isEmpty()) {
-                    List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(ticketDto.getAttachFiles());
+                    List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(ticketDto.getAttachFiles(),"T");
                     String fileId = fileService.insertFile(uploadFiles, ticketId, "티켓관리");
                     ticketService.setTicketFileId(fileId, ticketId);
                 }
@@ -459,7 +462,7 @@ public class TicketController {
 
             // 파일 저장 처리
             if (files != null) {
-                List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(files);
+                List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(files,"C");
                 String fileId = fileService.insertFile(uploadFiles, commentId, "댓글");
                 // 댓글 첨부파일 테이블에 저장
                 ticketService.setTicketFileId(fileId, commentId);
@@ -541,7 +544,7 @@ public class TicketController {
             // 첨부파일 처리
             try {
                 List<MultipartFile> fileDataList = new ObjectMapper().readValue(RequestBody.get("file"), new TypeReference<>() {});
-                List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(fileDataList);
+                List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(fileDataList,"C");
                 String fileId = fileService.insertFile(uploadFiles, commnetId, "댓글");
                 //댓글 첨부파일 테이블에 저장
                 //  ticketService.setTicketFileId(fileId, ticketId);

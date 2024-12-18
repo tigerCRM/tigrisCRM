@@ -2,14 +2,18 @@ package com.tiger.crm.service.common;
 
 import com.tiger.crm.repository.dto.company.CompanyOptionDto;
 import com.tiger.crm.repository.dto.ticket.StatusMapper;
+import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.repository.mapper.CompanyOptionMapper;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -153,4 +157,16 @@ public class CommonService {
         response.getOutputStream().flush();
     }
 
+    // Session에서 사용자 ID 가져오기
+    public UserLoginDto getCurrentUserIdFromSession() {
+        // RequestContextHolder로 현재 HTTP 요청의 세션 가져오기
+        HttpSession session = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest().getSession(false);
+        if (session != null) {
+            UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
+            if (loginUser != null) {
+                return loginUser;
+            }
+        }
+        return null;
+    }
 }

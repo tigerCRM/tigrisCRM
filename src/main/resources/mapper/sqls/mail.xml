@@ -40,8 +40,8 @@
                 <when test="searchType == 'TITLE'">
                     AND TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
                 </when>
-                <when test="searchType == 'TITLEANDCONTENTS'">
-                    AND (TITLE LIKE CONCAT('%', #{searchKeyword}, '%') OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%'))
+                <when test="searchType == 'SENDER_ADDR'">
+                    AND SENDER_ADDR LIKE CONCAT('%', #{searchKeyword}, '%')
                 </when>
                 <when test="searchType == 'RECEIVER_ADDR'">
                     AND RECEIVER_ADDR LIKE CONCAT('%', #{searchKeyword}, '%')
@@ -71,8 +71,8 @@
                 <when test="searchType == 'TITLE'">
                     AND TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
                 </when>
-                <when test="searchType == 'TITLEANDCONTENTS'">
-                    AND (TITLE LIKE CONCAT('%', #{searchKeyword}, '%') OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%'))
+                <when test="searchType == 'SENDER_ADDR'">
+                    AND SENDER_ADDR LIKE CONCAT('%', #{searchKeyword}, '%')
                 </when>
                 <when test="searchType == 'RECEIVER_ADDR'">
                     AND RECEIVER_ADDR LIKE CONCAT('%', #{searchKeyword}, '%')

@@ -1,14 +1,20 @@
 package com.tiger.crm.service.file;
 
+import com.tiger.crm.common.file.FileStoreUtils;
 import com.tiger.crm.repository.dto.file.UploadFileDto;
+import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.repository.mapper.FileMapper;
 import com.tiger.crm.repository.mapper.SystemBoardMapper;
 import com.tiger.crm.service.board.SystemBoardService;
+import com.tiger.crm.service.common.CommonService;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,10 +28,12 @@ public class FileServiceImpl implements FileService{
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
     @Autowired
     private FileMapper fileMapper;
-
     @Autowired
     private SystemBoardService systemBoardService;
-
+    @Autowired
+    private FileStoreUtils fileStoreUtils;
+    @Autowired
+    private CommonService commonService;
     /*
     * insertFile
     * 작성자 : 제예솔
@@ -42,6 +50,9 @@ public class FileServiceImpl implements FileService{
         if(uploadFiles == null){
             return null;
         }
+        // 현재 사용자 ID 가져오기 (Session에서 추출)
+        UserLoginDto  loginUser = commonService.getCurrentUserIdFromSession();
+
         switch (category){
             case "시스템관리" :
             case "공지사항"   :
@@ -67,8 +78,8 @@ public class FileServiceImpl implements FileService{
             uploadFile.setFileId(fileId);
             uploadFile.setSeq(lastSequence + i + 1);
             uploadFile.setCategory(category);
-            uploadFile.setFilePath(fileDir);
-
+            uploadFile.setFilePath(fileStoreUtils.getFullPath(prefix));
+            uploadFile.setCreatId(loginUser.getUserId());
             fileMapper.insertFile(uploadFile);
         }
 
@@ -127,4 +138,7 @@ public class FileServiceImpl implements FileService{
     public void deleteFileByFileName(String fileName){
         fileMapper.deleteFileByFileName(fileName);
     };
+
+
+
 }

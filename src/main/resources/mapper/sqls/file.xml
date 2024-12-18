@@ -12,6 +12,7 @@
         FILE_NAME,
         ORIGIN_FILE_NAME,
         FILE_SIZE,
+        CREATE_ID,
         DELETE_YN
         ) VALUES (
         #{fileId},
@@ -21,6 +22,7 @@
         #{fileName},
         #{originFileName},
         #{fileSize},
+        #{creatId},
         'N'
         )
     </insert>
@@ -37,13 +39,18 @@
     </select>
 
     <select id="getFileByFileName" resultType="com.tiger.crm.repository.dto.file.UploadFileDto">
-    SELECT
-    FILE_ID,
-    SEQ,
-    FILE_NAME,
-    ORIGIN_FILE_NAME
-    FROM T_FILE
-    WHERE FILE_NAME = #{fileName}
+        SELECT
+            T.FILE_ID,
+            T.SEQ,
+            T.FILE_NAME,
+            T.ORIGIN_FILE_NAME,
+            T.FILE_PATH,
+            T.CREATE_ID,
+            U.COMPANY_ID
+        FROM
+        T_FILE AS T
+        LEFT JOIN T_USER_INFO AS U ON T.CREATE_ID = U.USER_ID
+        WHERE T.FILE_NAME = #{fileName}
     </select>
 
     <update id="deleteFilesByFileId" parameterType="java.util.Map">

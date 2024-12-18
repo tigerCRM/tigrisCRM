@@ -4,22 +4,9 @@
 
 <mapper namespace="com.tiger.crm.repository.mapper.OpReportMapper">
 
-    <!-- 연도별 운영지원 보고서 목록 조회 -->
-    <select id="getOpReportList" resultType="com.tiger.crm.repository.dto.opReport.OpReportDto">
-        SELECT *
-        FROM T_OP_REPORTS
-        WHERE 1 = 1
-        <if test="year != null">
-            AND OP_REPORT_ID LIKE CONCAT(#{year}, '%')
-            AND CREATE_DT LIKE CONCAT(#{year}, '%')
-        </if>
-        <if test="companyId != 0">
-            AND COMPANY_ID = #{companyId}
-        </if>
-    </select>
     <!-- 년도 셀렉트 박스 조회 -->
     <select id="getYearList" resultType="com.tiger.crm.repository.dto.opReport.OpReportDto">
-        SELECT DISTINCT SUBSTR(OP_REPORT_ID, 1, 4) AS YEAR FROM T_OP_REPORTS ORDER BY OP_REPORT_ID DESC
+        SELECT DISTINCT TO_CHAR(CREATE_DT, 'YYYY') AS YEAR FROM T_TICKET_INFO
     </select>
 
     <!-- 고객 정보 조회 -->
@@ -52,11 +39,9 @@
                TO_CHAR(TTI.COMPLETE_DT, 'YYYY-MM-dd') AS COMPLETE_DT,
                TTI.SUPPORT_CD,
                TTI.MD
-        FROM T_OP_REPORTS TOR
-        LEFT JOIN T_TICKET_INFO TTI ON TOR.COMPANY_ID = TTI.COMPANY_ID
-        WHERE TOR.OP_REPORT_ID = #{opReportId}
-          AND TOR.COMPANY_ID = #{companyId}
-          AND TO_CHAR(TTI.CREATE_DT, 'YYYYMM') = #{opReportId}
+        FROM T_TICKET_INFO TTI
+        WHERE TO_CHAR(TTI.CREATE_DT, 'YYYYMM') = #{opReportId}
+          AND TTI.DELETE_YN = 'N'
     ]]>
     </select>
 </mapper>

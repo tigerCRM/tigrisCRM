@@ -7,17 +7,13 @@ import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.service.common.CommonService;
 import com.tiger.crm.service.opReport.OpReportService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 public class OpReportController {
@@ -26,8 +22,6 @@ public class OpReportController {
     private OpReportService opReportService;
     @Autowired
     private CommonService commonService;
-
-    private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     /*
      * 운영지원 보고서 리스트 페이지(초기 접속 시)
@@ -55,42 +49,7 @@ public class OpReportController {
             List<OpReportDto> yearList = opReportService.getYearList(currentTime.getYear());
             model.addAttribute("yearList", yearList);
 
-            // 연도별 운영지원 보고서 목록 조회
-            if( opReportDto.getYear() == 0 ){
-                opReportDto.setCompanyId(loginUser.getCompanyId()); // 로그인유저 고객사번호 고정
-                opReportDto.setYear(currentTime.getYear()); // 현재 년도
-            }
-            List<Map<String, Object>> opReportList = opReportService.getOpReportList(opReportDto);
-            model.addAttribute("opReportList", opReportList);
-
             return "opReportList";
-
-        } catch (Exception e) {
-            throw new CustomException("운영지원 보고서 데이터를 불러오는 중 오류가 발생했습니다.", e);
-        }
-    }
-
-    /*
-     * 운영지원 보고서 리스트 페이지(검색 조건 변경시)
-     * */
-    @PostMapping("/opReportList")
-    public String getOpReportList2(OpReportDto opReportDto, CompanyOptionDto companyOptionDto, HttpServletRequest request, Model model) {
-        try {
-            // 유저 정보 조회
-            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
-
-            // 년도 셀렉트 박스 조회
-            LocalDateTime currentTime = LocalDateTime.now();
-
-            // 연도별 운영지원 보고서 목록 조회
-            if( opReportDto.getYear() == 0 ){
-                opReportDto.setCompanyId(loginUser.getCompanyId()); // 로그인유저 고객사번호 고정
-                opReportDto.setYear(currentTime.getYear()); // 현재 년도
-            }
-            List<Map<String, Object>> opReportList = opReportService.getOpReportList(opReportDto);
-            model.addAttribute("opReportList", opReportList);
-
-            return "opReportList :: opReportListFragment";
 
         } catch (Exception e) {
             throw new CustomException("운영지원 보고서 데이터를 불러오는 중 오류가 발생했습니다.", e);

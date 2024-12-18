@@ -1,23 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width"/>
-    <title>메인</title>
-    <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
-   <link rel="stylesheet" type="text/css" href="/assets/css/common.css?v=1">
-   <!-- <link rel="stylesheet" type="text/css" th:href="@{/assets/css/common.css(v=${#dates.format(#dates.createNow(), 'yyyyMMddHHmmss')})}" />-->
-    <link rel="stylesheet" type="text/css" href="/assets/css/layout.css?v=1">
-    <link rel="stylesheet" type="text/css" href="/assets/css/main.css?v=1">
-    <script src="/lib/jquery/jquery-2.2.2.min.js"></script>
-    <!--datepicker 관련 -->
-    <script src="/lib/picker/datepicker.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/lib/picker/datepicker.min.css">
-    <script src="/js/datepicker.js"></script>
-    <script src="/js/common.js"></script>
-</head>
+<head th:replace="~{common/frame_head :: head('요청관리')}"></head>
 <body>
 <div class="wrapper">
     <!-- 왼쪽 메뉴  -->
@@ -215,7 +198,6 @@
                                 <div th:replace="~{fragments/pagination :: pagination(${ticketList}, 'ticketList')}"/>
                             </div>
                             <input type="hidden" id ="currentPage"  th:field="${ticketList.currentPage}" readonly>
-
                             <!-- //페이징 버튼 템플릿 -->
                         </div>
                     </div>
@@ -347,7 +329,6 @@
     });
 
     function goPage(url, page) {
-        console.log(`Navigating to URL: ${url} with Page: ${page}`);
         $("#currentPage").val(page);
         // 실제 페이지 이동 로직 구현
         searchTickets(this);

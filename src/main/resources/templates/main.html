@@ -1,11 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<!-- <head>공통 /meta/import/script 호출  -->
-<head th:replace="~{common/frame_head :: frame_head}">
-    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-</head>
+<!-- <head> 공통   -->
+<head th:replace="~{common/frame_head :: head('메인')}"></head>
 
 <body>
 <div class="wrapper">

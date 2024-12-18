@@ -14,12 +14,6 @@ public class OpReportServiceImpl implements OpReportService {
     @Autowired
     private OpReportMapper opReportMapper;
 
-    // 연도별 운영지원 보고서 목록 조회
-    @Override
-    public List<Map<String, Object>> getOpReportList(OpReportDto opReportDto) {
-        return opReportMapper.getOpReportList(opReportDto);
-    }
-
     // 년도 셀렉트 박스 조회
     @Override
     public List<OpReportDto> getYearList(int year) {
