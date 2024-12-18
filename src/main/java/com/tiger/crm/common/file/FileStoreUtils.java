@@ -9,6 +9,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -27,26 +32,39 @@ public class FileStoreUtils {
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
     
     //파일 전체 경로 찾기
-    public String getFullPath(String filename){
-        return fileDir + filename;
+    public String getFullPath(String loc){
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        // 전체 경로 생성
+        String fullPath = fileDir + "\\" + loc + "\\" + today;
+        Path path = Paths.get(fullPath);
+        try {
+            // 경로가 존재하지 않으면 폴더 생성
+            if (!Files.exists(path)) {
+                Files.createDirectories(path);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to create directory: " + fullPath, e);
+        }
+        return fullPath;
     }
     
     //여러개의 파일 동시 저장
-    public List<UploadFileDto> storeFiles(List<MultipartFile> multipartFiles){
+    public List<UploadFileDto> storeFiles(List<MultipartFile> multipartFiles,String loc){
         if(multipartFiles.isEmpty()){
             return null;
         }
         List<UploadFileDto> storeFileList = new ArrayList<>();
         for(MultipartFile multipartFile : multipartFiles){
             if(!multipartFile.isEmpty()){
-                storeFileList.add(storeFile(multipartFile));
+                storeFileList.add(storeFile(multipartFile,loc));
             }
         }
         return storeFileList;
     }
 
     //파일 저장
-    public UploadFileDto storeFile(MultipartFile multipartFile){
+    public UploadFileDto storeFile(MultipartFile multipartFile,String loc){
         if(multipartFile.isEmpty()){
             return null;
         }
@@ -54,7 +72,11 @@ public class FileStoreUtils {
         String originFileName = multipartFile.getOriginalFilename();
         String fileName = createFileName(originFileName);
         try {
-            multipartFile.transferTo(new File(getFullPath(fileName)));
+
+            LOGGER.info("Generated file name: {}", fileName);
+            String fullPath = Paths.get(getFullPath(loc), fileName).toString();
+            LOGGER.info("Saving file to path: {}", fullPath);
+            multipartFile.transferTo(new File(fullPath));
             return new UploadFileDto(originFileName,fileName);
         } catch (IOException e) {
             throw new RuntimeException(e);

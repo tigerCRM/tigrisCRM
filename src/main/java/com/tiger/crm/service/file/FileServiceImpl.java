@@ -1,5 +1,6 @@
 package com.tiger.crm.service.file;
 
+import com.tiger.crm.common.file.FileStoreUtils;
 import com.tiger.crm.repository.dto.file.UploadFileDto;
 import com.tiger.crm.repository.mapper.FileMapper;
 import com.tiger.crm.repository.mapper.SystemBoardMapper;
@@ -25,7 +26,8 @@ public class FileServiceImpl implements FileService{
 
     @Autowired
     private SystemBoardService systemBoardService;
-
+    @Autowired
+    private FileStoreUtils fileStoreUtils;
     /*
     * insertFile
     * 작성자 : 제예솔
@@ -67,7 +69,7 @@ public class FileServiceImpl implements FileService{
             uploadFile.setFileId(fileId);
             uploadFile.setSeq(lastSequence + i + 1);
             uploadFile.setCategory(category);
-            uploadFile.setFilePath(fileDir);
+            uploadFile.setFilePath(fileStoreUtils.getFullPath(prefix));
 
             fileMapper.insertFile(uploadFile);
         }

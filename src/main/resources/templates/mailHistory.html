@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" >
 
 <!-- <head> 공통   -->
-<head th:replace="~{common/frame_head :: head}"></head>
+<head th:replace="~{common/frame_head :: head('발송내역')}"></head>
 
 <body>
 <div class="wrapper">
@@ -166,7 +166,6 @@
     }
 
     function goPage(url, page) {
-        console.log(`Navigating to URL: ${url} with Page: ${page}`);
         $("#currentPage").val(page);
         // 실제 페이지 이동 로직 구현
         searchMailHist(this);

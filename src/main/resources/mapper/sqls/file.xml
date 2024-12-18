@@ -41,7 +41,8 @@
     FILE_ID,
     SEQ,
     FILE_NAME,
-    ORIGIN_FILE_NAME
+    ORIGIN_FILE_NAME,
+    FILE_PATH
     FROM T_FILE
     WHERE FILE_NAME = #{fileName}
     </select>

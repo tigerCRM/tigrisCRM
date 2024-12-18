@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{common/frame_head :: head}"></head>
+<head th:replace="~{common/frame_head :: head('요청관리')}"></head>
 <body>
 <div class="wrapper">
     <!-- 왼쪽 메뉴  -->
@@ -198,7 +198,6 @@
                                 <div th:replace="~{fragments/pagination :: pagination(${ticketList}, 'ticketList')}"/>
                             </div>
                             <input type="hidden" id ="currentPage"  th:field="${ticketList.currentPage}" readonly>
-
                             <!-- //페이징 버튼 템플릿 -->
                         </div>
                     </div>
@@ -330,7 +329,6 @@
     });
 
     function goPage(url, page) {
-        console.log(`Navigating to URL: ${url} with Page: ${page}`);
         $("#currentPage").val(page);
         // 실제 페이지 이동 로직 구현
         searchTickets(this);

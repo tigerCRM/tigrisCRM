@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" >
-<head th:replace="~{common/frame_head :: head}"></head>
+<head th:replace="~{common/frame_head :: head('시스템 정보')}"></head>
 </head>
 <body>
 <div class="wrapper">
@@ -171,7 +171,6 @@
     }
 
     function goPage(url, page) {
-        console.log(`Navigating to URL: ${url} with Page: ${page}`);
         $("#currentPage").val(page);
         // 실제 페이지 이동 로직 구현
         searchBoards(this);
