@@ -41,6 +41,7 @@
                TTI.MD
         FROM T_TICKET_INFO TTI
         WHERE TO_CHAR(TTI.CREATE_DT, 'YYYYMM') = #{opReportId}
+          AND TTI.COMPANY_ID = #{companyId}
           AND TTI.DELETE_YN = 'N'
     ]]>
     </select>
