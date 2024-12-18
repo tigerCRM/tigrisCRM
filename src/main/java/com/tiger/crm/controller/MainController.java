@@ -4,6 +4,7 @@ import com.tiger.crm.common.context.ConfigProperties;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.mail.MailService;
+import com.tiger.crm.service.common.CommonService;
 import com.tiger.crm.service.main.MainService;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 
@@ -23,7 +24,8 @@ import java.util.Map;
 @Controller
 public class MainController
 {
-
+	@Autowired
+	private CommonService commonService;
 	@Autowired
 	private ConfigProperties config;
 	@Autowired
@@ -90,6 +92,7 @@ public class MainController
 			// 메일 발송 내역 조회
 			PagingResponse<Map<String, Object>> pageResponse = mailService.getMailHistList(pagingRequest);
 			model.addAttribute("mailHistList", pageResponse);
+			model.addAttribute("searchOptions", commonService.getSelectOptions("mh_search"));
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -98,7 +101,7 @@ public class MainController
 	}
 
 	/*
-	 * 2. 메일발송내역 페이지(검색 시)
+	 * 2. 메일발송내역 페이지(상세 검색 시)
 	 */
 	@PostMapping(value = { "mailHistory"})
 	public String searchMailHistory(@ModelAttribute PagingRequest pagingRequest, Model model)	{

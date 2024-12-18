@@ -62,8 +62,8 @@
         FROM T_MAIL_SEND_HIST
         WHERE 1=1
         <!-- 검색어 조건 (검색어가 존재하는 경우 제목, 내용 필드에서 LIKE 검색) -->
-        <if test="searchStatus == '' and searchType == '' and searchKeyword != ''">
-            AND (TITLE LIKE CONCAT('%', #{searchKeyword}, '%') OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%'))
+        <if test="searchType == '' and (searchKeyword != null or searchKeyword != '')">
+            AND TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
         </if>
         <!-- 검색 유형 (searchType이 제목, 내용, 담당자, 등 선택된 경우) -->
         <if test="searchType != null and searchType != ''">
@@ -71,10 +71,7 @@
                 <when test="searchType == 'TITLE'">
                     AND TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
                 </when>
-                <when test="searchType == 'SENDER_ADDR'">
-                    AND SENDER_ADDR LIKE CONCAT('%', #{searchKeyword}, '%')
-                </when>
-                <when test="searchType == 'RECEIVER_ADDR'">
+                <when test="searchType == 'USERNAME'">
                     AND RECEIVER_ADDR LIKE CONCAT('%', #{searchKeyword}, '%')
                 </when>
             </choose>
