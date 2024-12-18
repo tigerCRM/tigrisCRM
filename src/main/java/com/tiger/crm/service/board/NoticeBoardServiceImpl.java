@@ -118,4 +118,11 @@ public class NoticeBoardServiceImpl implements NoticeBoardService{
     public List<BoardOpenCompanyDto> getBoardOpenCompanyByBoardId(int boardId){
         return boardOpenCompanyMapper.selectBoardOpenCompanyByBoardId(boardId);
     }
+
+    //메인 페이지에서 팝업 공지 가져오기
+    @Override
+    public List<NoticeBoardDto> getPopupNoticeBoardList(UserLoginDto userLoginDto) {
+
+        return noticeBoardMapper.getPopupNoticeBoardList(userLoginDto);
+    }
 }

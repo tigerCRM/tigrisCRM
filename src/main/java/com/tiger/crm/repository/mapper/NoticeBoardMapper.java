@@ -37,4 +37,7 @@ public interface NoticeBoardMapper {
 
     //시스템 게시글 수정
     void updateNoticeBoard(NoticeBoardDto noticeBoardDto);
+
+    //팝업 공지사항 가져오기
+    List<NoticeBoardDto> getPopupNoticeBoardList(UserLoginDto userLoginDto);
 }

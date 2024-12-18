@@ -531,13 +531,13 @@
 
     }
 
-    //11. 글 보기 or 글 수정 화면에서 선택한 회사 이름 로드
+    //12. 글 보기 or 글 수정 화면에서 선택한 회사 이름 로드
     if(boardOpenCompanies != null){
         chooseTargetArr = boardOpenCompanies.map(common.toCamelCase);
         writeDownCompanyName();
     }
 
-    //12.회사 이름 나열하는 구역에 회사이름 쓰기
+    //13.회사 이름 나열하는 구역에 회사이름 쓰기
     function writeDownCompanyName(){
         var viewCompanyElement = document.getElementById('viewCompany'); //열람대상 회사 이름 나열하는 구역
         if(!isViewAllYnChecked()){
@@ -549,7 +549,7 @@
             }
         }
     }
-    //13. 전체열람인지 부분열람인지 체크
+    //14. 전체열람인지 부분열람인지 체크
     function isViewAllYnChecked(){
         const radioButtons = document.getElementsByName("viewAllYn");
         for (const radioButton of radioButtons) {
@@ -561,7 +561,7 @@
         }
     }
 
-    //14. 팝업등록 시 노출일자 표시하는 선택창 보이기
+    //15. 팝업등록 시 노출일자 표시하는 선택창 보이기
     function toggleAlwaysDisplay() {
         const popupYnCheckbox = document.getElementById('popupYnCheckbox');
         const alwaysDisplaySection = document.getElementById('alwaysDisplaySection');

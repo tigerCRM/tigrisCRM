@@ -40,4 +40,7 @@ public interface NoticeBoardService {
 
     //게시판 번호로 boardOpenCompany 찾아오기
     List<BoardOpenCompanyDto> getBoardOpenCompanyByBoardId(int boardId);
+
+    //메인 페이지에서 팝업 공지 가져오기
+    List<NoticeBoardDto>getPopupNoticeBoardList(UserLoginDto userLoginDto);
 }

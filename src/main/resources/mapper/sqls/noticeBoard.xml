@@ -156,4 +156,28 @@
             UPDATE_DT = NOW()
         WHERE BOARD_ID = #{boardId}
     </update>
+
+    <select id="getPopupNoticeBoardList"  resultType="java.util.HashMap">
+        SELECT
+        B.BOARD_ID,
+        B.CATEGORY_CD,
+        B.TOP_YN,
+        B.TITLE,
+        B.CREATE_ID,
+        U.USER_NAME,
+        B.CREATE_DT
+        FROM T_BOARD B
+        LEFT JOIN T_USER_INFO U
+        ON B.CREATE_ID = U.USER_ID
+        LEFT JOIN T_BOARD_OPEN_COMPANY O
+        ON B.BOARD_ID = O.BOARD_ID
+        <where>
+        CATEGORY_CD = 'NOTICE'
+            AND DELETE_YN = 'N'
+            AND POPUP_YN = 'Y'
+            <if test="userClass == 'USER' ">
+                AND (O.COMPANY_ID = #{companyId} OR O.COMPANY_ID IS NULL)
+            </if>
+        </where>
+    </select>
 </mapper>

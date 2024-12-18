@@ -228,6 +228,42 @@ var common = {
         return camelCaseObj;
     },
 
+    /*
+    loadPopupPosts
+    작성자 : 제예솔
+    */
+    loadPopupPosts : function(){
+        // Fetch API로 서버에 요청 전송
+        var url = `/loadPopup`;
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ test: 'test' }),
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json(); // JSON 데이터를 파싱
+            } else {
+                return response.json().then(data => {
+                    if (data.errors) {
+                        alert(data.errors.join('\n')); // 오류 메시지 출력
+                    } else {
+                        alert('알 수 없는 오류가 발생했습니다.');
+                    }
+                });
+            }
+        })
+        .then(data => {
+                console.log('Popup Data:', data); // 서버에서 받은 데이터를 콘솔에 출력
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('서버 요청 중 문제가 발생했습니다.');
+        });
+    },
+
 
 
 //end

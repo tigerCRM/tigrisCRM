@@ -1,9 +1,11 @@
 package com.tiger.crm.controller;
 
 import com.tiger.crm.common.context.ConfigProperties;
+import com.tiger.crm.repository.dto.board.NoticeBoardDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.mail.MailService;
+import com.tiger.crm.service.board.NoticeBoardService;
 import com.tiger.crm.service.main.MainService;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 
@@ -30,7 +32,8 @@ public class MainController
 	private MainService mainService;
 	@Autowired
 	private MailService mailService;
-
+	@Autowired
+	private NoticeBoardService noticeBoardService;
 	private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	/*
@@ -122,5 +125,19 @@ public class MainController
 		}
 
 		return "mailHistory";
+	}
+	/*
+	* getPopup
+	* 작성자 : 제예솔
+	* 설명 : 팝업공지 내용 가져옴
+	* */
+	@PostMapping(value = { "/loadPopup"})
+	public List<NoticeBoardDto> getPopup(HttpServletRequest request, HttpServletResponse response)	{
+
+		HttpSession session = request.getSession(false);
+		UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
+
+		List<NoticeBoardDto> noticeBoardDtoList = noticeBoardService.getPopupNoticeBoardList(loginUser);
+		return null;
 	}
 }
