@@ -4,6 +4,7 @@ import com.tiger.crm.repository.dto.board.BoardOpenCompanyDto;
 import com.tiger.crm.repository.dto.board.NoticeBoardDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
+import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.repository.mapper.BoardOpenCompanyMapper;
 import com.tiger.crm.repository.mapper.NoticeBoardMapper;
 import org.slf4j.Logger;
@@ -29,19 +30,19 @@ public class NoticeBoardServiceImpl implements NoticeBoardService{
     
     //시스템 보드 리스트 가져오기
     @Override
-    public PagingResponse<Map<String, Object>> getNoticeBoardList(PagingRequest pagingRequest) {
+    public PagingResponse<Map<String, Object>> getNoticeBoardList(PagingRequest pagingRequest, UserLoginDto userLoginDto) {
 
-        List<Map<String, Object>> noticeBoardList = noticeBoardMapper.getNoticeBoardList(pagingRequest);
+        List<Map<String, Object>> noticeBoardList = noticeBoardMapper.getNoticeBoardList(pagingRequest, userLoginDto);
 
-        int totalRecords = getNoticeBoardListCount(pagingRequest);
+        int totalRecords = getNoticeBoardListCount(pagingRequest, userLoginDto);
 
         return new PagingResponse<>(noticeBoardList, totalRecords, pagingRequest);
     }
 
     //게시글 갯수 가져오기
     @Override
-    public int getNoticeBoardListCount(PagingRequest pagingRequest) {
-        Integer count = noticeBoardMapper.getNoticeBoardListCount(pagingRequest);  // Integer로 받아서 null 체크
+    public int getNoticeBoardListCount(PagingRequest pagingRequest, UserLoginDto userLoginDto) {
+        Integer count = noticeBoardMapper.getNoticeBoardListCount(pagingRequest, userLoginDto);  // Integer로 받아서 null 체크
         return count != null ? count : 0;  // null일 경우 0 반환
     }
 

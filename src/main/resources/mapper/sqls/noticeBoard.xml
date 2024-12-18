@@ -15,31 +15,36 @@
         FROM T_BOARD B
         LEFT JOIN T_USER_INFO U
             ON B.CREATE_ID = U.USER_ID
+        LEFT JOIN T_BOARD_OPEN_COMPANY O
+            ON B.BOARD_ID = O.BOARD_ID
         <where>
             CATEGORY_CD = 'NOTICE'
             AND DELETE_YN = 'N'
             <!-- 검색 유형 (searchType이 제목, 내용, 담당자, 등 선택된 경우) -->
-            <if test="searchType != null and searchType != ''">
+            <if test="pagingRequest.searchType != null and pagingRequest.searchType != ''">
                 <choose>
-                    <when test="searchType == 'TITLE'">
-                        AND TITLE LIKE CONCAT('%', #{searchKeyword}, '%') <!-- 제목으로 검색 -->
+                    <when test="pagingRequest.searchType == 'TITLE'">
+                        AND TITLE LIKE CONCAT('%', #{pagingRequest.searchKeyword}, '%') <!-- 제목으로 검색 -->
                     </when>
-                    <when test="searchType == 'TITLEANDCONTENTS'">
-                        AND (TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
-                        OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')) <!-- 제목+내용으로 검색 -->
+                    <when test="pagingRequest.searchType == 'TITLEANDCONTENTS'">
+                        AND (TITLE LIKE CONCAT('%', #{pagingRequest.searchKeyword}, '%')
+                        OR CONTENT LIKE CONCAT('%', #{pagingRequest.searchKeyword}, '%')) <!-- 제목+내용으로 검색 -->
                     </when>
-                    <when test="searchType == 'USERNAME'">
-                        AND U.USER_NAME LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 작성자로 검색 -->
+                    <when test="pagingRequest.searchType == 'USERNAME'">
+                        AND U.USER_NAME LIKE CONCAT('%', #{pagingRequest.searchKeyword}, '%')  <!-- 작성자로 검색 -->
                     </when>
                 </choose>
+            </if>
+            <if test="userLoginDto.userClass == 'USER' ">
+                AND (O.COMPANY_ID = #{userLoginDto.companyId} OR O.COMPANY_ID IS NULL)
             </if>
         </where>
         ORDER BY
             CASE WHEN B.TOP_YN = 'Y' THEN 1 ELSE 2 END ASC,
             B.CREATE_DT DESC
         <!-- 페이지 처리 (페이징 처리) -->
-        <if test="page != null">
-            LIMIT  #{offset}, #{size} <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
+        <if test="pagingRequest.page != null">
+            LIMIT  #{pagingRequest.offset}, #{pagingRequest.size} <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
         </if>
 
     </select>
@@ -49,24 +54,28 @@
         FROM T_BOARD B
         LEFT JOIN T_USER_INFO U
             ON B.CREATE_ID = U.USER_ID
+        LEFT JOIN T_BOARD_OPEN_COMPANY O
+            ON B.BOARD_ID = O.BOARD_ID
         <where>
             CATEGORY_CD = 'NOTICE'
             AND DELETE_YN = 'N'
-
             <!-- 검색 유형 (searchType이 제목, 내용, 담당자, 등 선택된 경우) -->
-            <if test="searchType != null and searchType != ''">
+            <if test="pagingRequest.searchType != null and pagingRequest.searchType != ''">
                 <choose>
-                    <when test="searchType == 'TITLE'">
-                        AND TITLE LIKE CONCAT('%', #{searchKeyword}, '%') <!-- 제목으로 검색 -->
+                    <when test="pagingRequest.searchType == 'TITLE'">
+                        AND TITLE LIKE CONCAT('%', #{pagingRequest.searchKeyword}, '%') <!-- 제목으로 검색 -->
                     </when>
-                    <when test="searchType == 'TITLEANDCONTENTS'">
-                        AND (TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
-                        OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')) <!-- 제목+내용으로 검색 -->
+                    <when test="pagingRequest.searchType == 'TITLEANDCONTENTS'">
+                        AND (TITLE LIKE CONCAT('%', #{pagingRequest.searchKeyword}, '%')
+                        OR CONTENT LIKE CONCAT('%', #{pagingRequest.searchKeyword}, '%')) <!-- 제목+내용으로 검색 -->
                     </when>
-                    <when test="searchType == 'USERNAME'">
-                        AND U.USER_NAME LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 작성자로 검색 -->
+                    <when test="pagingRequest.searchType == 'USERNAME'">
+                        AND U.USER_NAME LIKE CONCAT('%', #{pagingRequest.searchKeyword}, '%')  <!-- 작성자로 검색 -->
                     </when>
                 </choose>
+            </if>
+            <if test="userLoginDto.userClass == 'USER' ">
+                AND (O.COMPANY_ID = #{userLoginDto.companyId} OR O.COMPANY_ID IS NULL)
             </if>
         </where>
     </select>
