@@ -169,6 +169,9 @@ public class TicketController {
                 }
                 ticketCreate.setParentTicketCd(id);
                 ticketCreate.setTitle("["+String.valueOf(id)+"] Re:"+ parentTicketDetails.getTitle());
+                ticketCreate.setContent(System.lineSeparator()+"===========================연관티켓==========================="+System.lineSeparator()
+                        + "["+String.valueOf(id)+"] Re:"+ parentTicketDetails.getTitle()
+                        + System.lineSeparator()  +parentTicketDetails.getContent());
             }
             //model에 데이터 바인딩
             List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
