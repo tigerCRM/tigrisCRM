@@ -317,23 +317,39 @@ div::-webkit-scrollbar-button:end:increment {
     padding: 10px; /* 알림 내용과 버튼 사이 간격 */
     border-bottom: 1px solid #ddd; /* 항목 구분선 */
 }
-/* x 버튼 스타일 */
-.close-alert-btn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    border: none;
-    background: transparent;
-    font-size: 16px;
+.alert-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+}
+.alert-link {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.alert-link span {
+    display: inline-block;
     font-weight: bold;
-    color: #888;
+}
+.close-alert-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
     cursor: pointer;
-    transition: color 0.2s ease-in-out;
 }
 .close-alert-btn:hover {
-    color: #333;
+    color: #f44336; /* Hover 시 빨간색 강조 */
 }
-
+.alert-time {
+    font-size: 12px;
+    color: gray;
+    text-align: right;
+}
+/* 읽은 알림의 스타일 */
+.read-alert {
+    opacity: 0.6;
+}
 /* // main > header alert badge */
 
 

@@ -22,6 +22,8 @@ public class TicketServiceImpl implements TicketService {
     @Autowired
     private AlertService alertService;
 
+    public static final String TYPE = "TICKET"; // 알람 발송을 위한 값
+
     // 전체 티켓 수 조회 (null 체크 포함)
     @Override
     public PagingResponse<Map<String, Object>> getTicketList(PagingRequest pagingRequest) {
@@ -49,13 +51,13 @@ public class TicketServiceImpl implements TicketService {
         int ticketId = ticketDto.getTicketId();
         // 알림 발송
         if(resultCount > 0){
-            alertService.sendAlert(ticketDto.getStatusCd(), ticketId, "", ticketDto.getCreateId(), ticketDto.getManagerId());
+            alertService.sendAlert(TYPE, ticketDto.getStatusCd(), ticketId, ticketDto.getTitle(), ticketDto.getCreateId(), ticketDto.getManagerId());
         }
 
         return ticketId;
     }
 
-    //티켓저장
+    //티켓수정
     public int saveTicketModify(TicketDto ticketDto) {
         int resultCount =  ticketMapper.updateTicketInfo(ticketDto);
         if(resultCount != 1){
@@ -65,7 +67,7 @@ public class TicketServiceImpl implements TicketService {
         int ticketId = ticketDto.getTicketId();
         // 알림 발송
         if(resultCount > 0){
-            alertService.sendAlert(ticketDto.getStatusCd(), ticketId, "", ticketDto.getCreateId(), ticketDto.getManagerId());
+            alertService.sendAlert(TYPE ,ticketDto.getStatusCd(), ticketId, ticketDto.getTitle(), ticketDto.getCreateId(), ticketDto.getManagerId());
         }
 
         return ticketId;
@@ -92,8 +94,15 @@ public class TicketServiceImpl implements TicketService {
         return ticketMapper.selectTicketDetails(ticketId);
     }
 
-    public int changeStatus(int ticketId, String newStatus, String updateId) {
-        return ticketMapper.updateTicketStatus(ticketId,newStatus,updateId);
+    //진행상태 변경
+    public void changeStatus(int ticketId, String newStatus, String updateId) {
+        int resultCount = ticketMapper.updateTicketStatus(ticketId,newStatus,updateId);
+
+        // 알림 발송
+        if(resultCount > 0){
+            TicketDto ticketDto = ticketMapper.selectTicketDetails(ticketId);
+            alertService.sendAlert(TYPE ,newStatus, ticketId, ticketDto.getTitle(), ticketDto.getCreateId(), ticketDto.getManagerId());
+        }
     }
 
     //첨부파일 저장 후 티켓정보에 첨부파일 아이디 업데이트
