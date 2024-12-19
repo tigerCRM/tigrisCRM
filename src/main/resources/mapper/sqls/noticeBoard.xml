@@ -4,7 +4,7 @@
 
 <mapper namespace="com.tiger.crm.repository.mapper.NoticeBoardMapper">
     <select id="getNoticeBoardList"  resultType="java.util.HashMap">
-        SELECT
+        SELECT DISTINCT
             B.BOARD_ID,
             B.CATEGORY_CD,
             B.TOP_YN,
@@ -50,7 +50,7 @@
     </select>
 
     <select id="getNoticeBoardListCount" resultType="java.lang.Integer">
-        SELECT COUNT(*)
+        SELECT COUNT(DISTINCT B.BOARD_ID)
         FROM T_BOARD B
         LEFT JOIN T_USER_INFO U
             ON B.CREATE_ID = U.USER_ID
