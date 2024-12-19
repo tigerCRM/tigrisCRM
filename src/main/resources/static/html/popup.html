@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>팝업공지사항</title>
+    <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/layout.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+    <script src="/lib/jquery/jquery-2.2.2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <!--toast ui 설정-->
+    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+
+    <!--기타 전역에서 쓸 공통javascript 설정. commit-->
+    <script src="/js/common.js"></script>
+</head>
+<body>
+    <div class="main-area">
+        <!-- 내용 영역 -->
+        <main style="padding:0;">
+            <div class="container" style="padding:0;">
+                <div class="main-widget-wrap">
+                    <div>
+                        <!-- form 영역 -->
+                        <input type="hidden" id="boardId">
+                        <div>
+                            <!--사용자 입력 영역-->
+                            <table class="table table03 table--h table--xs">
+                                <colgroup>
+                                    <col style="width: 15%;">
+                                    <col style="width: auto;">
+                                    <!--<col style="width: 15%;">
+                                    <col style="width: 20%;">-->
+                                </colgroup>
+                                <tbody>
+                                <tr>
+                                    <th>제목</th>
+                                    <td>
+                                        <span id="title"></span>
+                                    </td>
+                                    <!--<th>작성일자</th>
+                                    <td id="createDt"></td>-->
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <div class="input-list--h">
+                                            <label class="checkbox02">
+                                                <input type="checkbox" id="hideToday">
+                                                <span>오늘 다시 읽지 않음</span>
+                                            </label>
+                                            <input type="hidden" id="topYn" name="topYn" value="Y">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        <div class="editor-wrap-popup">
+                                            <div id="editorContent"></div>
+                                            <input type="hidden" name="content" id="content">
+                                        </div>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <!--//사용자 입력 영역-->
+                        </div>
+                        <!-- //form 영역 -->
+
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- //내용 영역 -->
+    </div>
+    <script>
+        var editor;
+        document.addEventListener('DOMContentLoaded', () => {
+            // 메시지를 통해 부모 창에서 데이터 받기
+            window.addEventListener('message', (event) => {
+                const data = event.data; // 부모 창에서 보낸 데이터
+                console.log("Popup Data:", data);
+
+                if (data) {
+                    //var time = data.CREATE_DT.split('T')[0];
+
+                    document.getElementById('boardId').innerText = data.BOARD_ID || '';
+                    document.getElementById('title').innerText = data.TITLE || '';
+                    //document.getElementById('createDt').innerText = time || '';
+                    document.getElementById('content').innerText = data.CONTENT || '';
+
+                } else {
+                    console.error('부모 창 데이터를 찾을 수 없습니다.');
+                }
+                editor = new toastui.Editor.factory({
+                    el: document.querySelector('#editorContent'),      // viewer와 editor 컨테이너 구분
+                    viewer: true,                              // boardId 값에 따라 viewer 모드 설정
+                    height: 'auto',                                    // 높이 설정
+                    initialValue: document.querySelector('#content').innerText ,
+                    previewStyle: 'vertical',
+                    hideModeSwitch: false,                      // editor 모드일 때만 모드 전환 숨김
+                });
+            });
+        });
+    </script>
+</body>
+</html>

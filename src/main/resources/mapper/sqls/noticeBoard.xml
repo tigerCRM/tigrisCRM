@@ -163,6 +163,7 @@
         B.CATEGORY_CD,
         B.TOP_YN,
         B.TITLE,
+        B.CONTENT,
         B.CREATE_ID,
         U.USER_NAME,
         B.CREATE_DT

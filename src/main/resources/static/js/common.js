@@ -257,11 +257,25 @@ var common = {
         })
         .then(data => {
                 console.log('Popup Data:', data); // 서버에서 받은 데이터를 콘솔에 출력
+                data.forEach(item => {
+                    this.openPopup(item); // 각 데이터 항목에 대해 팝업 열기
+                });
         })
         .catch(error => {
             console.error('Error:', error);
             alert('서버 요청 중 문제가 발생했습니다.');
         });
+    },
+    /*
+    openPopup
+    작성자 : 제예솔
+    */
+    openPopup : function(data){
+        const popup = window.open('/html/popup.html', '_blank', 'width=568,height=750');
+
+        popup.onload = function () {
+            popup.postMessage(data, '*'); // 데이터를 팝업 창으로 전송
+        };
     },
 
 
