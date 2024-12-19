@@ -176,6 +176,8 @@
         CATEGORY_CD = 'NOTICE'
             AND DELETE_YN = 'N'
             AND POPUP_YN = 'Y'
+            AND B.POPUP_START_DT &lt;= NOW()
+            AND B.POPUP_END_DT &gt;= NOW()
             <if test="userClass == 'USER' ">
                 AND (O.COMPANY_ID = #{companyId} OR O.COMPANY_ID IS NULL)
             </if>
