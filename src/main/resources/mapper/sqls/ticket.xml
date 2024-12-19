@@ -183,7 +183,7 @@
         UPDATE T_TICKET_INFO
         SET STATUS_CD = #{newStatus},
         <!-- userClass가 고객아닐경우 -->
-        <if test="updateId != ''">
+        <if test="updateId != '' and newStatus != 'CLOSED'">
             MANAGER_ID = #{updateId},
         </if>
         UPDATE_DT = NOW(),
