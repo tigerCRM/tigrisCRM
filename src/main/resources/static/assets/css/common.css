@@ -322,11 +322,17 @@ div::-webkit-scrollbar-button:end:increment {
     align-items: center;
     justify-content: space-between;
     font-size: 14px;
+    max-width: 100%; /* 부모 요소의 최대 너비 */
 }
 .alert-link {
     display: flex;
     gap: 8px;
     align-items: center;
+    display: inline-block;      /* inline-block으로 설정 */
+    max-width: 291px;           /* 텍스트가 초과할 최대 너비 지정 */
+    white-space: nowrap;        /* 텍스트가 줄바꿈되지 않도록 설정 */
+    overflow: hidden;           /* 넘치는 텍스트를 숨김 */
+    text-overflow: ellipsis;    /* 숨겨진 텍스트 부분에 말줄임표 표시 */
 }
 .alert-link span {
     display: inline-block;
