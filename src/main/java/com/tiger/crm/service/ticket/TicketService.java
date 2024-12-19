@@ -22,7 +22,7 @@ public interface TicketService {
 
     TicketDto getTicketDetails(int ticketId);
 
-    int changeStatus(int ticketId, String newStatus, String updateId);
+    void changeStatus(int ticketId, String newStatus, String updateId);
 
     void setTicketFileId(String fileId, int ticketId);
 
