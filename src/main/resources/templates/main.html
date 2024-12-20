@@ -28,6 +28,7 @@
                                         <table class="table table01 table-ellipsis">
                                             <colgroup>
                                                 <col style="width: 16%;">
+                                                <col style="width: 12%;">
                                                 <col style="width: 50%;">
                                                 <col style="width: 20%;">
                                                 <col style="width: 20%;">
@@ -35,6 +36,7 @@
                                             <thead>
                                             <tr>
                                                 <th>요청번호</th>
+                                                <th></th>
                                                 <th class="board-title">제목</th>
                                                 <th>고객사</th>
                                                 <th>진행상태</th>
@@ -47,6 +49,7 @@
                                                 </tr>
                                                 <tr th:each="item : ${ticketList}">
                                                     <td><span th:text="${item.TICKET_ID}"></span></td>
+                                                    <td><span th:if="${item.PRIORITY_YN == 'Y'}" class="tag tag--red">긴급</span></td>
                                                     <td>
                                                         <a th:href="@{/ticketView(id=${item.TICKET_ID})}">
                                                             <span th:text="${item.TITLE}"></span>
