@@ -2,7 +2,9 @@ package com.tiger.crm.repository.mapper;
 
 import com.tiger.crm.repository.dto.board.NoticeBoardDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
+import com.tiger.crm.repository.dto.user.UserLoginDto;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -16,10 +18,10 @@ NoticeBoardMapper
 public interface NoticeBoardMapper {
 
     //시스템 관리 리스트 불러오기
-    List<Map<String, Object>> getNoticeBoardList(PagingRequest pagingRequest);
+    List<Map<String, Object>> getNoticeBoardList(@Param("pagingRequest")PagingRequest pagingRequest, @Param("userLoginDto")UserLoginDto userLoginDto);
 
     //시스템 관리 글갯수 불러오기
-    Integer getNoticeBoardListCount(PagingRequest pagingRequest);
+    Integer getNoticeBoardListCount(@Param("pagingRequest")PagingRequest pagingRequest, @Param("userLoginDto")UserLoginDto userLoginDto);
 
     //시스템 관리 글저장
     void insertNoticeBoard(NoticeBoardDto noticeBoardDto);
@@ -35,4 +37,7 @@ public interface NoticeBoardMapper {
 
     //시스템 게시글 수정
     void updateNoticeBoard(NoticeBoardDto noticeBoardDto);
+
+    //팝업 공지사항 가져오기
+    List<NoticeBoardDto> getPopupNoticeBoardList(UserLoginDto userLoginDto);
 }

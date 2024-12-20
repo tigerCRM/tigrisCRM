@@ -4,6 +4,7 @@ import com.tiger.crm.repository.dto.board.BoardOpenCompanyDto;
 import com.tiger.crm.repository.dto.board.NoticeBoardDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
+import com.tiger.crm.repository.dto.user.UserLoginDto;
 
 import java.util.List;
 import java.util.Map;
@@ -17,10 +18,10 @@ import java.util.Map;
 public interface NoticeBoardService {
     
     //시스템 보드 리스트 가져오기
-    PagingResponse<Map<String, Object>> getNoticeBoardList(PagingRequest pagingRequest);
+    PagingResponse<Map<String, Object>> getNoticeBoardList(PagingRequest pagingRequest, UserLoginDto userLoginDto);
     
     //게시글 갯수 가져오기
-    int getNoticeBoardListCount(PagingRequest pagingRequest);
+    int getNoticeBoardListCount(PagingRequest pagingRequest, UserLoginDto userLoginDto);
 
     //시스템관리 글 저장
     int insertNoticeBoard(NoticeBoardDto noticeBoardDto, List<BoardOpenCompanyDto> boardOpenCompanyList);
@@ -39,4 +40,7 @@ public interface NoticeBoardService {
 
     //게시판 번호로 boardOpenCompany 찾아오기
     List<BoardOpenCompanyDto> getBoardOpenCompanyByBoardId(int boardId);
+
+    //메인 페이지에서 팝업 공지 가져오기
+    List<NoticeBoardDto>getPopupNoticeBoardList(UserLoginDto userLoginDto);
 }

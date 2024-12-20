@@ -1,9 +1,12 @@
 package com.tiger.crm.controller;
 
 import com.tiger.crm.common.context.ConfigProperties;
+import com.tiger.crm.repository.dto.board.NoticeBoardDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.mail.MailService;
+import com.tiger.crm.service.board.NoticeBoardService;
+import com.tiger.crm.service.common.CommonService;
 import com.tiger.crm.service.main.MainService;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 
@@ -13,6 +16,7 @@ import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,14 +27,16 @@ import java.util.Map;
 @Controller
 public class MainController
 {
-
+	@Autowired
+	private CommonService commonService;
 	@Autowired
 	private ConfigProperties config;
 	@Autowired
 	private MainService mainService;
 	@Autowired
 	private MailService mailService;
-
+	@Autowired
+	private NoticeBoardService noticeBoardService;
 	private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	/*
@@ -90,6 +96,7 @@ public class MainController
 			// 메일 발송 내역 조회
 			PagingResponse<Map<String, Object>> pageResponse = mailService.getMailHistList(pagingRequest);
 			model.addAttribute("mailHistList", pageResponse);
+			model.addAttribute("searchOptions", commonService.getSelectOptions("mh_search"));
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -98,7 +105,7 @@ public class MainController
 	}
 
 	/*
-	 * 2. 메일발송내역 페이지(검색 시)
+	 * 2. 메일발송내역 페이지(상세 검색 시)
 	 */
 	@PostMapping(value = { "mailHistory"})
 	public String searchMailHistory(@ModelAttribute PagingRequest pagingRequest, Model model)	{
@@ -122,5 +129,23 @@ public class MainController
 		}
 
 		return "mailHistory";
+	}
+	/*
+	* getPopup
+	* 작성자 : 제예솔
+	* 설명 : 팝업공지 내용 가져옴
+	* */
+	@PostMapping(value = { "/loadPopup"})
+	public ResponseEntity<List<NoticeBoardDto>> getPopup(HttpServletRequest request, HttpServletResponse response)	{
+
+		HttpSession session = request.getSession(false);
+		UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
+
+		List<NoticeBoardDto> noticeBoardDtoList = noticeBoardService.getPopupNoticeBoardList(loginUser);
+		if(noticeBoardDtoList == null|| noticeBoardDtoList.isEmpty()){
+			return ResponseEntity.noContent().build();
+		}
+
+		return ResponseEntity.ok(noticeBoardDtoList);
 	}
 }

@@ -158,6 +158,7 @@
     <!-- 티켓 상세 정보 조회 -->
     <select id="selectTicketDetails" parameterType="int" resultType="com.tiger.crm.repository.dto.ticket.TicketDto">
         SELECT TICKET_ID,
+        T.CREATE_ID,
         CREATE_NAME,
         PRIORITY_YN,
         COMPANY_NAME,
@@ -182,7 +183,7 @@
         UPDATE T_TICKET_INFO
         SET STATUS_CD = #{newStatus},
         <!-- userClass가 고객아닐경우 -->
-        <if test="updateId != ''">
+        <if test="updateId != '' and newStatus != 'CLOSED'">
             MANAGER_ID = #{updateId},
         </if>
         UPDATE_DT = NOW(),

@@ -317,23 +317,45 @@ div::-webkit-scrollbar-button:end:increment {
     padding: 10px; /* 알림 내용과 버튼 사이 간격 */
     border-bottom: 1px solid #ddd; /* 항목 구분선 */
 }
-/* x 버튼 스타일 */
-.close-alert-btn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    border: none;
-    background: transparent;
-    font-size: 16px;
+.alert-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    max-width: 100%; /* 부모 요소의 최대 너비 */
+}
+.alert-link {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    display: inline-block;      /* inline-block으로 설정 */
+    max-width: 291px;           /* 텍스트가 초과할 최대 너비 지정 */
+    white-space: nowrap;        /* 텍스트가 줄바꿈되지 않도록 설정 */
+    overflow: hidden;           /* 넘치는 텍스트를 숨김 */
+    text-overflow: ellipsis;    /* 숨겨진 텍스트 부분에 말줄임표 표시 */
+}
+.alert-link span {
+    display: inline-block;
     font-weight: bold;
-    color: #888;
+}
+.close-alert-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
     cursor: pointer;
-    transition: color 0.2s ease-in-out;
 }
 .close-alert-btn:hover {
-    color: #333;
+    color: #f44336; /* Hover 시 빨간색 강조 */
 }
-
+.alert-time {
+    font-size: 12px;
+    color: gray;
+    text-align: right;
+}
+/* 읽은 알림의 스타일 */
+.read-alert {
+    opacity: 0.6;
+}
 /* // main > header alert badge */
 
 
@@ -3318,6 +3340,10 @@ ul[class*='list-tree--'] {
 /*예솔 에디터영역 크기 하드코딩*/
 .editor-wrap{
     width: 850px;
+}
+/*예솔 에디터영역 크기 하드코딩*/
+.editor-wrap-popup{
+    width: 550px; /* 내용물이 작으면 최소 550px */
 }
 /*예솔 모달 만들기 추가*/
 .move-button-area {

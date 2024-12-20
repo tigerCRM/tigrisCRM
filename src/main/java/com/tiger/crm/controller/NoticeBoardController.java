@@ -74,8 +74,10 @@ public class NoticeBoardController {
     @GetMapping("/noticeBoardList")
     public String getNoticeBoardListPage(PagingRequest pagingRequest, HttpServletRequest request, HttpServletResponse response, Model model)
     {
+        HttpSession session = request.getSession(false);
+        UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
         model.addAttribute("searchOptions", commonService.getSelectOptions("b_search_notice"));
-        PagingResponse<Map<String, Object>> pageResponse = noticeBoardService.getNoticeBoardList(pagingRequest);
+        PagingResponse<Map<String, Object>> pageResponse = noticeBoardService.getNoticeBoardList(pagingRequest, loginUser);
         model.addAttribute("noticeBoardList", pageResponse);
         return "noticeBoardList";
     }
@@ -86,10 +88,12 @@ public class NoticeBoardController {
      * * 스크립트단에서 ajax로 호출하여 PagingRequest data를 받아서 처리
      * */
     @PostMapping("/noticeBoardList")
-    public String searchNoticeBoardListPage(@ModelAttribute PagingRequest pagingRequest, Model model) {
+    public String searchNoticeBoardListPage(@ModelAttribute PagingRequest pagingRequest, HttpServletRequest request, HttpServletResponse response, Model model) {
         try {
+            HttpSession session = request.getSession(false);
+            UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
             // 티켓 조회
-            PagingResponse<Map<String, Object>> pageResponse = noticeBoardService.getNoticeBoardList(pagingRequest);
+            PagingResponse<Map<String, Object>> pageResponse = noticeBoardService.getNoticeBoardList(pagingRequest , loginUser);
             model.addAttribute("noticeBoardList", pageResponse);
             // 부분 뷰 렌더링 (리스트 부분만 갱신)
             return "noticeBoardList :: noticeBoardListFragment";
