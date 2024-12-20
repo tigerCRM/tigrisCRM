@@ -21,5 +21,5 @@ public interface AlertService {
     void deleteAlertStatus(String alertId);
 
     // 알림 발송
-    void sendAlert(String alertType, int objectId, String content, String senderId, String receiverId);
+    void sendAlert(String type, String alertType, int objectId, String content, String senderId, String receiverId);
 }
