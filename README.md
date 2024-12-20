@@ -40,7 +40,7 @@ tigris-crm 서비스 개발
 
 > 젠킨스 관련
    - 서버 : ``` http://192.168.0.240:8080/ ```
-   - 로그확인 : ``` sudo tail -f /var/log/crm/application.log ```
+   - 로그확인 : ``` sudo tail -f /var/log/crm/YYYYMMDD_application.log ```
 
 <br/><br/>
 

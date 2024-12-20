@@ -4,7 +4,7 @@
 
 <mapper namespace="com.tiger.crm.repository.mapper.NoticeBoardMapper">
     <select id="getNoticeBoardList"  resultType="java.util.HashMap">
-        SELECT
+        SELECT DISTINCT
             B.BOARD_ID,
             B.CATEGORY_CD,
             B.TOP_YN,
@@ -50,7 +50,7 @@
     </select>
 
     <select id="getNoticeBoardListCount" resultType="java.lang.Integer">
-        SELECT COUNT(*)
+        SELECT COUNT(DISTINCT B.BOARD_ID)
         FROM T_BOARD B
         LEFT JOIN T_USER_INFO U
             ON B.CREATE_ID = U.USER_ID
@@ -163,6 +163,7 @@
         B.CATEGORY_CD,
         B.TOP_YN,
         B.TITLE,
+        B.CONTENT,
         B.CREATE_ID,
         U.USER_NAME,
         B.CREATE_DT
@@ -175,6 +176,8 @@
         CATEGORY_CD = 'NOTICE'
             AND DELETE_YN = 'N'
             AND POPUP_YN = 'Y'
+            AND B.POPUP_START_DT &lt;= NOW()
+            AND B.POPUP_END_DT &gt;= NOW()
             <if test="userClass == 'USER' ">
                 AND (O.COMPANY_ID = #{companyId} OR O.COMPANY_ID IS NULL)
             </if>

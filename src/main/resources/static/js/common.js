@@ -81,6 +81,40 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
+$(document).ready(function(){
+    $('#adminmenu').click(function(e){
+        e.preventDefault(); // 링크 기본 동작 방지
+
+        // 클릭한 메뉴의 하위 메뉴를 찾고 토글 (보이기/숨기기)
+        var subMenu = $(this).next('.tree-list--sub-2');
+        subMenu.slideToggle(); // 슬라이딩 효과로 토글
+
+        // 아이콘 방향 변경 (선택 사항)
+        var arrowBtn = $(this).find('.tree-arrow-btn');
+        arrowBtn.toggleClass('tree--open'); // 아이콘 상태 변경
+    });
+    /*// 메뉴 클릭 시 오른쪽 컨텐츠만 업데이트
+    $('.menu-item').click(function(e) {
+        e.preventDefault(); // 기본 링크 동작 방지
+
+        var url = $(this).data('url'); // 클릭한 메뉴의 URL 가져오기
+
+        // AJAX로 오른쪽 컨텐츠 로드
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: function(response) {
+                // 오른쪽 영역에 새로운 콘텐츠를 로드
+                $('.main-area').html(response);
+            },
+            error: function() {
+                alert('콘텐츠를 불러오는 데 오류가 발생했습니다.');
+            }
+        });
+    });*/
+});
+
+
 //2. 함수 저장소  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 var common = {
 
@@ -257,11 +291,48 @@ var common = {
         })
         .then(data => {
                 console.log('Popup Data:', data); // 서버에서 받은 데이터를 콘솔에 출력
+                data.forEach(item => {
+                    if(common.compareToLocalStorage(item.BOARD_ID)){
+                        this.openPopup(item); // 각 데이터 항목에 대해 팝업 열기
+                    }
+                });
         })
         .catch(error => {
             console.error('Error:', error);
             alert('서버 요청 중 문제가 발생했습니다.');
         });
+    },
+    /*
+    openPopup
+    작성자 : 제예솔
+    */
+    openPopup : function(data){
+        const popup = window.open('/html/popup.html', '_blank', 'width=568,height=750');
+
+        popup.onload = function () {
+            popup.postMessage(data, '*'); // 데이터를 팝업 창으로 전송
+        };
+    },
+    /*
+    compareToLocalStorage
+    작성자 : 제예솔
+    */
+    compareToLocalStorage : function(boardId){
+        var popupHideData = localStorage.getItem("popupHideData");
+        popupHideData = JSON.parse(popupHideData);
+        if (!popupHideData || popupHideData === "") {
+            return true;
+        } else {
+            for (var i = 0; i < popupHideData.length; i++) {
+                if (popupHideData[i].hideBoardId === boardId.toString()) {
+                    if(popupHideData[i].hideDate === new Date().toISOString().split("T")[0] ){
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
     },
 
 

@@ -3341,6 +3341,10 @@ ul[class*='list-tree--'] {
 .editor-wrap{
     width: 850px;
 }
+/*예솔 에디터영역 크기 하드코딩*/
+.editor-wrap-popup{
+    width: 550px; /* 내용물이 작으면 최소 550px */
+}
 /*예솔 모달 만들기 추가*/
 .move-button-area {
     display: flex;
