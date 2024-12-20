@@ -22,10 +22,75 @@
                     <li>
                         <a href="ticketList" class="menu-item">
                                 <span class="menu-icon">
-                                    <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#mail}"/></svg>
+                                    <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#e-approval}"/></svg>
                                 </span>
                             <p class="menu-title">
                                 <span class="menu-title__text">요청관리</span>
+                                <span class="menu-title__num"></span>
+                            </p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="systemBoardList" class="menu-item">
+                                <span class="menu-icon">
+                                    <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#archive}"/></svg>
+                                </span>
+                            <p class="menu-title">
+                                <span class="menu-title__text">시스템 정보</span>
+                                <span class="menu-title__num"  th:field=${userClass} ></span>
+                            </p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="noticeBoardList" class="menu-item">
+                                <span class="menu-icon">
+                                    <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#window}"/></svg>
+                                </span>
+                            <p class="menu-title">
+                                <span class="menu-title__text">공지사항</span>
+                                <span class="menu-title__num"></span>
+                            </p>
+                        </a>
+                    </li>
+                    <li class="tree-item" th:if="${userClass != 'USER'}">
+                        <a href="#" class="menu-item" id="adminmenu">
+                            <span class="menu-icon">
+                                <button class="tree-arrow-btn"></button>
+                            </span>
+                            <p class="menu-title">
+                                <span class="menu-title__text">관리기능</span>
+                                <span class="menu-title__num"></span>
+                            </p>
+                        </a>
+                        <!-- 하위 메뉴 (초기에는 숨김) -->
+                        <ul class="tree-list--sub-2">
+                            <li class="tree-item" style="margin-left:50px">
+                                <a href="opReportList" class="menu-item">
+
+                                    <p class="menu-title">
+                                        <span class="menu-title__text">운영지원보고서</span>
+                                        <span class="menu-title__num"></span>
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="tree-item" style="margin-left:50px">
+                                <a href="mailHistory" class="menu-item">
+                                    <p class="menu-title">
+                                        <span class="menu-title__text">발송내역</span>
+                                        <span class="menu-title__num"></span>
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!--추후 관리기능 안으로-->
+                    <li>
+                        <a href="opReportList" class="menu-item">
+                                <span class="menu-icon">
+                                    <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#menu-all}"/></svg>
+                                </span>
+                            <p class="menu-title">
+                                <span class="menu-title__text">운영지원보고서</span>
                                 <span class="menu-title__num"></span>
                             </p>
                         </a>
@@ -37,39 +102,6 @@
                                 </span>
                             <p class="menu-title">
                                 <span class="menu-title__text">발송내역</span>
-                                <span class="menu-title__num"></span>
-                            </p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="systemBoardList" class="menu-item">
-                                <span class="menu-icon">
-                                    <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#mail}"/></svg>
-                                </span>
-                            <p class="menu-title">
-                                <span class="menu-title__text">시스템 정보</span>
-                                <span class="menu-title__num"></span>
-                            </p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="noticeBoardList" class="menu-item">
-                                <span class="menu-icon">
-                                    <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#mail}"/></svg>
-                                </span>
-                            <p class="menu-title">
-                                <span class="menu-title__text">공지사항</span>
-                                <span class="menu-title__num"></span>
-                            </p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="opReportList" class="menu-item">
-                                <span class="menu-icon">
-                                    <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#mail}"/></svg>
-                                </span>
-                            <p class="menu-title">
-                                <span class="menu-title__text">운영지원보고서</span>
                                 <span class="menu-title__num"></span>
                             </p>
                         </a>
