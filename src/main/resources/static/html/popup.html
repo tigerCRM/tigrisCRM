@@ -104,6 +104,32 @@
                 });
             });
         });
+
+        document.getElementById('hideToday').addEventListener('change', (event) => {
+            if (event.target.checked) {
+
+                var data = {
+                    hideDate : new Date().toISOString().split("T")[0],
+                    hideBoardId : document.getElementById('boardId').innerText
+                }
+                var popupHideData = localStorage.getItem("popupHideData");
+
+                if (!popupHideData || popupHideData.trim() === "") {
+
+                    popupHideData = [];
+                    popupHideData.push(data);
+
+                } else {
+                    popupHideData = JSON.parse(popupHideData);
+                    popupHideData.push(data);
+                }
+
+                popupHideData = JSON.stringify(popupHideData)
+                localStorage.setItem("popupHideData", popupHideData);
+
+                window.close();
+            }
+        });
     </script>
 </body>
 </html>

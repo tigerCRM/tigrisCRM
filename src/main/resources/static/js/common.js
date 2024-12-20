@@ -258,7 +258,9 @@ var common = {
         .then(data => {
                 console.log('Popup Data:', data); // 서버에서 받은 데이터를 콘솔에 출력
                 data.forEach(item => {
-                    this.openPopup(item); // 각 데이터 항목에 대해 팝업 열기
+                    if(common.compareToLocalStorage(item.BOARD_ID)){
+                        this.openPopup(item); // 각 데이터 항목에 대해 팝업 열기
+                    }
                 });
         })
         .catch(error => {
@@ -276,6 +278,27 @@ var common = {
         popup.onload = function () {
             popup.postMessage(data, '*'); // 데이터를 팝업 창으로 전송
         };
+    },
+    /*
+    compareToLocalStorage
+    작성자 : 제예솔
+    */
+    compareToLocalStorage : function(boardId){
+        var popupHideData = localStorage.getItem("popupHideData");
+        popupHideData = JSON.parse(popupHideData);
+        if (!popupHideData || popupHideData === "") {
+            return true;
+        } else {
+            for (var i = 0; i < popupHideData.length; i++) {
+                if (popupHideData[i].hideBoardId === boardId.toString()) {
+                    if(popupHideData[i].hideDate === new Date().toISOString().split("T")[0] ){
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
     },
 
 
