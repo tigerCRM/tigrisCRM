@@ -101,7 +101,9 @@
                                                                     ? '티켓을 검토 요청하였습니다.'
                                                                     : alert.alertType === 'CLOSED'
                                                                         ? '티켓이 완료되었습니다.'
-                                                                        : '알 수 없는 작업을 수행하였습니다.'
+                                                                        : alert.alertType === 'COMMENT'
+                                                                            ? '새로운 댓글을 등록하였습니다.'
+                                                                            : '알 수 없는 작업을 수행하였습니다.'
                                                    }
                                                   <br/>
                                               "${alert.content}"

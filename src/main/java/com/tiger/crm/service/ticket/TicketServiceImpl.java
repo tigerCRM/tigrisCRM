@@ -1,16 +1,14 @@
 package com.tiger.crm.service.ticket;
 
-import com.tiger.crm.repository.dto.alert.AlertDto;
-import com.tiger.crm.repository.dto.company.CompanyOptionDto;
+import com.tiger.crm.repository.dto.alert.AlertType;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.dto.ticket.CommentDto;
+import com.tiger.crm.repository.dto.ticket.TicketDto;
 import com.tiger.crm.repository.mapper.TicketMapper;
 import com.tiger.crm.service.alert.AlertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.tiger.crm.repository.dto.ticket.TicketDto;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -21,8 +19,6 @@ public class TicketServiceImpl implements TicketService {
     private TicketMapper ticketMapper;
     @Autowired
     private AlertService alertService;
-
-    public static final String TYPE = "TICKET"; // 알람 발송을 위한 값
 
     // 전체 티켓 수 조회 (null 체크 포함)
     @Override
@@ -51,7 +47,7 @@ public class TicketServiceImpl implements TicketService {
         int ticketId = ticketDto.getTicketId();
         // 알림 발송
         if(resultCount > 0){
-            alertService.sendAlert(TYPE, ticketDto.getStatusCd(), ticketId, ticketDto.getTitle(), ticketDto.getCreateId(), ticketDto.getManagerId());
+            alertService.sendAlert(AlertType.TICKET_STATUS, ticketDto.getStatusCd(), ticketId, ticketDto.getTitle(), ticketDto.getCreateId(), ticketDto.getManagerId());
         }
 
         return ticketId;
@@ -63,11 +59,13 @@ public class TicketServiceImpl implements TicketService {
         if(resultCount != 1){
             return 0;
         }
+
         // 고유번호가 TicketDto에 저장됨
         int ticketId = ticketDto.getTicketId();
-        // 알림 발송
+
+        // [알림, 메일] 발송 파트
         if(resultCount > 0){
-            alertService.sendAlert(TYPE ,ticketDto.getStatusCd(), ticketId, ticketDto.getTitle(), ticketDto.getCreateId(), ticketDto.getManagerId());
+            alertService.sendAlert(AlertType.TICKET_STATUS ,ticketDto.getStatusCd(), ticketId, ticketDto.getTitle(), ticketDto.getCreateId(), ticketDto.getManagerId());
         }
 
         return ticketId;
@@ -98,10 +96,10 @@ public class TicketServiceImpl implements TicketService {
     public void changeStatus(int ticketId, String newStatus, String updateId) {
         int resultCount = ticketMapper.updateTicketStatus(ticketId,newStatus,updateId);
 
-        // 알림 발송
+        // [알림, 메일] 발송 파트
         if(resultCount > 0){
             TicketDto ticketDto = ticketMapper.selectTicketDetails(ticketId);
-            alertService.sendAlert(TYPE ,newStatus, ticketId, ticketDto.getTitle(), ticketDto.getCreateId(), ticketDto.getManagerId());
+            alertService.sendAlert(AlertType.TICKET_STATUS ,newStatus, ticketId, ticketDto.getTitle(), ticketDto.getCreateId(), ticketDto.getManagerId());
         }
     }
 
@@ -116,10 +114,20 @@ public class TicketServiceImpl implements TicketService {
         if(result != 1){
             return 0;
         }
+
         // 고유번호가 TicketDto에 저장됨
         int commentId = commentDto.getAnswerId();
+
+        // [알림, 메일] 발송 파트
+        if(result > 0){
+            // 댓글시 상대방 조회(본인 x)
+            String receiverId = ticketMapper.findOtherUser(commentDto.getTicketId(), commentDto.getCreateId());
+            alertService.sendAlert(AlertType.TICKET_COMMENT ,"COMMENT", commentDto.getTicketId(), commentDto.getContent(), commentDto.getCreateId(), receiverId);
+        }
+
         return commentId;
     }
+
     //첨부파일 저장 후 댓글정보에 첨부파일 아이디 업데이트
     public void setCommentFileId(String fileId,int Id) {
         ticketMapper.updateCommentFileId(fileId, Id);
@@ -128,6 +136,7 @@ public class TicketServiceImpl implements TicketService {
     public List<CommentDto> getCommentsByTicketId(int ticketId) {
         return ticketMapper.getCommentsByTicketId(ticketId);
     }
+
     public void deleteTicket(int ticketId) {
         ticketMapper.deleteTicket(ticketId);
     }

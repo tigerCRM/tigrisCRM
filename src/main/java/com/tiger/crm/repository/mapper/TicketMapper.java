@@ -55,4 +55,8 @@ public interface TicketMapper {
     void deleteTicketAnswerFileById(int Id);
 
     int updateCommentFileId(String fileId, int Id);
+
+    // 댓글시 상대방 조회(본인 x)
+    String findOtherUser(Integer ticketId, String commentId);
+
 }

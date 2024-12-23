@@ -1,6 +1,7 @@
 package com.tiger.crm.service.alert;
 
 import com.tiger.crm.repository.dto.alert.AlertDto;
+import com.tiger.crm.repository.dto.alert.AlertType;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 
@@ -21,5 +22,5 @@ public interface AlertService {
     void deleteAlertStatus(String alertId);
 
     // 알림 발송
-    void sendAlert(String type, String alertType, int objectId, String content, String senderId, String receiverId);
+    void sendAlert(AlertType type, String alertType, int objectId, String content, String senderId, String receiverId);
 }

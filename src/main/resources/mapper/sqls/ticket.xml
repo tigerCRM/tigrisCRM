@@ -261,4 +261,13 @@
         WHERE FILE_ID = CONCAT('C',#{Id});
     </update>
 
+    <!-- 댓글시 상대방 조회(본인 x) -->
+    <select id="findOtherUser" resultType="java.lang.String">
+        SELECT CASE
+                   WHEN CREATE_ID != #{commentId} THEN CREATE_ID
+                   WHEN MANAGER_ID != #{commentId} THEN MANAGER_ID
+                   END AS REMAINING_VALUE
+        FROM T_TICKET_INFO
+        WHERE TICKET_ID = #{ticketId}
+    </select>
 </mapper>

@@ -13,6 +13,8 @@ public class AlertDto {
     private String receiverId;      // 알림 수령인
     private String alertDt;         // 알림 생성일
     private String readYn;          // 알림 읽음 여부
-
     private String userName;        // 발송인 이름
+
+    // enum 값 받기(AlertType.java)
+    private AlertType type; // Enum 사용
 }

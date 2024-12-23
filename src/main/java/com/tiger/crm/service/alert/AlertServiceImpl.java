@@ -1,6 +1,8 @@
 package com.tiger.crm.service.alert;
 
+import com.tiger.crm.common.exception.CustomException;
 import com.tiger.crm.repository.dto.alert.AlertDto;
+import com.tiger.crm.repository.dto.alert.AlertType;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.repository.mapper.AlertMapper;
@@ -46,39 +48,47 @@ public class AlertServiceImpl implements AlertService {
 
     // 알림 발송
     @Override
-    public void sendAlert(String type ,String alertType, int objectId, String content, String senderId, String receiverId) {
+    public void sendAlert(AlertType type , String alertType, int objectId, String content, String senderId, String receiverId) {
+        AlertDto alertDto = new AlertDto();     // 알림 객체 생성
+        alertDto.setBoardType(type.getType());  // 게시물 타입
+        alertDto.setAlertType(alertType);       // 상태코드
+        alertDto.setAlertObjectId(objectId);    // 요청사항 고유번호
+        alertDto.setContent(content);           // 내용
 
-        // 알림 객체 생성
-        AlertDto alertDto = new AlertDto();
-        
-        // 요청내역,게시판, 댓글 분류
-        switch (type){
-            case "TICKET":
-                alertDto.setBoardType(type);
-                alertDto.setAlertType(alertType); // 상태코드
-
-                // [ OPEN, CLOSED : 수신인은 담당자 ], [ RECEIPT, PROGRESS , REVIEW : 수신인 작성자]
+        switch (type){ // 요청내역, 게시판, 댓글 분류
+            case TICKET_STATUS:
+                // [ OPEN, CLOSED : 담당자에게 발송]
+                // [ RECEIPT, PROGRESS , REVIEW : 작성자에게 발송]
                 if(alertType.equals("RECEIPT") || alertType.equals("PROGRESS") || alertType.equals("REVIEW")){
-                    alertDto.setSenderId(receiverId);  // 발송인 아이디
-                    alertDto.setReceiverId(senderId);  // 수령인 아이디
+                    alertDto.setSenderId(receiverId);   // 발송인 아이디
+                    alertDto.setReceiverId(senderId);   // 수령인 아이디
                 }else if(alertType.equals("OPEN") || alertType.equals("CLOSED")){
+                    alertDto.setSenderId(senderId);     // 발송인 아이디
+                    alertDto.setReceiverId(receiverId); // 수령인 아이디
+                }else if(alertType.equals("COMMENT")){  // 댓글일 경우
                     alertDto.setSenderId(senderId);     // 발송인 아이디
                     alertDto.setReceiverId(receiverId); // 수령인 아이디
                 }
                 break;
-
-            case "NOTICE":
-                alertDto.setBoardType(type);
+            case TICKET_COMMENT:
+                // 항상 상대방에게 보냄
+                // (ex : 요청자가 댓글 달면 > 담당자에게 발송)
+                alertDto.setSenderId(senderId);      // 발송인 아이디
+                alertDto.setReceiverId(receiverId);  // 수령인 아이디
                 break;
+            case NOTICE:
 
+                break;
             default:
                 LOGGER.error("error : [type]이 정의되지 않았습니다.");
         }
-        alertDto.setAlertObjectId(objectId);       // 요청사항 고유번호
-        alertDto.setContent(content);              // 내용
 
-        // 알림 발송 (DB 저장 등)
-        alertMapper.createAlert(alertDto);
+        try {
+            // 알림 발송 (DB 저장 등)
+            alertMapper.createAlert(alertDto);
+        } catch (Exception e){
+            throw new CustomException("알림 등록 중 오류가 발생했습니다.", e);
+        }
     }
 
 }
