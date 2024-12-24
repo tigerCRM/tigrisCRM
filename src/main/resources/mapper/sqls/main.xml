@@ -63,8 +63,10 @@
                B.CREATE_DT
         FROM T_BOARD B
         LEFT JOIN T_USER_INFO U ON B.CREATE_ID = U.USER_ID
+        LEFT JOIN T_BOARD_OPEN_COMPANY TBOC ON B.BOARD_ID = TBOC.BOARD_ID
         WHERE CATEGORY_CD = 'NOTICE'
           AND DELETE_YN = 'N'
+          AND ( B.OPEN_YN = 'Y' OR (B.OPEN_YN = 'N' AND TBOC.COMPANY_ID = #{companyId}) )
         ORDER BY B.CREATE_DT DESC
         LIMIT 5
     </select>
