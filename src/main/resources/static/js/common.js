@@ -278,7 +278,10 @@ var common = {
         })
         .then(response => {
             if (response.ok) {
-                return response.json(); // JSON 데이터를 파싱
+                return response.text().then(text => {
+                    // 응답이 비어 있지 않으면 JSON으로 파싱
+                    return text ? JSON.parse(text) : {}; // 빈 응답이면 빈 객체 반환
+                });
             } else {
                 return response.json().then(data => {
                     if (data.errors) {
@@ -291,11 +294,15 @@ var common = {
         })
         .then(data => {
                 console.log('Popup Data:', data); // 서버에서 받은 데이터를 콘솔에 출력
+            // 데이터가 배열인지 확인
+            if (Array.isArray(data)) {
+                // 배열이면 forEach 사용
                 data.forEach(item => {
-                    if(common.compareToLocalStorage(item.BOARD_ID)){
+                    if (common.compareToLocalStorage(item.BOARD_ID)) {
                         this.openPopup(item); // 각 데이터 항목에 대해 팝업 열기
                     }
                 });
+            }
         })
         .catch(error => {
             console.error('Error:', error);
