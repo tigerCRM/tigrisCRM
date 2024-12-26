@@ -364,6 +364,10 @@ var common = {
                         location.reload();
                     } else if (title === '삭제') {
                         window.location.href = '/ticketList';
+                    } else if (title === '공지사항삭제' || title === '공지사항저장') {
+                        window.location.href = '/noticeBoardList';
+                    } else if (title === '시스템게시글삭제' || title === '시스템게시글저장') {
+                        window.location.href = '/systemBoardList';
                     } else {
                         location.reload();
                     }
@@ -388,7 +392,7 @@ var common = {
     }
 
     //Confirm 창 공통 구현
-    function showConfirm(type, title, text) {
+    function showConfirm(type, title, text, afterFunction) {
         Swal.fire({
             icon: type,  // 'success', 'error', 'warning', 'info', 'question'
             title: title,
@@ -402,7 +406,11 @@ var common = {
             html: `<span style="font-size: 15px; font-weight: bold;">${text}</span>`,  // 메시지 텍스트 스타일
         }).then((result) => {
             if (result.isConfirmed) {
-                afterConfirm();
+                if (typeof afterFunction === 'function') {
+                    afterFunction();
+                }else{
+                    afterConfirm();
+                }
             }else if (result.isDismissed) { // 만약 모달창에서 cancel 버튼을 눌렀다면
                 location.reload();
              }

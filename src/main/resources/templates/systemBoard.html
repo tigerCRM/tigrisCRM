@@ -17,6 +17,7 @@
     <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
     <!--기타 전역에서 쓸 공통javascript 설정. commit-->
     <script src="/js/common.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -168,11 +169,11 @@
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
                                     <button type="submit" class="btn btn--m primary-btn" th:if="${mode == 'write'}">글등록</button>
-                                    <button type="button" class="btn btn--m primary-btn" th:if="${mode == 'modify'}" onclick="submitModifiedBoard()">수정저장</button>
+                                    <button type="button" class="btn btn--m primary-btn" th:if="${mode == 'modify'}" onclick="modifiedBoardConfirm()">수정저장</button>
                                     <button type="button" class="btn btn--m primary-btn"
                                             th:if="${mode == 'read'}"
                                             onclick="getModifyBoard()">글수정</button>
-                                    <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'read'}" onclick="deleteBoard()">글삭제</button>
+                                    <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'read'}" onclick="deleteBoardConfirm()">글삭제</button>
                                     <button type="button" class="btn btn--m  secondary-btn" onclick="location.href='/systemBoardList';">목록으로</button>
                                 </div>
                                 <!--//버튼그룹-->
@@ -200,8 +201,20 @@
     //1. editor load 및 초기화
     var editor = common.loadOrInitializeEditor(editor , mode, contentValue);
 
-    //2. form submit 전 작업
+    //2. form submit 작업
     document.querySelector('#boardSubmitArea').addEventListener('submit', function (e) {
+        e.preventDefault();
+            const form = this;
+            showConfirm("question","저장하시겠습니까?","",
+                function(){
+                    beforeSubmit();
+                    form.submit();
+                }
+            );
+    });
+
+    //3. form submit 전 작업
+    function beforeSubmit(){
         // 에디터 안의 html 콘텐츠를 가져와서 hidden input 안에 데이터를 넣고 전송
         var content = editor.getHTML();
         document.querySelector('#content').value = content;
@@ -214,43 +227,50 @@
 
         //첨부파일 설정
         common.attachFileWorks();
-    });
-
-    //3. 글 삭제
-    function deleteBoard() {
-        var url = `/systemBoard`;
-        if (confirm('정말로 삭제하시겠습니까?')) {
-            fetch(url, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ boardId: boardId }),
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('삭제되었습니다.');
-                    window.location.href = '/systemBoardList'; // 삭제 후 이동할 페이지
-                } else {
-                    response.text().then(message => {
-                        alert(`서버응답실패: ${message}`);
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('오류가 발생해 서버로 요청을 전송하지 못했습니다');
-            });
-        }
     }
 
-    //4. 글 수정 페이지로 전환
+    //4. 삭제 의사 확인
+    function deleteBoardConfirm(){
+        if (showConfirm("question","삭제하시겠습니까?","",deleteBoard)) {}
+    }
+
+    //5. 글 삭제
+    function deleteBoard() {
+        var url = `/systemBoard`;
+        fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ boardId: boardId }),
+        })
+        .then(response => {
+            if (response.ok) {
+                showMessage('success', '시스템게시글삭제', '시스템 게시글이 정상적으로 삭제되었습니다.');
+            } else {
+                response.text().then(message => {
+                    showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('오류가 발생해 서버로 요청을 전송하지 못했습니다');
+        });
+    }
+
+    //6. 글 수정 페이지로 전환
     function getModifyBoard() {
         var url = '/systemBoard?boardId=' + boardId + '&mode=modify';
         window.location.href = url;
     }
 
-    //5. 글 수정후 저장
+    //7. 글 수정 의사 확인
+    function modifiedBoardConfirm(){
+        if (showConfirm("question","수정한 게시글을 저장하시겠습니까?","",submitModifiedBoard)) {}
+    }
+
+    //8. 글 수정후 저장
     function submitModifiedBoard() {
         var content = editor.getHTML();
         document.querySelector('#content').value = content;
@@ -272,14 +292,13 @@
         })
         .then(response => {
             if (response.ok) {
-                alert('처리가 완료되었습니다.');
-                window.location.href = '/systemBoardList'; // 완료 후 이동할 URL
+                showMessage('success', '시스템게시글저장', '시스템 게시글이 정상적으로 수정되었습니다.');
             } else {
                 return response.json().then(data => {
                     if (data.errors) {
-                        alert(data.errors.join('\n')); // 오류 메시지 출력
+                        showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
                     } else {
-                        alert('알 수 없는 오류가 발생했습니다.');
+                        showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
                     }
                 });
             }
