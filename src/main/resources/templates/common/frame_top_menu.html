@@ -76,9 +76,9 @@
 
                             // 알림 배지 표시
                             if (alertCount > 0) {
-                                $alertBadge.text(alertCount).addClass('active');
+                                $alertBadge.html('<p style="font-size:10px;">' + alertCount + '</p>').addClass('active');
                             } else {
-                                $alertBadge.text('').removeClass('active');
+                                $alertBadge.html('').removeClass('active');
                             }
 
                             // 드롭다운 내용 추가

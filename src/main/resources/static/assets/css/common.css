@@ -290,8 +290,11 @@ div::-webkit-scrollbar-button:end:increment {
     background-color: red;
     color: white;
     border-radius: 50%;
-    padding: 0.3em 0.6em;
+    min-width: 2em; /* 최소 너비 설정 */
+    min-height: 2em; /* 최소 높이 설정 */
     font-size: 0.8em;
+    line-height: 2em; /* 텍스트 중앙 정렬 */
+    text-align: center; /* 숫자 중앙 정렬 */
     position: absolute; /* 위치 조정이 필요하면 사용 */
     top: -10px; /* 버튼에 맞게 조정 */
     right: -10px;
@@ -303,8 +306,8 @@ div::-webkit-scrollbar-button:end:increment {
 .menu-btn .badge,
 .menu-icon .badge {
     position: absolute;
-    top: 0.2rem;
-    right: 0.5rem;
+    top: 1px;
+    right: 0px;
 }
 
 .read-alert { /* 읽은 알림 (클릭 후) */
