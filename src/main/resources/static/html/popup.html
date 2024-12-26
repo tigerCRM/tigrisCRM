@@ -77,6 +77,11 @@
     </div>
     <script>
         var editor;
+        window.addEventListener('keydown', function (e) {
+            if (e.key === 'F5' || (e.ctrlKey && e.key === 'r')) {
+                e.preventDefault(); // 새로고침 방지
+            }
+        });
         document.addEventListener('DOMContentLoaded', () => {
             // 메시지를 통해 부모 창에서 데이터 받기
             window.addEventListener('message', (event) => {
