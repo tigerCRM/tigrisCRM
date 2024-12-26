@@ -10,6 +10,12 @@ import java.io.IOException;
 
 @Component
 public class SameSiteCookieFilter implements Filter {
+
+    /*
+    * samesite 설정 위한 필터
+    * 작성자 : 제예솔
+    * 설명 : 세션 쿠키에 samesite 설정을 추가해 csrf 공격 방지
+    * */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {

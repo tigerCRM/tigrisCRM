@@ -32,9 +32,7 @@ public class ConfigProperties {
 //	private String legalOrgCode;
 
 	// enc
-	@Value("${aes128.secret.key}")
-	private String aes128SecretKey;
-	@Value("${aes.secret.key}")
+	@Value("${aes256.secret.key}")
 	private String aesSecretKey;
 
 	// mail

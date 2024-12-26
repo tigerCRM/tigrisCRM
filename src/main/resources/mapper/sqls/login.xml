@@ -26,9 +26,10 @@
 
     <!--전체 사용자 불러오기-->
     <select id="getAllUsers" resultType="com.tiger.crm.repository.dto.user.UserLoginDto">
-        SELECT USER_ID,
-               USER_NAME,
-               USER_PW
+        SELECT  USER_ID,
+                USER_NAME,
+                USER_PW,
+                PHONE
         FROM T_USER_INFO
     </select>
 
@@ -44,4 +45,11 @@
         FROM T_USER_INFO
         WHERE USER_ID = #{id}
     </select>
+
+    <!-- 사용자 전화번호를 업데이트하는 쿼리 -->
+    <update id="updateUserPhone">
+        UPDATE T_USER_INFO
+        SET PHONE = #{phone}
+        WHERE USER_ID = #{id}
+    </update>
 </mapper>

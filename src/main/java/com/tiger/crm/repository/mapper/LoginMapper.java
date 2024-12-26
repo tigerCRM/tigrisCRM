@@ -17,6 +17,9 @@ public interface LoginMapper {
     
     //사용자 비밀번호 업데이트(**주의** 테스트 시 외에는 사용하지 말것)
     void updateUserPassword(String id, String password);
+
+    //사용자 전화번호 업데이트(**주의** 테스트 시 외에는 사용하지 말것)
+    void updateUserPhone(String id, String phone);
     
     String getUserPwByUserId(String id);
 
