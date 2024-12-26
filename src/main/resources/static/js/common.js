@@ -332,7 +332,7 @@ var common = {
         } else {
             for (var i = 0; i < popupHideData.length; i++) {
                 if (popupHideData[i].hideBoardId === boardId.toString()) {
-                    if(popupHideData[i].hideDate === new Date().toISOString().split("T")[0] ){
+                    if(popupHideData[i].hideDate === new Date(Date.now() -(new Date().getTimezoneOffset()*60000)).toISOString().split("T")[0] ){
                         return false;
                     }
                 }
