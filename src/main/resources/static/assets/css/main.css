@@ -721,6 +721,7 @@
     font-size: 15px;
     max-height: 300px;
     overflow-y: auto;
+    cursor: pointer;
 }
 /* 드롭다운 항목 스타일 */
 .dropdown-menu li, .dropdown-menu2 li {

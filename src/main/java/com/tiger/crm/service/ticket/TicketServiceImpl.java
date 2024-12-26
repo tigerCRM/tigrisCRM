@@ -5,11 +5,15 @@ import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.dto.ticket.CommentDto;
 import com.tiger.crm.repository.dto.ticket.TicketDto;
+import com.tiger.crm.repository.mail.MailService;
 import com.tiger.crm.repository.mapper.TicketMapper;
 import com.tiger.crm.service.alert.AlertService;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +23,11 @@ public class TicketServiceImpl implements TicketService {
     private TicketMapper ticketMapper;
     @Autowired
     private AlertService alertService;
+    @Autowired
+    private MailService mailService;
+    @Value("${app.base-url}")
+    private String baseUrl;
+
 
     // 전체 티켓 수 조회 (null 체크 포함)
     @Override
@@ -38,15 +47,19 @@ public class TicketServiceImpl implements TicketService {
     }
 
     //티켓저장
-    public int saveTicket(TicketDto ticketDto) {
+    public int saveTicket(TicketDto ticketDto) throws MessagingException {
         int resultCount =  ticketMapper.insertTicketInfo(ticketDto);
         if(resultCount != 1){
             return 0;
         }
+
         // 고유번호가 TicketDto에 저장됨
         int ticketId = ticketDto.getTicketId();
-        // 알림 발송
+
+        // [알림, 메일] 발송 파트
         if(resultCount > 0){
+            Map<String, Object> model = new HashMap<>();
+            mailService.sendEmail(ticketDto.getManagerId(),"티켓등록", "ticket-email", model);
             alertService.sendAlert(AlertType.TICKET_STATUS, ticketDto.getStatusCd(), ticketId, ticketDto.getTitle(), ticketDto.getCreateId(), ticketDto.getManagerId());
         }
 
@@ -54,7 +67,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     //티켓수정
-    public int saveTicketModify(TicketDto ticketDto) {
+    public int saveTicketModify(TicketDto ticketDto) throws MessagingException {
         int resultCount =  ticketMapper.updateTicketInfo(ticketDto);
         if(resultCount != 1){
             return 0;
@@ -65,6 +78,8 @@ public class TicketServiceImpl implements TicketService {
 
         // [알림, 메일] 발송 파트
         if(resultCount > 0){
+            // Map<String, Object> model = new HashMap<>();
+            // mailService.sendEmail(ticketDto.getManagerId(), "티켓수정", "password-reset-email", model);
             alertService.sendAlert(AlertType.TICKET_STATUS ,ticketDto.getStatusCd(), ticketId, ticketDto.getTitle(), ticketDto.getCreateId(), ticketDto.getManagerId());
         }
 
@@ -93,12 +108,20 @@ public class TicketServiceImpl implements TicketService {
     }
 
     //진행상태 변경
-    public void changeStatus(int ticketId, String newStatus, String updateId) {
+    public void changeStatus(int ticketId, String newStatus, String updateId) throws MessagingException {
         int resultCount = ticketMapper.updateTicketStatus(ticketId,newStatus,updateId);
 
         // [알림, 메일] 발송 파트
         if(resultCount > 0){
             TicketDto ticketDto = ticketMapper.selectTicketDetails(ticketId);
+
+            Map<String, Object> model = new HashMap<>();
+            model.put("userName", ticketDto.getCreateName());
+            model.put("ticketTitle", ticketDto.getTitle());
+            model.put("ticketStatus", ticketDto.getStatusCd());
+            model.put("ticketUrl", baseUrl + "/ticketView?id=" + ticketDto.getTicketId() + "&redirect=/ticketView?id=" + ticketDto.getTicketId());
+
+            mailService.sendEmail(ticketDto.getCreateId(), "티켓상태변경", "ticket-email", model);
             alertService.sendAlert(AlertType.TICKET_STATUS ,newStatus, ticketId, ticketDto.getTitle(), ticketDto.getCreateId(), ticketDto.getManagerId());
         }
     }
