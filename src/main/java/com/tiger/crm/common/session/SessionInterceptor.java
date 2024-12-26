@@ -19,12 +19,18 @@ public class SessionInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         // 요청 URL 가져오기
         String requestUrl = request.getRequestURI();
+        String redirectUrl = request.getParameter("redirect"); // redirect 파라미터 추출
 
         // 세션에서 userId를 조회
         UserLoginDto user = (UserLoginDto) request.getSession().getAttribute("loginUser");
 
-        // user가 없거나 세션에서 로그인된 정보가 없으면 로그인 페이지로 리다이렉트
-        if (user == null || user.getUserId() == null) {
+        if (user == null) { // 로그인되지 않은 경우 처리
+            // 세션에 리다이렉트 URL을 저장
+            if (redirectUrl != null && !redirectUrl.isEmpty()) {
+                request.getSession().setAttribute("redirectUrl", redirectUrl);
+            }
+
+            // 로그인 페이지로 리다이렉트
             response.sendRedirect("/login");
             return false;
         }
@@ -49,6 +55,7 @@ public class SessionInterceptor implements HandlerInterceptor {
         // 권한이 있다면 요청을 계속 진행
         return true;
     }
+
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         // 요청이 컨트롤러에서 처리된 후 (뷰를 렌더링하기 전)에 추가 작업이 필요하다면

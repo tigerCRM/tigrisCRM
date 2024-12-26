@@ -67,7 +67,6 @@ public class LoginController
 
 		//로그인 정보 가져옴
 		UserLoginDto loginUser = loginService.login(user.getUserId(),user.getUserPw());
-
 		LOGGER.info("login access {}",loginUser);
 		
 		//해당 사용자가 없을 경우 에러 발생
@@ -77,10 +76,21 @@ public class LoginController
 			return "login";
 		}
 
+		// 로그인 성공 시 세션에 사용자 정보 저장
 		HttpSession session = request.getSession();
 		session.setAttribute("loginUser", loginUser);
 
-		return "redirect:main";
+		// 세션에서 리다이렉트 URL 가져오기
+		String redirectUrl = (String) session.getAttribute("redirectUrl");
+
+		// 리다이렉트 URL이 있으면 해당 페이지로 이동, 없으면 기본 메인 페이지로 이동
+		if (redirectUrl != null && !redirectUrl.isEmpty()) {
+			session.removeAttribute("redirectUrl");  // 리다이렉트 후 세션에서 URL 제거
+			return "redirect:" + redirectUrl;  // 리다이렉트 URL로 이동
+		}
+
+		// 리다이렉트 URL이 없다면 기본 메인 페이지로 이동
+		return "redirect:/main";
 	}
 
 	/*

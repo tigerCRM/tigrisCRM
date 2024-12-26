@@ -54,6 +54,13 @@ spring:
       mail.smtp.starttls.enable: false  # STARTTLS 사용
       mail.smtp.ssl.enable: true # SSL활성화
 
+# 메일 용 url
+app:
+  # 개발
+  base-url: https://192.168.0.240:8081
+  # 로컬
+  # base-url: https://localhost:8081
+
 # mybatis path setting
 mybatis:
   mapper-locations: classpath:/mapper/sqls/**/*.xml # mapper XML 파일 경로

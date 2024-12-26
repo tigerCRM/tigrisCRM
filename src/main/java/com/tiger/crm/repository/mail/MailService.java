@@ -1,5 +1,6 @@
 package com.tiger.crm.repository.mail;
 
+import com.tiger.crm.common.exception.CustomException;
 import com.tiger.crm.repository.dto.mail.MailDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
@@ -33,37 +34,39 @@ public class MailService {
 
     // 이메일 발송 메서드
     public void sendEmail(String to, String subject, String templateName, Map<String, Object> model) throws MessagingException {
+
+        // 1. html 렌더링 생성
+        String htmlContent = generateHtmlContent(templateName, model);
+
+        // 2. 이메일 발송
         try {
-            // MimeMessage 객체 생성
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-            helper.setTo(to); // 수신자
-            helper.setSubject(subject); // 제목 설정
+            helper.setFrom("dkstkdwo93@naver.com");       // 발송인(crm 관리자 계정으로 보낼거니까 고정)
+            helper.setTo(to);                             // 수령인
+            helper.setSubject("[타이거컴퍼니]" + subject);  // 제목
+            helper.setText(htmlContent, true);       // html양식
 
-            // Thymeleaf 템플릿 렌더링
-            String htmlContent = generateHtmlContent(templateName, model);
-
-            // 이메일 내용 설정 (HTML)
-            helper.setText(htmlContent, true);
-            helper.setFrom("dkstkdwo93@naver.com");  // 네이버 계정과 동일한 발신자 이메일 설정
-
-            // 이메일 발송
             mailSender.send(message);
 
-            // 메일 발송 이력 저장
+        } catch (MessagingException e) {
+            throw new CustomException("이메일 발송 중 오류가 발생했습니다.", e);
+        }
+
+        // 3. 메일 발송 이력 저장
+        try {
             MailDto mail = new MailDto();
-            mail.setCategory(templateName);
-            mail.setTitle(subject);
-            mail.setContent(htmlContent);
-            mail.setSenderAddr("dkstkdwo93@tigrison.com");
-            mail.setReceiverAddr(to);
+            mail.setCategory(templateName);             // 분류명
+            mail.setTitle(subject);                     // 제목
+            mail.setContent(htmlContent);               // html양식
+            mail.setReceiverAddr(to);                   // 수령인
+            mail.setSenderAddr("dkstkdwo93@naver.com"); // 발송인(crm 관리자 계정으로 보낼거니까 고정)
 
             mailMapper.saveMailHist(mail);
 
-        }catch (Exception e){
-            System.err.println("Error sending email: " + e.getMessage());
-            e.printStackTrace();
+        } catch (Exception e){
+            throw new CustomException("메일 발송 이력 저장 중 오류가 발생했습니다.", e);
         }
     }
 
@@ -78,18 +81,24 @@ public class MailService {
             return thymeleafViewResolver.getTemplateEngine().process(templateName, context);
 
         } catch (Exception e) {
-            throw new RuntimeException("Template rendering failed", e);
+            throw new CustomException("메일 템플릿 렌더링 중 오류가 발생했습니다.", e);
         }
     }
 
     // 메일 발송 내역 조회
     public PagingResponse<Map<String, Object>> getMailHistList(PagingRequest pagingRequest) {
+        try{
+            // 전체 건수 조회
+            int totalRecords = mailMapper.getMailHistListCount(pagingRequest);
+            // 메일 발송 내역 조회
+            List<Map<String, Object>> mailHistList = mailMapper.getMailHistList(pagingRequest);
 
-        // 전체 건수 조회
-        int totalRecords = mailMapper.getMailHistListCount(pagingRequest);
+            return new PagingResponse<>(mailHistList, totalRecords, pagingRequest);
 
-        List<Map<String, Object>> mailHistList = mailMapper.getMailHistList(pagingRequest);
-
-        return new PagingResponse<>(mailHistList, totalRecords, pagingRequest);
+        }catch (Exception e){
+            throw new CustomException("메일 발송 내역 조회 중 오류가 발생했습니다.", e);
+        }
     }
+
+
 }

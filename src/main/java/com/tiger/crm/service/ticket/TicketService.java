@@ -16,13 +16,13 @@ public interface TicketService {
 
     int saveTicket(TicketDto ticketDto) throws MessagingException;
 
-    int saveTicketModify(TicketDto ticketDto);
+    int saveTicketModify(TicketDto ticketDto) throws MessagingException;
 
     Map<String, Object> getManagerInfo(String companyId);
 
     TicketDto getTicketDetails(int ticketId);
 
-    void changeStatus(int ticketId, String newStatus, String updateId);
+    void changeStatus(int ticketId, String newStatus, String updateId) throws MessagingException;
 
     void setTicketFileId(String fileId, int ticketId);
 
