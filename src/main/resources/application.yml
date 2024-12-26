@@ -71,12 +71,9 @@ mybatis:
     lazy-loading-enabled: true # Lazy Loading 사용 여부
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # MyBatis SQL 로그 활성화
 
-aes128:
+aes256:
   secret:
-    key: 6c6afe32f263c477
-aes:
-  secret:
-    key: 330ed346c97712232ba447f49b8846eb
+    key: mU6K5dhFAyOro2buJE9yKZR99D0Oh7gMnYEMFYvd6MU=
 
 # File
 file:
