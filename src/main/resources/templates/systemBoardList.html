@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" >
 <head th:replace="~{common/frame_head :: head('시스템 정보')}"></head>
-</head>
 <body>
 <div class="wrapper">
     <!-- 왼쪽 메뉴  -->
@@ -30,7 +29,7 @@
                                     <div>
                                         <div class="dropdown dropdown--s wd110" aria-expanded="false" tabindex="0">
                                             <select class="dropdown__selected" id="searchCompany" name="searchCompany"
-                                                    th:value="${searchCompany}" onchange="searchBoards(this);">
+                                                    th:value="${searchCompany}" onchange="searchBoards(this); ">
                                                 <option value="">==고객사==</option>
                                                 <option th:each="op : ${companyOptions}"
                                                         th:value="${op.companyId}"
@@ -121,6 +120,11 @@
                                 <div th:replace="~{fragments/pagination :: pagination(${systemBoardList}, '/systemBoardList')}" />
                                 <input type="hidden" id ="currentPage"  th:field="${systemBoardList.currentPage}" readonly>
                             </div>
+
+                            <select class="js-example-basic-single" name="state">
+                                <option value="AL">Alabama</option>
+                                <option value="WY">Wyoming</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -130,8 +134,10 @@
     </div>
     <!-- //컨텐츠 영역 -->
 </div>
-
 <script>
+    $(document).ready(function () {
+        $('#searchCompany').select2();
+    });
     function searchBoards(obj) {
         if (obj.id == "refresh"){
           $("#searchType").val("");

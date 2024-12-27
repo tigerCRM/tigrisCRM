@@ -908,7 +908,12 @@ div::-webkit-scrollbar-button:end:increment {
     transition: .2s ease;
     resize: none;
 }
-
+.select2-container--default .select2-selection--single {
+    border: 1px solid #DBDBDB !important;
+}
+.select2-container {
+    height:100% !important;
+}
 /* input */
 .input--full {
     width: 100% !important;
