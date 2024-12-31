@@ -14,7 +14,7 @@ import java.util.List;
 @ToString
 public class CommentDto {
     private Integer answerId;         // 댓글 ID
-    private Integer ticketId;          // 티켓 ID
+    private Integer ticketId;          // 요청 ID
     private String content;            // 댓글 내용
     private String createId;           // 작성자 ID
     private String createName;         // 작성자 이름

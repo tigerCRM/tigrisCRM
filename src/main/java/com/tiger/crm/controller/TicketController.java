@@ -35,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -55,7 +56,7 @@ public class TicketController {
     @Autowired
     private StatusMapper statusMapper;
     /*
-     * 요청관리(티켓관리)
+     * 요청관리(요청관리)
      * 설명 : 요청관리 페이지 초기화면
      * */
     @GetMapping("/ticketList")
@@ -72,7 +73,7 @@ public class TicketController {
             model.addAttribute("companyOptions", companyOptions);//회사 옵션 정보 가져오기
             model.addAttribute("statusOptions", commonService.getSelectOptions("t_status"));
             model.addAttribute("searchOptions", commonService.getSelectOptions("t_search"));
-            // 티켓 조회
+            // 요청 조회
             PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
             model.addAttribute("ticketList", pageResponse);
             return "ticketList";
@@ -82,7 +83,7 @@ public class TicketController {
     }
 
     /*
-     * 요청관리(티켓관리) 검색
+     * 요청관리(요청관리) 검색
      * 설명 : 요청관리 페이지 검색
      * * 스크립트단에서 ajax로 호출하여 PagingRequest data를 받아서 처리
      * */
@@ -92,7 +93,7 @@ public class TicketController {
             UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
             String userClass = String.valueOf(loginUser.getUserClass());
             pagingRequest.setUserClass(userClass);
-            // 티켓 조회
+            // 요청 조회
             PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
             model.addAttribute("userClass",userClass);
             model.addAttribute("ticketList", pageResponse);
@@ -128,8 +129,8 @@ public class TicketController {
     }
 
     /*
-     * 티켓등록 이동
-     * 설명 : 신규 티켓 등록시 초기화면 바인딩
+     * 요청등록 이동
+     * 설명 : 신규 요청 등록시 초기화면 바인딩
      * */
     @GetMapping("/ticketCreate")
     public String goTicketCreatePage(@RequestParam(value = "id", required = false) Integer id, HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -157,8 +158,8 @@ public class TicketController {
             ticketCreate.setExpectedCompleteDt(expDate);
             ticketCreate.setStatusCd("OPEN");
             ticketCreate.setTicketId(null);
-            if (id!=null){  //연관티켓 요청일경우
-                // 티켓 상세 정보 조회 - 로그인한 본인 회사만 볼수있음
+            if (id!=null){  //연관요청 요청일경우
+                // 요청 상세 정보 조회 - 로그인한 본인 회사만 볼수있음
                 TicketDto parentTicketDetails = ticketService.getTicketDetails(id);
                 if (!String.valueOf(parentTicketDetails.getCompanyId()).equals(companyId) && userClass.equals("USER")) {
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);  // 403 상태 코드 반환
@@ -169,7 +170,7 @@ public class TicketController {
                 }
                 ticketCreate.setParentTicketCd(id);
                 ticketCreate.setTitle("["+String.valueOf(id)+"] Re:"+ parentTicketDetails.getTitle());
-                ticketCreate.setContent(System.lineSeparator()+"===========================연관티켓==========================="+System.lineSeparator()
+                ticketCreate.setContent(System.lineSeparator()+"===========================연관요청==========================="+System.lineSeparator()
                         + "["+String.valueOf(id)+"] Re:"+ parentTicketDetails.getTitle()
                         + System.lineSeparator()  +parentTicketDetails.getContent());
             }
@@ -195,8 +196,8 @@ public class TicketController {
     }
 
     /*
-     * 티켓 등록(신규)
-     * 설명 : 신규 티켓 저장
+     * 요청 등록(신규)
+     * 설명 : 신규 요청 저장
      * */
     @PostMapping("/ticketCreate")
     public String saveTicketCreate(@ModelAttribute TicketDto ticketDto, HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -207,31 +208,31 @@ public class TicketController {
             if( ticketDto.getMd() == null){
                 ticketDto.setMd(BigDecimal.ZERO);
             }
-            if (ticketDto.getCompleteDt() == null || ticketDto.getCompleteDt().isEmpty()) {
+            if (ticketDto.getCompleteDt() == null || ticketDto.getCompleteDt().isEmpty() ) {
                 ticketDto.setCompleteDt(null);
             }
-            // 티켓 저장
+            // 요청 저장
             int ticketId = ticketService.saveTicket(ticketDto);
             if (ticketId == 0) {
-                throw new CustomException("티켓 저장에 실패했습니다.");
+                throw new CustomException("요청 저장에 실패했습니다.");
             }
             // 첨부파일 처리
             try {
                 List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(ticketDto.getAttachFiles(),"T");
-                String fileId = fileService.insertFile(uploadFiles, ticketId, "티켓관리");
+                String fileId = fileService.insertFile(uploadFiles, ticketId, "요청관리");
                 ticketService.setTicketFileId(fileId, ticketId);
             } catch (Exception fileException) {
                 throw new CustomException("첨부파일 저장 중 오류가 발생했습니다.", fileException);
             }
         } catch (Exception e) {
-            throw new CustomException("ticketCreate : 티켓 저장 중 오류가 발생했습니다.", e);
+            throw new CustomException("ticketCreate : 요청 저장 중 오류가 발생했습니다.", e);
         }
         return "redirect:ticketList";
     }
 
     /*
-     * 티켓 수정 이동
-     * 설명 : 티켓 수정시 티켓 정보 바인딩
+     * 요청 수정 이동
+     * 설명 : 요청 수정시 요청 정보 바인딩
      * */
     @PostMapping("/ticketModify")
     public String showticketModifyPage(@ModelAttribute TicketDto ticketDto, HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -240,7 +241,7 @@ public class TicketController {
             UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
             String companyId = String.valueOf(loginUser.getCompanyId());
             String userClass = String.valueOf(loginUser.getUserClass());
-            // 티켓 상세 정보 조회 - 로그인한 본인 회사만 볼수있음
+            // 요청 상세 정보 조회 - 로그인한 본인 회사만 볼수있음
             TicketDto ticketDetails = ticketService.getTicketDetails(ticketDto.getTicketId());
             if (!String.valueOf(ticketDetails.getCompanyId()).equals(companyId) && userClass.equals("USER")) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);  // 403 상태 코드 반환
@@ -278,8 +279,8 @@ public class TicketController {
     }
 
     /*
-     * 티켓 수정 저장
-     * 설명 : 티켓 수정 후 저장
+     * 요청 수정 저장
+     * 설명 : 요청 수정 후 저장
      * */
     @PostMapping("/ticketModifySave")
     public String ticketModifySave(@ModelAttribute TicketDto ticketDto, @RequestParam String deleteSavedAttachFiles, HttpServletRequest request, HttpServletResponse response, Model model) {
@@ -299,14 +300,14 @@ public class TicketController {
             if( ticketDto.getMd() == null){
                 ticketDto.setMd(BigDecimal.ZERO);
             }
-            if (ticketDto.getCompleteDt() == null || ticketDto.getCompleteDt().isEmpty()) {
+            if (ticketDto.getCompleteDt() == null) {
                 ticketDto.setCompleteDt(null);
             }
-            // 티켓 수정 업데이트
+            // 요청 수정 업데이트
             ticketId = ticketService.saveTicketModify(ticketDto);
 
             if (ticketId == 0) {
-                throw new CustomException("티켓 수정에 실패했습니다.");
+                throw new CustomException("요청 수정에 실패했습니다.");
             }
             ObjectMapper objectMapper = new ObjectMapper();
             List<String> deleteFilesList = null;
@@ -322,7 +323,7 @@ public class TicketController {
 
                 if (ticketDto.getAttachFiles() != null && !ticketDto.getAttachFiles().isEmpty()) {
                     List<UploadFileDto> uploadFiles = fileStoreUtils.storeFiles(ticketDto.getAttachFiles(),"T");
-                    String fileId = fileService.insertFile(uploadFiles, ticketId, "티켓관리");
+                    String fileId = fileService.insertFile(uploadFiles, ticketId, "요청관리");
                     ticketService.setTicketFileId(fileId, ticketId);
                 }
             } catch (Exception fileException) {
@@ -340,15 +341,15 @@ public class TicketController {
             ticketService.addComment(commentDto);
 
         } catch (Exception e) {
-            LOGGER.error("티켓 수정 중 오류가 발생했습니다.", e);
-            throw new CustomException("ticketModifySave : 티켓 수정 중 오류가 발생했습니다.", e);
+            LOGGER.error("요청 수정 중 오류가 발생했습니다.", e);
+            throw new CustomException("ticketModifySave : 요청 수정 중 오류가 발생했습니다.", e);
         }
         return "redirect:/ticketView?id=" + ticketId;
 
     }
 
     /*
-     * 티켓 상세보기
+     * 요청 상세보기
      * 설명 :
      * */
 
@@ -359,7 +360,7 @@ public class TicketController {
             UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
             String companyId = String.valueOf(loginUser.getCompanyId());
             String userClass = String.valueOf(loginUser.getUserClass());
-            // 티켓 상세 정보 조회 - 로그인한 본인 회사만 볼수있음
+            // 요청 상세 정보 조회 - 로그인한 본인 회사만 볼수있음
             TicketDto ticketDetails = ticketService.getTicketDetails(id);
             if (!String.valueOf(ticketDetails.getCompanyId()).equals(companyId) && userClass.equals("USER")) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);  // 403 상태 코드 반환
@@ -415,19 +416,19 @@ public class TicketController {
             String comment = "";
             switch (newStatus) {
                 case "OPEN":
-                    comment = "티켓 진행상태를 [진행]으로 변경하였습니다.";
+                    comment = "요청 진행상태를 [진행]으로 변경하였습니다.";
                     break;
                 case "RECEIPT":
-                    comment = "티켓 진행상태를 [접수]로 변경하였습니다.";
+                    comment = "요청 진행상태를 [접수]로 변경하였습니다.";
                     break;
                 case "PROGRESS":
-                    comment = "티켓 진행상태를 [진행]으로 변경하였습니다.";
+                    comment = "요청 진행상태를 [진행]으로 변경하였습니다.";
                     break;
                 case "REVIEW":
-                    comment = "티켓 진행상태를 [검토]로 변경하였습니다.";
+                    comment = "요청 진행상태를 [검토]로 변경하였습니다.";
                     break;
                 case "CLOSED":
-                    comment = "티켓 진행상태를 [완료]로 변경하였습니다.";
+                    comment = "요청 진행상태를 [완료]로 변경하였습니다.";
                     break;
                 default:
                     comment = "알 수 없는 상태입니다.";
@@ -496,14 +497,14 @@ public class TicketController {
     }*/
 
     /*
-     * 티켓 정보, 댓글,첨부 삭제처리(deleteYn = Y)
+     * 요청 정보, 댓글,첨부 삭제처리(deleteYn = Y)
      * 추후에 댓글의 첨부까지 삭제처리!!!!!!!!!!
      * */
     @DeleteMapping("/deleteTicket")
     public ResponseEntity<?> deleteTicket(@RequestBody Map<String, Object> data){
         int Id = Integer.parseInt((String) data.get("Id"));
         try{
-            ticketService.deleteTicket(Id);             //티켓정보
+            ticketService.deleteTicket(Id);             //요청정보
             ticketService.deleteTicketAnswer(Id);       //댓글정보
             ticketService.deleteTicketAnswerFile(Id);    //댓글첨부파일등
             fileService.deleteFiles("ticket",Id);  //첨부파일들

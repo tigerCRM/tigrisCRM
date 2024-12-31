@@ -92,7 +92,7 @@ public class NoticeBoardController {
         try {
             HttpSession session = request.getSession(false);
             UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
-            // 티켓 조회
+            // 요청 조회
             PagingResponse<Map<String, Object>> pageResponse = noticeBoardService.getNoticeBoardList(pagingRequest , loginUser);
             model.addAttribute("noticeBoardList", pageResponse);
             // 부분 뷰 렌더링 (리스트 부분만 갱신)

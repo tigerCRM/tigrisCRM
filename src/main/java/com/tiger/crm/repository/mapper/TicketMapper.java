@@ -12,16 +12,16 @@ import java.util.Map;
 
 @Mapper
 public interface TicketMapper {
-    //티켓조회
+    //요청조회
     List<Map<String, Object>> getTicketList(PagingRequest pagingRequest);
 
-    //티켓카운트
+    //요청카운트
     Integer getTicketListCount(PagingRequest pagingRequest);
 
-    //티켓등록
+    //요청등록
     int insertTicketInfo(TicketDto ticketDto);
 
-    //티켓수정
+    //요청수정
     int updateTicketInfo(TicketDto ticketDto);
 
     //고객사 담당자조회
@@ -30,13 +30,13 @@ public interface TicketMapper {
     //전체 고객사 담당자조회
     List<TicketDto> getAllManager();
 
-    //티켓 상세 정보 조회
+    //요청 상세 정보 조회
     TicketDto selectTicketDetails(int ticketId);
 
-    //티켓 상태 업데이트
+    //요청 상태 업데이트
     int updateTicketStatus(int ticketId, String newStatus, String updateId);
 
-    //티켓 첨부파일 ID 업데이트
+    //요청 첨부파일 ID 업데이트
     int updateTicketFileId(String fileId, int ticketId);
 
     //댓글저장

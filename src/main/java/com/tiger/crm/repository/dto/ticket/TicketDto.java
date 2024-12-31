@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -33,17 +34,17 @@ public class TicketDto {
     private String companyId;       //고객사code
     private String completeDt;      //실제완료일
     private BigDecimal md;              //작업공수
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate createDt;     //등록일
+
+    private String createDt;     //등록일
     private String updateId;        //수정자ID
     private String updateDt;        //수정일자
     private char deleteYn;          //삭제여부
     private String fileId;          //파일 ID
-    private Integer ticketId;       // 티켓ID
+    private Integer ticketId;       // 요청ID
     private String statusCd;            //진행상태코드
     private String expectedCompleteDt;  //희망완료일
     private String priorityYn;          // 중요도
-    private Integer parentTicketCd;      //연관티켓
+    private Integer parentTicketCd;      //연관요청
     private String supportCd;           //지원범위
     private String requestTypeCd;       //작업구분
     private List<MultipartFile> attachFiles;    //첨부파일

@@ -85,7 +85,7 @@ public class CommonService {
         // 헤더 생성
         if (Objects.equals(location, "ticketList")){
             // 헤더 컬럼명 지정 (고정값)
-            String[] headerColumns = {"티켓번호", "고객사", "제목", "분류", "상태", "범위", "담당", "MD", "등록일", "완료일"};
+            String[] headerColumns = {"요청번호", "고객사", "제목", "분류", "상태", "범위", "담당", "MD", "등록일", "완료일"};
             Row headerRow = sheet.createRow(0);
             int headerIndex = 0;
             for (String columnName : headerColumns) {

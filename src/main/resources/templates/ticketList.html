@@ -134,7 +134,7 @@
                                         </colgroup>
                                         <thead>
                                         <tr>
-                                            <th>티켓번호</th>
+                                            <th>요청번호</th>
                                             <th>고객사</th>
                                             <th></th>
                                             <th class="board-title">제목</th>
@@ -150,18 +150,18 @@
                                         <div>
                                             <tbody>
                                             <tr th:if="${ticketList == null or ticketList.dataList == null or #lists.isEmpty(ticketList.dataList)}">
-                                                <td colspan="11" style="text-align:center;">등록된 티켓이 없습니다.</td>
+                                                <td colspan="11" style="text-align:center;">등록된 요청이 없습니다.</td>
                                             </tr>
 
-                                            <tr th:each="ticket : ${ticketList.dataList}" th:attr="data-id=${ticket['TICKET_ID']}" style="cursor: pointer;">
+                                            <tr th:each="ticket : ${ticketList.dataList}" th:attr="data-id=${ticket['TICKET_ID']}" >
                                                 <td><span th:text="${ticket['TICKET_ID']}"></span></td>
                                                 <td><span th:text="${ticket['COMPANY_NAME']}"></span></td>
                                                 <td><span th:if="${ticket['PRIORITY_YN'] == 'Y'}" class="tag tag--red">긴급</span>
                                                 </td>
-                                                <td class="text-left">
-                                                    <a th:text="${ticket['TITLE']}" th:href="@{/ticketView(id=${ticket['TICKET_ID']})}"></a>
+                                                <td class="text-left" style="cursor: pointer;">
+                                                    <a th:text="${ticket['TITLE']}" th:attr="data-id=${ticket['TICKET_ID']}" onclick="gotoTicket(this)"></a>
                                                 </td>
-                                                <td><span th:switch="${ticket['REQUEST_TYPE_CD']}">
+                                                <td><span th:switch="${ticket['REQUEST_TYPE_CD']}" >
                                                     <span th:case="'QA'">문의답변</span>
                                                     <span th:case="'ERR'">오류수정</span>
                                                     <span th:case="'ADD'">기능추가</span>
@@ -170,7 +170,7 @@
                                                     <span th:case="'ETC'">기타</span>
                                                 </span></td>
                                                 <td><span th:switch="${ticket['STATUS_CD']}">
-                                                    <span th:case="'OPEN'" class="tag tag--red">등록</span>
+                                                    <span th:case="'OPEN'" class="tag tag--blue">등록</span>
                                                     <span th:case="'RECEIPT'" class="tag tag--navy">접수</span>
                                                     <span th:case="'PROGRESS'" class="tag tag--green">진행</span>
                                                     <span th:case="'REVIEW'" class="tag tag--orange">검토</span>
@@ -223,6 +223,7 @@
     }
     function gotoTicket(row){
         const ticketId = row.getAttribute("data-id");
+        const page = $("#currentPage").val();
         window.location.href = `/ticketView?id=${ticketId}`;
     }
     function searchTickets(obj) {

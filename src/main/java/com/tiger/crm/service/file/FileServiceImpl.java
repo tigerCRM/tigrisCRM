@@ -58,7 +58,7 @@ public class FileServiceImpl implements FileService{
             case "공지사항"   :
                 prefix = "B";
                 break;
-            case "티켓관리"   :
+            case "요청관리"   :
                 prefix = "T";
                 break;
             case "댓글"   :
@@ -89,7 +89,7 @@ public class FileServiceImpl implements FileService{
     /*
     * 첨부파일 리스트 가져오기
     * 작성자 : 제예솔
-    * 설명 : type은 첨부한 경로의 타입(board = 게시판, ticket = 티켓) , id (게시판 또는 티켓의 아이디)
+    * 설명 : type은 첨부한 경로의 타입(board = 게시판, ticket = 요청) , id (게시판 또는 요청의 아이디)
     * 이외의 첨부파일 로드 경로가 있을 시 else if 붙여서 로직 추가하시면 됩니다
     * */
     @Override
@@ -98,7 +98,7 @@ public class FileServiceImpl implements FileService{
         List<UploadFileDto> files;
         if("board".equals(type)){ // 게시판 첨부파일
             fileId = "B".concat(String.valueOf(id));
-        }else if("ticket".equals(type)){ // 티켓 첨부파일
+        }else if("ticket".equals(type)){ // 요청 첨부파일
             fileId = "T".concat(String.valueOf(id));
         }else if("comment".equals(type)){ // 댓글 첨부파일
             fileId = "C".concat(String.valueOf(id));
@@ -124,7 +124,7 @@ public class FileServiceImpl implements FileService{
         String fileId = null;
         if("board".equals(type)){ // 게시판 첨부파일
             fileId = "B".concat(String.valueOf(id));
-        }else if("ticket".equals(type)){ // 티켓 첨부파일
+        }else if("ticket".equals(type)){ // 요청 첨부파일
             fileId = "T".concat(String.valueOf(id));
         }else{
             LOGGER.info("파일 찾기 오류 : 명시 되지 않은 요청 타입");

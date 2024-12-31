@@ -29,7 +29,7 @@ public class TicketServiceImpl implements TicketService {
     private String baseUrl;
 
 
-    // 전체 티켓 수 조회 (null 체크 포함)
+    // 전체 요청 수 조회 (null 체크 포함)
     @Override
     public PagingResponse<Map<String, Object>> getTicketList(PagingRequest pagingRequest) {
 
@@ -40,13 +40,13 @@ public class TicketServiceImpl implements TicketService {
         return new PagingResponse<>(ticketList, totalRecords, pagingRequest);
     }
 
-    // 전체 티켓 수를 조회하는 메서드
+    // 전체 요청 수를 조회하는 메서드
     private int getTicketListCount(PagingRequest pagingRequest) {
         Integer count = ticketMapper.getTicketListCount(pagingRequest);  // Integer로 받아서 null 체크
         return count != null ? count : 0;  // null일 경우 0 반환
     }
 
-    //티켓저장
+    //요청저장
     public int saveTicket(TicketDto ticketDto) throws MessagingException {
         int resultCount =  ticketMapper.insertTicketInfo(ticketDto);
         if(resultCount != 1){
@@ -59,14 +59,14 @@ public class TicketServiceImpl implements TicketService {
         // [알림, 메일] 발송 파트
         if(resultCount > 0){
             Map<String, Object> model = new HashMap<>();
-            mailService.sendEmail(ticketDto.getManagerId(),"티켓등록", "ticket-email", model);
+            mailService.sendEmail(ticketDto.getManagerId(),"요청등록", "ticket-email", model);
             alertService.sendAlert(AlertType.TICKET_STATUS, ticketDto.getStatusCd(), ticketId, ticketDto.getTitle(), ticketDto.getCreateId(), ticketDto.getManagerId());
         }
 
         return ticketId;
     }
 
-    //티켓수정
+    //요청수정
     public int saveTicketModify(TicketDto ticketDto) throws MessagingException {
         int resultCount =  ticketMapper.updateTicketInfo(ticketDto);
         if(resultCount != 1){
@@ -79,7 +79,7 @@ public class TicketServiceImpl implements TicketService {
         // [알림, 메일] 발송 파트
         if(resultCount > 0){
             // Map<String, Object> model = new HashMap<>();
-            // mailService.sendEmail(ticketDto.getManagerId(), "티켓수정", "password-reset-email", model);
+            // mailService.sendEmail(ticketDto.getManagerId(), "요청수정", "password-reset-email", model);
             alertService.sendAlert(AlertType.TICKET_STATUS ,ticketDto.getStatusCd(), ticketId, ticketDto.getTitle(), ticketDto.getCreateId(), ticketDto.getManagerId());
         }
 
@@ -121,12 +121,12 @@ public class TicketServiceImpl implements TicketService {
             model.put("ticketStatus", ticketDto.getStatusCd());
             model.put("ticketUrl", baseUrl + "/ticketView?id=" + ticketDto.getTicketId() + "&redirect=/ticketView?id=" + ticketDto.getTicketId());
 
-            mailService.sendEmail(ticketDto.getCreateId(), "티켓상태변경", "ticket-email", model);
+            mailService.sendEmail(ticketDto.getCreateId(), "요청상태변경", "ticket-email", model);
             alertService.sendAlert(AlertType.TICKET_STATUS ,newStatus, ticketId, ticketDto.getTitle(), ticketDto.getCreateId(), ticketDto.getManagerId());
         }
     }
 
-    //첨부파일 저장 후 티켓정보에 첨부파일 아이디 업데이트
+    //첨부파일 저장 후 요청정보에 첨부파일 아이디 업데이트
     public void setTicketFileId(String fileId,int ticketId) {
         ticketMapper.updateTicketFileId(fileId,ticketId);
     }

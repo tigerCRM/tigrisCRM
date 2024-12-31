@@ -58,7 +58,7 @@
                                                     <td><span th:text="${item.COMPANY_NAME}"></span></td>
                                                     <td>
                                                         <span th:switch="${item.STATUS_CD}">
-                                                            <span th:case="'OPEN'" class="tag tag--red">등록</span>
+                                                            <span th:case="'OPEN'" class="tag tag--blue">등록</span>
                                                             <span th:case="'RECEIPT'" class="tag tag--navy">접수</span>
                                                             <span th:case="'PROGRESS'" class="tag tag--green">진행</span>
                                                             <span th:case="'REVIEW'" class="tag tag--orange">검토</span>

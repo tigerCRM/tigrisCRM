@@ -13,8 +13,8 @@
         IFNULL(MD, '') as MD,
         TITLE,
         U.USER_NAME,
-        DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d %H:%i') AS CREATE_DT,
-        IFNULL(DATE_FORMAT(IFNULL(COMPLETE_DT, ''), '%Y-%m-%d %H:%i'),'') as COMPLETE_DT
+        DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d') AS CREATE_DT,
+        IFNULL(DATE_FORMAT(IFNULL(COMPLETE_DT, ''), '%Y-%m-%d'),'') as COMPLETE_DT
         FROM T_TICKET_INFO as T
         LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
         <where>
@@ -41,7 +41,7 @@
             <if test="searchType != null and searchType != ''">
                 <choose>
                     <when test="searchType == 'NUM'">
-                        AND TICKET_ID LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 티켓번호로 검색 -->
+                        AND TICKET_ID LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 요청번호로 검색 -->
                     </when>
                     <when test="searchType == 'TITLE'">
                         AND TITLE LIKE CONCAT('%', #{searchKeyword}, '%') <!-- 제목으로 검색 -->
@@ -96,7 +96,7 @@
             <if test="searchType != null and searchType != ''">
                 <choose>
                     <when test="searchType == 'NUM'">
-                        AND TICKET_ID LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 티켓번호로 검색 -->
+                        AND TICKET_ID LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 요청번호로 검색 -->
                     </when>
                     <when test="searchType == 'TITLE'">
                         AND TITLE LIKE CONCAT('%', #{searchKeyword}, '%') <!-- 제목으로 검색 -->
@@ -155,7 +155,7 @@
         WHERE C.COMPANY_ID = #{companyId}
     </select>
 
-    <!-- 티켓 상세 정보 조회 -->
+    <!-- 요청 상세 정보 조회 -->
     <select id="selectTicketDetails" parameterType="int" resultType="com.tiger.crm.repository.dto.ticket.TicketDto">
         SELECT TICKET_ID,
         T.CREATE_ID,
@@ -171,9 +171,9 @@
         CONTENT,
         T.MANAGER_ID as MANAGER_ID,
         U.USER_NAME as MANAGER_NAME,
-        DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d') as CREATE_DT,
+        DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d %H:%i:%s') as CREATE_DT,
         DATE_FORMAT(T.EXPECTED_COMPLETE_DT, '%Y-%m-%d') as EXPECTED_COMPLETE_DT,
-        IFNULL(DATE_FORMAT(IFNULL(COMPLETE_DT, ''), '%Y-%m-%d'),'') as COMPLETE_DT
+        DATE_FORMAT(COMPLETE_DT, '%Y-%m-%d %H:%i:%s') AS COMPLETE_DT
         FROM T_TICKET_INFO as T
         LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
         WHERE TICKET_ID = #{ticketId} and  DELETE_YN = 'N'
@@ -206,7 +206,7 @@
         VALUES(#{ticketId}, #{statusCd}, #{content}, #{createId}, NOW(), NOW(), NULL, 'N');
     </insert>
 
-    <!-- 티켓 댓글 정보 조회 -->
+    <!-- 요청 댓글 정보 조회 -->
     <select id="getCommentsByTicketId" resultType="com.tiger.crm.repository.dto.ticket.CommentDto">
         SELECT ANSWER_ID, TICKET_ID, STATUS_CD, CONTENT, T.CREATE_ID, U.USER_NAME as CREATE_NAME , DATE_FORMAT(T.CREATE_DT, '%y/%m/%d %H:%i') as CREATE_DT , FILE_ID, USER_CLASS
         FROM T_TICKET_ANSWER as T

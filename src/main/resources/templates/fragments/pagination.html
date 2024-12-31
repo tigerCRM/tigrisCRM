@@ -8,7 +8,7 @@
         <!-- 이전 페이지로 이동 버튼 -->
         <li>
             <a class="btn paging-btn arrow-btn"
-               th:if="${list.currentPage > 1}"
+
                th:data-url="${paginationUrl}"
                th:data-page="${list.currentPage - 1}"
                onclick="callPage()">
@@ -30,7 +30,6 @@
         <!-- 다음 페이지로 이동 버튼 -->
         <li>
             <a class="btn paging-btn arrow-btn"
-               th:if="${list.currentPage < list.totalPages}"
                th:data-url="${paginationUrl}"
                th:data-page="${list.currentPage + 1}"
                onclick="callPage()">

@@ -1,31 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width"/>
-    <title>요청 등록 상세</title>
-    <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
-    <!--<link rel="stylesheet" type="text/css" href="/assets/css/common.css?v9">-->
-    <link rel="stylesheet" type="text/css" th:href="@{/assets/css/common.css(v=${#dates.format(#dates.createNow(), 'yyyyMMddHHmmss')})}" />
-    <link rel="stylesheet" type="text/css" href="/assets/css/layout.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
-    <script src="/lib/jquery/jquery-2.2.2.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-    <!--toast ui 설정-->
-    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css"/>
-    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
-    <!--datepicker 관련 -->
-    <script src="/lib/picker/datepicker.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="/lib/picker/datepicker.min.css">
-    <script src="/js/datepicker.js"></script>
-    <!--기타 전역에서 쓸 공통javascript 설정. commit-->
-    <script src="/js/common.js"></script>
-    <!--메세지-->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
+<head th:replace="~{common/frame_head :: head('요청 등록 상세')}"></head>
 <body>
 <div class="wrapper">
     <!-- 왼쪽 메뉴  -->
@@ -116,18 +91,16 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <th>등록일</th>
+                                        <td>
+                                            <span id="createDt" th:text="*{createDt}"></span>
+                                        </td>
                                         <th>담당자</th>
                                         <td>
                                             <span id="managerName" th:text="*{managerName}"></span>
                                             <input type="hidden" id="managerId" th:field="*{managerId}">
                                         </td>
-                                        <th>중요도</th>
-                                        <td>
-                                            <span th:switch="*{priorityYn}">
-                                                <span th:case="'Y'">긴급</span>
-                                                <span th:case="'N'">일반</span>
-                                            </span>
-                                        </td>
+
                                     </tr>
                                     <tr>
                                         <th>작업구분</th>
@@ -141,18 +114,21 @@
                                                 <span th:case="'ETC'">기타</span>
                                             </span>
                                         </td>
+                                        <th>중요도</th>
+                                        <td>
+                                            <span th:switch="*{priorityYn}">
+                                                <span th:case="'Y'">긴급</span>
+                                                <span th:case="'N'">일반</span>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <th>지원범위</th>
                                         <td>
                                             <span th:switch="*{supportCd}">
                                                 <span th:case="'ST'">기본</span>
                                                 <span th:case="'ADD'">추가</span>
                                             </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>희망완료일</th>
-                                        <td>
-                                            <span id="expectedCompleteDt" name="expectedCompleteDt" th:text="*{expectedCompleteDt}"></span>
                                         </td>
                                         <th>진행상태</th>
                                         <td>
@@ -165,7 +141,6 @@
                                                                 th:value="${op.key}"
                                                                 th:text="${op.value}"></option>
                                                     </select>
-
                                                 </div>
                                                 <div>
                                                     <button type="button" class="btn btn--s primary-btn"
@@ -176,8 +151,12 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>연관티켓</th>
-                                        <td colspan="3">
+                                        <th>희망완료일</th>
+                                        <td>
+                                            <span id="expectedCompleteDt" name="expectedCompleteDt" th:text="*{expectedCompleteDt}"></span>
+                                        </td>
+                                        <th>연관요청</th>
+                                        <td>
                                             <input type="text" th:field="*{parentTicketCd}" readonly>
                                         </td>
                                     </tr>
@@ -280,12 +259,12 @@
                                 <!--//댓글 영역-->
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
-                                    <button type="button" class="btn btn--m secondary-btn"
-                                            onclick="goReRequest()">연관요청</button>
                                     <button type="submit" class="btn btn--m primary-btn">수정</button>
                                     <button type="button" class="btn btn--m danger-btn" onclick="deleteTicket()">삭제</button>
                                     <button type="button" class="btn btn--m secondary-btn"
-                                            onclick="location.href='/ticketList';">목록으로
+                                            onclick="goReRequest()">재요청</button>
+                                    <button type="button" class="btn btn--m secondary-btn"
+                                            onclick="goBack()">목록
                                     </button>
                                 </div>
                                 <!--//버튼그룹-->
@@ -445,7 +424,7 @@
         })
         .then(response => {
             if (response.ok) {
-                showMessage('success', '삭제', '해당 티켓 정보가 삭제되었습니다.');
+                showMessage('success', '삭제', '해당 요청 정보가 삭제되었습니다.');
             } else {
                 response.text().then(message => {
                     showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
@@ -547,6 +526,9 @@
         location.href = '/ticketCreate?id=' + ticketId;
     }
 
+    function goBack(){
+        window.history.back();
+    }
 </script>
 </body>
 </html>

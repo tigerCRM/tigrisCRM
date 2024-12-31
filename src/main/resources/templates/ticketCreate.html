@@ -68,7 +68,7 @@
                                     <tr>
                                         <th>제목</th>
                                         <td colspan="3">
-                                            <input type="text" id="title" class="input--xs input01 input--full"
+                                            <input type="text" id="title" class="input--s input01 input--full"
                                                    th:field="*{title}" required>
                                         </td>
                                     </tr>
@@ -163,7 +163,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>연관티켓</th>
+                                        <th>연관요청</th>
                                         <td colspan="3">
                                             <input type="text" th:field="*{parentTicketCd}" readonly>
                                         </td>
@@ -180,7 +180,7 @@
                                         </td>
                                         <th>처리일수</th>
                                         <td>
-                                            <input type="text"  class="input--xs input01 input--full" id="md" th:name="${md}" th:field="*{md}">
+                                            <input type="text"  class="input--s input01 input--full" id="md" th:name="${md}" th:field="*{md}">
                                         </td>
                                     </tr>
                                     <tr>
@@ -242,7 +242,7 @@
                                     <button class="btn btn--m primary-btn" th:if="${mode == 'modify'}">저장</button>
                                     <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'modify'}" onclick="deleteTicket()">삭제</button>
                                     <button type="button" class="btn btn--m  secondary-btn"
-                                            onclick="location.href='/ticketList';">목록으로
+                                            onclick="goBack()">취소
                                     </button>
                                 </div>
                                 <!--//버튼그룹-->
@@ -313,7 +313,7 @@
         })
         .then(response => {
             if (response.ok) {
-                showMessage('success', '삭제', '해당 티켓 정보가 삭제되었습니다.');
+                showMessage('success', '삭제', '해당 요청 정보가 삭제되었습니다.');
             } else {
                 response.text().then(message => {
                     showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
@@ -325,7 +325,9 @@
             showMessage('error', '실패', '오류가 발생해 서버로 요청을 전송하지 못했습니다');
         });
     }
-
+    function goBack(){
+        window.history.back();
+    }
 </script>
 </body>
 </html>

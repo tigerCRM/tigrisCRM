@@ -94,7 +94,7 @@ public class SystemBoardController {
     @PostMapping("/systemBoardList")
     public String searchSystemBoardListPage(@ModelAttribute PagingRequest pagingRequest, Model model) {
         try {
-            // 티켓 조회
+            // 요청 조회
             PagingResponse<Map<String, Object>> pageResponse = systemBoardService.getSystemBoardList(pagingRequest);
             model.addAttribute("systemBoardList", pageResponse);
             // 부분 뷰 렌더링 (리스트 부분만 갱신)

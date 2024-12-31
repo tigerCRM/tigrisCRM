@@ -12,7 +12,7 @@ public class PagingRequest {
     private String searchType;            // 검색 타입
     private String startDt;                 //시작일
     private String endDt;                   //종료일
-    private String searchStatus;            //티켓상태
+    private String searchStatus;            //요청상태
     private String searchCompany;           //회사 검색
     private String userClass;
     private String userId;
