@@ -313,7 +313,7 @@ public class TicketController {
             if( ticketDto.getMd() == null){
                 ticketDto.setMd(BigDecimal.ZERO);
             }
-            if (ticketDto.getCompleteDt() == null) {
+            if (ticketDto.getCompleteDt() == null || ticketDto.getCompleteDt().isEmpty()) {
                 ticketDto.setCompleteDt(null);
             }
             // 요청 수정 업데이트
