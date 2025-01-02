@@ -69,7 +69,7 @@
                                         <th>제목<span class="color-error500">*<span class="hidden">필수 항목</span></span></th>
                                         <td colspan="3">
                                             <input type="text" id="title" class="input--s input01 input--full" placeholder="제목을 입력하세요"
-                                                   th:field="*{title}" autofocus>
+                                                   th:field="*{title}" autofocus >
                                         </td>
                                     </tr>
                                     <tr>
@@ -238,8 +238,10 @@
                                 <!--//사용자 입력 영역-->
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
-                                    <button type="button" class="btn btn--m primary-btn"
-                                            th:if="${mode == 'write'}" onclick="validateAndSubmit()">등록</button>
+                                    <!--<button type="button" class="btn btn&#45;&#45;m primary-btn"
+                                            th:if="${mode == 'write'}" onclick="validateAndSubmit()">등록</button>-->
+                                    <button type="submit" class="btn btn--m primary-btn" th:if="${mode == 'write'}">등록</button>
+
                                     <button class="btn btn--m primary-btn" th:if="${mode == 'modify'}">저장</button>
                                     <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'modify'}" onclick="deleteTicket()">삭제</button>
                                     <button type="button" class="btn btn--m  secondary-btn"
@@ -282,10 +284,9 @@
         }
     });
     // 무결성 검사
-    function validateAndSubmit() {
+    document.getElementById('SubmitArea').addEventListener('submit', function(event) {
         const form = document.getElementById("SubmitArea");
         const title = document.getElementById("title");
-        const content = document.getElementById("content");
 
         if (!title.value.trim()) {
             title.classList.add("input--error");
@@ -296,10 +297,8 @@
         }else {
             title.classList.remove("input--error");
         }
+    });
 
-        // 폼 제출
-        form.submit();
-    }
     function updateCompanyName(selectElement) {
         const selectedOption = selectElement.options[selectElement.selectedIndex];
         const companyName = selectedOption.getAttribute("data-name");
