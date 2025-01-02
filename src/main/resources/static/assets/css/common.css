@@ -3532,7 +3532,40 @@ h2 { margin-bottom: 1rem; font-weight: 700; font-size: 2.4rem; }
 .file-preview-item{
     display: inline-block;
 }
+/*select2 관련 설정*/
+.select2-selection {
+    height:32px !important;
+}
+.select2-selection__rendered{
+    height:32px !important;
+    line-height: 32px !important;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered{
+    color:var(--gray-900) !important;
+    font-size: small !important;
+}
+.select2-container--default .select2-results__option {
+  font-size: small !important;
+  line-height: 1.5;
+}
+.select2-container--default .select2-selection__arrow {
+  background: url('/assets/images/icon/icon-arrow_down.svg') no-repeat center center;
+  position: absolute;
+  top: 50%;
+  right: 1.6rem;
+  display: block;
+  width: 1.6rem;
+  height: 1.6rem;
+  background-size: 80%;
+}
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 30px !important;
+}
 
+.select2-container--default .select2-selection__arrow b {
+  display: none; /* 기본 화살표 제거 */
+}
+/*select2 관련 설정 end*/
 /* ---------------------------------------------START : 운영지원보고서 css */
 .orReport-widget-wrap{
     gap: var(--grid-gutter);

@@ -121,10 +121,6 @@
                                 <input type="hidden" id ="currentPage"  th:field="${systemBoardList.currentPage}" readonly>
                             </div>
 
-                            <select class="js-example-basic-single" name="state">
-                                <option value="AL">Alabama</option>
-                                <option value="WY">Wyoming</option>
-                            </select>
                         </div>
                     </div>
                 </div>
@@ -135,9 +131,18 @@
     <!-- //컨텐츠 영역 -->
 </div>
 <script>
+    //검색형 셀렉트박스(select2) 관련 설정
     $(document).ready(function () {
         $('#searchCompany').select2();
     });
+    $('#searchCompany').on('select2:open', function() {
+      $('body').css('overflow', 'hidden');
+    });
+    $('#searchCompany').on('select2:close', function() {
+      $('body').css('overflow', '');
+    });
+
+    //검색관련 설정
     function searchBoards(obj) {
         if (obj.id == "refresh"){
           $("#searchType").val("");
@@ -148,10 +153,7 @@
         var searchKeyword = $("#searchKeyword").val();
         var searchCompany = $("#searchCompany").val();
         var page = ($("#currentPage").val() === undefined || $("#currentPage").val() === "") ? '' : $("#currentPage").val();
-        console.log(searchType); //COMPANY
-        console.log(searchKeyword); //네패스
 
-        // x-www-form-urlencoded 형식으로 데이터 생성
         const data = new URLSearchParams({
             page:page,
             searchType: searchType,
@@ -159,23 +161,21 @@
             searchCompany: searchCompany
         });
 
-        // Ajax 요청
         fetch('/systemBoardList', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
           },
-          body: data.toString() // URLSearchParams 객체를 문자열로 변환하여 전송 (POST로 밖에 보낼수 없음)
+          body: data.toString()
         })
         .then(response => response.text())
         .then(data => {
-          // 응답받은 HTML을 페이지에 삽입
           document.getElementById('systemBoardListContainer').innerHTML = data;
         })
         .catch(error => console.error('검색 중 오류 발생:', error));
-
     }
 
+    //게시물 상세보기
     function goPage(url, page) {
         $("#currentPage").val(page);
         // 실제 페이지 이동 로직 구현
