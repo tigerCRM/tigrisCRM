@@ -84,8 +84,11 @@ public class AlertServiceImpl implements AlertService {
         }
 
         try {
-            // 알림 발송 (DB 저장 등)
-            alertMapper.createAlert(alertDto);
+            if (receiverId != null){
+                // 알림 발송 (DB 저장 등)
+                alertMapper.createAlert(alertDto);
+            }
+
         } catch (Exception e){
             throw new CustomException("알림 등록 중 오류가 발생했습니다.", e);
         }

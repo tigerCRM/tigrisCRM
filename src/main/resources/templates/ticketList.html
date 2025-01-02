@@ -166,8 +166,8 @@
                                                 <td><span th:text="${ticket['COMPANY_NAME']}"></span></td>
                                                 <td><span th:if="${ticket['PRIORITY_YN'] == 'Y'}" class="tag tag--red">긴급</span>
                                                 </td>
-                                                <td class="text-left" style="cursor: pointer;">
-                                                    <a th:text="${ticket['TITLE']}" th:attr="data-id=${ticket['TICKET_ID']}" onclick="gotoTicket(this)"></a>
+                                                <td class="text-left" >
+                                                    <a th:text="${ticket['TITLE']}" th:attr="data-id=${ticket['TICKET_ID']}" style="cursor: pointer;" onclick="gotoTicket(this)"></a>
                                                 </td>
                                                 <td><span th:switch="${ticket['REQUEST_TYPE_CD']}" >
                                                     <span th:case="'QA'">문의답변</span>
