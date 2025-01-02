@@ -219,6 +219,13 @@
 </div>
 
 <script>
+    window.addEventListener("pageshow", function(event) {
+        if (sessionStorage.getItem("fromTicketView") === "true") {
+
+            sessionStorage.removeItem("fromTicketView");
+        }
+    });
+
     function filterOptions() {
         const searchText = document.getElementById('searchBox').value.toLowerCase();
         const select = document.getElementById('searchCompany');

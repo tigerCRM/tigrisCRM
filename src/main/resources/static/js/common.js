@@ -321,7 +321,11 @@ var common = {
     */
     openPopup : function(data){
         const popup = window.open('/html/popup.html', '_blank', 'width=568,height=750');
-
+        if (!popup || popup.closed || typeof popup.closed === "undefined") {
+            // 팝업 차단
+            showMessage('info', '팝업차단', "팝업 차단이 활성화되어 있습니다. 팝업 차단을 해제해주세요.");
+            return false;
+        }
         popup.onload = function () {
             popup.postMessage(data, '*'); // 데이터를 팝업 창으로 전송
         };
@@ -374,7 +378,7 @@ var common = {
                         window.location.href = '/noticeBoardList';
                     } else if (title === '시스템게시글삭제' || title === '시스템게시글저장') {
                         window.location.href = '/systemBoardList';
-                    }else if(title === "필수값"){
+                    }else if(title === "필수값" || title === "팝업차단"){
                         //location.reload();
                     }
                      else {

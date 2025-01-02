@@ -183,7 +183,7 @@ public class TicketController {
                 }
                 ticketCreate.setParentTicketCd(id);
                 ticketCreate.setTitle("["+String.valueOf(id)+"] Re:"+ parentTicketDetails.getTitle());
-                ticketCreate.setContent(System.lineSeparator()+"===========================연관요청==========================="+System.lineSeparator()
+                ticketCreate.setContent("<br>"+System.lineSeparator()+System.lineSeparator()+"===========================연관요청==========================="+System.lineSeparator()
                         + "["+String.valueOf(id)+"] Re:"+ parentTicketDetails.getTitle()
                         + System.lineSeparator()  +parentTicketDetails.getContent());
             }
