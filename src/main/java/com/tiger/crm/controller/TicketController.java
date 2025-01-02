@@ -73,6 +73,7 @@ public class TicketController {
             model.addAttribute("companyOptions", companyOptions);//회사 옵션 정보 가져오기
             model.addAttribute("statusOptions", commonService.getSelectOptions("t_status"));
             model.addAttribute("searchOptions", commonService.getSelectOptions("t_search"));
+            pagingRequest.setCreateId("");
             // 요청 조회
             PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
             model.addAttribute("ticketList", pageResponse);
@@ -92,7 +93,13 @@ public class TicketController {
         try {
             UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
             String userClass = String.valueOf(loginUser.getUserClass());
+            String userid = String.valueOf(loginUser.getUserId());
             pagingRequest.setUserClass(userClass);
+            if (pagingRequest.getCreateId().equals("true")){
+                pagingRequest.setCreateId(userid);
+            }else{
+                pagingRequest.setCreateId("");
+            }
             // 요청 조회
             PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
             model.addAttribute("userClass",userClass);
@@ -116,8 +123,14 @@ public class TicketController {
             UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
             String userClass = String.valueOf(loginUser.getUserClass());
             String companyId = String.valueOf(loginUser.getCompanyId());
+            String userid = String.valueOf(loginUser.getUserId());
             pagingRequest.setUserClass(userClass);
             pagingRequest.setCompanyId(companyId);
+            if (pagingRequest.getCreateId().equals("true")){
+                pagingRequest.setCreateId(userid);
+            }else{
+                pagingRequest.setCreateId("");
+            }
             // 데이터 조회
             PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
             List<Map<String, Object>> dataList = pageResponse.getDataList();

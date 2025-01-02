@@ -226,9 +226,9 @@
                                                 </div>
                                                 <div class="message_time">
                                                     <span th:text="${comment.createDt}"></span>
-                                                    <button type="button" class="btn btn--xs mono-ghost-btn" onclick="delComment(this)"
+                                                    <!--<button type="button" class="btn btn&#45;&#45;xs mono-ghost-btn" onclick="delComment(this)"
                                                             th:if="${user.userName == comment.createName}"
-                                                            th:attr="data-comment-id=${comment.answerId}">삭제</button>
+                                                            th:attr="data-comment-id=${comment.answerId}">삭제</button>-->
                                                 </div>
                                                 <div id="commentfile" class="file-preview-container" th:if="${comment.attachFiles != null and comment.attachFiles.size() > 0}">
                                                     <svg class="icon icon--20 color-gray700">

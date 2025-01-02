@@ -312,6 +312,10 @@
     padding: 0 3.6rem;
     overflow-y: auto;
 }
+.list-content {
+    height: calc(100% - 7.2rem);
+    padding: 3.6rem 3.6rem;
+}
 /* 서브 */
 .sub-content {
     display: flex;

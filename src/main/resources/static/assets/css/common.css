@@ -711,6 +711,7 @@ div::-webkit-scrollbar-button:end:increment {
     background-color: transparent;
     color: var(--gray-800);
     font-size: 2rem;
+    cursor: pointer;
 }
 
 .paging-btn:hover,
@@ -725,8 +726,10 @@ div::-webkit-scrollbar-button:end:increment {
     color: var(--white);
 }
 
-.paging-btn:disabled {
+.paging-btn.disabled {
     color: var(--gray-600);
+    pointer-events: none;
+    cursor: default;
 }
 .paging-btn.arrow-btn {
     font-size: 2rem;

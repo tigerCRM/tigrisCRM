@@ -13,7 +13,7 @@
     <!-- 컨텐츠 영역 -->
     <div class="main-area">
         <!-- 내용 영역 -->
-        <main class="form-content">
+        <main class="list-content">
             <div class="container">
                 <div class="main-widget-wrap">
                     <div class="content">
@@ -89,6 +89,14 @@
                                                 <use th:href="@{/assets/images/icon/sprite-sheet.svg#refresh}"/>
                                             </svg>
                                         </button>
+                                    </div>
+                                    <div style="align-content: center;">
+                                        <label class="checkbox02">
+                                            <input type="checkbox"
+                                                   id="writerYn"
+                                                   th:onclick="searchTickets(this);">
+                                            <span>내가 작성한 글 보기</span>
+                                        </label>
                                     </div>
                                     <div style="margin-left:auto;">
                                         <button class="btn btn--s  secondary-btn" onclick="exceldownload(this);"
@@ -234,6 +242,7 @@
           $("#searchKeyword").val("");
           $("#startDate").val("");
           $("#endDate").val("");
+          document.getElementById('writerYn').checked = false
         }
         var searchType = $("#searchType").val();
         var searchStatus = $("#searchStatus").val();
@@ -242,7 +251,7 @@
         var startDt = ($("#startDate").val() === undefined || $("#startDate").val() === "") ? '1999-01-01' : $("#startDate").val();
         var endDt = ($("#endDate").val() === undefined || $("#endDate").val() === "") ? '2030-01-01' : $("#endDate").val();
         var page = ($("#currentPage").val() === undefined || $("#currentPage").val() === "") ? '' : $("#currentPage").val();
-        // x-www-form-urlencoded 형식으로 데이터 생성
+        var writerYn = document.getElementById('writerYn').checked;
         const data = new URLSearchParams({
           searchType: searchType,
           searchStatus: searchStatus,
@@ -250,7 +259,8 @@
           searchKeyword: searchKeyword,
           startDt: startDt,
           endDt: endDt,
-          page: page
+          page: page,
+          createId: writerYn
         });
 
         // Ajax 요청
@@ -276,14 +286,15 @@
         var searchCompany = $("#searchCompany").val();
         var startDt = ($("#startDate").val() === undefined || $("#startDate").val() === "") ? '1999-01-01' : $("#startDate").val();
         var endDt = ($("#endDate").val() === undefined || $("#endDate").val() === "") ? '2030-01-01' : $("#endDate").val();
-
+        var writerYn = document.getElementById('writerYn').checked;
         const data = new URLSearchParams({
           searchType: searchType,
           searchStatus: searchStatus,
           searchKeyword: searchKeyword,
           searchCompany: searchCompany,
           startDt: startDt,
-          endDt: endDt
+          endDt: endDt,
+          createId: writerYn
         });
         // 다운로드 파일 이름 설정
         const now = new Date();

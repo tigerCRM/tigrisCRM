@@ -18,6 +18,7 @@ public class PagingRequest {
     private String userId;
     private String companyId;
     private int totalcnt;
+    private String createId;
 
     public PagingRequest() {
         this.page = 1;  // 기본값 설정

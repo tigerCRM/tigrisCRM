@@ -66,10 +66,10 @@
                                     </colgroup>
                                     <tbody>
                                     <tr>
-                                        <th>제목</th>
+                                        <th>제목<span class="color-error500">*<span class="hidden">필수 항목</span></span></th>
                                         <td colspan="3">
-                                            <input type="text" id="title" class="input--s input01 input--full"
-                                                   th:field="*{title}" required>
+                                            <input type="text" id="title" class="input--s input01 input--full" placeholder="제목을 입력하세요"
+                                                   th:field="*{title}" autofocus>
                                         </td>
                                     </tr>
                                     <tr>
@@ -238,7 +238,8 @@
                                 <!--//사용자 입력 영역-->
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
-                                    <button type="submit" class="btn btn--m primary-btn" th:if="${mode == 'write'}">등록</button>
+                                    <button type="button" class="btn btn--m primary-btn"
+                                            th:if="${mode == 'write'}" onclick="validateAndSubmit()">등록</button>
                                     <button class="btn btn--m primary-btn" th:if="${mode == 'modify'}">저장</button>
                                     <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'modify'}" onclick="deleteTicket()">삭제</button>
                                     <button type="button" class="btn btn--m  secondary-btn"
@@ -274,7 +275,31 @@
          //첨부파일 설정
          common.attachFileWorks();
     });
+    document.addEventListener("DOMContentLoaded", () => {
+        const titleField = document.getElementById("title");
+        if (titleField) {
+            titleField.focus();
+        }
+    });
+    // 무결성 검사
+    function validateAndSubmit() {
+        const form = document.getElementById("SubmitArea");
+        const title = document.getElementById("title");
+        const content = document.getElementById("content");
 
+        if (!title.value.trim()) {
+            title.classList.add("input--error");
+            title.focus();
+            isValid = false;
+            showMessage('info', '필수값', '제목을 입력하세요.');
+            return;
+        }else {
+            title.classList.remove("input--error");
+        }
+
+        // 폼 제출
+        form.submit();
+    }
     function updateCompanyName(selectElement) {
         const selectedOption = selectElement.options[selectElement.selectedIndex];
         const companyName = selectedOption.getAttribute("data-name");

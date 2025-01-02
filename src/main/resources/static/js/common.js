@@ -172,6 +172,12 @@ var common = {
             initialEditType: mode == 'read' ? undefined : 'wysiwyg', // viewer 모드일 때 편집 타입 생략
             previewStyle: 'vertical',
             hideModeSwitch: mode != 'read',                      // editor 모드일 때만 모드 전환 숨김
+            toolbarItems: [
+                      ['heading', 'bold', 'italic', 'strike'],
+                      ['hr', 'quote'],
+                      ['ul', 'ol', 'task', 'indent', 'outdent'],
+                      ['table', 'image', 'link']
+                ]
         });
 
         return editor;
@@ -368,7 +374,10 @@ var common = {
                         window.location.href = '/noticeBoardList';
                     } else if (title === '시스템게시글삭제' || title === '시스템게시글저장') {
                         window.location.href = '/systemBoardList';
-                    } else {
+                    }else if(title === "필수값"){
+                        //location.reload();
+                    }
+                     else {
                         location.reload();
                     }
                 }
