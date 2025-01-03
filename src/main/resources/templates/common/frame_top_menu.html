@@ -83,11 +83,18 @@
 
                             // 드롭다운 내용 추가
                             if (alerts && alerts.length > 0) {
-                                let alertListHtml = '';
+                                let alertListHtml = `
+                                                        <div class="alert-header">
+                                                            <button id="markAllAsRead" class="mark-all-read-btn">모두 읽음</button>
+                                                            <button id="closeAlertBtn" type="button" class="close">
+                                                               <span class="hidden">닫기</span>
+                                                            </button>
+                                                        </div>
+                                                    `;
                                 alerts.forEach(alert => {
                                     alertListHtml += `
                                       <li class="${alert.readYn === 'Y' ? 'read-alert' : ''}">
-                                          <div class="alert-content">
+                                          <div class="alert-content1">
                                               <span class="alert-link" data-id="${alert.alertId}" data-alertObjectId="${alert.alertObjectId}">
                                                   ${alert.userName}님이
                                                   ${
@@ -109,8 +116,11 @@
                                               "${alert.content}"
                                               </span>
                                               <button class="close-alert-btn">×</button>
+                                          </div><br/>
+                                          <div class="alert-content2">
+                                              <svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use></svg>
+                                              <div class="alert-time">${alert.alertDt}</div>
                                           </div>
-                                          <div class="alert-time">${alert.alertDt}</div>
                                       </li>
                                     `;
                                 });
@@ -138,6 +148,13 @@
                     event.stopPropagation(); // 이벤트 전파 방지
                     $alertDropdownMenu.toggle(); // 알림 드롭다운 토글
                     $('#settingDropdownMenu').hide(); // 설정 드롭다운이 열려있다면 닫기
+                });
+
+                // -------------------
+                // 알람 닫기 버튼 클릭
+                // -------------------
+                $(document).on("click", "#closeAlertBtn", function() {
+                    $alertDropdownMenu.toggle(); // 알림 드롭다운 토글
                 });
 
 
@@ -230,6 +247,27 @@
                     window.location.href = '/ticketView?id='+alertObjectId;
                 })
                 .catch(error => console.error('읽음처리 중 오류 발생:', error));
+            });
+
+            // ------------------
+            // "모두 읽음" 버튼 클릭 시 색상 변경
+            // ------------------
+            $(document).on('click', '#markAllAsRead', function () {
+                fetch('/alert/all', {
+                    method: 'PUT',
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // 성공 시 모든 알림의 상태를 'read-alert'로 변경
+                        $('#alertDropdownMenu li').each(function () {
+                            $(this).addClass('read-alert'); // 클래스 추가
+                        });
+                        console.log('전체 알림 읽음 처리 완료');
+                    } else {
+                        console.error('전체 알림 읽음 처리 실패');
+                    }
+                })
+                .catch(error => console.error('모두 읽음 처리 중 오류 발생:', error));
             });
 
             // -------------------

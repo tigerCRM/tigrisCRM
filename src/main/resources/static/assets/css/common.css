@@ -317,15 +317,18 @@ div::-webkit-scrollbar-button:end:increment {
 /* li 요소 스타일 */
 #alertDropdownMenu li {
     position: relative; /* 각 li를 기준 컨테이너로 설정 */
-    padding: 10px; /* 알림 내용과 버튼 사이 간격 */
+    padding: 13px; /* 알림 내용과 버튼 사이 간격 */
     border-bottom: 1px solid #ddd; /* 항목 구분선 */
 }
-.alert-content {
+.alert-content1 {
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-size: 14px;
     max-width: 100%; /* 부모 요소의 최대 너비 */
+}
+.alert-content2 {
+    display: flex;
 }
 .alert-link {
     display: flex;
@@ -336,10 +339,10 @@ div::-webkit-scrollbar-button:end:increment {
     white-space: nowrap;        /* 텍스트가 줄바꿈되지 않도록 설정 */
     overflow: hidden;           /* 넘치는 텍스트를 숨김 */
     text-overflow: ellipsis;    /* 숨겨진 텍스트 부분에 말줄임표 표시 */
+    font-weight: 500;
 }
 .alert-link span {
     display: inline-block;
-    font-weight: bold;
 }
 .close-alert-btn {
     margin-top: -5%;
@@ -352,13 +355,45 @@ div::-webkit-scrollbar-button:end:increment {
     color: #f44336; /* Hover 시 빨간색 강조 */
 }
 .alert-time {
+    margin-left: 1%;
+    margin-top: 2px;
+    font-weight: 500;
     font-size: 12px;
-    color: gray;
-    text-align: right;
+    text-align: left;
 }
 /* 읽은 알림의 스타일 */
 .read-alert {
     opacity: 0.6;
+}
+/* [알림]전체읽음버튼 */
+.mark-all-read-btn{
+    position: relative; /* 버튼 자체의 기본 위치 */
+    font-size: 14px;
+    font-weight: 700;
+    color : #458DFC;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+/* [알림]전체읽음 옆 닫기버튼 */
+#closeAlertBtn{
+    right: 16px;
+    width: 24px;
+    height: 24px;
+    background: url(../images/icon/tgicon-close02.svg) no-repeat;
+}
+.mark-all-read-btn:hover{
+    text-decoration: underline;
+}
+/* [알림]전체읽음 버튼 고정 헤더 */
+.alert-header {
+    position: sticky; /* 스크롤 시 고정 */
+    top: 0; /* 스크롤 기준 위쪽에 고정 */
+    background-color: #fff; /* 고정된 헤더의 배경색 */
+    z-index: 10; /* 다른 요소 위에 표시되도록 설정 */
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: right; /* 버튼을 오른쪽으로 정렬 */
 }
 /* // main > header alert badge */
 

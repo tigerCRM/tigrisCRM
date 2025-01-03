@@ -40,6 +40,10 @@ public class AlertServiceImpl implements AlertService {
         alertMapper.updateAlertReadStatus(alertId);
     }
 
+    // 알림 모두 읽음 처리
+    @Override
+    public void updateAllAlertsReadStatus(String userId) { alertMapper.updateAllAlertsReadStatus(userId); }
+
     // 알림 삭제 처리
     @Override
     public void deleteAlertStatus(String alertId) {
