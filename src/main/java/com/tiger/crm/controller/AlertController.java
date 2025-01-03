@@ -97,4 +97,23 @@ public class AlertController {
         }
     }
 
+    /*
+     * 알림내역 읽음 일괄 처리
+     * 설명 : 종아이콘 모두 읽음 처리
+     * */
+    @PutMapping("/all")
+    public ResponseEntity<Void> updateAllAlertsReadStatus(HttpServletRequest request) {
+        try {
+            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
+
+            // 알람 모두 읽음 처리(구분값 : 유저 아이디)
+            alertService.updateAllAlertsReadStatus(loginUser.getUserId());
+
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }

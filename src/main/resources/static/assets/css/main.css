@@ -719,7 +719,7 @@
     border: 1px solid var(--gray-300);
     z-index: 1000; /* 다른 요소 위에 오도록 */
     font-size: 15px;
-    max-height: 300px;
+    max-height: 293px;
     overflow-y: auto;
     cursor: pointer;
 }
