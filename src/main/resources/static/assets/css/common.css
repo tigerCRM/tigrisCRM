@@ -3642,6 +3642,9 @@ h2 { margin-bottom: 1rem; font-weight: 700; font-size: 2.4rem; }
     font-size: small;
     font-weight: bold;
 }
+.gap2{
+    gap:2rem !important;
+}
 /*통계 그리드 잡는 설정 END */
 
 /* ---------------------------------------------START : 운영지원보고서 css */
