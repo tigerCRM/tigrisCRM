@@ -70,7 +70,8 @@
     <update id="updateAllAlertsReadStatus">
         UPDATE T_ALERT
         SET READ_YN = 'Y'
-        WHERE RECEIVER_ID = #{userId}
+        WHERE READ_YN = 'N'
+          AND RECEIVER_ID = #{userId}
     </update>
 
 </mapper>
