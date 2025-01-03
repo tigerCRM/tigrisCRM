@@ -30,6 +30,7 @@
                             </p>
                         </a>
                     </li>
+                    <!--통계 현황 -->
                     <li>
                         <a href="systemBoardList" class="menu-item">
                                 <span class="menu-icon">
@@ -52,6 +53,45 @@
                             </p>
                         </a>
                     </li>
+                    <li class="tree-item" th:if="${userClass != 'USER'}">
+                        <a href="#" class="menu-item" id="analytics">
+                            <span class="menu-icon">
+                                <button class="tree-arrow-btn"></button>
+                            </span>
+                            <p class="menu-title">
+                                <span class="menu-title__text">통계 현황</span>
+                                <span class="menu-title__num"></span>
+                            </p>
+                        </a>
+                        <!-- 하위 메뉴 (초기에는 숨김) -->
+                        <ul class="tree-list--sub-2">
+                            <li class="tree-item" style="margin-left:50px">
+                                <a href="analytics_openAndClose" class="menu-item">
+                                    <p class="menu-title">
+                                        <span class="menu-title__text">요청/처리 현황</span>
+                                        <span class="menu-title__num"></span>
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="tree-item" style="margin-left:50px">
+                                <a href="analytics_week" class="menu-item">
+                                    <p class="menu-title">
+                                        <span class="menu-title__text">주간처리 현황</span>
+                                        <span class="menu-title__num"></span>
+                                    </p>
+                                </a>
+                            </li>
+                            <li class="tree-item" style="margin-left:50px">
+                                <a href="analytics_leftover" class="menu-item">
+                                    <p class="menu-title">
+                                        <span class="menu-title__text">고객사별 잔여 현황</span>
+                                        <span class="menu-title__num"></span>
+                                    </p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!--//통계 현황-->
                     <li class="tree-item" th:if="${userClass != 'USER'}">
                         <a href="#" class="menu-item" id="adminmenu">
                             <span class="menu-icon">

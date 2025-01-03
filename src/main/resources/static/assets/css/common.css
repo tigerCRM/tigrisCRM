@@ -3601,6 +3601,49 @@ h2 { margin-bottom: 1rem; font-weight: 700; font-size: 2.4rem; }
   display: none; /* 기본 화살표 제거 */
 }
 /*select2 관련 설정 end*/
+
+/*통계 그리드 잡는 설정 */
+.ticket-list, .analytics-content1, .analytics-content2_1, .analytics-content2_2, .analytics-content4_1, .analytics-content4_3{
+    border: 1px solid var(--gray-300);
+}
+.analytics-main {
+    display: flex; /* 플렉스 박스 설정 */
+    gap: 10px; /* 자식 간 간격 (여러 자식이 있을 때만 적용) */
+    justify-content: center; /* 기본 정렬 */
+    align-items: center; /* 세로 정렬 */
+}
+
+.analytics-main > * {
+    flex: 1; /* 자식 요소가 부모의 전체 너비를 채우도록 설정 */
+}
+
+.analytics-main:only-child > * {
+    flex: none; /* 자식 요소가 유일할 때 기본 설정 무시 */
+    width: 100%; /* 부모 요소의 너비를 꽉 채움 */
+    height: 100%; /* 부모 요소의 높이를 꽉 채움 */
+}
+
+.analytics-main > .analytics-content2_1,
+.analytics-main > .analytics-content2_2 {
+    flex: 1;
+}
+
+.analytics-main > .analytics-content4_1 {
+    flex: 1;
+}
+
+.analytics-main > .analytics-content4_3 {
+    flex: 3;
+}
+.filter-label {
+    display: inline-block;
+    line-height: 32px;
+    text-align: center;
+    font-size: small;
+    font-weight: bold;
+}
+/*통계 그리드 잡는 설정 END */
+
 /* ---------------------------------------------START : 운영지원보고서 css */
 .orReport-widget-wrap{
     gap: var(--grid-gutter);

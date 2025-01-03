@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" >
+<head th:replace="~{common/frame_head :: head('주간 처리 현황')}"></head>
+<body>
+<div class="wrapper">
+    <!-- 왼쪽 메뉴  -->
+    <div th:replace="~{common/frame_left_menu :: frame_left_menu}" />
+
+    <!-- 상단 메뉴  -->
+    <div th:replace="~{common/frame_top_menu :: frame_top_menu}" />
+
+    <!-- 컨텐츠 영역 -->
+    <div class="main-area">
+        <!-- 내용 영역 -->
+        <main class="form-content">
+            <div class="container">
+                <div class="main-widget-wrap">
+                    <div class="content flex1">
+                        <!--검색 및 헤더-->
+                        <div class="search--box">
+                            <div class="content-header">
+                                <!-- 헤더 -->
+                                <h2 class="text-body1">
+                                    <div class="flex flex-align_center gap--8">
+                                        <b>주간 처리 현황</b>
+                                    </div>
+                                </h2>
+                                <!--//헤더 -->
+                                <!-- 검색영역 -->
+                                <div class="searchbar">
+                                    <span class="filter-label">고객사</span>
+                                    <div>
+                                        <div class="dropdown dropdown--s wd110" aria-expanded="false" tabindex="0">
+                                            <select class="dropdown__selected" id="searchCompany" name="searchCompany"
+                                                    th:value="${searchCompany}" onchange="searchBoards(this); ">
+                                                <option value="">==전체==</option>
+                                                <option th:each="op : ${companyOptions}"
+                                                        th:value="${op.companyId}"
+                                                        th:text="${op.companyName}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <span class="filter-label">지원범위</span>
+                                    <div class="input-list--h">
+                                        <label class="checkbox02">
+                                            <input type="checkbox">
+                                            <span>기본지원</span>
+                                        </label>
+                                        <label class="checkbox02">
+                                            <input type="checkbox">
+                                            <span>추가지원</span>
+                                        </label>
+                                    </div>
+
+                                    <span class="filter-label">요청종류</span>
+                                    <div class="input-list--h">
+                                        <label class="checkbox02">
+                                            <input type="checkbox">
+                                            <span>문의답변</span>
+                                        </label>
+                                        <label class="checkbox02">
+                                            <input type="checkbox">
+                                            <span>오류수정</span>
+                                        </label>
+                                        <label class="checkbox02">
+                                            <input type="checkbox">
+                                            <span>기능추가</span>
+                                        </label>
+                                        <label class="checkbox02">
+                                            <input type="checkbox">
+                                            <span>기술지원</span>
+                                        </label>
+                                        <label class="checkbox02">
+                                            <input type="checkbox">
+                                            <span>기능변경</span>
+                                        </label>
+                                        <label class="checkbox02">
+                                            <input type="checkbox">
+                                            <span>기타</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <!-- //검색영역 -->
+                            </div>
+                        </div>
+                        <!--//검색 및 헤더 -->
+                        <!--통계 메인컨텐츠 -->
+                        <div class="analytics-main">
+                            <div class="analytics-content1">
+                                <span>test2</span>
+                            </div>
+                        </div>
+                        <!--//통계 메인컨텐츠 -->
+                        <!-- 티켓 리스트 -->
+                        <div class="ticket-list">
+                            <span>test2</span>
+                        </div>
+                        <!--//티켓 리스트 -->
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- //내용 영역 -->
+    </div>
+    <!-- //컨텐츠 영역 -->
+</div>
+
+<script>
+    //검색형 셀렉트박스(select2) 관련 설정
+    $(document).ready(function () {
+        $('#searchCompany').select2();
+    });
+    $('#searchCompany').on('select2:open', function() {
+      $('body').css('overflow', 'hidden');
+    });
+    $('#searchCompany').on('select2:close', function() {
+      $('body').css('overflow', '');
+    });
+
+    function searchBoards(obj) {
+        if (obj.id == "refresh"){
+          $("#searchType").val("");
+          $("#searchKeyword").val("");
+        }
+        var searchType = $("#searchType").val();
+        var searchKeyword = $("#searchKeyword").val();
+        var page = ($("#currentPage").val() === undefined || $("#currentPage").val() === "") ? '' : $("#currentPage").val();
+        console.log(searchType); //COMPANY
+        console.log(searchKeyword); //네패스
+
+        // x-www-form-urlencoded 형식으로 데이터 생성
+        const data = new URLSearchParams({
+            page:page,
+            searchType: searchType,
+            searchKeyword: searchKeyword,
+        });
+
+        // Ajax 요청
+        fetch('/noticeBoardList', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: data.toString() // URLSearchParams 객체를 문자열로 변환하여 전송 (POST로 밖에 보낼수 없음)
+        })
+        .then(response => response.text())
+        .then(data => {
+          // 응답받은 HTML을 페이지에 삽입
+          document.getElementById('noticeBoardListContainer').innerHTML = data;
+        })
+        .catch(error => console.error('검색 중 오류 발생:', error));
+
+    }
+
+    function goPage(url, page) {
+        $("#currentPage").val(page);
+        // 실제 페이지 이동 로직 구현
+        searchBoards(this);
+    }
+
+</script>
+</body>
+</html>
