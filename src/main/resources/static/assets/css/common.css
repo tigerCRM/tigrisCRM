@@ -3645,6 +3645,30 @@ h2 { margin-bottom: 1rem; font-weight: 700; font-size: 2.4rem; }
 .gap2{
     gap:2rem !important;
 }
+.analytics-week-header1 { /*주간처리현황 00월 00주 표시 부분*/
+    margin: 20px 0;
+    font-size: large;
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+.analytics-week-header2 {/*주간처리현황 접수 00건 처리 00건 표시 부분*/
+    margin: 5px 20px;
+    font-size: medium;
+    text-align: right;
+    color: var(--primary-navy-600);
+    font-weight: bold;
+    margin-top: 10px;
+}
+.analytics-week-header1 span {
+    margin: 0 5px;
+}
+.analytics-table{
+    padding :  0 0 10px 0;
+}
 /*통계 그리드 잡는 설정 END */
 
 /* ---------------------------------------------START : 운영지원보고서 css */
