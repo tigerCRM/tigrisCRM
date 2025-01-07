@@ -66,4 +66,12 @@
         WHERE ALERT_ID = #{alertId}
     </update>
 
+    <!-- 알림 모두 읽음 처리 -->
+    <update id="updateAllAlertsReadStatus">
+        UPDATE T_ALERT
+        SET READ_YN = 'Y'
+        WHERE READ_YN = 'N'
+          AND RECEIVER_ID = #{userId}
+    </update>
+
 </mapper>

@@ -4,6 +4,7 @@ import com.tiger.crm.repository.dto.company.CompanyOptionDto;
 import com.tiger.crm.repository.dto.ticket.StatusMapper;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.repository.mapper.CompanyOptionMapper;
+import com.tiger.crm.repository.mapper.LoginMapper;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.apache.poi.ss.usermodel.*;
@@ -25,7 +26,8 @@ import java.util.*;
  * 1. selectbox
  * 2. 회사 불러오기(getCompanyOption)
  * 2. downloadExcel
- * 3.
+ * 3. getCurrentUserIdFromSession
+ * 4. 자사 담당자 리스트 불러오기(getManagerList)
  * */
 
 @Service
@@ -34,6 +36,9 @@ import java.util.*;
 public class CommonService {
     @Autowired
     CompanyOptionMapper companyOptionMapper;
+    @Autowired
+    LoginMapper loginMapper;
+
     private Map<String, String> select = new LinkedHashMap<>();
 
     public Map<String, String> getSelectOptions(String id) {
@@ -168,5 +173,9 @@ public class CommonService {
             }
         }
         return null;
+    }
+
+    public List<UserLoginDto> getManagerList(){
+        return loginMapper.getAllManagers(1);
     }
 }

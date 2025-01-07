@@ -76,6 +76,7 @@
                 </when>
             </choose>
         </if>
+        ORDER BY SEND_DT DESC
         <!-- 페이지 처리 (페이징 처리) -->
         <if test="page != null">
             LIMIT  #{offset}, #{size}

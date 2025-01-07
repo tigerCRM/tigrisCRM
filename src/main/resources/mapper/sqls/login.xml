@@ -52,4 +52,15 @@
         SET PHONE = #{phone}
         WHERE USER_ID = #{id}
     </update>
+
+    <!--전체 매니저 불러오기-->
+    <select id="getAllManagers" resultType="com.tiger.crm.repository.dto.user.UserLoginDto">
+        SELECT USER_ID,
+        USER_NAME,
+        USER_PW,
+        PHONE
+        FROM T_USER_INFO
+        WHERE COMPANY_ID = #{companyId}
+            AND USER_CLASS = 'ADMIN'
+    </select>
 </mapper>
