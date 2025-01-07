@@ -44,14 +44,19 @@ public class AnalyticsController {
         HttpSession session = request.getSession(false);
         UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
 
+        String startDate = "";
+
         //고객사 리스트
         List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
         model.addAttribute("companyOptions", companyOptions);
 
-        //줘야 하는 데이터..
-        //{남유경, [12월 30일(접수 00, 처리 00), 12월 31일(접수 00, 처리 00)] }
-        List<AnalyticsWeekDto> analyticsWeeksample = analyticsService.getAnalyticsWeek();
+        //날짜 리스트
+        List<String> dayList = analyticsService.getDate(startDate);
+        model.addAttribute("dayList", dayList);
 
+        //접수 리스트
+        List<AnalyticsWeekDto> weekReceiptList = analyticsService.getAnalyticsWeek(startDate);
+        model.addAttribute("weekReceiptList", weekReceiptList);
 
         return "analyticsWeek";
     }

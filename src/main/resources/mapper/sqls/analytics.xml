@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tiger.crm.repository.mapper.AnalyticsMapper">
+
+    <select id="getAnalyticsWeekReceipt"  resultType="com.tiger.crm.repository.dto.analytics.AnalyticsWeekDto" parameterType="map">
+        SELECT
+        TUI.USER_ID, TUI.USER_NAME,
+        COALESCE(LEFTOVER.`leftover`, 0) AS `leftover`,
+        COALESCE(MON1.`mon`, 0) AS `monReceipt`, COALESCE(TUE1.`tue`, 0) AS `tueReceipt`,
+        COALESCE(WED1.`wed`, 0) AS `wedReceipt`, COALESCE(THU1.`thu`, 0) AS `thuReceipt`,
+        COALESCE(FRI1.`fri`, 0) AS `friReceipt`, COALESCE(SAT1.`sat`, 0) AS `satReceipt`,
+        COALESCE(SUN1.`sun`, 0) AS `sunReceipt`,
+        COALESCE(MON2.`mon`, 0) AS `monComplete`, COALESCE(TUE2.`tue`, 0) AS `tueComplete`,
+        COALESCE(WED2.`wed`, 0) AS `wedComplete`, COALESCE(THU2.`thu`, 0) AS `thuComplete`,
+        COALESCE(FRI2.`fri`, 0) AS `friComplete`, COALESCE(SAT2.`sat`, 0) AS `satComplete`,
+        COALESCE(SUN2.`sun`, 0) AS `sunComplete`
+        FROM T_USER_INFO TUI
+
+        LEFT JOIN (
+        SELECT MANAGER_ID, COUNT(*) AS `leftover`
+        FROM T_TICKET_INFO
+        where status_cd != 'CLOSED' AND DELETE_YN = 'N'
+        GROUP BY MANAGER_ID
+        ) LEFTOVER ON TUI.USER_ID = LEFTOVER.MANAGER_ID
+
+        LEFT JOIN (
+        SELECT MANAGER_ID, COUNT(*) AS `mon`
+        FROM T_TICKET_INFO
+        WHERE CREATE_DT &gt;= CONCAT(#{mon} , ' 00:00:00') AND CREATE_DT &lt;= CONCAT(#{mon} , ' 23:59:59') AND DELETE_YN = 'N'
+        GROUP BY MANAGER_ID
+        ) MON1 ON TUI.USER_ID = MON1.MANAGER_ID
+        LEFT JOIN (
+        SELECT MANAGER_ID, COUNT(*) AS `tue`
+        FROM T_TICKET_INFO
+        WHERE CREATE_DT &gt;= CONCAT(#{tue} , ' 00:00:00') AND CREATE_DT &lt;= CONCAT(#{tue} , ' 23:59:59') AND DELETE_YN = 'N'
+        GROUP BY MANAGER_ID
+        ) TUE1 ON TUI.USER_ID = TUE1.MANAGER_ID
+        LEFT JOIN (
+        SELECT MANAGER_ID, COUNT(*) AS `wed`
+        FROM T_TICKET_INFO
+        WHERE CREATE_DT &gt;= CONCAT(#{wed} , ' 00:00:00') AND CREATE_DT &lt;= CONCAT(#{wed} , ' 23:59:59') AND DELETE_YN = 'N'
+        GROUP BY MANAGER_ID
+        ) WED1 ON TUI.USER_ID = WED1.MANAGER_ID
+        LEFT JOIN (
+        SELECT MANAGER_ID, COUNT(*) AS `thu`
+        FROM T_TICKET_INFO
+        WHERE CREATE_DT &gt;= CONCAT(#{thu} , ' 00:00:00') AND CREATE_DT &lt;= CONCAT(#{thu} , ' 23:59:59') AND DELETE_YN = 'N'
+        GROUP BY MANAGER_ID
+        ) THU1 ON TUI.USER_ID = THU1.MANAGER_ID
+        LEFT JOIN (
+        SELECT MANAGER_ID, COUNT(*) AS `fri`
+        FROM T_TICKET_INFO
+        WHERE CREATE_DT &gt;= CONCAT(#{fri} , ' 00:00:00') AND CREATE_DT &lt;= CONCAT(#{fri} , ' 23:59:59') AND DELETE_YN = 'N'
+        GROUP BY MANAGER_ID
+        ) FRI1 ON TUI.USER_ID = FRI1.MANAGER_ID
+        LEFT JOIN (
+        SELECT MANAGER_ID, COUNT(*) AS `sat`
+        FROM T_TICKET_INFO
+        WHERE CREATE_DT &gt;= CONCAT(#{sat} , ' 00:00:00') AND CREATE_DT &lt;= CONCAT(#{sat} , ' 23:59:59') AND DELETE_YN = 'N'
+        GROUP BY MANAGER_ID
+        ) SAT1 ON TUI.USER_ID = SAT1.MANAGER_ID
+        LEFT JOIN (
+        SELECT MANAGER_ID, COUNT(*) AS `sun`
+        FROM T_TICKET_INFO
+        WHERE CREATE_DT &gt;= CONCAT(#{sun} , ' 00:00:00') AND CREATE_DT &lt;= CONCAT(#{sun} , ' 23:59:59') AND DELETE_YN = 'N'
+        GROUP BY MANAGER_ID
+        ) SUN1 ON TUI.USER_ID = SUN1.MANAGER_ID
+
+        LEFT JOIN (
+        SELECT MANAGER_ID, COUNT(*) AS `mon`
+        FROM T_TICKET_INFO
+        WHERE COMPLETE_DT &gt;= CONCAT(#{mon} , ' 00:00:00') AND COMPLETE_DT &lt;= CONCAT(#{mon} , ' 23:59:59') AND DELETE_YN = 'N'
+        GROUP BY MANAGER_ID
+        ) MON2 ON TUI.USER_ID = MON2.MANAGER_ID
+        LEFT JOIN (
+        SELECT MANAGER_ID, COUNT(*) AS `tue`
+        FROM T_TICKET_INFO
+        WHERE COMPLETE_DT &gt;= CONCAT(#{tue} , ' 00:00:00') AND COMPLETE_DT &lt;= CONCAT(#{tue} , ' 23:59:59') AND DELETE_YN = 'N'
+        GROUP BY MANAGER_ID
+        ) TUE2 ON TUI.USER_ID = TUE2.MANAGER_ID
+        LEFT JOIN (
+        SELECT MANAGER_ID, COUNT(*) AS `wed`
+        FROM T_TICKET_INFO
+        WHERE COMPLETE_DT &gt;= CONCAT(#{wed} , ' 00:00:00') AND COMPLETE_DT &lt;= CONCAT(#{wed} , ' 23:59:59') AND DELETE_YN = 'N'
+        GROUP BY MANAGER_ID
+        ) WED2 ON TUI.USER_ID = WED2.MANAGER_ID
+        LEFT JOIN (
+        SELECT MANAGER_ID, COUNT(*) AS `thu`
+        FROM T_TICKET_INFO
+        WHERE COMPLETE_DT &gt;= CONCAT(#{thu} , ' 00:00:00') AND COMPLETE_DT &lt;= CONCAT(#{thu} , ' 23:59:59') AND DELETE_YN = 'N'
+        GROUP BY MANAGER_ID
+        ) THU2 ON TUI.USER_ID = THU2.MANAGER_ID
+        LEFT JOIN (
+        SELECT MANAGER_ID, COUNT(*) AS `fri`
+        FROM T_TICKET_INFO
+        WHERE COMPLETE_DT &gt;= CONCAT(#{fri} , ' 00:00:00') AND COMPLETE_DT &lt;= CONCAT(#{fri} , ' 23:59:59') AND DELETE_YN = 'N'
+        GROUP BY MANAGER_ID
+        ) FRI2 ON TUI.USER_ID = FRI2.MANAGER_ID
+        LEFT JOIN (
+        SELECT MANAGER_ID, COUNT(*) AS `sat`
+        FROM T_TICKET_INFO
+        WHERE COMPLETE_DT &gt;= CONCAT(#{sat} , ' 00:00:00') AND COMPLETE_DT &lt;= CONCAT(#{sat} , ' 23:59:59') AND DELETE_YN = 'N'
+        GROUP BY MANAGER_ID
+        ) SAT2 ON TUI.USER_ID = SAT2.MANAGER_ID
+        LEFT JOIN (
+        SELECT MANAGER_ID, COUNT(*) AS `sun`
+        FROM T_TICKET_INFO
+        WHERE COMPLETE_DT &gt;= CONCAT(#{sun} , ' 00:00:00') AND COMPLETE_DT &lt;= CONCAT(#{sun} , ' 23:59:59') AND DELETE_YN = 'N'
+        GROUP BY MANAGER_ID
+        ) SUN2 ON TUI.USER_ID = SUN2.MANAGER_ID
+
+        WHERE TUI.COMPANY_ID = 1
+        ORDER BY TUI.USER_ID
+    </select>
+</mapper>

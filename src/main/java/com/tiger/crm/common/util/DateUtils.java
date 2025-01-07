@@ -15,11 +15,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 /**
  * <code>DateUtils</code>
@@ -158,6 +157,28 @@ public class DateUtils {
 		SimpleDateFormat formatter = new SimpleDateFormat(format);
 
 		return formatter.format(date);
+	}
+
+
+	//오늘이 포함된 한 주 구하기
+	//작성자 : 제예솔
+	public static ArrayList<String> getWeekDates(LocalDate date) {
+		// 날짜 포맷 지정
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+		// 입력된 날짜의 요일 가져오기 (1: 월요일, ..., 7: 일요일)
+		int dayOfWeek = date.getDayOfWeek().getValue();
+
+		// 해당 주의 월요일 계산
+		LocalDate monday = date.minusDays(dayOfWeek - 1);
+
+		// 월요일부터 일요일까지 날짜 추가
+		ArrayList<String> weekDates = new ArrayList<>();
+		for (int i = 0; i < 7; i++) {
+			weekDates.add(monday.plusDays(i).format(formatter));
+		}
+
+		return weekDates;
 	}
 
 }
