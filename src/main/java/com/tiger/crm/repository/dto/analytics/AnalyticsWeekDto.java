@@ -16,21 +16,21 @@ public class AnalyticsWeekDto {
     
     private String userId; //유저 ID
     private String userName;// 유저 이름
-    private int leftover;//잔여 요청
-    private int monReceipt; //요일별 데이터 수
-    private int tueReceipt;
-    private int wedReceipt;
-    private int thuReceipt;
-    private int friReceipt;
-    private int satReceipt;
-    private int sunReceipt;
-    private int monComplete;
-    private int tueComplete;
-    private int wedComplete;
-    private int thuComplete;
-    private int friComplete;
-    private int satComplete;
-    private int sunComplete;
+    private Integer leftover;//잔여 요청
+    private Integer monReceipt; //요일별 데이터 수
+    private Integer tueReceipt;
+    private Integer wedReceipt;
+    private Integer thuReceipt;
+    private Integer friReceipt;
+    private Integer satReceipt;
+    private Integer sunReceipt;
+    private Integer monComplete;
+    private Integer tueComplete;
+    private Integer wedComplete;
+    private Integer thuComplete;
+    private Integer friComplete;
+    private Integer satComplete;
+    private Integer sunComplete;
 
 
 }

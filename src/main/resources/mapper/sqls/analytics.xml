@@ -7,15 +7,15 @@
     <select id="getAnalyticsWeekReceipt"  resultType="com.tiger.crm.repository.dto.analytics.AnalyticsWeekDto" parameterType="map">
         SELECT
         TUI.USER_ID, TUI.USER_NAME,
-        COALESCE(LEFTOVER.`leftover`, 0) AS `leftover`,
-        COALESCE(MON1.`mon`, 0) AS `monReceipt`, COALESCE(TUE1.`tue`, 0) AS `tueReceipt`,
-        COALESCE(WED1.`wed`, 0) AS `wedReceipt`, COALESCE(THU1.`thu`, 0) AS `thuReceipt`,
-        COALESCE(FRI1.`fri`, 0) AS `friReceipt`, COALESCE(SAT1.`sat`, 0) AS `satReceipt`,
-        COALESCE(SUN1.`sun`, 0) AS `sunReceipt`,
-        COALESCE(MON2.`mon`, 0) AS `monComplete`, COALESCE(TUE2.`tue`, 0) AS `tueComplete`,
-        COALESCE(WED2.`wed`, 0) AS `wedComplete`, COALESCE(THU2.`thu`, 0) AS `thuComplete`,
-        COALESCE(FRI2.`fri`, 0) AS `friComplete`, COALESCE(SAT2.`sat`, 0) AS `satComplete`,
-        COALESCE(SUN2.`sun`, 0) AS `sunComplete`
+        COALESCE(LEFTOVER.`leftover`, NULL) AS `leftover`,
+        COALESCE(MON1.`mon`, NULL) AS `monReceipt`, COALESCE(TUE1.`tue`, NULL) AS `tueReceipt`,
+        COALESCE(WED1.`wed`, NULL) AS `wedReceipt`, COALESCE(THU1.`thu`, NULL) AS `thuReceipt`,
+        COALESCE(FRI1.`fri`, NULL) AS `friReceipt`, COALESCE(SAT1.`sat`, NULL) AS `satReceipt`,
+        COALESCE(SUN1.`sun`, NULL) AS `sunReceipt`,
+        COALESCE(MON2.`mon`, NULL) AS `monComplete`, COALESCE(TUE2.`tue`, NULL) AS `tueComplete`,
+        COALESCE(WED2.`wed`, NULL) AS `wedComplete`, COALESCE(THU2.`thu`, NULL) AS `thuComplete`,
+        COALESCE(FRI2.`fri`, NULL) AS `friComplete`, COALESCE(SAT2.`sat`, NULL) AS `satComplete`,
+        COALESCE(SUN2.`sun`, NULL) AS `sunComplete`
         FROM T_USER_INFO TUI
 
         LEFT JOIN (
