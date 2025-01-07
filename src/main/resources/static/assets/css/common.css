@@ -3487,7 +3487,7 @@ ul[class*='list-tree--'] {
 
 
 .comment__write {
-    border-top: 1px solid var(--gray-300);
+    border: 1px solid var(--gray-300);
     padding: 2.4rem;
     margin-top: 10px;
 }
