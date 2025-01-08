@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 import java.util.Map;
@@ -39,7 +41,7 @@ public class AnalyticsController {
     * 주간처리현황 페이지 보기
     * */
     @GetMapping("/analytics_week")
-    public String getAnalyticsWeek(PagingRequest pagingRequest, HttpServletRequest request, HttpServletResponse response, Model model)
+    public String getAnalyticsWeek(HttpServletRequest request, HttpServletResponse response, Model model)
     {
         HttpSession session = request.getSession(false);
         UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
@@ -59,5 +61,25 @@ public class AnalyticsController {
         model.addAttribute("weekReceiptList", weekReceiptList);
 
         return "analyticsWeek";
+    }
+
+    @PostMapping("/analytics_week")
+    public String getAnalyticsWeekSearchWeek(HttpServletRequest request, HttpServletResponse response, Model model) {
+
+        String startDate = request.getParameter("startDate");
+
+        //고객사 리스트
+        List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
+        model.addAttribute("companyOptions", companyOptions);
+
+        //날짜 리스트
+        List<String> dayList = analyticsService.getDate(startDate);
+        model.addAttribute("dayList", dayList);
+
+        //접수 리스트
+        List<AnalyticsWeekDto> weekReceiptList = analyticsService.getAnalyticsWeek(startDate);
+        model.addAttribute("weekReceiptList", weekReceiptList);
+
+        return "analyticsWeek :: analyticsWeekFragment";
     }
 }
