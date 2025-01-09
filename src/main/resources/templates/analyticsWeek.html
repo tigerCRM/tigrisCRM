@@ -32,7 +32,7 @@
                                     <div>
                                         <div class="dropdown dropdown--s wd110" aria-expanded="false" tabindex="0">
                                             <select class="dropdown__selected" id="searchCompany" name="searchCompany"
-                                                    th:value="${searchCompany}" onchange="searchBoards(this); ">
+                                                    th:value="${searchCompany}" >
                                                 <option value="">==전체==</option>
                                                 <option th:each="op : ${companyOptions}"
                                                         th:value="${op.companyId}"
@@ -89,82 +89,84 @@
                         <div class="analytics-main">
                             <div class="analytics-content1">
                                 <div class="analytics-week-header1">
-                                    <span>◀</span><span>12월 1주 </span><span>▶</span>
+                                    <a class="arrow-cursor" onclick="goWeek('prev')"> ◀ </a><span> 12월 1주 </span><a class="arrow-cursor" onclick="goWeek('next')"> ▶ </a>
                                 </div>
                                 <div class="analytics-week-header2">
-                                    <span>접수 00 건 / 처리 00 건 / 잔여 00 건</span>
+                                    <span>접수 <a id="totalReceipt"></a> 건 / 처리 <a id="totalComplete"></a> 건 / 잔여 <a id="totalLeftover"></a> 건</span>
                                 </div>
                                 <div class="table-component-wrap analytics-table">
-                                    <table class="table table03">
-                                        <thead>
-                                        <tr>
-                                            <th rowspan="2">담당</th>
-                                            <th rowspan="2">잔여</th>
-                                            <th colspan="2" th:each="day : ${dayList}" th:text="${day}"></th>
-                                            <th colspan="2">금주합계</th>
-                                        </tr>
-                                        <tr>
-                                            <th>접수</th>
-                                            <th>처리</th>
-                                            <th>접수</th>
-                                            <th>처리</th>
-                                            <th>접수</th>
-                                            <th>처리</th>
-                                            <th>접수</th>
-                                            <th>처리</th>
-                                            <th>접수</th>
-                                            <th>처리</th>
-                                            <th>접수</th>
-                                            <th>처리</th>
-                                            <th>접수</th>
-                                            <th>처리</th>
-                                            <th>접수</th>
-                                            <th>처리</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>합계</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                        <tr th:each="receipt : ${weekReceiptList}" class="data">
-                                            <td th:text="${receipt.userName}"></td>
-                                            <td th:text="${receipt.leftover}"></td>
-                                            <td th:text="${receipt.monReceipt}"></td>
-                                            <td th:text="${receipt.monComplete}"></td>
-                                            <td th:text="${receipt.tueReceipt}"></td>
-                                            <td th:text="${receipt.tueComplete}"></td>
-                                            <td th:text="${receipt.wedReceipt}"></td>
-                                            <td th:text="${receipt.wedComplete}"></td>
-                                            <td th:text="${receipt.thuReceipt}"></td>
-                                            <td th:text="${receipt.thuComplete}"></td>
-                                            <td th:text="${receipt.friReceipt}"></td>
-                                            <td th:text="${receipt.friComplete}"></td>
-                                            <td th:text="${receipt.satReceipt}"></td>
-                                            <td th:text="${receipt.satComplete}"></td>
-                                            <td th:text="${receipt.sunReceipt}"></td>
-                                            <td th:text="${receipt.sunComplete}"></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
+                                    <div th:fragment="analyticsWeekFragment" id="analyticsWeekContainer">
+                                        <table class="table table03">
+                                            <thead>
+                                                <tr>
+                                                    <th rowspan="2">담당</th>
+                                                    <th rowspan="2">잔여</th>
+                                                    <th colspan="2" th:each="day : ${dayList}" th:text="${day}" name="day"></th>
+                                                    <th colspan="2">금주합계</th>
+                                                </tr>
+                                                <tr>
+                                                    <th>접수</th>
+                                                    <th>처리</th>
+                                                    <th>접수</th>
+                                                    <th>처리</th>
+                                                    <th>접수</th>
+                                                    <th>처리</th>
+                                                    <th>접수</th>
+                                                    <th>처리</th>
+                                                    <th>접수</th>
+                                                    <th>처리</th>
+                                                    <th>접수</th>
+                                                    <th>처리</th>
+                                                    <th>접수</th>
+                                                    <th>처리</th>
+                                                    <th>접수</th>
+                                                    <th>처리</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr name="sum">
+                                                    <td>합계</td>
+                                                    <td class="text-bold text-red"></td>
+                                                    <td ></td>
+                                                    <td ></td>
+                                                    <td ></td>
+                                                    <td ></td>
+                                                    <td ></td>
+                                                    <td ></td>
+                                                    <td ></td>
+                                                    <td ></td>
+                                                    <td ></td>
+                                                    <td ></td>
+                                                    <td ></td>
+                                                    <td ></td>
+                                                    <td ></td>
+                                                    <td ></td>
+                                                    <td class="text-bold"></td>
+                                                    <td class="text-bold"></td>
+                                                </tr>
+                                                <tr th:each="receipt : ${weekReceiptList}" name="data">
+                                                    <td th:text="${receipt.userName}"></td>
+                                                    <td th:text="${receipt.leftover}" class="text-bold text-red"></td>
+                                                    <td th:text="${receipt.monReceipt}" ></td>
+                                                    <td th:text="${receipt.monComplete}"></td>
+                                                    <td th:text="${receipt.tueReceipt}" ></td>
+                                                    <td th:text="${receipt.tueComplete}" ></td>
+                                                    <td th:text="${receipt.wedReceipt}" ></td>
+                                                    <td th:text="${receipt.wedComplete}" ></td>
+                                                    <td th:text="${receipt.thuReceipt}" ></td>
+                                                    <td th:text="${receipt.thuComplete}" ></td>
+                                                    <td th:text="${receipt.friReceipt}" ></td>
+                                                    <td th:text="${receipt.friComplete}" ></td>
+                                                    <td th:text="${receipt.satReceipt}" ></td>
+                                                    <td th:text="${receipt.satComplete}" ></td>
+                                                    <td th:text="${receipt.sunReceipt}" ></td>
+                                                    <td th:text="${receipt.sunComplete}" ></td>
+                                                    <td class="text-bold"></td>
+                                                    <td class="text-bold"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -184,13 +186,13 @@
 </div>
 
 <script>
-
-
-
-    //검색형 셀렉트박스(select2) 관련 설정
+    calculateSums();
+    calculateSumsWeekTotal();
+    calculateSummary();
     $(document).ready(function () {
         $('#searchCompany').select2();
     });
+
     $('#searchCompany').on('select2:open', function() {
       $('body').css('overflow', 'hidden');
     });
@@ -198,45 +200,127 @@
       $('body').css('overflow', '');
     });
 
-    function searchBoards(obj) {
-        if (obj.id == "refresh"){
-          $("#searchType").val("");
-          $("#searchKeyword").val("");
-        }
-        var searchType = $("#searchType").val();
-        var searchKeyword = $("#searchKeyword").val();
-        var page = ($("#currentPage").val() === undefined || $("#currentPage").val() === "") ? '' : $("#currentPage").val();
-        console.log(searchType); //COMPANY
-        console.log(searchKeyword); //네패스
+    //주간 이동 화살표 버튼 클릭시
+    function goWeek(direction) {
+        var referenceDate = document.querySelector('th[name="day"]').textContent.trim();
+        var startDate = getWeekRange(referenceDate, direction);
 
-        // x-www-form-urlencoded 형식으로 데이터 생성
         const data = new URLSearchParams({
-            page:page,
-            searchType: searchType,
-            searchKeyword: searchKeyword,
+            startDate: startDate
         });
 
         // Ajax 요청
-        fetch('/noticeBoardList', {
+        fetch('/analytics_week', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/x-www-form-urlencoded',
           },
-          body: data.toString() // URLSearchParams 객체를 문자열로 변환하여 전송 (POST로 밖에 보낼수 없음)
+          body: data.toString()
         })
         .then(response => response.text())
         .then(data => {
           // 응답받은 HTML을 페이지에 삽입
-          document.getElementById('noticeBoardListContainer').innerHTML = data;
+          document.getElementById('analyticsWeekContainer').innerHTML = data;
+          calculateSums();
+          calculateSumsWeekTotal();
+          calculateSummary();
         })
         .catch(error => console.error('검색 중 오류 발생:', error));
-
     }
 
-    function goPage(url, page) {
-        $("#currentPage").val(page);
-        // 실제 페이지 이동 로직 구현
-        searchBoards(this);
+    function calculateSums() {
+        const dataRows = document.querySelectorAll('tr[name="data"]');
+        const sumRow = document.querySelector('tr[name="sum"]');
+
+        const columnSums = [];
+
+        dataRows.forEach(row => {
+            const cells = row.querySelectorAll('td');
+            cells.forEach((cell, index) => {
+              if (index === 0) return;
+              const value = parseFloat(cell.textContent.trim()) || 0;
+              columnSums[index] = (columnSums[index] || 0) + value;
+            });
+        });
+
+        const sumCells = sumRow.querySelectorAll('td');
+        columnSums.forEach((sum, index) => {
+            if (sumCells[index]) {
+              if (index === 0) return;
+              sumCells[index].textContent = sum === 0 ? "" : sum;
+            }
+        });
+    }
+
+    function getWeekRange(dateString, direction) {
+        const inputDate = new Date(dateString);
+
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+        const oneWeekBefore = new Date(inputDate);
+        oneWeekBefore.setDate(inputDate.getDate() - 7);
+
+        const oneWeekAfter = new Date(inputDate);
+        oneWeekAfter.setDate(inputDate.getDate() + 7);
+
+        if(direction == 'prev'){
+            return formatDate(oneWeekBefore);
+        }else if(direction == 'next'){
+            return formatDate(oneWeekAfter);
+        }
+    }
+
+    function calculateSumsWeekTotal() {
+        const rows = document.querySelectorAll('tr[name="data"], tr[name="sum"]');
+
+        rows.forEach(function (row) {
+            const tds = row.querySelectorAll('td');
+
+            // 17번째 td에 속한 3, 5, 7, 9, 11, 13, 15번째 td의 값을 더해주기
+            if (tds.length >= 18) {
+                let sum1 = 0;
+                // 3, 5, 7, 9, 11, 13, 15번째 td의 값을 더해서 sum1에 저장
+                for (let i = 2; i < tds.length; i++) {
+                    if ([3, 5, 7, 9, 11, 13, 15].includes(i + 1)) { // 0-based index에 맞춰서 +1
+                        let value = parseFloat(tds[i].innerText) || 0; // 값이 없다면 0으로 간주
+                        sum1 += value;
+                    }
+                }
+                // 17번째 td에 sum1값을 삽입
+                tds[16].innerText = sum1;
+
+                let sum2 = 0;
+                // 4, 6, 8, 10, 12, 14, 16번째 td의 값을 더해서 sum2에 저장
+                for (let i = 3; i < tds.length; i++) {
+                    if ([4, 6, 8, 10, 12, 14, 16].includes(i + 1)) { // 0-based index에 맞춰서 +1
+                        let value = parseFloat(tds[i].innerText) || 0; // 값이 없다면 0으로 간주
+                        sum2 += value;
+                    }
+                }
+                // 18번째 td에 sum2값을 삽입
+                tds[17].innerText = sum2;
+
+                // 합계가 0인 경우 빈 값으로 표현
+                if (sum1 === 0) {
+                    tds[16].innerText = '';
+                }
+                if (sum2 === 0) {
+                    tds[17].innerText = '';
+                }
+            }
+        });
+    }
+
+    function calculateSummary(){
+        const rows = document.querySelector('tr[name="sum"]');
+        const tds = rows.querySelectorAll('td');
+        document.querySelector('#totalReceipt').innerText = tds[16].innerText;
+        document.querySelector('#totalComplete').innerText = tds[17].innerText;
+        document.querySelector('#totalLeftover').innerText = tds[1].innerText;
     }
 
 </script>

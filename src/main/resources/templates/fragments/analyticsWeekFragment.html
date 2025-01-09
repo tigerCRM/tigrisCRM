@@ -1,0 +1,72 @@
+<div th:fragment="analyticsWeekFragment">
+    <table class="table table03">
+        <thead>
+        <tr>
+            <th rowspan="2">담당</th>
+            <th rowspan="2">잔여</th>
+            <th colspan="2" th:each="day : ${dayList}" th:text="${day}" name="day"></th>
+            <th colspan="2">금주합계</th>
+        </tr>
+        <tr>
+            <th>접수</th>
+            <th>처리</th>
+            <th>접수</th>
+            <th>처리</th>
+            <th>접수</th>
+            <th>처리</th>
+            <th>접수</th>
+            <th>처리</th>
+            <th>접수</th>
+            <th>처리</th>
+            <th>접수</th>
+            <th>처리</th>
+            <th>접수</th>
+            <th>처리</th>
+            <th>접수</th>
+            <th>처리</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr name="sum">
+            <td>합계</td>
+            <td class="text-bold text-red"></td>
+            <td ></td>
+            <td ></td>
+            <td ></td>
+            <td ></td>
+            <td ></td>
+            <td ></td>
+            <td ></td>
+            <td ></td>
+            <td ></td>
+            <td ></td>
+            <td ></td>
+            <td ></td>
+            <td ></td>
+            <td ></td>
+            <td class="text-bold"></td>
+            <td class="text-bold"></td>
+        </tr>
+        <tr th:each="receipt : ${weekReceiptList}" name="data">
+            <td th:text="${receipt.userName}"></td>
+            <td th:text="${receipt.leftover}" class="text-bold text-red"></td>
+            <td th:text="${receipt.monReceipt}" ></td>
+            <td th:text="${receipt.monComplete}"></td>
+            <td th:text="${receipt.tueReceipt}" ></td>
+            <td th:text="${receipt.tueComplete}" ></td>
+            <td th:text="${receipt.wedReceipt}" ></td>
+            <td th:text="${receipt.wedComplete}" ></td>
+            <td th:text="${receipt.thuReceipt}" ></td>
+            <td th:text="${receipt.thuComplete}" ></td>
+            <td th:text="${receipt.friReceipt}" ></td>
+            <td th:text="${receipt.friComplete}" ></td>
+            <td th:text="${receipt.satReceipt}" ></td>
+            <td th:text="${receipt.satComplete}" ></td>
+            <td th:text="${receipt.sunReceipt}" ></td>
+            <td th:text="${receipt.sunComplete}" ></td>
+            <td class="text-bold"></td>
+            <td class="text-bold"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
