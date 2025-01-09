@@ -696,16 +696,16 @@
 }
 /* 설정(톱니바퀴) 드롭다운 메뉴 스타일 */
 .dropdown-menu {
-    display: none; /* 기본적으로 숨겨짐 */
-    position: absolute;
-    top: 100%; /* 버튼 아래에 위치 */
-    left: -42%;
-    width: 140%;
     background-color: #fff;
     border-radius: 0.8rem;
     border: 1px solid var(--gray-300);
     z-index: 1000; /* 다른 요소 위에 오도록 */
     font-size: 15px;
+    position: absolute;
+    top: 21rem;
+    left: 25rem;
+    width: 50%;
+    overflow: hidden;
 }
 /*  알림(종) 드롭다운 메뉴 스타일 */
 .dropdown-menu2 {

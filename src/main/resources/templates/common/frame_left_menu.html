@@ -1,6 +1,8 @@
 <body>
     <div th:fragment="frame_left_menu" id="sidebar" class="main-sidebar main-sidebar--expand">
-        <div style="padding-top: 70px;"></div>
+        <div class="logo" onclick="location.href='/main';" style="cursor: pointer;">
+            <span class="hidden">이노베이터</span>
+        </div>
         <div class="profile">
             <div class="profile__img profile__img--48">
                 <a href="#">
@@ -18,135 +20,147 @@
         </div>
         <nav class="main-lnb">
             <ul>
-                <ul>
-                    <li>
-                        <a href="ticketList" class="menu-item">
-                                <span class="menu-icon">
-                                    <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#e-approval}"/></svg>
-                                </span>
-                            <p class="menu-title">
-                                <span class="menu-title__text">요청관리</span>
-                                <span class="menu-title__num"></span>
-                            </p>
-                        </a>
-                    </li>
-                    <!--통계 현황 -->
-                    <li>
-                        <a href="systemBoardList" class="menu-item">
-                                <span class="menu-icon">
-                                    <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#archive}"/></svg>
-                                </span>
-                            <p class="menu-title">
-                                <span class="menu-title__text">시스템 정보</span>
-                                <span class="menu-title__num"  th:field=${userClass} ></span>
-                            </p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="noticeBoardList" class="menu-item">
-                                <span class="menu-icon">
-                                    <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#window}"/></svg>
-                                </span>
-                            <p class="menu-title">
-                                <span class="menu-title__text">공지사항</span>
-                                <span class="menu-title__num"></span>
-                            </p>
-                        </a>
-                    </li>
-                    <li class="tree-item" th:if="${userClass != 'USER'}">
-                        <a href="#" class="menu-item" id="analytics">
+                <li>
+                    <a class="menu-item" id="alertMenuBtn">
+                        <span class="menu-icon">
+                            <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#notification}"/></svg>
+                        </span>
+                        <p class="menu-title" >
+                            <span class="menu-title__text">알림</span>
+                            <span class="menu-title__num" id="alertBadge"></span>
+                        </p>
+                    </a>
+                    <div class="layerpopup-wrap alarm-wrap" id="alertDropdownMenu" style="display:none">
+                        <!-- 알림 내용이 동적으로 추가됨 -->
+                    </div>
+                </li>
+                <li>
+                    <a class="menu-item" id="settingMenuBtn">
+                        <span class="menu-icon">
+                            <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#setting}"/></svg>
+                        </span>
+                        <p class="menu-title">
+                            <span class="menu-title__text">설정</span>
+                        </p>
+                    </a>
+                    <!-- 설정(톱니바퀴) 드롭다운 메뉴 추가 -->
+                    <ul class="dropdown-menu" id="settingDropdownMenu" style="display:none">
+                        <li id="resetPassword"><a href="#" id="resetPasswordBtn" class="button">비밀번호 초기화</a></li>
+                        <li id="logout">
+                            <a href="#" onclick="if(confirm('로그아웃 하시겠습니까?')) window.location.href='/logout'; else alert('취소하였습니다.'); return false;">로그아웃</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <ul>
+                <li>
+                    <a href="ticketList" class="menu-item">
+                            <span class="menu-icon">
+                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#inbox-archive}"/></svg>
+                            </span>
+                        <p class="menu-title">
+                            <span class="menu-title__text">요청관리</span>
+                            <span class="menu-title__num"></span>
+                        </p>
+                    </a>
+                </li>
+                <li>
+                    <a href="systemBoardList" class="menu-item">
+                            <span class="menu-icon">
+                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#file-info}"/></svg>
+                            </span>
+                        <p class="menu-title">
+                            <span class="menu-title__text">시스템 정보</span>
+                            <span class="menu-title__num"  th:field=${userClass} ></span>
+                        </p>
+                    </a>
+                </li>
+                <li>
+                    <a href="noticeBoardList" class="menu-item">
+                            <span class="menu-icon">
+                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#pin}"/></svg>
+                            </span>
+                        <p class="menu-title">
+                            <span class="menu-title__text">공지사항</span>
+                            <span class="menu-title__num"></span>
+                        </p>
+                    </a>
+                </li>
+                <!--통계 현황 -->
+                <li class="tree-item" th:if="${userClass != 'USER'}">
+                    <a href="#" class="menu-item" id="analytics">
+                        <span class="menu-icon">
+                            <i class="ri-bar-chart-box-line"></i>
+                        </span>
+                        <p class="menu-title">
+                            <span class="menu-title__text">통계 현황</span>
                             <span class="menu-icon">
                                 <button class="tree-arrow-btn"></button>
                             </span>
-                            <p class="menu-title">
-                                <span class="menu-title__text">통계 현황</span>
-                                <span class="menu-title__num"></span>
-                            </p>
-                        </a>
-                        <!-- 하위 메뉴 (초기에는 숨김) -->
-                        <ul class="tree-list--sub-2">
-                            <li class="tree-item" style="margin-left:50px">
-                                <a href="analytics_openAndClose" class="menu-item">
-                                    <p class="menu-title">
-                                        <span class="menu-title__text">요청/처리 현황</span>
-                                        <span class="menu-title__num"></span>
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="tree-item" style="margin-left:50px">
-                                <a href="analytics_week" class="menu-item">
-                                    <p class="menu-title">
-                                        <span class="menu-title__text">주간처리 현황</span>
-                                        <span class="menu-title__num"></span>
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="tree-item" style="margin-left:50px">
-                                <a href="analytics_leftover" class="menu-item">
-                                    <p class="menu-title">
-                                        <span class="menu-title__text">고객사별 잔여 현황</span>
-                                        <span class="menu-title__num"></span>
-                                    </p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <!--//통계 현황-->
-                    <li class="tree-item" th:if="${userClass != 'USER'}">
-                        <a href="#" class="menu-item" id="adminmenu">
+                        </p>
+                    </a>
+                    <!-- 하위 메뉴 (초기에는 숨김) -->
+                    <ul class="tree-list--sub-2">
+                        <li>
+                            <a href="analytics_openAndClose" class="menu-item">
+                                <p class="menu-title">
+                                    <span class="menu-title__text">요청/처리 현황</span>
+                                    <span class="menu-title__num"></span>
+                                </p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="analytics_week" class="menu-item">
+                                <p class="menu-title">
+                                    <span class="menu-title__text">주간처리 현황</span>
+                                    <span class="menu-title__num"></span>
+                                </p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="analytics_leftover" class="menu-item">
+                                <p class="menu-title">
+                                    <span class="menu-title__text">고객사별 잔여 현황</span>
+                                    <span class="menu-title__num"></span>
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <!--//통계 현황-->
+                <!--관리기능-->
+                <li th:if="${userClass != 'USER'}">
+                    <a href="#" class="menu-item" id="adminmenu">
+                        <span class="menu-icon">
+                            <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#file-settings}"/></svg>
+                        </span>
+                        <p class="menu-title">
+                            <span class="menu-title__text">관리기능</span>
                             <span class="menu-icon">
                                 <button class="tree-arrow-btn"></button>
                             </span>
-                            <p class="menu-title">
-                                <span class="menu-title__text">관리기능</span>
-                                <span class="menu-title__num"></span>
-                            </p>
-                        </a>
-                        <!-- 하위 메뉴 (초기에는 숨김) -->
-                        <ul class="tree-list--sub-2">
-                            <li class="tree-item" style="margin-left:50px">
-                                <a href="opReportList" class="menu-item">
-
-                                    <p class="menu-title">
-                                        <span class="menu-title__text">운영지원보고서</span>
-                                        <span class="menu-title__num"></span>
-                                    </p>
-                                </a>
-                            </li>
-                            <li class="tree-item" style="margin-left:50px">
-                                <a href="mailHistory" class="menu-item">
-                                    <p class="menu-title">
-                                        <span class="menu-title__text">발송내역</span>
-                                        <span class="menu-title__num"></span>
-                                    </p>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <!--추후 관리기능 안으로-->
-                    <li>
-                        <a href="opReportList" class="menu-item">
-                                <span class="menu-icon">
-                                    <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#menu-all}"/></svg>
-                                </span>
-                            <p class="menu-title">
-                                <span class="menu-title__text">운영지원보고서</span>
-                                <span class="menu-title__num"></span>
-                            </p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="mailHistory" class="menu-item">
-                                <span class="menu-icon">
-                                    <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#mail}"/></svg>
-                                </span>
-                            <p class="menu-title">
-                                <span class="menu-title__text">발송내역</span>
-                                <span class="menu-title__num"></span>
-                            </p>
-                        </a>
-                    </li>
-                </ul>
+                        </p>
+                    </a>
+                    <!-- 하위 메뉴 (초기에는 숨김) -->
+                    <ul class="tree-list--sub-2" style="display: none;">
+                        <li >
+                            <a href="opReportList" class="menu-item">
+                                <p class="menu-title">
+                                    <span class="menu-title__text">운영지원보고서</span>
+                                    <span class="menu-title__num"></span>
+                                </p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="mailHistory" class="menu-item">
+                                <p class="menu-title">
+                                    <span class="menu-title__text">발송내역</span>
+                                    <span class="menu-title__num"></span>
+                                </p>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
         </nav>
         <div class="quickmenu">
@@ -155,5 +169,276 @@
                 <span>빠른 작성</span>
             </button>
         </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                let currentPage = 1; // 현재 페이지
+
+                // 알림 리스트 초기 로드
+                loadAlerts();
+
+                // 무한 스크롤 이벤트
+                $('#alertDropdownMenu').on('scroll', function () {
+                    const $this = $(this);
+                    // 스크롤이 하단에 도달했을 때 다음 페이지 로드
+                    if ($this.scrollTop() + $this.innerHeight() >= this.scrollHeight) {
+                        currentPage++; // 다음 페이지
+                        loadAlerts(); // 다음 알림 로드
+                    }
+                });
+
+                // -------------------
+                // alert 호출 및 갱신
+                // -------------------
+                function loadAlerts() {
+                    $.ajax({
+                        url: '/alert',
+                        method: 'GET',
+                        success: function (data) {
+                            const alertCount = data.alertCount; // 알림 개수
+                            const alerts = data.alerts; // 알림 목록
+
+                            const $alertBadge = $('#alertBadge');
+                            const $alertDropdownMenu = $('#alertDropdownMenu'); // 알림 드롭다운 메뉴
+
+                            // 알림 배지 표시
+                            if (alertCount > 0) {
+                                $alertBadge.html('<p>' + alertCount + '</p>');
+                            } else {
+                                $alertBadge.html('').removeClass('active');
+                            }
+
+                            // 드롭다운 내용 추가
+                            if (alerts && alerts.length > 0) {
+                                let alertListHtml = `<div class="layerpopup__header">
+                                                            <h1 class="layerpopup__title">알림</h2>
+                                                            <div class="flex gap--8">
+                                                                <button type="button" id="markAllAsRead"  class="btn btn--s ghost-btn">모두 읽음</button>
+                                                                <button id="closeAlertBtn"  class="btn icon-btn close-btn"><svg class="icon"><use href='./assets/images/icon/sprite-sheet.svg#close'/></svg></button>
+                                                            </div>
+                                                        </div>
+                                                         <div class='alarm-content'><ul class='alarm-list'>
+                                                    `;
+                                alerts.forEach(alert => {
+                                    alertListHtml += `
+                                        <li class="${alert.readYn === 'Y' ? 'read-alert' : ''} alarm--item">
+                                            <button type='button' name='close-btn' class='btn icon-btn close-btn'>
+                                                <svg class='icon'><use href='./assets/images/icon/sprite-sheet.svg#close'/></svg>
+                                            </button>
+
+                                            <a>
+
+                                                <div class='profile'  data-id="${alert.alertId}" data-alertObjectId="${alert.alertObjectId}">
+                                                    <div class='profile__info'>
+                                                        <p class='alarm__user-info'>
+                                                            <span class='name'>${alert.userName}</span>
+                                                            <span class='date'>${alert.alertDt}</span>
+                                                        </p>
+                                                        <div class='alarm__text-wrap'>
+                                                            <span class="${alert.alertType === 'OPEN' ? 'tag tag--blue'
+                                                                            : alert.alertType === 'RECEIPT' ? 'tag tag--navy'
+                                                                            : alert.alertType === 'PROGRESS' ? 'tag tag--green'
+                                                                            : alert.alertType === 'REVIEW' ? 'tag tag--orange'
+                                                                            : alert.alertType === 'CLOSED' ? 'tag tag--gray' : 'tag tag--purple'}">
+                                                                  ${alert.alertType === 'OPEN' ? '등록'
+                                                                            : alert.alertType === 'RECEIPT' ? '접수'
+                                                                            : alert.alertType === 'PROGRESS' ? '진행'
+                                                                            : alert.alertType === 'REVIEW' ? '검토'
+                                                                            : alert.alertType === 'CLOSED' ? '완료' : '댓글'}
+                                                            </span>
+
+                                                            <p class='alarm__text'>
+                                                                ${alert.content}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                      </li>
+                                    `;
+                                });
+                                alertListHtml +='</ul></div>';
+                                // 알림 리스트를 드롭다운에 추가
+                                $alertDropdownMenu.html(alertListHtml);
+                            } else {
+                                // 알림이 없으면 "알림 없음" 표시
+                                $alertDropdownMenu.html('<li style="text-align: center;">알림이 없습니다.</li>');
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('알림 목록 조회 실패:', error);
+                        }
+                    });
+                }
+
+                // -------------------
+                // 알림 메뉴 토글
+                // -------------------
+                const $alertMenuBtn = $('#alertMenuBtn');
+                const $alertDropdownMenu = $('#alertDropdownMenu'); // 알림 드롭다운 메뉴
+
+                // 알림 버튼 클릭 시 알림 드롭다운 토글
+                $alertMenuBtn.on('click', function(event) {
+                    event.stopPropagation(); // 이벤트 전파 방지
+                    $alertDropdownMenu.toggle(); // 알림 드롭다운 토글
+                  //  $('#settingDropdownMenu').hide(); // 설정 드롭다운이 열려있다면 닫기
+                });
+
+                // -------------------
+                // 알람 닫기 버튼 클릭
+                // -------------------
+                $(document).on("click", "#closeAlertBtn", function() {
+                    $alertDropdownMenu.toggle(); // 알림 드롭다운 토글
+                });
+
+
+                // -------------------
+                // 설정 메뉴 토글
+                // -------------------
+                const $settingMenuBtn = $("#settingMenuBtn");
+                const $settingDropdownMenu = $("#settingDropdownMenu"); // 설정 드롭다운 메뉴
+
+                // 설정 버튼 클릭 시 설정 드롭다운 토글
+                $settingMenuBtn.on("click", function(event) {
+                    event.stopPropagation(); // 이벤트 전파 방지
+                    $settingDropdownMenu.toggle(); // 설정 드롭다운 토글
+                    $('#alertDropdownMenu').hide(); // 알림 드롭다운이 열려있다면 닫기
+                });
+
+                // -------------------
+                // 드롭다운 외부 클릭 시 숨기기
+                // -------------------
+                $(document).on("click", function(event) {
+                    // 알림 드롭다운이 열려있고 클릭한 곳이 알림 드롭다운 메뉴가 아니면 숨기기
+                    if (!$(event.target).closest('#alertMenuBtn, #alertDropdownMenu').length) {
+                        $alertDropdownMenu.hide();
+                    }
+
+                    // 설정 드롭다운이 열려있고 클릭한 곳이 설정 드롭다운 메뉴가 아니면 숨기기
+                    if (!$(event.target).closest('#settingMenuBtn, #settingDropdownMenu').length) {
+                        $settingDropdownMenu.hide();
+                    }
+                });
+
+
+            });
+
+            // -------------------
+            // 알림 내역 삭제
+            // ------------------
+            $(document).on('click', '[name="close-btn"]', function () {
+                const $alertItem = $(this).closest('li'); // 현재 알림 항목
+                const alertId = $alertItem.find('.profile').data('id'); // 알림 ID
+
+                const data = new URLSearchParams({
+                    alertId: alertId,
+                });
+
+                fetch('/alert', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: data.toString()
+                })
+                .then(response => response.text())
+                .then(data => {
+                    alert("삭제했습니다.");
+
+                    // 삭제 성공 시 UI에서 제거
+                    $alertItem.remove();
+                })
+                .catch(error => console.error('삭제처리 중 오류 발생:', error));
+
+            });
+
+            // -------------------
+            // 종 알림 클릭 시 -1
+            // 상세페이지로 이동
+            // ------------------
+            $(document).on('click', '.profile', function (e) {
+                e.preventDefault(); // 기본 동작(페이지 이동)을 방지
+                const alertId = $(this).data('id'); // 알림 ID 가져오기
+                const alertObjectId =  $(this).data('alertobjectid')  // data-alertObjectId 속성값을 가져옴
+
+                // x-www-form-urlencoded 형식으로 데이터 생성
+                const data = new URLSearchParams({
+                    alertId: alertId,
+                    alertObjectId: alertObjectId,
+                });
+
+                // Ajax 요청
+                fetch('/alert', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: data.toString()
+                })
+                .then(response => response.text())
+                .then(data => {
+                    // 페이지 이동
+                    window.location.href = '/ticketView?id='+alertObjectId;
+                })
+                .catch(error => console.error('읽음처리 중 오류 발생:', error));
+            });
+
+            // ------------------
+            // "모두 읽음" 버튼 클릭 시 색상 변경
+            // ------------------
+            $(document).on('click', '#markAllAsRead', function () {
+                fetch('/alert/all', {
+                    method: 'PUT',
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // 성공 시 모든 알림의 상태를 'read-alert'로 변경
+                        $('#alertDropdownMenu li').each(function () {
+                            $(this).addClass('read-alert'); // 클래스 추가
+                        });
+                        console.log('전체 알림 읽음 처리 완료');
+                    } else {
+                        console.error('전체 알림 읽음 처리 실패');
+                    }
+                })
+                .catch(error => console.error('모두 읽음 처리 중 오류 발생:', error));
+            });
+
+            // -------------------
+            // 비밀번호 초기화 버튼 클릭시
+            // 요청 전송 후 alert
+            // 작성자 : 제예솔
+            // ------------------
+            document.getElementById('resetPasswordBtn').addEventListener('click', function (event) {
+                event.preventDefault(); // 기본 링크 동작 방지
+
+                const spinner = document.getElementById('loadingSpinner');
+                spinner.style.display = 'flex'; // 스피너 표시
+
+                fetch('/resetPassword', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => {
+                    if (response.ok) {
+                        alert("임시 비밀번호가 이메일로 전송되었습니다");
+                        window.location.href = '/login';
+                    } else {
+                        alert("비밀번호 초기화 요청 중 오류가 발생했습니다.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("요청 처리 중 문제가 발생했습니다.");
+                })
+                .finally(() => {
+                    spinner.style.display = 'none'; // 스피너 숨기기
+                });
+            });
+
+        </script>
     </div>
+
 </body>

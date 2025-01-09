@@ -1,0 +1,495 @@
+.wrapper {
+    display: flex;
+    min-width: 144rem;
+    height: 100%;
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+
+/* 사이드바 */
+.main-sidebar {
+    position: relative;
+    flex: 0 0 24rem;
+    max-width: 24rem;
+    min-width: 7.2rem;
+    height: 100%;
+    padding-top: 1.2rem;
+    border-right: 1px solid var(--gray-400);
+    box-sizing: border-box;
+    z-index: 10;
+}
+
+.main-sidebar--compact {
+    flex: 0 0 7.2rem;
+}
+
+.main-sidebar .profile {
+    margin: 0 1.2rem;
+}
+
+.main-sidebar .profile .profile__info .team {
+    margin-top: 0.4rem;
+    color: var(--gray-700);
+}
+
+.main-sidebar .menu__btn {
+    margin: 0 1.2rem 4rem;
+}
+
+.main-sidebar .quickmenu {
+    position: absolute;
+    bottom: 5.6rem;
+    width: 100%;
+    padding: 0 1.6rem;
+}
+.main-sidebar .quickmenu:before {
+    position: absolute;
+    left: 0;
+    top: -7.2rem;
+    display: block;
+    width: 100%;
+    height: 7.2rem;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, #FFF 57.64%);
+    content: '';
+}
+
+.main-sidebar--compact .quickmenu {
+    padding: 0 1.2rem;
+}
+
+.main-sidebar--expand .quickmenu .quick-btn {
+    width: 100%;
+}
+
+.main-sidebar--compact .profile .profile__info {
+    display: none;
+}
+
+/* LNB */
+.main-lnb {
+    height: calc(100vh - 36rem);
+    margin: 2.4rem 0 0;
+    padding-bottom: 7.2rem;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    /* 인터넷 익스플로러 */
+    scrollbar-width: none;
+    /* 파이어폭스 */
+}
+
+.main-lnb::-webkit-scrollbar {
+    display: none;
+    /* 크롬, 사파리, 오페라, 엣지 */
+}
+
+.main-lnb>ul+ul:before {
+    display: block;
+    margin: 1.6rem;
+    border-top: 1px solid var(--gray-400);
+    content: '';
+}
+
+.main-sidebar--compact .main-lnb {
+    padding: 0 1.2rem 7.2rem;
+}
+
+.main-sidebar--compact .menu-title {
+    display: none;
+}
+
+.main-sidebar--compact .menu-title .menu-title__num {
+    display: none;
+}
+
+.main-sidebar--compact .menu-item {
+    padding: 0;
+    border-radius: 0.8rem;
+}
+
+.main-sidebar--compact .main-lnb>ul+ul:before {
+    margin: 1.6rem 0;
+}
+
+/* 서브 사이드바(new) */
+.sub-sidebar {
+    position: absolute;
+    flex: 0 0 24rem;
+    width: 24rem;
+    height: calc(100% - 7.2rem);
+    padding: 2.8rem 1.6rem 0;
+    border-right: 1px solid var(--gray-400);
+    box-sizing: border-box;
+    z-index: 10;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.sub-sidebar:after {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    display: block;
+    width: 100%;
+    height: 7.2rem;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, #FFF 57.64%);
+    content: '';
+}
+.sub-sidebar .sidebar-title .sidebar__btn {
+    margin-top: 1.6rem;
+}
+
+/* 서브 LNB */
+.sub-lnb {
+    height: calc(100vh - 30rem);
+    margin: 2.4rem 0 0;
+    padding-bottom: 7.2rem;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.sub-lnb::-webkit-scrollbar {
+    display: none;
+}
+.sub-lnb .list-tree {
+    max-height: 28rem;
+    overflow-y: auto;
+}
+.sub-lnb .list__item {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    min-width: 0;
+}
+.sub-lnb .list__item > .list__item-title {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    width: calc(100% - 4rem);
+    padding: 0.4rem;
+    border-radius: 0.4rem;
+}
+.sub-lnb .list__item > .list__item-title > a {
+    display: inline-block;
+    width: 16.4rem;
+    box-sizing: border-box;
+    
+    padding-left: 3.2rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+
+    line-height: 1.7em;
+    font-size: 1.4rem;
+}
+
+.list__item-title > .arrow-btn {
+    position: absolute;
+    transform: translateX(-2.8rem);
+}
+
+.sub-lnb .list__item-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: 100%;
+    min-height: 3.2rem;
+    padding: 0.4rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+}
+.sub-lnb .list__item-wrap .list__item-title {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    line-height: 1.7em;
+    font-size: 1.4rem;
+}
+.sub-lnb .list__item-wrap .list__item-title > a {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.sub-lnb .list__item-wrap .list__item-title > .num {
+    margin-left: 0.8rem;
+    color: var(--primary-navy-500);
+    line-height: 1.3em;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+.sub-lnb .list__item-wrap:hover {
+    background-color: var(--primary-navy-50);
+}
+
+.list-tree > .list__item > .list__item-wrap > .list__item-title { padding-left: 3.2rem; }
+.list-tree--2depth > .list__item > .list__item-wrap > .list__item-title { padding-left: 4rem; }
+.list-tree--3depth > .list__item > .list__item-wrap > .list__item-title { padding-left: 4.8rem; }
+.list-tree--4depth > .list__item > .list__item-wrap > .list__item-title { padding-left: 5.6rem; }
+.list-tree--5depth > .list__item > .list__item-wrap > .list__item-title { padding-left: 6.4rem; }
+
+.sub-lnb ul[class*='list-tree--'] {
+    width: 100%;
+}
+
+.list__item-button {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    z-index: 0;
+}
+.list__item-button > button {
+    padding: 0;
+    background-color: transparent;
+    color: var(--gray-600);
+    font-size: 2rem;
+}
+.list__item-button > button:hover {
+    color: var(--gray-800);
+}
+.list__item-title + .list__item-button .lnb-menu-btn {
+    display: none;
+}
+.list__item-wrap:hover .list__item-title + .list__item-button .lnb-menu-btn {
+    display: block;
+}
+
+.sub-lnb .line {
+    height: 1px;
+    margin: 0.8rem 0;
+    background-color: var(--gray-400);
+}
+.sub-lnb .list-tree--2depth .line {
+    height: 1px;
+    margin: 0.4rem 0 0.4rem 4rem;
+}
+
+
+.sub-lnb.sub-lnb--l .list__item-wrap {
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+    min-height: 4rem;
+}
+.sub-lnb.sub-lnb--s .list__item-wrap {
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    min-height: 2.8rem;
+}
+
+.logo {
+    width: 11.2rem;
+    height: 4rem;
+    background: url('../images/common/logo.png') no-repeat;
+}
+
+/* 헤더 */
+.main-area {
+    flex: 1;
+    overflow: hidden;
+}
+
+.header {
+    height: 7.2rem;
+    border-bottom: 1px solid var(--gray-400);
+    box-sizing: border-box;
+    z-index: 10;
+}
+
+.header>.container {
+    position: relative;
+    display: flex;
+    gap: 0.4rem;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
+    padding: 0 2.4rem;
+}
+
+.header .logo {
+    position: absolute;
+    left: 2.4rem;
+}
+
+.header .search-wrap {
+    min-width: 48rem;
+}
+
+.main-util-menu > ul {
+    display: flex;
+    gap: 0.4rem;
+}
+
+/* 메인 */
+.main-content {
+    height: calc(100% - 7.2rem);
+    padding: 0 3.6rem;
+    overflow-y: auto;
+}
+
+/* 서브 */
+.sub-content {
+    display: flex;
+    height: calc(100% - 7.2rem);
+    overflow-y: auto;
+}
+
+.sub-content>.sub-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    padding: 2.8rem 3.6rem 0 27.6rem;
+}
+
+/* 레이어 팝업 영역 */
+.layer-wrap {
+    display: none;
+    position: fixed;
+    width: 100%;
+    /* max-width: 144rem; */
+    height: 100%;
+    z-index: 100;
+}
+
+.dimmed:before {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    content: '';
+}
+
+/* 퀵메뉴 */
+.action__list {
+    /*display: none;*/
+    position: absolute;
+    min-width: 20rem;
+    padding: 0.8rem 0;
+    border-radius: 0.8rem;
+    border: 1px solid var(--gray-300);
+    background-color: var(--white);
+    box-shadow: 0 0.1rem 0.4rem 0 rgba(0, 0, 0, .06), 0 1rem 2rem 0 rgba(0, 0, 0, .08);
+}
+
+.action__list[data-layout="compact"] {
+    left: 8rem;
+}
+
+.action__list[data-layout="expand"] {
+    left: 24.8rem;
+}
+
+.action__list[data-layout="setting"] {
+    top: 8rem;
+    right: 2.4rem;
+}
+
+.action__list[data-layout="setting"] .menu-item {
+    padding-left: 1.6rem;
+}
+
+.action__list .menu-title {
+    font-weight: 400;
+}
+
+
+.action__list[data-layout="sub_lnb"] {
+    /* 임시 위치 */
+    /* 가능하면 버튼 아래로 0.8rem, 왼쪽으로 -0.4rem 들어가게 위치시켜 주세요 */
+    top: 24.8rem;
+    left: 43rem;
+}
+
+/* 서브 퀵메뉴 */
+.sub-action__list {
+    min-width: 18rem;
+}
+
+.sub-action__list .menu-item {
+    padding: 0 1.6rem;
+    height: 4rem;
+}
+
+.sub-action__list .menu-item.active,
+.sub-action__list .menu-item:hover,
+.sub-action__list .menu-item:focus-visible {
+    background-color: var(--gray-50);
+    color: var(--gray-900);
+}
+
+.sub-action__list .menu-item.active .menu-title,
+.sub-action__list .menu-item:hover .menu-title,
+.sub-action__list .menu-item:focus-visible .menu-title {
+    font-weight: 400;
+}
+
+.sub-action__list .menu-item.disabled {
+    background-color: transparent;
+    color: var(--gray-600);
+    cursor: default;
+}
+
+.alarm-wrap {
+    /*display: none;*/
+    position: absolute;
+    top: 8rem;
+    right: 2.4rem;
+    width: 50rem;
+    height: 48rem;
+    overflow: hidden;
+}
+
+.alarm-content .alarm-list {
+    height: 37.2rem;
+    overflow-y: auto;
+}
+
+.alarm--item {
+    position: relative;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.alarm--item:hover {
+    background-color: var(--primary-navy-50);
+}
+
+.alarm--item .profile {
+    gap: 0.8rem;
+    padding: 1.2rem 2.4rem;
+}
+
+.alarm--item .badge {
+    position: absolute;
+    top: 1.2rem;
+    left: 1.2rem;
+}
+
+.alarm--item .alarm__user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.alarm--item .alarm__user-info .name {
+    color: var(--gray-900);
+    line-height: 1.7em;
+    font-weight: 700;
+    font-size: 1.4rem;
+}
+
+.alarm--item .alarm__user-info .name+.date {
+    color: var(--gray-600);
+    line-height: 1.3em;
+    font-size: 1.2rem;
+}
+
+.alarm__text {
+    color: var(--gray-800);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
