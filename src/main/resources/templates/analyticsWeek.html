@@ -15,7 +15,7 @@
         <main class="form-content">
             <div class="container">
                 <div class="main-widget-wrap">
-                    <div class="content flex1">
+                    <div class="content flex1 flex-with-no-gap">
                         <!--검색 및 헤더-->
                         <div class="search--box">
                             <div class="content-header">
@@ -89,7 +89,7 @@
                         <div class="analytics-main">
                             <div class="analytics-content1">
                                 <div class="analytics-week-header1">
-                                    <a class="arrow-cursor" onclick="goWeek('prev')"> ◀ </a><span> 12월 1주 </span><a class="arrow-cursor" onclick="goWeek('next')"> ▶ </a>
+                                    <a class="arrow-cursor" onclick="goWeek('prev')"> ◀ </a><span id="dateRange"></span><a class="arrow-cursor" onclick="goWeek('next')"> ▶ </a>
                                 </div>
                                 <div class="analytics-week-header2">
                                     <span>접수 <a id="totalReceipt"></a> 건 / 처리 <a id="totalComplete"></a> 건 / 잔여 <a id="totalLeftover"></a> 건</span>
@@ -98,7 +98,7 @@
                                     <div th:fragment="analyticsWeekFragment" id="analyticsWeekContainer">
                                         <table class="table table03">
                                             <thead>
-                                                <tr>
+                                                <tr name="date-header">
                                                     <th rowspan="2">담당</th>
                                                     <th rowspan="2">잔여</th>
                                                     <th colspan="2" th:each="day : ${dayList}" th:text="${day}" name="day"></th>
@@ -185,14 +185,17 @@
     <!-- //컨텐츠 영역 -->
 </div>
 
-<script>
+<script th:inline="javascript">
+    setDateRange();
+    findMatchingDateTh();
     calculateSums();
     calculateSumsWeekTotal();
     calculateSummary();
+
+    //회사 검색형 셀렉트박스 설정
     $(document).ready(function () {
         $('#searchCompany').select2();
     });
-
     $('#searchCompany').on('select2:open', function() {
       $('body').css('overflow', 'hidden');
     });
@@ -209,7 +212,6 @@
             startDate: startDate
         });
 
-        // Ajax 요청
         fetch('/analytics_week', {
           method: 'POST',
           headers: {
@@ -219,8 +221,10 @@
         })
         .then(response => response.text())
         .then(data => {
-          // 응답받은 HTML을 페이지에 삽입
+          // 응답받은 HTML fragment를 페이지에 삽입
           document.getElementById('analyticsWeekContainer').innerHTML = data;
+          setDateRange();
+          findMatchingDateTh();
           calculateSums();
           calculateSumsWeekTotal();
           calculateSummary();
@@ -228,6 +232,7 @@
         .catch(error => console.error('검색 중 오류 발생:', error));
     }
 
+    //합계 로우 집계
     function calculateSums() {
         const dataRows = document.querySelectorAll('tr[name="data"]');
         const sumRow = document.querySelector('tr[name="sum"]');
@@ -252,6 +257,7 @@
         });
     }
 
+    //한주의 월요일 날짜 구하기
     function getWeekRange(dateString, direction) {
         const inputDate = new Date(dateString);
 
@@ -274,6 +280,7 @@
         }
     }
 
+    //금주합계 컬럼 집계
     function calculateSumsWeekTotal() {
         const rows = document.querySelectorAll('tr[name="data"], tr[name="sum"]');
 
@@ -315,6 +322,7 @@
         });
     }
 
+    //접수 00 건 / 처리 00 건 / 잔여 00 건 채우기
     function calculateSummary(){
         const rows = document.querySelector('tr[name="sum"]');
         const tds = rows.querySelectorAll('td');
@@ -323,6 +331,65 @@
         document.querySelector('#totalLeftover').innerText = tds[1].innerText;
     }
 
+    //오늘날짜에 파란색 배경 칠하기
+    function findMatchingDateTh() {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        const todayString = `${yyyy}-${mm}-${dd}`;
+        var thNumber = "";
+
+        const dateHeaderRow = document.querySelector('tr[name="date-header"]');
+        if (!dateHeaderRow) {
+            thNumber = -1;
+            return;
+        };
+        const thElements = Array.from(dateHeaderRow.querySelectorAll('th'));
+
+        for (let i = 2; i <= 8; i++) {
+            if (thElements[i] && thElements[i].textContent.trim() === todayString) {
+                thNumber =  i + 1;
+            }
+        }
+        if (thNumber >= 3 && thNumber <= 9) {
+            const sumRow = document.querySelector('tr[name="sum"]');
+            const dataRows = document.querySelectorAll('tr[name="data"]');
+
+            // Determine the target TD indices based on thNumber
+            const startIndex = (thNumber - 3) * 2 + 3; // 3rd -> 3, 4th -> 5, etc.
+            const endIndex = startIndex + 1;
+
+            // Highlight <td> elements in <tr name="sum">
+            if (sumRow) {
+                const sumTds = Array.from(sumRow.querySelectorAll('td'));
+                for (let i = startIndex - 1; i <= endIndex - 1; i++) {
+                    if (sumTds[i]) {
+                        sumTds[i].style.backgroundColor = "#C8EAF9";
+                    }
+                }
+            }
+
+            // Highlight <td> elements in <tr name="data">
+            dataRows.forEach(row => {
+                const dataTds = Array.from(row.querySelectorAll('td'));
+                for (let i = startIndex - 1; i <= endIndex - 1; i++) {
+                    if (dataTds[i]) {
+                        dataTds[i].style.backgroundColor = "#C8EAF9";
+                    }
+                }
+            });
+        }
+    }
+    //화살표 안쪽 yyyy-mm-dd ~ yyyy-mm-dd 채우기
+    function setDateRange(){
+        var headerRow = document.querySelector('tr[name="date-header"]');
+        var thElementList = Array.from(headerRow.querySelectorAll('th'));
+        var startDay = thElementList[2].innerText;
+        var endDay = thElementList[8].innerText;
+
+        document.querySelector('#dateRange').innerText = startDay + " ~ " + endDay ;
+    }
 </script>
 </body>
 </html>
