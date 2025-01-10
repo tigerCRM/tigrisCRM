@@ -3861,7 +3861,7 @@ td:nth-child(13), td:nth-child(14), td:nth-child(15), td:nth-child(16) {
 }
 /* [고객관리] 푸터 조정 */
 .client-footer {
-    margin-top: 70%;
+    margin-top: 55%;
     margin-bottom: 4%;
 }
 /* [고객관리] 푸터 조정2 */
