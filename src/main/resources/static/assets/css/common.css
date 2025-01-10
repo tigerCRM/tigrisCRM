@@ -3648,3 +3648,70 @@ h2 { margin-bottom: 1rem; font-weight: 700; font-size: 2.4rem; }
     border: 0px;
 }
 /* ---------------------------------------------END : 운영지원보고서 css */
+
+/* ---------------------------------------------START : 고객관리 css */
+/* [고객관리] 목록 */
+.widget-list {
+    flex: 0 0 30%;
+    max-width: 30%;
+}
+/* [고객관리] 상세 */
+.widget-detail {
+    flex: 0 0 69%;
+    max-width: 70%;
+}
+/* [고객관리] 회사 리스트  */
+.click-row {
+    cursor: pointer;
+}
+/* [고객관리] 리스트에 호버시 */
+#companyList tbody tr:hover,
+#clientList tbody tr:hover {
+    font-size: 17px;
+    cursor: pointer;
+    transform: scale(1.02); /* 약간 확대 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 튀어나온 느낌 */
+    background-color: var(--primary-navy-50);
+    color: var(--primary-navy-500);
+    border-radius: 1.2rem
+}
+/* [고객관리] 리스트 클릭 시 css고정 */
+#companyList tbody tr.active,
+#clientList tbody tr.active { /* 클릭 시 활성화 효과 */
+    transform: scale(1.05); /* 더 크게 확대 */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* 더 깊은 그림자 */
+    background: #eef5ff; /* 선택된 배경색 */
+    font-weight: 500;
+    background-color: var(--primary-navy-50);
+    color: var(--primary-navy-500);
+    border-radius: 1.2rem
+}
+/* [고객관리] 고객사 및 고객 등록 버튼 */
+.client_button{
+    margin-bottom: 3%;
+}
+/* [고객관리] 고객사 기본 위젯 설정 */
+.clientList-parts,
+.clientList-parts2{
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 1.2rem;
+    height: 577px;/* 94% */
+}
+/* [고객관리] 푸터 조정 */
+.client-footer {
+    margin-top: 70%;
+    margin-bottom: 4%;
+}
+/* [고객관리] 푸터 조정2 */
+.client-footer2 {
+    margin-top: 5%;
+    margin-bottom: 4%;
+}
+/* [고객관리] 비밀번호 초기화 버튼 */
+#resetPasswordBtn{
+    margin-top: 1%;
+}
+/* ---------------------------------------------END : 고객관리 css */

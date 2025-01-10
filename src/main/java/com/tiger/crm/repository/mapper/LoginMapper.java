@@ -23,4 +23,6 @@ public interface LoginMapper {
     
     String getUserPwByUserId(String id);
 
+    // 메일 발송용 유저 이름 조회
+    String getUserName(String userId);
 }

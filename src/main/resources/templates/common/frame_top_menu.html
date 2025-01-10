@@ -26,7 +26,6 @@
                             </button>
                             <!-- 설정(톱니바퀴) 드롭다운 메뉴 추가 -->
                             <ul class="dropdown-menu" id="settingDropdownMenu">
-                                <li id="resetPassword"><a href="#" id="resetPasswordBtn" class="button">비밀번호 초기화</a></li>
                                 <li id="logout">
                                     <a href="#" onclick="if(confirm('로그아웃 하시겠습니까?')) window.location.href='/logout'; else alert('취소하였습니다.'); return false;">로그아웃</a>
                                 </li>
@@ -35,11 +34,6 @@
                     </ul>
                 </nav>
             </div>
-            <!--스피너-->
-            <div id="loadingSpinner" class="loading" style="display: none;">
-                <div class="spinner"></div>
-            </div>
-            <!--//스피너-->
         </header>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -262,47 +256,9 @@
                         $('#alertDropdownMenu li').each(function () {
                             $(this).addClass('read-alert'); // 클래스 추가
                         });
-                        console.log('전체 알림 읽음 처리 완료');
-                    } else {
-                        console.error('전체 알림 읽음 처리 실패');
                     }
                 })
                 .catch(error => console.error('모두 읽음 처리 중 오류 발생:', error));
             });
-
-            // -------------------
-            // 비밀번호 초기화 버튼 클릭시
-            // 요청 전송 후 alert
-            // 작성자 : 제예솔
-            // ------------------
-            document.getElementById('resetPasswordBtn').addEventListener('click', function (event) {
-                event.preventDefault(); // 기본 링크 동작 방지
-
-                const spinner = document.getElementById('loadingSpinner');
-                spinner.style.display = 'flex'; // 스피너 표시
-
-                fetch('/resetPassword', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                })
-                .then(response => {
-                    if (response.ok) {
-                        alert("임시 비밀번호가 이메일로 전송되었습니다");
-                        window.location.href = '/login';
-                    } else {
-                        alert("비밀번호 초기화 요청 중 오류가 발생했습니다.");
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert("요청 처리 중 문제가 발생했습니다.");
-                })
-                .finally(() => {
-                    spinner.style.display = 'none'; // 스피너 숨기기
-                });
-            });
-
         </script>
 </body>
