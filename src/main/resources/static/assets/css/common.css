@@ -286,19 +286,19 @@ div::-webkit-scrollbar-button:end:increment {
 
 /* main > header alert badge */
 .badge {
-    display: none; /* 초기에는 숨김 */
-    background-color: red;
-    color: white;
+    position: relative;
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
     border-radius: 50%;
-    min-width: 2em; /* 최소 너비 설정 */
-    min-height: 2em; /* 최소 높이 설정 */
-    font-size: 0.8em;
-    line-height: 2em; /* 텍스트 중앙 정렬 */
-    text-align: center; /* 숫자 중앙 정렬 */
-    position: absolute; /* 위치 조정이 필요하면 사용 */
-    top: -10px; /* 버튼에 맞게 조정 */
-    right: -10px;
+    background-color: var(--error-500);
 }
+
+.badge--s {
+    width: 0.6rem;
+    height: 0.6rem;
+}
+
 .badge.active {
     display: inline-block; /* 값이 있을 때만 보임 */
 }
@@ -314,12 +314,8 @@ div::-webkit-scrollbar-button:end:increment {
     background-color: #f0f0f0; /* 어두운 배경색 */
     color: #888; /* 텍스트 색상 변경 (선택 사항) */
 }
-/* li 요소 스타일 */
-#alertDropdownMenu li {
-    position: relative; /* 각 li를 기준 컨테이너로 설정 */
-    padding: 13px; /* 알림 내용과 버튼 사이 간격 */
-    border-bottom: 1px solid #ddd; /* 항목 구분선 */
-}
+
+
 .alert-content1 {
     display: flex;
     align-items: center;
@@ -376,12 +372,7 @@ div::-webkit-scrollbar-button:end:increment {
     cursor: pointer;
 }
 /* [알림]전체읽음 옆 닫기버튼 */
-#closeAlertBtn{
-    right: 16px;
-    width: 24px;
-    height: 24px;
-    background: url(../images/icon/tgicon-close02.svg) no-repeat;
-}
+
 .mark-all-read-btn:hover{
     text-decoration: underline;
 }
@@ -875,6 +866,12 @@ div::-webkit-scrollbar-button:end:increment {
     overflow: hidden;
 }
 
+.menu-title .arrow-icon {
+    width: 2rem;
+    height: 2rem;
+    font-size: 2rem;
+}
+
 .menu-title .menu-title__text {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -884,6 +881,13 @@ div::-webkit-scrollbar-button:end:increment {
 .menu-title .menu-title__num {
     color: var(--primary-navy-500);
     font-weight: 700;
+}
+
+.menu-btn .badge,
+.menu-icon .badge {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
 }
 
 /* tooltip */
@@ -1547,6 +1551,11 @@ label.checkbox02 input[type="checkbox"]:disabled+span {
     color: var(--info-500);
 }
 
+.tag.tag--purple {
+    background-color: #F7EDFC;
+    color: #B347E6;
+}
+
 .tag.tag--gray {
     background-color: var(--gray-200);
     color: var(--gray-700);
@@ -1795,6 +1804,26 @@ label.checkbox02 input[type="checkbox"]:disabled+span {
 
 .table--h th, .table--h td {
     text-align: left;
+}
+
+.table tr.focus td {
+    background-color: var(--primary-navy-20) !important;
+    font-weight: 700;
+}
+
+/* 테이블 속성 */
+.table-hover tbody tr:hover td {
+    background-color: var(--gray-50);
+    cursor: pointer;
+}
+
+.table-ellipsis {
+    table-layout: fixed;
+}
+.table-ellipsis td {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 /* 테이블 리스트 */
@@ -2061,6 +2090,14 @@ label.checkbox02 input[type="checkbox"]:disabled+span {
 }
 
 /* elements */
+.board-btn {
+    width: 1.6rem;
+    height: 1.6rem;
+    padding: 0;
+    background-color: transparent;
+    color: var(--gray-600);
+    font-size: 1.6rem;
+}
 .board-icon {
     width: 1.6rem;
     height: 1.6rem;
@@ -2751,6 +2788,14 @@ ul[class*='list-tree--'] {
     border: 1px solid var(--gray-300);
 }
 
+
+.desc_box--blue {
+    border-radius: 0.8rem;
+    border-color: var(--primary-navy-200);
+    background-color: var(--primary-navy-20);
+    line-height: 1.7em;
+    font-size: 1.4rem;
+}
 /* 스크롤 리스트 */
 .scroll-list-wrap {
     /* height: 22rem; */
