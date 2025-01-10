@@ -1,8 +1,6 @@
 <body>
     <div th:fragment="frame_left_menu" id="sidebar" class="main-sidebar main-sidebar--expand">
-        <div class="logo" onclick="location.href='/main';" style="cursor: pointer;">
-            <span class="hidden">이노베이터</span>
-        </div>
+        <div style="padding-top: 70px;"></div>
         <div class="profile">
             <div class="profile__img profile__img--48">
                 <a href="#">
@@ -155,6 +153,14 @@
                             <a href="mailHistory" class="menu-item">
                                 <p class="menu-title">
                                     <span class="menu-title__text">발송내역</span>
+                                    <span class="menu-title__num"></span>
+                                </p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="clientManage" class="menu-item">
+                                <p class="menu-title">
+                                    <span class="menu-title__text">고객관리</span>
                                     <span class="menu-title__num"></span>
                                 </p>
                             </a>
@@ -440,5 +446,4 @@
 
         </script>
     </div>
-
 </body>

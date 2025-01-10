@@ -46,6 +46,13 @@
         WHERE USER_ID = #{id}
     </select>
 
+    <!-- 메일 발송용 유저 이름 조회 -->
+    <select id="getUserName" resultType="String">
+        SELECT USER_NAME
+        FROM T_USER_INFO
+        WHERE USER_ID = #{userId}
+    </select>
+
     <!-- 사용자 전화번호를 업데이트하는 쿼리 -->
     <update id="updateUserPhone">
         UPDATE T_USER_INFO

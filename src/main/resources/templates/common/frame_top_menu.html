@@ -26,7 +26,6 @@
                             </button>
                             <!-- 설정(톱니바퀴) 드롭다운 메뉴 추가 -->
                             <ul class="dropdown-menu" id="settingDropdownMenu">
-                                <li id="resetPassword"><a href="#" id="resetPasswordBtn" class="button">비밀번호 초기화</a></li>
                                 <li id="logout">
                                     <a href="#" onclick="if(confirm('로그아웃 하시겠습니까?')) window.location.href='/logout'; else alert('취소하였습니다.'); return false;">로그아웃</a>
                                 </li>
@@ -35,11 +34,6 @@
                     </ul>
                 </nav>
             </div>
-            <!--스피너-->
-            <div id="loadingSpinner" class="loading" style="display: none;">
-                <div class="spinner"></div>
-            </div>
-            <!--//스피너-->
         </header>
 
 

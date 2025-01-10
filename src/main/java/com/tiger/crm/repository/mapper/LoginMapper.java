@@ -25,4 +25,7 @@ public interface LoginMapper {
 
     //매니저 사용자 불러오기
     List<UserLoginDto> getAllManagers(int companyId);
+
+    // 메일 발송용 유저 이름 조회
+    String getUserName(String userId);
 }

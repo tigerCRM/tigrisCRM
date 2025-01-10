@@ -111,20 +111,13 @@ public class LoginController
 	/*
 	 * 비밀번호 초기화 이메일 발송
 	 */
-	@RequestMapping("/resetPassword")
-	public ResponseEntity<String> resetPassword(UserLoginDto user, HttpSession session) {
+	@PostMapping("/resetPassword")
+	public ResponseEntity<String> resetPassword(UserLoginDto user) {
 		try {
-			//세션 로그인 정보 가져옴
-			UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
-
 			// 임시 비밀번호로 업데이트 및 메일 발송
-			loginService.resetPassword(loginUser);
-
-			session.invalidate();  // 세션 무효화(필요시)
+			loginService.resetPassword(user);
 
 			return ResponseEntity.ok("Password reset email sent.");
-
-
 
 		}catch (Exception e){
 			System.out.println(e.getStackTrace());

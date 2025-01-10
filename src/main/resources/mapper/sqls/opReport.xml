@@ -6,7 +6,7 @@
 
     <!-- 년도 셀렉트 박스 조회 -->
     <select id="getYearList" resultType="com.tiger.crm.repository.dto.opReport.OpReportDto">
-        SELECT DISTINCT TO_CHAR(CREATE_DT, 'YYYY') AS YEAR FROM T_TICKET_INFO
+        SELECT DISTINCT TO_CHAR(CREATE_DT, 'YYYY') AS YEAR FROM T_TICKET_INFO ORDER BY 1 DESC
     </select>
 
     <!-- 고객 정보 조회 -->
