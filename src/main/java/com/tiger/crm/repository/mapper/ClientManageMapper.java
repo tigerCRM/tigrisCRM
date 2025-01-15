@@ -27,4 +27,7 @@ public interface ClientManageMapper {
 
     // 고객 카운트
     Integer getClientListCount(PagingRequest pagingRequest);
+
+    // 신규 고객사 등록
+    void createCompany(ClientManageDto clientManageDto);
 }

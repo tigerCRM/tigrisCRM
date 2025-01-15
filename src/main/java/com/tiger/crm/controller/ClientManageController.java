@@ -4,15 +4,14 @@ import com.tiger.crm.common.exception.CustomException;
 import com.tiger.crm.repository.dto.client.ClientManageDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
+import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.service.client.ClientManageService;
 import com.tiger.crm.service.common.CommonService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
@@ -174,5 +173,23 @@ public class ClientManageController {
         }
     }
     
+    /*
+     * 신규 고객사 등록
+     */
+    @PostMapping("/createCompany")
+    @ResponseBody
+    public Map<String, Object> createCompany(@RequestBody ClientManageDto clientManageDto, HttpServletRequest request) {
+        try {
+            // 1. 사용자값 추출
+            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
+            clientManageDto.setUserId(loginUser.getUserId()); // 수정자 용도
+            
+            // 2. 신규 고객사 등록
+            clientManageService.createCompany(clientManageDto);
 
+        }catch (Exception e) {
+            throw new CustomException("신규 고객사 등록 중 오류가 발생했습니다.", e);
+        }
+        return Map.of();
+    }
 }

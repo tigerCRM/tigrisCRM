@@ -68,5 +68,11 @@ public class ClientManageServiceImpl implements ClientManageService {
         return clientManageMapper.getClientDetail(clientManageDto);
     }
 
+    // 신규 고객사 등록
+    @Override
+    public void createCompany(ClientManageDto clientManageDto) {
+        clientManageMapper.createCompany(clientManageDto);
+    }
+
 
 }

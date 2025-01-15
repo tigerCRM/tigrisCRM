@@ -46,7 +46,6 @@
                     </a>
                     <!-- 설정(톱니바퀴) 드롭다운 메뉴 추가 -->
                     <ul class="dropdown-menu" id="settingDropdownMenu" style="display:none">
-                        <li id="resetPassword"><a href="#" id="resetPasswordBtn" class="button">비밀번호 초기화</a></li>
                         <li id="logout">
                             <a href="#" onclick="if(confirm('로그아웃 하시겠습니까?')) window.location.href='/logout'; else alert('취소하였습니다.'); return false;">로그아웃</a>
                         </li>
@@ -290,7 +289,7 @@
                 $alertMenuBtn.on('click', function(event) {
                     event.stopPropagation(); // 이벤트 전파 방지
                     $alertDropdownMenu.toggle(); // 알림 드롭다운 토글
-                  //  $('#settingDropdownMenu').hide(); // 설정 드롭다운이 열려있다면 닫기
+                    $('#settingDropdownMenu').hide(); // 설정 드롭다운이 열려있다면 닫기
                 });
 
                 // -------------------
@@ -299,7 +298,6 @@
                 $(document).on("click", "#closeAlertBtn", function() {
                     $alertDropdownMenu.toggle(); // 알림 드롭다운 토글
                 });
-
 
                 // -------------------
                 // 설정 메뉴 토글
