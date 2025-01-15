@@ -19,5 +19,6 @@ public class ClientManageDto {
     private String userClass;       // 고객 권한
     private String email;           // 고객 메일
     private String phone;           // 고객 전화번호
+    private String createId;        // 생성자 아이디
 
 }

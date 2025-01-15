@@ -142,7 +142,7 @@
                                 <section class="clientList-parts2">
                                     <div class="widget__content">
                                         <div class="client_button">
-                                            <button type="button" class="btn btn--s primary-btn">고객 등록</button>
+                                            <button type="button" class="btn btn--s primary-btn" onclick="createClientModal()">고객 등록</button>
                                         </div>
                                         <div class="is_full">
                                             <div class="board-list board--m list-wrap ">
@@ -271,7 +271,7 @@
     <!-- //컨텐츠 영역 -->
 </div>
 
-<!--모달팝업 영역-->
+<!--모달팝업(고객사 등록) 영역-->
 <div class="layerpopup-wrap layerpopup--l layerpopup--center contact-layer" style="display: none;">
     <div class="layerpopup__header">
         <h1 class="layerpopup__title">고객사 등록</h1>
@@ -311,7 +311,63 @@
         </div>
     </div>
 </div>
-<!--모달팝업 영역-->
+<!--모달팝업(고객사 등록) 영역-->
+<!--모달팝업(고객 등록) 영역-->
+<div class="layerpopup-wrap2 layerpopup--l layerpopup--center contact-layer" style="display: none;">
+    <div class="layerpopup__header">
+        <h1 class="layerpopup__title">고객 등록</h1>
+        <button class="btn icon-btn close-btn" onclick="closeLayerpopup2()"><svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#close"/></svg></button>
+    </div>
+    <div class="layerpopup__content">
+        <div id="client_info">
+            <form id="clientForm">
+                <table class="table table03 table--h table--xs">
+                    <colgroup>
+                        <col style="width: 18%;">
+                        <col style="width: 18%;">
+                        <col style="width: 32%;">
+                        <col style="width: 18%;">
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th>아이디</th>
+                        <td colspan="4"><input type="text" id="userId" class="input--s input01 input--full" name="userId" placeholder="아이디를 입력하세요" required /></td>
+                    </tr>
+                    <tr>
+                        <th>회사명</th>
+                        <td colspan="4"><input type="text" id="userName" class="input--s input01 input--full" name="userName" placeholder="이름을 입력하세요" required /></td>
+                    </tr>
+                    <tr>
+                        <th>권한</th>
+                        <td colspan="4">
+                            <select id="userClass" class="dropdown dropdown--s wd120 dropdown__selected input--s input01 input--full" name="userClass" required>
+                                <option value="USER">USER</option>
+                                <option value="ADMIN">ADMIN</option>
+                                <option value="SYSADMIN">SYSADMIN</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>이메일</th>
+                        <td colspan="4"><input type="text" id="email" class="input--s input01 input--full" name="email" placeholder="이메일을 입력하세요" required /></td>
+                    </tr>
+                    <tr>
+                        <th>전화번호</th>
+                        <td colspan="4"><input type="text" id="phone" class="input--s input01 input--full" name="phone" placeholder="전화번호를 입력하세요" required /></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="layerpopup__footer">
+        <div class="flex flex-justify_center gap--8 btn-wrap">
+            <button type="button" class="btn btn--s mono-outline-btn" onclick="closeLayerpopup2()">취소</button>
+            <button type="button" class="btn btn--s primary-btn" onclick="createClient()">등록</button>
+        </div>
+    </div>
+</div>
+<!--모달팝업(고객등록) 영역-->
 
 <script>
     // -------------------
@@ -330,10 +386,11 @@
     // ------------------
     function generateList() {
         var selectedType = $('#clientType').val();
-        closeLayerpopup();
 
         // '고객사 관리' 선택 시 회사 목록을 표시
         if (selectedType === 'COMPANY') {
+            closeLayerpopup2();
+
             $('#companyList').show();
             $('#companyDetailView').show();
             $('#clientList').hide();
@@ -361,7 +418,7 @@
         }
         // '고객 관리' 선택 시 고객 목록을 표시
         else if (selectedType === 'CLIENT') {
-
+            closeLayerpopup();
             searchClient(this);// 샐렉트박스 변경 시 고객 리스트 호출
 
             $('#clientList').show();
@@ -583,6 +640,50 @@
     }
 
     // -------------------
+    // 신규 고객 등록
+    // ------------------
+    function createClient() {
+        var userId = $('#clientForm #userId').val();
+        var userName = $('#clientForm #userName').val();
+        var userClass = $('#clientForm #userClass').val();
+        var email = $('#clientForm #email').val();
+        var phone = $('#clientForm #phone').val();
+
+        if (!userId || !userName || !userClass || !email || !phone) {
+            alert("모든 필드를 입력해 주세요.");
+            return;
+        }
+
+        if(confirm("고객을 등록하시겠습니까?")){
+            $.ajax({
+                url: '/createClient',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({userId: userId, userName: userName, userClass: userClass, email: email, phone: phone}),
+                success: function(response) {
+                    alert('신규 고객 등록 성공!');
+
+                    // 팝업 내 필드값 초기화 및 팝업 닫기
+                    $('#companyForm #userId').val("");
+                    $('#companyForm #userName').val("");
+                    $('#companyForm #userClass').val("");
+                    $('#companyForm #email').val("");
+                    $('#companyForm #phone').val("");
+
+                    closeLayerpopup2();
+                    searchClient(this);
+                },
+                error: function(xhr, status, error) {
+                    alert('등록 실패: ' + error);
+                }
+            });
+        }else{
+            alert("고객사 등록을 취소하였습니다.");
+            closeLayerpopup2();
+        }
+    }
+
+    // -------------------
     // pagination 내 함수 선언
     // ------------------
     function goPage(url, page) {
@@ -607,7 +708,6 @@
     // ------------------
     function createCompanyModal(){
         $('.layerpopup-wrap').css("display", "block");
-        $('.layer-wrap.dimmed').css("display", "block");
     }
 
     // -------------------
@@ -615,7 +715,20 @@
     // ------------------
     function closeLayerpopup(){
         $('.layerpopup-wrap').css("display", "none");
-        $('.layer-wrap.dimmed').css("display", "none");
+    }
+
+    // -------------------
+    // 모달 팝업 열기(고객 등록)
+    // ------------------
+    function createClientModal(){
+        $('.layerpopup-wrap2').css("display", "block");
+    }
+
+    // -------------------
+    // 모달 팝업 닫기
+    // ------------------
+    function closeLayerpopup2(){
+        $('.layerpopup-wrap2').css("display", "none");
     }
 
     // -------------------

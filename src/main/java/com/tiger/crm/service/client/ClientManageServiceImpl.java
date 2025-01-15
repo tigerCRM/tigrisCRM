@@ -7,8 +7,11 @@ import com.tiger.crm.repository.mapper.ClientManageMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +20,8 @@ public class ClientManageServiceImpl implements ClientManageService {
 
     @Autowired
     private ClientManageMapper clientManageMapper;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
@@ -72,6 +77,19 @@ public class ClientManageServiceImpl implements ClientManageService {
     @Override
     public void createCompany(ClientManageDto clientManageDto) {
         clientManageMapper.createCompany(clientManageDto);
+    }
+
+    // 신규 고객 등록
+    @Override
+    public void createClient(ClientManageDto clientManageDto) {
+
+        // 관리자가 고객을 임의로 생성하는 경우 초기 패스워드로 저장
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String tempPwd = "@" + today.format(formatter) ;
+
+
+        clientManageMapper.createClient(clientManageDto, passwordEncoder.encode(tempPwd));
     }
 
 

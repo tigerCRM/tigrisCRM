@@ -3,6 +3,7 @@ package com.tiger.crm.repository.mapper;
 import com.tiger.crm.repository.dto.client.ClientManageDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -30,4 +31,7 @@ public interface ClientManageMapper {
 
     // 신규 고객사 등록
     void createCompany(ClientManageDto clientManageDto);
+
+    // 신규 고객 등록
+    void createClient(@Param("clientManageDto") ClientManageDto clientManageDto, @Param("tempPwd") String tempPwd);
 }

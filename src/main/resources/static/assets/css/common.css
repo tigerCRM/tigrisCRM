@@ -2332,7 +2332,8 @@ label.checkbox02 input[type="checkbox"]:disabled+span {
 
 
 /* 레이어 팝업 */
-.layerpopup-wrap {
+.layerpopup-wrap,
+.layerpopup-wrap2 {
     position: fixed; /* 레이어가 가운데 오게하기 위함 */
     border-radius: 1.2rem;
     border: 1px solid var(--gray-300);

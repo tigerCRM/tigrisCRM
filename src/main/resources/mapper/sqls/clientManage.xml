@@ -121,4 +121,31 @@
             'Y'
         )
     </insert>
+
+    <!-- 신규 고객 등록 -->
+    <insert id="createClient" parameterType="map">
+        INSERT INTO T_USER_INFO(
+            USER_ID,
+            USER_NAME,
+            USER_PW,
+            COMPANY_ID,
+            USER_CLASS,
+            EMAIL,
+            PHONE,
+            CREATE_ID,
+            CREATE_DT,
+            USE_YN
+        )VALUES (
+            #{clientManageDto.userId},
+            #{clientManageDto.userName},
+            #{tempPwd},
+            '0', /* 관리자가 고객 등록 시 회사번호 0 */
+            #{clientManageDto.userClass},
+            #{clientManageDto.email},
+            #{clientManageDto.phone},
+            #{clientManageDto.createId},
+            SYSDATE(),
+            'Y'
+        )
+    </insert>
 </mapper>

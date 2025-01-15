@@ -182,10 +182,30 @@ public class ClientManageController {
         try {
             // 1. 사용자값 추출
             UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
-            clientManageDto.setUserId(loginUser.getUserId()); // 수정자 용도
+            clientManageDto.setUserId(loginUser.getUserId()); // 등록/수정자 용도
             
             // 2. 신규 고객사 등록
             clientManageService.createCompany(clientManageDto);
+
+        }catch (Exception e) {
+            throw new CustomException("신규 고객사 등록 중 오류가 발생했습니다.", e);
+        }
+        return Map.of();
+    }
+
+    /*
+     * 신규 고객 등록
+     */
+    @PostMapping("/createClient")
+    @ResponseBody
+    public Map<String, Object> createClient(@RequestBody ClientManageDto clientManageDto, HttpServletRequest request) {
+        try {
+            // 1. 사용자값 추출
+            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
+            clientManageDto.setCreateId(loginUser.getUserId()); // 등록/수정자 용도
+
+            // 2. 신규 고객 등록
+            clientManageService.createClient(clientManageDto);
 
         }catch (Exception e) {
             throw new CustomException("신규 고객사 등록 중 오류가 발생했습니다.", e);
