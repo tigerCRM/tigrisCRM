@@ -1497,7 +1497,6 @@ label.checkbox02 {
     height: 1.6rem;
     margin: 0;
     background: url('../images/icon/sprite-input.svg') no-repeat 0 -94px;
-	 cursor: pointer;
 }
 .clickable input {
         cursor: pointer;

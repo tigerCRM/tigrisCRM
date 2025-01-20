@@ -156,7 +156,7 @@
                                         </td>
                                         <th>연관요청</th>
                                         <td>
-                                            <input type="text" th:field="*{parentTicketCd}" readonly>
+                                            <span id="parentTicketCd" name="parentTicketCd" th:text="*{parentTicketCd}"></span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -259,7 +259,7 @@
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
                                     <button type="submit" class="btn btn--m primary-btn">수정</button>
-                                    <button type="button" class="btn btn--m danger-btn" onclick="deleteTicket()">삭제</button>
+                                    <button type="button" class="btn btn--m danger-btn" th:if="${user.userName == createName}" onclick="deleteTicket()">삭제</button>
                                     <button type="button" class="btn btn--m secondary-btn"
                                             onclick="goReRequest()">재요청</button>
                                     <button type="button" class="btn btn--m secondary-btn"
