@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tiger.crm.repository.mapper.ClientManageMapper">
+
+    <!-- 고객사 목록 조회 -->
+    <select id="getCompanyList" resultType="java.util.Map">
+        SELECT COMPANY_ID,
+               COMPANY_NAME
+        FROM T_COMPANY_INFO
+        WHERE USE_YN = 'Y'
+        <if test="searchCompany != null and searchCompany != ''">
+            AND COMPANY_NAME LIKE CONCAT('%', #{searchCompany}, '%')
+        </if>
+        <!-- 페이지 처리 (페이징 처리) -->
+        <if test="page != null">
+            LIMIT #{offset}, #{size} <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
+        </if>
+    </select>
+
+    <!-- 고객사 카운트 -->
+    <select id="getCompanyListCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM T_COMPANY_INFO
+        WHERE USE_YN = 'Y'
+        <if test="searchCompany != null and searchCompany != ''">
+            AND COMPANY_NAME LIKE CONCAT('%', #{searchCompany}, '%')
+        </if>
+    </select>
+
+    <!-- 고객사 상세 조회 -->
+    <select id="getCompanyDetail" resultType="com.tiger.crm.repository.dto.client.ClientManageDto">
+        select COMPANY_ID,
+               COMPANY_NAME,
+               (SELECT USER_NAME FROM T_USER_INFO WHERE USER_ID = MANAGER_ID) AS MANAGER_ID
+        from T_COMPANY_INFO
+        where COMPANY_ID = #{companyId}
+    </select>
+
+    <!-- 고객 목록 조회 -->
+    <select id="getClientList" resultType="com.tiger.crm.repository.dto.client.ClientManageDto">
+        SELECT TUI.USER_NAME,
+               TUI.USER_ID,
+               TUI.COMPANY_ID,
+               TCI.COMPANY_NAME,
+               CASE
+                   WHEN TUI.USER_CLASS = 'USER' THEN '일반사용자'
+                   WHEN TUI.USER_CLASS = 'ADMIN' THEN '관리자'
+                   WHEN TUI.USER_CLASS = 'SYSADMIN' THEN '최고관리자'
+               END  AS USER_CLASS
+        FROM T_USER_INFO TUI
+        LEFT JOIN T_COMPANY_INFO TCI ON (TUI.COMPANY_ID = TCI.COMPANY_ID)
+        WHERE TUI.USE_YN = 'Y'
+        <if test="userId != null and userId != ''">
+            AND TUI.USER_ID LIKE CONCAT('%', #{userId}, '%')
+        </if>
+        <if test="userName != null and userName != ''">
+            AND TUI.USER_NAME LIKE CONCAT('%', #{userName}, '%')
+        </if>
+        <if test="searchCompany != null and searchCompany != ''">
+            AND TCI.COMPANY_NAME LIKE CONCAT('%', #{searchCompany}, '%')
+        </if>
+        <!-- 페이지 처리 (페이징 처리) -->
+        <if test="page != null">
+            LIMIT #{offset}, #{size} <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
+        </if>
+    </select>
+
+    <!-- 고객 카운트 -->
+    <select id="getClientListCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM T_USER_INFO TUI
+        LEFT JOIN T_COMPANY_INFO TCI ON (TUI.COMPANY_ID = TCI.COMPANY_ID)
+        WHERE TUI.USE_YN = 'Y'
+        <if test="userId != null and userId != ''">
+            AND TUI.USER_ID LIKE CONCAT('%', #{userId}, '%')
+        </if>
+        <if test="userName != null and userName != ''">
+            AND TUI.USER_NAME LIKE CONCAT('%', #{userName}, '%')
+        </if>
+        <if test="searchCompany != null and searchCompany != ''">
+            AND TCI.COMPANY_NAME LIKE CONCAT('%', #{searchCompany}, '%')
+        </if>
+    </select>
+
+    <!-- 고객 상세 조회 -->
+    <select id="getClientDetail" resultType="com.tiger.crm.repository.dto.client.ClientManageDto">
+        SELECT TUI.USER_NAME,
+               TUI.USER_id,
+               TUI.COMPANY_ID,
+               TCI.COMPANY_NAME,
+               CASE
+                   WHEN TUI.USER_CLASS = 'USER' THEN '일반사용자'
+                   WHEN TUI.USER_CLASS = 'ADMIN' THEN '관리자'
+                   WHEN TUI.USER_CLASS = 'SYSADMIN' THEN '최고관리자'
+               END AS USER_CLASS,
+               TUI.EMAIL,
+               TUI.PHONE
+        FROM T_USER_INFO TUI
+        LEFT JOIN T_COMPANY_INFO TCI ON (TUI.COMPANY_ID = TCI.COMPANY_ID)
+        WHERE TUI.USE_YN = 'Y'
+          and TUI.USER_ID = #{userId}
+    </select>
+
+    <!-- 신규 고객사 등록 -->
+    <insert id="createCompany">
+        INSERT INTO T_COMPANY_INFO(
+            COMPANY_NAME,
+            MANAGER_ID,
+            UPDATE_DT,
+            UPDATE_ID,
+            NOTES,
+            USE_YN
+        )VALUES (
+            #{companyName},
+            #{managerId},
+            SYSDATE(),
+            #{userId},
+            #{notes},
+            'Y'
+        )
+    </insert>
+
+    <!-- 신규 고객 등록 -->
+    <insert id="createClient" parameterType="map">
+        INSERT INTO T_USER_INFO(
+            USER_ID,
+            USER_NAME,
+            USER_PW,
+            COMPANY_ID,
+            USER_CLASS,
+            EMAIL,
+            PHONE,
+            CREATE_ID,
+            CREATE_DT,
+            USE_YN
+        )VALUES (
+            #{clientManageDto.userId},
+            #{clientManageDto.userName},
+            #{tempPwd},
+            '0', /* 관리자가 고객 등록 시 회사번호 0 */
+            #{clientManageDto.userClass},
+            #{clientManageDto.email},
+            #{clientManageDto.phone},
+            #{clientManageDto.createId},
+            SYSDATE(),
+            'Y'
+        )
+    </insert>
+</mapper>

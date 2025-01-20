@@ -1,7 +1,8 @@
 <body>
     <div th:fragment="frame_left_menu" id="sidebar" class="main-sidebar main-sidebar--expand">
+        <div style="padding-top: 10px;"></div>
         <div class="logo" onclick="location.href='/main';" style="cursor: pointer;">
-            <span class="hidden">이노베이터</span>
+            <span class="hidden"></span>
         </div>
         <div class="profile">
             <div class="profile__img profile__img--48">
@@ -45,7 +46,6 @@
                     </a>
                     <!-- 설정(톱니바퀴) 드롭다운 메뉴 추가 -->
                     <ul class="dropdown-menu" id="settingDropdownMenu" style="display:none">
-                        <li id="resetPassword"><a href="#" id="resetPasswordBtn" class="button">비밀번호 초기화</a></li>
                         <li id="logout">
                             <a href="#" onclick="if(confirm('로그아웃 하시겠습니까?')) window.location.href='/logout'; else alert('취소하였습니다.'); return false;">로그아웃</a>
                         </li>
@@ -166,6 +166,14 @@
                             <a href="mailHistory" class="menu-item">
                                 <p class="menu-title">
                                     <span class="menu-title__text">발송내역</span>
+                                    <span class="menu-title__num"></span>
+                                </p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="clientManage" class="menu-item">
+                                <p class="menu-title">
+                                    <span class="menu-title__text">고객관리</span>
                                     <span class="menu-title__num"></span>
                                 </p>
                             </a>
@@ -300,7 +308,6 @@
                 $(document).on("click", "#closeAlertBtn", function() {
                     $alertDropdownMenu.toggle(); // 알림 드롭다운 토글
                 });
-
 
                 // -------------------
                 // 설정 메뉴 토글
@@ -450,5 +457,4 @@
 
         </script>
     </div>
-
 </body>
