@@ -29,43 +29,43 @@
         <tbody>
         <tr name="sum">
             <td>합계</td>
-            <td class="text-bold text-red"></td>
-            <td ></td>
-            <td ></td>
-            <td ></td>
-            <td ></td>
-            <td ></td>
-            <td ></td>
-            <td ></td>
-            <td ></td>
-            <td ></td>
-            <td ></td>
-            <td ></td>
-            <td ></td>
-            <td ></td>
-            <td ></td>
-            <td class="text-bold"></td>
-            <td class="text-bold"></td>
+            <td class="text-bold text-red" onclick="openTicketList()"></td>
+            <td  onclick="openTicketList()"></td>
+            <td  onclick="openTicketList()"></td>
+            <td  onclick="openTicketList()"></td>
+            <td  onclick="openTicketList()"></td>
+            <td  onclick="openTicketList()"></td>
+            <td  onclick="openTicketList()"></td>
+            <td  onclick="openTicketList()"></td>
+            <td  onclick="openTicketList()"></td>
+            <td  onclick="openTicketList()"></td>
+            <td  onclick="openTicketList()"></td>
+            <td  onclick="openTicketList()"></td>
+            <td  onclick="openTicketList()"></td>
+            <td  onclick="openTicketList()"></td>
+            <td  onclick="openTicketList()"></td>
+            <td class="text-bold" onclick="openTicketList()"></td>
+            <td class="text-bold" onclick="openTicketList()"></td>
         </tr>
         <tr th:each="receipt : ${weekReceiptList}" name="data">
             <td th:text="${receipt.userName}"></td>
-            <td th:text="${receipt.leftover}" class="text-bold text-red"></td>
-            <td th:text="${receipt.monReceipt}" ></td>
-            <td th:text="${receipt.monComplete}"></td>
-            <td th:text="${receipt.tueReceipt}" ></td>
-            <td th:text="${receipt.tueComplete}" ></td>
-            <td th:text="${receipt.wedReceipt}" ></td>
-            <td th:text="${receipt.wedComplete}" ></td>
-            <td th:text="${receipt.thuReceipt}" ></td>
-            <td th:text="${receipt.thuComplete}" ></td>
-            <td th:text="${receipt.friReceipt}" ></td>
-            <td th:text="${receipt.friComplete}" ></td>
-            <td th:text="${receipt.satReceipt}" ></td>
-            <td th:text="${receipt.satComplete}" ></td>
-            <td th:text="${receipt.sunReceipt}" ></td>
-            <td th:text="${receipt.sunComplete}" ></td>
-            <td class="text-bold"></td>
-            <td class="text-bold"></td>
+            <td th:text="${receipt.leftover}" class="text-bold text-red"  onclick="openTicketList()"></td>
+            <td th:text="${receipt.monReceipt}"  onclick="openTicketList()"></td>
+            <td th:text="${receipt.monComplete}" onclick="openTicketList()"></td>
+            <td th:text="${receipt.tueReceipt}"  onclick="openTicketList()"></td>
+            <td th:text="${receipt.tueComplete}"  onclick="openTicketList()"></td>
+            <td th:text="${receipt.wedReceipt}"  onclick="openTicketList()"></td>
+            <td th:text="${receipt.wedComplete}"  onclick="openTicketList()"></td>
+            <td th:text="${receipt.thuReceipt}"  onclick="openTicketList()"></td>
+            <td th:text="${receipt.thuComplete}"  onclick="openTicketList()"></td>
+            <td th:text="${receipt.friReceipt}"  onclick="openTicketList()"></td>
+            <td th:text="${receipt.friComplete}"  onclick="openTicketList()"></td>
+            <td th:text="${receipt.satReceipt}"  onclick="openTicketList()"></td>
+            <td th:text="${receipt.satComplete}"  onclick="openTicketList()"></td>
+            <td th:text="${receipt.sunReceipt}"  onclick="openTicketList()"></td>
+            <td th:text="${receipt.sunComplete}"  onclick="openTicketList()"></td>
+            <td class="text-bold" onclick="openTicketList()"></td>
+            <td class="text-bold" onclick="openTicketList()"></td>
         </tr>
         </tbody>
     </table>

@@ -125,44 +125,44 @@
                                             </thead>
                                             <tbody>
                                                 <tr name="sum">
-                                                    <td>합계</td>
-                                                    <td class="text-bold text-red"></td>
-                                                    <td ></td>
-                                                    <td ></td>
-                                                    <td ></td>
-                                                    <td ></td>
-                                                    <td ></td>
-                                                    <td ></td>
-                                                    <td ></td>
-                                                    <td ></td>
-                                                    <td ></td>
-                                                    <td ></td>
-                                                    <td ></td>
-                                                    <td ></td>
-                                                    <td ></td>
-                                                    <td ></td>
-                                                    <td class="text-bold"></td>
-                                                    <td class="text-bold"></td>
+                                                    <td data-userid="total">합계</td>
+                                                    <td class="text-bold text-red" onclick="openTicketList('leftover')"></td>
+                                                    <td  onclick="openTicketList()"></td>
+                                                    <td  onclick="openTicketList()"></td>
+                                                    <td  onclick="openTicketList()"></td>
+                                                    <td  onclick="openTicketList()"></td>
+                                                    <td  onclick="openTicketList()"></td>
+                                                    <td  onclick="openTicketList()"></td>
+                                                    <td  onclick="openTicketList()"></td>
+                                                    <td  onclick="openTicketList()"></td>
+                                                    <td  onclick="openTicketList()"></td>
+                                                    <td  onclick="openTicketList()"></td>
+                                                    <td  onclick="openTicketList()"></td>
+                                                    <td  onclick="openTicketList()"></td>
+                                                    <td  onclick="openTicketList()"></td>
+                                                    <td  onclick="openTicketList()"></td>
+                                                    <td class="text-bold" onclick="openTicketList()"></td>
+                                                    <td class="text-bold" onclick="openTicketList()"></td>
                                                 </tr>
                                                 <tr th:each="receipt : ${weekReceiptList}" name="data">
-                                                    <td th:text="${receipt.userName}"></td>
-                                                    <td th:text="${receipt.leftover}" class="text-bold text-red"></td>
-                                                    <td th:text="${receipt.monReceipt}" ></td>
-                                                    <td th:text="${receipt.monComplete}"></td>
-                                                    <td th:text="${receipt.tueReceipt}" ></td>
-                                                    <td th:text="${receipt.tueComplete}" ></td>
-                                                    <td th:text="${receipt.wedReceipt}" ></td>
-                                                    <td th:text="${receipt.wedComplete}" ></td>
-                                                    <td th:text="${receipt.thuReceipt}" ></td>
-                                                    <td th:text="${receipt.thuComplete}" ></td>
-                                                    <td th:text="${receipt.friReceipt}" ></td>
-                                                    <td th:text="${receipt.friComplete}" ></td>
-                                                    <td th:text="${receipt.satReceipt}" ></td>
-                                                    <td th:text="${receipt.satComplete}" ></td>
-                                                    <td th:text="${receipt.sunReceipt}" ></td>
-                                                    <td th:text="${receipt.sunComplete}" ></td>
-                                                    <td class="text-bold"></td>
-                                                    <td class="text-bold"></td>
+                                                    <td th:text="${receipt.userName}" th:attr="data-userid=${receipt.userId}"></td>
+                                                    <td th:text="${receipt.leftover}" class="text-bold text-red"  onclick="openTicketList('leftover')"></td>
+                                                    <td th:text="${receipt.monReceipt}"  onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.monComplete}" onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.tueReceipt}"  onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.tueComplete}"  onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.wedReceipt}"  onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.wedComplete}"  onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.thuReceipt}"  onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.thuComplete}"  onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.friReceipt}"  onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.friComplete}"  onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.satReceipt}"  onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.satComplete}"  onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.sunReceipt}"  onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.sunComplete}"  onclick="openTicketList()"></td>
+                                                    <td class="text-bold" onclick="openTicketList()"></td>
+                                                    <td class="text-bold" onclick="openTicketList()"></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -202,6 +202,40 @@
     $('#searchCompany').on('select2:close', function() {
       $('body').css('overflow', '');
     });
+
+    //숫자 클릭시 티켓 리스트 뿌려줌
+    function openTicketList(leftover){
+        const td = event.target;
+        const content = td.textContent.trim();
+        if (!content) {
+            return; // 내용이 없으면 함수 종료
+        }
+
+         // 2. td가 속한 row의 첫 번째 td 값 구하기
+        const row = td.closest('tr'); // td가 속한 행(tr)을 가져옴
+        const index1 = row ? row.querySelector('td:first-child').dataset.userid.trim() : '';
+
+        // 3. td가 속한 열의 인덱스 구하기
+        var colIndex = Array.from(row.children).indexOf(td);
+        var colIndexSpan2 = Math.floor(colIndex/2) + 1;
+
+        console.log("colIndex : " + colIndex);
+        console.log("colIndexSpan2 : " + colIndexSpan2);
+        // 4. td가 속한 table의 첫 번째 열과 두 번째 열 값 구하기
+        const table = td.closest('table');
+        const rows = Array.from(table.querySelectorAll('tr'));
+
+        if(typeof leftover == "undefined" || leftover == null || leftover == ""){
+            const index2 = rows[0] ? rows[0].querySelectorAll('th')[colIndexSpan2].innerText.trim() : '';
+            const index3 = rows[1] ? rows[1].querySelectorAll('th')[colIndex-2].innerText.trim() : '';
+            console.log('index1:', index1, 'index2:', index2, 'index3:', index3);
+        }else{
+            console.log('index1:', index1, '잔여');
+        }
+
+
+
+    }
 
     //주간 이동 화살표 버튼 클릭시
     function goWeek(direction) {
