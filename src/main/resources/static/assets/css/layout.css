@@ -544,7 +544,7 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
 }
-input[type="radio"] { display:none; }
+.wrap_radio input[type="radio"] { display:none; }
 .wrap_condition {display:none;position:absolute;top:54px;left:0;right:0;width: 100%;padding: 25px 25px; border-radius: 10px; background-color: #fff; box-sizing: border-box; box-shadow: 0 10px 20px 0 rgba(11, 19, 42, 0.16); z-index: 4;}.wrap_condition .detail_condition {overflow:hidden;padding:6px 0}
 .wrap_condition .detail_condition:after {clear:both}
 .wrap_condition .detail_condition .wrap_date {display:inline-block;margin-left:16px}

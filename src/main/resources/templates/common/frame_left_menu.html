@@ -6,7 +6,7 @@
         </div>
         <div class="profile">
             <div class="profile__img profile__img--48">
-                <a href="#">
+                <a>
                     <img th:src="@{/assets/images/temp/profile.png}" alt="">
                 </a>
             </div>
@@ -81,7 +81,7 @@
                                 <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#file-info}"/></svg>
                             </span>
                         <p class="menu-title">
-                            <span class="menu-title__text">시스템 정보</span>
+                            <span class="menu-title__text">시스템 관리</span>
                             <span class="menu-title__num"  th:field=${userClass} ></span>
                         </p>
                     </a>
@@ -426,6 +426,7 @@
             // 요청 전송 후 alert
             // 작성자 : 제예솔
             // ------------------
+            if (document.getElementById('resetPasswordBtn')!=null){
             document.getElementById('resetPasswordBtn').addEventListener('click', function (event) {
                 event.preventDefault(); // 기본 링크 동작 방지
 
@@ -454,6 +455,8 @@
                     spinner.style.display = 'none'; // 스피너 숨기기
                 });
             });
+
+            }
 
         </script>
     </div>

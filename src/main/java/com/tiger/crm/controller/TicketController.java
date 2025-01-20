@@ -94,12 +94,14 @@ public class TicketController {
             UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
             String userClass = String.valueOf(loginUser.getUserClass());
             String userid = String.valueOf(loginUser.getUserId());
+            String companyId = String.valueOf(loginUser.getCompanyId());
             pagingRequest.setUserClass(userClass);
             if (pagingRequest.getCreateId().equals("true")){
                 pagingRequest.setCreateId(userid);
             }else{
                 pagingRequest.setCreateId("");
             }
+            pagingRequest.setCompanyId(companyId);
             // 요청 조회
             PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
             model.addAttribute("userClass",userClass);
@@ -346,6 +348,11 @@ public class TicketController {
             }
             if (ticketDto.getCompleteDt() == null || ticketDto.getCompleteDt().isEmpty()) {
                 ticketDto.setCompleteDt(null);
+            }else{
+                LocalDateTime getdate = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                String formattedDate = getdate.format(formatter);
+                ticketDto.setCompleteDt(formattedDate);
             }
             // 요청 수정 업데이트
             ticketId = ticketService.saveTicketModify(ticketDto);

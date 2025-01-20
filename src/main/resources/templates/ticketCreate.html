@@ -242,8 +242,8 @@
                                             th:if="${mode == 'write'}" onclick="validateAndSubmit()">등록</button>-->
 
                                     <button type="button" class="btn btn--m primary-btn" th:if="${mode == 'write'}" onclick="validateAndSubmit()">등록</button>
-                                    <button type="button" class="btn btn--m primary-btn" th:if="${mode == 'modify'}">저장</button>
-                                    <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'modify'}" onclick="deleteTicket()">삭제</button>
+                                    <button type="button" class="btn btn--m primary-btn" th:if="${mode == 'modify'}"  onclick="validateAndSubmit()">저장</button>
+                                    <button type="button" class="btn btn--m danger-btn" th:if="${mode != 'modify'}" onclick="deleteTicket()">삭제</button>
                                     <button type="button" class="btn btn--m  secondary-btn"
                                             onclick="goBack()">취소
                                     </button>
@@ -288,6 +288,9 @@
     function validateAndSubmit(){
         const form = document.getElementById("SubmitArea");
         const title = document.getElementById("title");
+        const md = document.getElementById("md");
+        const isNumberOrDecimal = /^\d+(\.\d+)?$/;
+
 
         if (!title.value.trim()) {
             title.classList.add("input--error");
@@ -295,10 +298,18 @@
             isValid = false;
             showMessage('info', '필수값', '제목을 입력하세요.');
             return false;
-        }else {
-            title.classList.remove("input--error");
-            form.submit();
         }
+         // 숫자만 입력 제한
+        if (md.value != '' & !isNumberOrDecimal.test(md.value) ) {
+            md.classList.add("input--error");
+            md.focus();
+            showMessage('info', '필수값', '숫자와 소수점만 입력할 수 있습니다.');
+            return false;
+        }
+        md.classList.remove("input--error");
+        title.classList.remove("input--error");
+        form.submit();
+
     }
 
     function updateCompanyName(selectElement) {
