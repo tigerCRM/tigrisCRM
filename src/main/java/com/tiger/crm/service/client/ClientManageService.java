@@ -21,4 +21,9 @@ public interface ClientManageService {
     // 고객 상세 조회
     List<ClientManageDto> getClientDetail(ClientManageDto clientManageDto);
 
+    // 신규 고객사 등록
+    void createCompany(ClientManageDto clientManageDto);
+
+    // 신규 고객 등록
+    void createClient(ClientManageDto clientManageDto);
 }

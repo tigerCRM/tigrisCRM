@@ -4,7 +4,6 @@
 
 <mapper namespace="com.tiger.crm.repository.mapper.ClientManageMapper">
 
-
     <!-- 고객사 목록 조회 -->
     <select id="getCompanyList" resultType="java.util.Map">
         SELECT COMPANY_ID,
@@ -104,4 +103,49 @@
           and TUI.USER_ID = #{userId}
     </select>
 
+    <!-- 신규 고객사 등록 -->
+    <insert id="createCompany">
+        INSERT INTO T_COMPANY_INFO(
+            COMPANY_NAME,
+            MANAGER_ID,
+            UPDATE_DT,
+            UPDATE_ID,
+            NOTES,
+            USE_YN
+        )VALUES (
+            #{companyName},
+            #{managerId},
+            SYSDATE(),
+            #{userId},
+            #{notes},
+            'Y'
+        )
+    </insert>
+
+    <!-- 신규 고객 등록 -->
+    <insert id="createClient" parameterType="map">
+        INSERT INTO T_USER_INFO(
+            USER_ID,
+            USER_NAME,
+            USER_PW,
+            COMPANY_ID,
+            USER_CLASS,
+            EMAIL,
+            PHONE,
+            CREATE_ID,
+            CREATE_DT,
+            USE_YN
+        )VALUES (
+            #{clientManageDto.userId},
+            #{clientManageDto.userName},
+            #{tempPwd},
+            '0', /* 관리자가 고객 등록 시 회사번호 0 */
+            #{clientManageDto.userClass},
+            #{clientManageDto.email},
+            #{clientManageDto.phone},
+            #{clientManageDto.createId},
+            SYSDATE(),
+            'Y'
+        )
+    </insert>
 </mapper>

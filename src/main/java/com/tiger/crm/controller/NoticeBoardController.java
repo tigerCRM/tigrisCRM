@@ -76,6 +76,8 @@ public class NoticeBoardController {
     {
         HttpSession session = request.getSession(false);
         UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
+        String userClass = String.valueOf(loginUser.getUserClass());
+        model.addAttribute("userClass",userClass);
         model.addAttribute("searchOptions", commonService.getSelectOptions("b_search_notice"));
         PagingResponse<Map<String, Object>> pageResponse = noticeBoardService.getNoticeBoardList(pagingRequest, loginUser);
         model.addAttribute("noticeBoardList", pageResponse);

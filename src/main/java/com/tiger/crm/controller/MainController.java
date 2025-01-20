@@ -72,7 +72,8 @@ public class MainController
 		user = (UserLoginDto)session.getAttribute("loginUser");
 		LOGGER.info("세션정보 : " + user.toString());
 		model.addAttribute("user", user);
-
+		String userClass = String.valueOf(user.getUserClass());
+		model.addAttribute("userClass",userClass);
 		// 메인 페이지 요청내역 조회
 		List<Map<String, Object>> ticketList = mainService.getMainTicketList(user);
 		// 메인 페이지 완료내역 조회

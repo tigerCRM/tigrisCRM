@@ -13,7 +13,7 @@
     <!-- 컨텐츠 영역 -->
     <div class="main-area">
         <!-- 내용 영역 -->
-        <main class="form-content">
+        <main class="list-content">
             <div class="container">
                 <div class="main-widget-wrap">
                     <div class="content">
@@ -37,17 +37,40 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <input type="hidden" id="searchCompany" class="input--s input01" th:value="${searchKeyword}" >
-                                    <input type="hidden" id="searchType" class="input--s input01" th:value="${searchType}">
-                                    <div>
+                                    <div th:if="${userClass != 'USER'}">
+                                        <div class="dropdown dropdown--s wd110" aria-expanded="false" tabindex="0">
+                                            <select class="dropdown__selected" id="searchCompany" name="searchCompany"
+                                                    th:value="${searchCompany}" onchange="searchTickets(this);">
+                                                <option value="">==고객사==</option>
+                                                <option th:each="op : ${companyOptions}"
+                                                        th:value="${op.companyId}"
+                                                        th:text="${op.companyName}"></option>
+                                            </select>
+                                            <!--<input list="companyOptions" name="searchCompany" id="searchCompany" autocomplete="off">
+                                            <datalist id="companyOptions" th:field="*{companyOptions}">
+                                                <option value="">==고객사==</option>
+                                                <option th:each="op : ${companyOptions}" th:value="${op.companyId}" th:utext="${op.companyName}"></option>
+                                            </datalist>-->
 
-
+                                        </div>
                                     </div>
-                                    <div class="wrap_search">
-                                        <div class="wrap_input">
-                                            <button type="button" class="search_more" id="btnSearchDetail">
-                                                <p style="color:#E1E4EB; font-size:12px;"></p>
-                                            </button>
+                                    <div>
+                                        <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
+                                            <select class="dropdown__selected" id="searchType" name="searchType"
+                                                    th:value="${searchType}">
+                                                <option value="">==검색조건==</option>
+                                                <option th:each="op : ${searchOptions}"
+                                                        th:value="${op.key}"
+                                                        th:text="${op.value}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div th:include="fragments/datepicker :: datepicker('startDate', 'endDate')"></div>
+                                    </div>
+                                    <div>
+                                        <div class="search-wrap">
                                             <input type="text" id="searchKeyword" name="searchKeyword"
                                                    class="input--s input01" placeholder="검색어를 입력해주세요."
                                                    th:value="${searchKeyword}"
@@ -58,30 +81,15 @@
                                                 </svg>
                                             </button>
                                         </div>
-                                        <div id="searchDetail" class="wrap_condition" style="display: none;">
-                                            <div class="detail_condition group">
-                                                <div class="wrap_radio type_button">
-                                                    <input type="radio" name="filterType" id="group01" value="TITLEANDCONTENTS" checked=""> <label for="group01">제목+내용</label>
-                                                    <input type="radio" name="filterType" id="group02" value="TITLE"><label for="group02">제목</label>
-                                                    <input type="radio" name="filterType" id="group03" value="CONTENTS"><label for="group03">내용</label>
-                                                    <input type="radio" name="filterType" id="group04" value="WRITER"><label for="group04">작성자</label>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <input type="text" class="input--s input01 datepicker-input start-date" placeholder="시작 일자" id="startDate" th:name="${startDateId}">
-                                                <button type="button" class="btn just-icon btn--24 calendar-btn">
-                                                    <svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use></svg>
-                                                </button>
-                                                ~
-                                                <input type="text" class="input--s input01 datepicker-input end-date" placeholder="종료 일자" id="endDate" th:name="${endDateId}">
-                                                <button type="button" class="btn just-icon btn--24 calendar-btn">
-                                                    <svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use></svg>
-                                                </button>
-                                            </div>
-                                            <button type="button" class="btn_close02" id="searchClose">
-                                                <svg class="icon"><use href="./assets/images/icon/sprite-sheet.svg#close"></use></svg>
-                                            </button>
-                                        </div>
+                                    </div>
+                                    <div style="align-content: center;">
+                                        <button class="btn just-icon btn--24" onclick="searchTickets(this);"
+                                                id="refresh">
+                                            <i class="ri-find-replace-line"></i>
+                                           <!-- <svg class="icon">
+                                                <use th:href="@{/assets/images/icon/sprite-sheet.svg#refresh}"/>
+                                            </svg>-->
+                                        </button>
                                     </div>
                                     <div style="align-content: center;">
                                         <label class="checkbox02">
@@ -90,6 +98,11 @@
                                                    th:onclick="searchTickets(this);">
                                             <span>내가 작성한 글 보기</span>
                                         </label>
+                                    </div>
+                                    <div style="margin-left:auto;">
+                                        <button class="btn btn--s  secondary-btn" onclick="exceldownload(this);"
+                                                id="excelticket">엑셀다운로드
+                                        </button>
                                     </div>
                                 </div>
                                 <!-- //검색영역 -->
@@ -117,22 +130,28 @@
                                     <table class="table table01 table-ellipsis">
                                         <colgroup>
                                             <col style="width: 10%;">
+                                            <col style="width: 10%;">
                                             <col style="width: 4%;">
-                                            <col style="width: 30%;">
+                                            <col style="width: 21%;">
+                                            <col style="width: 8%;">
                                             <col style="width: 10%;">
+                                            <col style="width: 5%;">
                                             <col style="width: 10%;">
-                                            <col style="width: 10%;">
+                                            <col style="width: 7%;">
                                             <col style="width: 10%;">
                                             <col style="width: 10%;">
                                         </colgroup>
                                         <thead>
                                         <tr>
                                             <th>요청번호</th>
+                                            <th>고객사</th>
                                             <th></th>
                                             <th class="board-title">제목</th>
+                                            <th>분류</th>
                                             <th>상태</th>
-                                            <th>요청자</th>
-                                            <th>담당자</th>
+                                            <th>범위</th>
+                                            <th>담당</th>
+                                            <th>MD</th>
                                             <th>등록일</th>
                                             <th>완료일</th>
                                         </tr>
@@ -140,16 +159,25 @@
                                         <div>
                                             <tbody>
                                             <tr th:if="${ticketList == null or ticketList.dataList == null or #lists.isEmpty(ticketList.dataList)}">
-                                                <td colspan="8" style="text-align:center;">등록된 요청이 없습니다.</td>
+                                                <td colspan="11" style="text-align:center;">등록된 요청이 없습니다.</td>
                                             </tr>
 
                                             <tr th:each="ticket : ${ticketList.dataList}" th:attr="data-id=${ticket['TICKET_ID']}" >
                                                 <td><span th:text="${ticket['TICKET_ID']}"></span></td>
+                                                <td><span th:text="${ticket['COMPANY_NAME']}"></span></td>
                                                 <td><span th:if="${ticket['PRIORITY_YN'] == 'Y'}" class="tag tag--red">긴급</span>
                                                 </td>
                                                 <td class="text-left" >
                                                     <a th:text="${ticket['TITLE']}" th:attr="data-id=${ticket['TICKET_ID']}" style="cursor: pointer;" onclick="gotoTicket(this)"></a>
                                                 </td>
+                                                <td><span th:switch="${ticket['REQUEST_TYPE_CD']}" >
+                                                    <span th:case="'QA'">문의답변</span>
+                                                    <span th:case="'ERR'">오류수정</span>
+                                                    <span th:case="'ADD'">기능추가</span>
+                                                    <span th:case="'CH'">기능변경</span>
+                                                    <span th:case="'SP'">기술지원</span>
+                                                    <span th:case="'ETC'">기타</span>
+                                                </span></td>
                                                 <td><span th:switch="${ticket['STATUS_CD']}">
                                                     <span th:case="'OPEN'" class="tag tag--blue">등록</span>
                                                     <span th:case="'RECEIPT'" class="tag tag--navy">접수</span>
@@ -158,8 +186,12 @@
                                                     <span th:case="'CLOSED'" class="tag tag--gray">완료</span>
                                                     <span th:case="*"></span> <!-- 기본 값 -->
                                                 </span></td>
-                                                <td><span th:text="${ticket['CREATE_NAME']}"></span></td>
+                                                <td><span th:switch="${ticket['SUPPORT_CD']}">
+                                                    <span th:case="'ST'">기본</span>
+                                                    <span th:case="'ADD'">추가</span>
+                                                </span></td>
                                                 <td><span th:text="${ticket['USER_NAME']}"></span></td>
+                                                <td><span th:text="${ticket['MD']}"></span></td>
                                                 <td><span th:text="${ticket['CREATE_DT']}"></span></td>
                                                 <td><span th:text="${ticket['COMPLETE_DT']}"></span></td>
                                             </tr>
@@ -194,31 +226,6 @@
             sessionStorage.removeItem("fromTicketView");
         }
     });
-    $("#btnSearchDetail").click(function(){
-
-		if($('#searchDetail').css("display")=="none") {
-			$('#searchDetail').show();
-		}else {
-			$('#searchDetail').hide();
-		}
-
-	});
-	$("#searchClose").click(function(){
-
-		if($('#searchDetail').css("display")=="none") {
-			$('#searchDetail').show();
-		}else {
-			$('#searchDetail').hide();
-			$("#searchType").val("");
-           // $("#searchStatus").val("");
-           // $("#searchCompany").val("");
-            $("#searchKeyword").val("");
-            $("#startDate").val("");
-            $("#endDate").val("");
-           // document.getElementById('writerYn').checked = false
-		}
-
-	});
 
     function filterOptions() {
         const searchText = document.getElementById('searchBox').value.toLowerCase();
@@ -236,24 +243,16 @@
         window.location.href = `/ticketView?id=${ticketId}`;
     }
     function searchTickets(obj) {
-        $('#searchDetail').hide();
         if (obj.id == "refresh"){
           $("#searchType").val("");
           $("#searchStatus").val("");
-          $("#searchCompany").val("");
+          $("#searchCompany").val("");ticketList.html
           $("#searchKeyword").val("");
           $("#startDate").val("");
           $("#endDate").val("");
           document.getElementById('writerYn').checked = false
         }
         var searchType = $("#searchType").val();
-        const checkedRadio = document.querySelector('input[name="filterType"]:checked');
-        if (checkedRadio) {
-            // 체크된 라디오 버튼의 value 값
-            const value = checkedRadio.value;
-            searchType = value
-        }
-
         var searchStatus = $("#searchStatus").val();
         var searchCompany = $("#searchCompany").val();
         var searchKeyword = $("#searchKeyword").val();

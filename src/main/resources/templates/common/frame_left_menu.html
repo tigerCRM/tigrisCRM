@@ -1,9 +1,12 @@
 <body>
     <div th:fragment="frame_left_menu" id="sidebar" class="main-sidebar main-sidebar--expand">
-        <div style="padding-top: 70px;"></div>
+        <div style="padding-top: 10px;"></div>
+        <div class="logo" onclick="location.href='/main';" style="cursor: pointer;">
+            <span class="hidden"></span>
+        </div>
         <div class="profile">
             <div class="profile__img profile__img--48">
-                <a href="#">
+                <a>
                     <img th:src="@{/assets/images/temp/profile.png}" alt="">
                 </a>
             </div>
@@ -19,7 +22,7 @@
         <nav class="main-lnb">
             <ul>
                 <li>
-                    <a class="menu-item" id="alertMenuBtn">
+                    <a href="#" class="menu-item" id="alertMenuBtn">
                         <span class="menu-icon">
                             <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#notification}"/></svg>
                         </span>
@@ -33,7 +36,7 @@
                     </div>
                 </li>
                 <li>
-                    <a class="menu-item" id="settingMenuBtn">
+                    <a href="#" class="menu-item" id="settingMenuBtn">
                         <span class="menu-icon">
                             <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#setting}"/></svg>
                         </span>
@@ -43,7 +46,6 @@
                     </a>
                     <!-- 설정(톱니바퀴) 드롭다운 메뉴 추가 -->
                     <ul class="dropdown-menu" id="settingDropdownMenu" style="display:none">
-                        <li id="resetPassword"><a href="#" id="resetPasswordBtn" class="button">비밀번호 초기화</a></li>
                         <li id="logout">
                             <a href="#" onclick="if(confirm('로그아웃 하시겠습니까?')) window.location.href='/logout'; else alert('취소하였습니다.'); return false;">로그아웃</a>
                         </li>
@@ -62,13 +64,24 @@
                         </p>
                     </a>
                 </li>
-                <li>
+                <li th:if="${userClass != 'USER'}">
+                    <a href="ticketListAdmin" class="menu-item">
+                            <span class="menu-icon">
+                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#inbox-archive}"/></svg>
+                            </span>
+                        <p class="menu-title">
+                            <span class="menu-title__text">요청관리(관리자)</span>
+                            <span class="menu-title__num"></span>
+                        </p>
+                    </a>
+                </li>
+                <li th:if="${userClass != 'USER'}">
                     <a href="systemBoardList" class="menu-item">
                             <span class="menu-icon">
                                 <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#file-info}"/></svg>
                             </span>
                         <p class="menu-title">
-                            <span class="menu-title__text">시스템 정보</span>
+                            <span class="menu-title__text">시스템 관리</span>
                             <span class="menu-title__num"  th:field=${userClass} ></span>
                         </p>
                     </a>
@@ -231,10 +244,9 @@
                                             <button type='button' name='close-btn' class='btn icon-btn close-btn'>
                                                 <svg class='icon'><use href='./assets/images/icon/sprite-sheet.svg#close'/></svg>
                                             </button>
-
                                             <a>
-
-                                                <div class='profile'  data-id="${alert.alertId}" data-alertObjectId="${alert.alertObjectId}">
+                                                <span class="${alert.readYn === 'Y' ? '' : 'badge badge--s'}"></span>
+                                                <div class='profile' name='alarmview' data-id="${alert.alertId}" data-alertObjectId="${alert.alertObjectId}">
                                                     <div class='profile__info'>
                                                         <p class='alarm__user-info'>
                                                             <span class='name'>${alert.userName}</span>
@@ -287,7 +299,7 @@
                 $alertMenuBtn.on('click', function(event) {
                     event.stopPropagation(); // 이벤트 전파 방지
                     $alertDropdownMenu.toggle(); // 알림 드롭다운 토글
-                  //  $('#settingDropdownMenu').hide(); // 설정 드롭다운이 열려있다면 닫기
+                    $('#settingDropdownMenu').hide(); // 설정 드롭다운이 열려있다면 닫기
                 });
 
                 // -------------------
@@ -296,7 +308,6 @@
                 $(document).on("click", "#closeAlertBtn", function() {
                     $alertDropdownMenu.toggle(); // 알림 드롭다운 토글
                 });
-
 
                 // -------------------
                 // 설정 메뉴 토글
@@ -362,7 +373,7 @@
             // 종 알림 클릭 시 -1
             // 상세페이지로 이동
             // ------------------
-            $(document).on('click', '.profile', function (e) {
+            $(document).on('click', '[name="alarmview"]', function (e) {
                 e.preventDefault(); // 기본 동작(페이지 이동)을 방지
                 const alertId = $(this).data('id'); // 알림 ID 가져오기
                 const alertObjectId =  $(this).data('alertobjectid')  // data-alertObjectId 속성값을 가져옴
@@ -415,6 +426,7 @@
             // 요청 전송 후 alert
             // 작성자 : 제예솔
             // ------------------
+            if (document.getElementById('resetPasswordBtn')!=null){
             document.getElementById('resetPasswordBtn').addEventListener('click', function (event) {
                 event.preventDefault(); // 기본 링크 동작 방지
 
@@ -443,6 +455,8 @@
                     spinner.style.display = 'none'; // 스피너 숨기기
                 });
             });
+
+            }
 
         </script>
     </div>

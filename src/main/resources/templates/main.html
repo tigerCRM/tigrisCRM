@@ -45,7 +45,7 @@
                                             <tbody>
                                             <div id="requestList" th:if="${ticketList != null}">
                                                 <tr th:if="${ticketList == null or #lists.isEmpty(ticketList)}">
-                                                    <td colspan="4" style="text-align:center;">내역이 없습니다</td>
+                                                    <td colspan="5" style="text-align:center;">내역이 없습니다</td>
                                                 </tr>
                                                 <tr th:each="item : ${ticketList}">
                                                     <td><span th:text="${item.TICKET_ID}"></span></td>

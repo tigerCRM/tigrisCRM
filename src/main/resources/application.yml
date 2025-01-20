@@ -28,7 +28,13 @@ spring:
     # driver-class-name: org.mariadb.jdbc.Driver
     # username: root
     # password: Xkdlrj@2024!
-    url: jdbc:mariadb://192.168.0.240:3306/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
+    # 사무실
+    # url: jdbc:mariadb://192.168.0.240:3306/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
+    # driver-class-name: org.mariadb.jdbc.Driver
+    # username: crmservice
+    # password: mp$0wnEgq*d(0CzH
+
+    url: jdbc:mariadb://61.74.221.49:30190/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
     driver-class-name: org.mariadb.jdbc.Driver
     username: crmservice
     password: mp$0wnEgq*d(0CzH
@@ -39,21 +45,22 @@ spring:
     multipart:
       max-file-size: 30MB #파일 하나의 최대 크기
       max-request-size: 30MB #한번에 최대 업로드 가능용량
+    session:
+      tracking-modes: cookie
 
   profiles:
     active: local
 
   mail:
-    # host: smtp.sirteam.net  # SMTP 서버
-    host:  smtp.naver.com  # SMTP 서버
+    host: smtp.sirteam.net  # SMTP 서버
+    #host:  smtp.naver.com  # SMTP 서버
     port: 465  # 포트
-    username: dkstkdwo93@naver.com  # 발송자 이메일
-    password: LXQVXWQXU631 # 발송자 이메일 비밀번호
+    username: ygnam@tigrison.com  # 발송자 이메일
+    password: 0pCd^3%G # 발송자 이메일 비밀번호
     properties:
       mail.smtp.auth: true  # SMTP 인증
       mail.smtp.starttls.enable: false  # STARTTLS 사용
       mail.smtp.ssl.enable: true # SSL활성화
-
 # 메일 용 url
 app:
   # 개발
@@ -78,7 +85,7 @@ aes256:
 # File
 file:
   dir: /home/crmdevuser/files
-  # dir: C:\TigerCompany\crm
+  #dir: C:\Temp\fileUpload
 
 # Cookie
 cookie:

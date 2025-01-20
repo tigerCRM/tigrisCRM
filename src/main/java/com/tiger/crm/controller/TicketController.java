@@ -94,12 +94,14 @@ public class TicketController {
             UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
             String userClass = String.valueOf(loginUser.getUserClass());
             String userid = String.valueOf(loginUser.getUserId());
+            String companyId = String.valueOf(loginUser.getCompanyId());
             pagingRequest.setUserClass(userClass);
             if (pagingRequest.getCreateId().equals("true")){
                 pagingRequest.setCreateId(userid);
             }else{
                 pagingRequest.setCreateId("");
             }
+            pagingRequest.setCompanyId(companyId);
             // 요청 조회
             PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
             model.addAttribute("userClass",userClass);
@@ -108,6 +110,34 @@ public class TicketController {
             return "ticketList :: ticketListFragment";
         } catch (Exception e) {
             throw new CustomException("ticketList : 예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
+        }
+    }
+
+    /*
+     * 요청관리(요청관리)
+     * 설명 : 요청관리 페이지 초기화면
+     * */
+    @GetMapping("/ticketListAdmin")
+    public String getTicketsAdmin(@ModelAttribute PagingRequest pagingRequest, HttpServletRequest request, Model model) {
+        try {
+            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
+            String companyId = String.valueOf(loginUser.getCompanyId());
+            String userClass = String.valueOf(loginUser.getUserClass());
+            pagingRequest.setUserClass(userClass);
+            pagingRequest.setCompanyId(companyId);
+            model.addAttribute("userClass",userClass);
+            // selectbox 바인딩
+            List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
+            model.addAttribute("companyOptions", companyOptions);//회사 옵션 정보 가져오기
+            model.addAttribute("statusOptions", commonService.getSelectOptions("t_status"));
+            model.addAttribute("searchOptions", commonService.getSelectOptions("t_search"));
+            pagingRequest.setCreateId("");
+            // 요청 조회
+            PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
+            model.addAttribute("ticketList", pageResponse);
+            return "ticketListAdmin";
+        } catch (Exception e) {
+            throw new CustomException("ticketList : 데이터를 불러오는 중 오류가 발생했습니다.", e);
         }
     }
 
@@ -224,6 +254,9 @@ public class TicketController {
             if (ticketDto.getCompleteDt() == null || ticketDto.getCompleteDt().isEmpty() ) {
                 ticketDto.setCompleteDt(null);
             }
+            if (ticketDto.getTitle().isEmpty()) {
+               // throw new CustomException("요청 저장에 실패했습니다.");
+            }
             // 요청 저장
             int ticketId = ticketService.saveTicket(ticketDto);
             if (ticketId == 0) {
@@ -315,6 +348,11 @@ public class TicketController {
             }
             if (ticketDto.getCompleteDt() == null || ticketDto.getCompleteDt().isEmpty()) {
                 ticketDto.setCompleteDt(null);
+            }else{
+                LocalDateTime getdate = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                String formattedDate = getdate.format(formatter);
+                ticketDto.setCompleteDt(formattedDate);
             }
             // 요청 수정 업데이트
             ticketId = ticketService.saveTicketModify(ticketDto);

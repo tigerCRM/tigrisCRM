@@ -29,7 +29,7 @@
     <!-- 왼쪽 메뉴  -->
     <div th:replace="~{common/frame_left_menu :: frame_left_menu}"/>
     <!-- 상단 메뉴  -->
-    <div th:replace="~{common/frame_top_menu :: frame_top_menu}"/>
+ <!--   <div th:replace="~{common/frame_top_menu :: frame_top_menu}"/>-->
     <!-- 컨텐츠 영역 -->
     <div class="main-area">
         <!-- 내용 영역 -->
@@ -165,7 +165,7 @@
                                     <tr>
                                         <th>연관요청</th>
                                         <td colspan="3">
-                                            <input type="text" th:field="*{parentTicketCd}" readonly>
+                                            <span type="text" id="parentTicketCd" th:text="*{parentTicketCd}"></span>
                                         </td>
                                     </tr>
                                     <tr th:if="${userClass != 'USER'}">
@@ -240,10 +240,10 @@
                                 <div class="button-group align-right">
                                     <!--<button type="button" class="btn btn&#45;&#45;m primary-btn"
                                             th:if="${mode == 'write'}" onclick="validateAndSubmit()">등록</button>-->
-                                    <button type="submit" class="btn btn--m primary-btn" th:if="${mode == 'write'}">등록</button>
 
-                                    <button class="btn btn--m primary-btn" th:if="${mode == 'modify'}">저장</button>
-                                    <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'modify'}" onclick="deleteTicket()">삭제</button>
+                                    <button type="button" class="btn btn--m primary-btn" th:if="${mode == 'write'}" onclick="validateAndSubmit()">등록</button>
+                                    <button type="button" class="btn btn--m primary-btn" th:if="${mode == 'modify'}"  onclick="validateAndSubmit()">저장</button>
+                                    <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'read'}" onclick="deleteTicket()">삭제</button>
                                     <button type="button" class="btn btn--m  secondary-btn"
                                             onclick="goBack()">취소
                                     </button>
@@ -272,10 +272,7 @@
     //document.querySelector('input[name="deleteSavedAttachFiles"]').value = deleteSavedAttachFiles;
     //2. form submit 시 toast editor 영역 안의 값을 content 안에 넣음
     document.querySelector('#SubmitArea').addEventListener('submit', function (e) {
-         const content = editor.getHTML(); // 에디터 안의 html 콘텐츠를 가져옴
-         document.querySelector('#content').value = content; // hidden input 안에 입력한 데이터를 넣고 전송
-         //첨부파일 설정
-         common.attachFileWorks();
+
     });
     document.addEventListener("DOMContentLoaded", () => {
         const titleField = document.getElementById("title");
@@ -283,21 +280,43 @@
             titleField.focus();
         }
     });
+
     // 무결성 검사
-    document.getElementById('SubmitArea').addEventListener('submit', function(event) {
+    function validateAndSubmit(){
         const form = document.getElementById("SubmitArea");
         const title = document.getElementById("title");
+        const md = document.getElementById("md");
+        const isNumberOrDecimal = /^\d+(\.\d+)?$/;
 
         if (!title.value.trim()) {
             title.classList.add("input--error");
             title.focus();
             isValid = false;
             showMessage('info', '필수값', '제목을 입력하세요.');
-            return;
-        }else {
-            title.classList.remove("input--error");
+            return false;
         }
-    });
+        if (md!=null){
+            // 숫자만 입력 제한
+            if (md.value != '' & !isNumberOrDecimal.test(md.value) ) {
+                md.classList.add("input--error");
+                md.focus();
+                showMessage('info', '필수값', '숫자와 소수점만 입력할 수 있습니다.');
+                return false;
+            }
+            md.classList.remove("input--error");
+        }
+        title.classList.remove("input--error");
+        formSubmit();
+
+    }
+
+    function formSubmit(){
+         const content = editor.getHTML(); // 에디터 안의 html 콘텐츠를 가져옴
+         document.querySelector('#content').value = content; // hidden input 안에 입력한 데이터를 넣고 전송
+         //첨부파일 설정
+         common.attachFileWorks();
+         document.getElementById("SubmitArea").submit();
+    }
 
     function updateCompanyName(selectElement) {
         const selectedOption = selectElement.options[selectElement.selectedIndex];

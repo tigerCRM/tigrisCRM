@@ -9,9 +9,6 @@
     <!-- 왼쪽 메뉴  -->
     <div th:replace="~{common/frame_left_menu :: frame_left_menu}" />
 
-    <!-- 상단 메뉴  -->
-    <div th:replace="~{common/frame_top_menu :: frame_top_menu}" />
-
     <!-- 컨텐츠 영역 -->
     <div class="main-area">
         <!-- 내용 영역 -->
@@ -188,11 +185,11 @@
     // -------------------
     // 클릭 시 css 활성화
     // ------------------
-    // 이벤트 위임을 사용하여 각 li 요소에 active 클래스 추가
-    $('#opReportList-items').on('click', 'li', function () {
-        // 모든 li 항목에서 active 클래스 제거
+    $('#opReportList-items li').on('click', function () {
+        // 모든 항목에서 active 클래스 제거
         $('#opReportList-items li').removeClass('active');
-        // 클릭된 li 항목에 active 클래스 추가
+
+        // 클릭된 항목에 active 클래스 추가
         $(this).addClass('active');
     });
 </script>

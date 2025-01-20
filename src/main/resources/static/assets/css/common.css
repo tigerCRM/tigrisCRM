@@ -184,11 +184,9 @@ a {
     text-decoration: none;
 }
 
-input,
 textarea,
 select,
-button,
-label {
+button{
     cursor: pointer;
 }
 
@@ -1278,6 +1276,71 @@ div::-webkit-scrollbar-button:end:increment {
     /* width: 33.3%; */
     /*가로 길이는 임의로 설정*/
 }
+/* 검색 인풋 */
+/* 날짜형태 */
+.wrap_date {position:relative;}
+.wrap_search {position:relative;}
+.wrap_input {
+	overflow:hidden;position:relative;width: 350px; height:3.2rem;border:1px solid var(--tigris-background-regular);
+	z-index:5
+	}
+.wrap_input > .input01 {
+    width: 100%;
+}
+.wrap_input .icon-btn:focus-visible {
+    color: var(--primary-navy-500);
+    outline: none;
+}
+
+.wrap_input .input--s+.icon-btn {
+    font-size: 1.6rem;
+}
+
+.wrap_input .icon-btn {
+    position: absolute;
+    top: 50%;
+    right: 1.6rem;
+    transform: translateY(-50%);
+    height: 1em;
+    padding: 0;
+    border-radius: 0.4rem;
+    background-color: transparent;
+    font-size: 2.4rem;
+}
+
+.wrap_input > .input01 {
+    width: 75%;
+    height: 3.2rem;
+    border-radius: 0.4rem;
+}
+
+.wrap_input .icon-btn:focus-visible {
+    color: var(--primary-navy-500);
+    outline: none;
+}
+
+.wrap_input .input--s+.icon-btn {
+    font-size: 1.6rem;
+}
+
+.wrap_input .icon-btn {
+    position: absolute;
+    top: 50%;
+    right: 1.6rem;
+    transform: translateY(-50%);
+    height: 1em;
+    padding: 0;
+    border-radius: 0.4rem;
+    background-color: transparent;
+    font-size: 2.4rem;
+}
+
+/* 검색 인풋 */
+.search-wrap {
+    position: relative;
+    /* width: 33.3%; */
+    /*가로 길이는 임의로 설정*/
+}
 
 .search-wrap > .input01 {
     width: 100%;
@@ -1435,7 +1498,9 @@ label.checkbox02 {
     margin: 0;
     background: url('../images/icon/sprite-input.svg') no-repeat 0 -94px;
 }
-
+.clickable input {
+        cursor: pointer;
+    }
 .checkbox02 [type="checkbox"]:checked {
     background-position-x: -26px;
 }
@@ -2332,7 +2397,8 @@ label.checkbox02 input[type="checkbox"]:disabled+span {
 
 
 /* 레이어 팝업 */
-.layerpopup-wrap {
+.layerpopup-wrap,
+.layerpopup-wrap2 {
     position: fixed; /* 레이어가 가운데 오게하기 위함 */
     border-radius: 1.2rem;
     border: 1px solid var(--gray-300);
@@ -2457,7 +2523,7 @@ label.checkbox02 input[type="checkbox"]:disabled+span {
 }
 /*.datepicker .datepicker-input {*/
 .datepicker-input {
-    width: 12rem;
+    width: 11rem;
     text-align: center;
 }
 .datepicker .calendar-btn {
