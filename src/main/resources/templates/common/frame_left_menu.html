@@ -21,7 +21,7 @@
         <nav class="main-lnb">
             <ul>
                 <li>
-                    <a class="menu-item" id="alertMenuBtn">
+                    <a href="#" class="menu-item" id="alertMenuBtn">
                         <span class="menu-icon">
                             <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#notification}"/></svg>
                         </span>
@@ -35,7 +35,7 @@
                     </div>
                 </li>
                 <li>
-                    <a class="menu-item" id="settingMenuBtn">
+                    <a href="#" class="menu-item" id="settingMenuBtn">
                         <span class="menu-icon">
                             <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#setting}"/></svg>
                         </span>
@@ -64,7 +64,18 @@
                         </p>
                     </a>
                 </li>
-                <li>
+                <li th:if="${userClass != 'USER'}">
+                    <a href="ticketListAdmin" class="menu-item">
+                            <span class="menu-icon">
+                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#inbox-archive}"/></svg>
+                            </span>
+                        <p class="menu-title">
+                            <span class="menu-title__text">요청관리(관리자)</span>
+                            <span class="menu-title__num"></span>
+                        </p>
+                    </a>
+                </li>
+                <li th:if="${userClass != 'USER'}">
                     <a href="systemBoardList" class="menu-item">
                             <span class="menu-icon">
                                 <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#file-info}"/></svg>
@@ -225,10 +236,9 @@
                                             <button type='button' name='close-btn' class='btn icon-btn close-btn'>
                                                 <svg class='icon'><use href='./assets/images/icon/sprite-sheet.svg#close'/></svg>
                                             </button>
-
                                             <a>
-
-                                                <div class='profile'  data-id="${alert.alertId}" data-alertObjectId="${alert.alertObjectId}">
+                                                <span class="${alert.readYn === 'Y' ? '' : 'badge badge--s'}"></span>
+                                                <div class='profile' name='alarmview' data-id="${alert.alertId}" data-alertObjectId="${alert.alertObjectId}">
                                                     <div class='profile__info'>
                                                         <p class='alarm__user-info'>
                                                             <span class='name'>${alert.userName}</span>
@@ -281,7 +291,7 @@
                 $alertMenuBtn.on('click', function(event) {
                     event.stopPropagation(); // 이벤트 전파 방지
                     $alertDropdownMenu.toggle(); // 알림 드롭다운 토글
-                  //  $('#settingDropdownMenu').hide(); // 설정 드롭다운이 열려있다면 닫기
+                    $('#settingDropdownMenu').hide(); // 설정 드롭다운이 열려있다면 닫기
                 });
 
                 // -------------------
@@ -356,7 +366,7 @@
             // 종 알림 클릭 시 -1
             // 상세페이지로 이동
             // ------------------
-            $(document).on('click', '.profile', function (e) {
+            $(document).on('click', '[name="alarmview"]', function (e) {
                 e.preventDefault(); // 기본 동작(페이지 이동)을 방지
                 const alertId = $(this).data('id'); // 알림 ID 가져오기
                 const alertObjectId =  $(this).data('alertobjectid')  // data-alertObjectId 속성값을 가져옴

@@ -12,6 +12,7 @@
         SUPPORT_CD,
         IFNULL(MD, '') as MD,
         TITLE,
+        T.CREATE_NAME,
         U.USER_NAME,
         DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d') AS CREATE_DT,
         IFNULL(DATE_FORMAT(IFNULL(COMPLETE_DT, ''), '%Y-%m-%d'),'') as COMPLETE_DT

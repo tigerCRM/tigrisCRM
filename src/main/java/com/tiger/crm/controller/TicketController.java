@@ -112,6 +112,34 @@ public class TicketController {
     }
 
     /*
+     * 요청관리(요청관리)
+     * 설명 : 요청관리 페이지 초기화면
+     * */
+    @GetMapping("/ticketListAdmin")
+    public String getTicketsAdmin(@ModelAttribute PagingRequest pagingRequest, HttpServletRequest request, Model model) {
+        try {
+            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
+            String companyId = String.valueOf(loginUser.getCompanyId());
+            String userClass = String.valueOf(loginUser.getUserClass());
+            pagingRequest.setUserClass(userClass);
+            pagingRequest.setCompanyId(companyId);
+            model.addAttribute("userClass",userClass);
+            // selectbox 바인딩
+            List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
+            model.addAttribute("companyOptions", companyOptions);//회사 옵션 정보 가져오기
+            model.addAttribute("statusOptions", commonService.getSelectOptions("t_status"));
+            model.addAttribute("searchOptions", commonService.getSelectOptions("t_search"));
+            pagingRequest.setCreateId("");
+            // 요청 조회
+            PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
+            model.addAttribute("ticketList", pageResponse);
+            return "ticketListAdmin";
+        } catch (Exception e) {
+            throw new CustomException("ticketList : 데이터를 불러오는 중 오류가 발생했습니다.", e);
+        }
+    }
+
+    /*
      * 엑셀다운로드
      * 설명 : 공통 쿼리문 사용하기위해서 Page와 Size값 fix로 사용(이후 변경 필요)
      * */
@@ -223,6 +251,9 @@ public class TicketController {
             }
             if (ticketDto.getCompleteDt() == null || ticketDto.getCompleteDt().isEmpty() ) {
                 ticketDto.setCompleteDt(null);
+            }
+            if (ticketDto.getTitle().isEmpty()) {
+               // throw new CustomException("요청 저장에 실패했습니다.");
             }
             // 요청 저장
             int ticketId = ticketService.saveTicket(ticketDto);

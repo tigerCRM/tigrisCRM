@@ -704,7 +704,7 @@
     position: absolute;
     top: 21rem;
     left: 25rem;
-    width: 50%;
+    width: 60%;
     overflow: hidden;
 }
 /*  알림(종) 드롭다운 메뉴 스타일 */
@@ -725,7 +725,7 @@
 }
 /* 드롭다운 항목 스타일 */
 .dropdown-menu li, .dropdown-menu2 li {
-    padding: 10px;
+    padding: 12px;
 }
 .dropdown-menu li a, .dropdown-menu2 li a {
     text-decoration: none;

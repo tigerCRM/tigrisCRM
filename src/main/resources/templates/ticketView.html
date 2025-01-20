@@ -6,7 +6,7 @@
     <!-- 왼쪽 메뉴  -->
     <div th:replace="~{common/frame_left_menu :: frame_left_menu}"/>
     <!-- 상단 메뉴  -->
-    <div th:replace="~{common/frame_top_menu :: frame_top_menu}"/>
+<!--    <div th:replace="~{common/frame_top_menu :: frame_top_menu}"/>-->
     <!-- 컨텐츠 영역 -->
     <div class="main-area">
         <!-- 내용 영역 -->
@@ -157,7 +157,7 @@
                                         </td>
                                         <th>연관요청</th>
                                         <td>
-                                            <input type="text" th:field="*{parentTicketCd}" readonly>
+                                            <span type="text"id="parentTicketCd" th:text="*{parentTicketCd}"></span>
                                         </td>
                                     </tr>
                                     <tr>

@@ -1278,21 +1278,54 @@ div::-webkit-scrollbar-button:end:increment {
     /* width: 33.3%; */
     /*가로 길이는 임의로 설정*/
 }
-
-.search-wrap > .input01 {
+/* 검색 인풋 */
+/* 날짜형태 */
+.wrap_date {position:relative;}
+.wrap_search {position:relative;}
+.wrap_input {
+	overflow:hidden;position:relative;width: 350px; height:3.2rem;border:1px solid var(--tigris-background-regular);
+	z-index:5
+	}
+.wrap_input > .input01 {
     width: 100%;
 }
-
-.search-wrap .icon-btn:focus-visible {
+.wrap_input .icon-btn:focus-visible {
     color: var(--primary-navy-500);
     outline: none;
 }
 
-.search-wrap .input--s+.icon-btn {
+.wrap_input .input--s+.icon-btn {
     font-size: 1.6rem;
 }
 
-.search-wrap .icon-btn {
+.wrap_input .icon-btn {
+    position: absolute;
+    top: 50%;
+    right: 1.6rem;
+    transform: translateY(-50%);
+    height: 1em;
+    padding: 0;
+    border-radius: 0.4rem;
+    background-color: transparent;
+    font-size: 2.4rem;
+}
+
+.wrap_input > .input01 {
+    width: 75%;
+    height: 3.2rem;
+    border-radius: 0.4rem;
+}
+
+.wrap_input .icon-btn:focus-visible {
+    color: var(--primary-navy-500);
+    outline: none;
+}
+
+.wrap_input .input--s+.icon-btn {
+    font-size: 1.6rem;
+}
+
+.wrap_input .icon-btn {
     position: absolute;
     top: 50%;
     right: 1.6rem;
@@ -2457,7 +2490,7 @@ label.checkbox02 input[type="checkbox"]:disabled+span {
 }
 /*.datepicker .datepicker-input {*/
 .datepicker-input {
-    width: 12rem;
+    width: 11rem;
     text-align: center;
 }
 .datepicker .calendar-btn {
@@ -3715,16 +3748,7 @@ h2 { margin-bottom: 1rem; font-weight: 700; font-size: 2.4rem; }
     padding :  0 0 10px 0;
 }
 td:nth-child(13), td:nth-child(14), td:nth-child(15), td:nth-child(16) {
-    background-color: var(--gray-400);
-}
-.text-bold{
-    font-weight: bold;
-}
-.text-red{
-    color: var(--error-600);
-}
-.arrow-cursor{
-    cursor: pointer;
+background-color: var(--gray-400);
 }
 /*통계 그리드 잡는 설정 END */
 
