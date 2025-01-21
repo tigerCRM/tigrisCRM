@@ -17,6 +17,7 @@
         LEFT JOIN T_COMPANY_INFO TCI ON TUI.COMPANY_ID = TCI.COMPANY_ID
         WHERE TUI.USER_CLASS = 'USER'
           AND TCI.COMPANY_ID = #{companyId}
+        LIMIT 1
     </select>
 
     <!-- 지원사 정보 조회 -->

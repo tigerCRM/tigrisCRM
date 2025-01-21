@@ -8,9 +8,9 @@
         <!-- 이전 페이지로 이동 버튼 -->
         <li>
             <a class="btn paging-btn arrow-btn"
-               th:classappend="${(list.currentPage - 1) == 0} ? 'disabled'"
+               th:classappend="${list.currentPage <= 10} ? 'disabled'"
                th:data-url="${paginationUrl}"
-               th:data-page="${list.currentPage - 1}"
+               th:data-page="${list.currentPage > 10 ? ((list.currentPage - 1) / 10) * 10 : 1}"
                onclick="callPage()">
                 <svg class="icon">
                     <use href="./assets/images/icon/sprite-sheet.svg#arrow-left"></use>
@@ -18,21 +18,23 @@
             </a>
         </li>
         <!-- 페이지 번호 버튼 -->
-        <li th:if="${list.totalPages > 0}" th:each="i : ${#numbers.sequence(1, list.totalPages)}">
+        <li th:if="${list.totalPages > 0}"
+            th:each="i : ${#numbers.sequence(((list.currentPage - 1) / 10) * 10 + 1, T(java.lang.Math).min(((list.currentPage - 1) / 10) * 10 + 10, list.totalPages))}">
             <a class="btn paging-btn"
                th:data-url="${paginationUrl}"
                th:data-page="${i}"
                th:classappend="${list.currentPage == i} ? 'active' : ''"
-                onclick="callPage()">
+               onclick="callPage()">
                 <span th:text="${i}"></span>
             </a>
         </li>
+
         <!-- 다음 페이지로 이동 버튼 -->
         <li>
             <a class="btn paging-btn arrow-btn"
-               th:classappend="${(list.currentPage + 1) > list.totalPages} ? 'disabled'"
+               th:classappend="${list.currentPage + 10 > list.totalPages} ? 'disabled'"
                th:data-url="${paginationUrl}"
-               th:data-page="${list.currentPage + 1}"
+               th:data-page="${((list.currentPage - 1) / 10) * 10 + 11 <= list.totalPages ? ((list.currentPage - 1) / 10) * 10 + 11 : list.totalPages}"
                onclick="callPage()">
                 <svg class="icon">
                     <use href="./assets/images/icon/sprite-sheet.svg#arrow-right"></use>

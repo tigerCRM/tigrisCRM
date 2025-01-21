@@ -259,7 +259,7 @@
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
                                     <button type="submit" class="btn btn--m primary-btn">수정</button>
-                                    <button type="button" class="btn btn--m danger-btn" th:if="${user.userName == createName}" onclick="deleteTicket()">삭제</button>
+                                    <button type="button" class="btn btn--m danger-btn" th:if="${user != null and (user.userName == ticketinfo.createName or user.userClass != 'USER')}" onclick="deleteTicket()">삭제</button>
                                     <button type="button" class="btn btn--m secondary-btn"
                                             onclick="goReRequest()">재요청</button>
                                     <button type="button" class="btn btn--m secondary-btn"
