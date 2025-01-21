@@ -195,13 +195,13 @@
                                             </colgroup>
                                             <tbody>
                                                 <tr>
-                                                    <th>회사코드</th>
+                                                    <th>고객사 아이디</th>
                                                     <td colspan="2">
                                                         <span id="companyId" th:each="detail : ${companyDetail}" th:text="${detail.companyId}"></span>
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th>회사명</th>
+                                                    <th>고객사 명</th>
                                                     <td colspan="2">
                                                         <span id="companyName" th:each="detail : ${companyDetail}" th:text="${detail.companyName}"></span>
                                                     </td>
@@ -306,8 +306,8 @@
     </div>
     <div class="layerpopup__footer">
         <div class="flex flex-justify_center gap--8 btn-wrap">
-            <button type="button" class="btn btn--s mono-outline-btn" onclick="closeLayerpopup()">취소</button>
             <button type="button" class="btn btn--s primary-btn" onclick="createCompany()">등록</button>
+            <button type="button" class="btn btn--s mono-outline-btn" onclick="closeLayerpopup()">취소</button>
         </div>
     </div>
 </div>
