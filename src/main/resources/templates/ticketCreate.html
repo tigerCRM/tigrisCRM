@@ -164,8 +164,12 @@
                                     </tr>
                                     <tr>
                                         <th>연관요청</th>
-                                        <td colspan="3">
+                                        <td>
                                             <span type="text" id="parentTicketCd" th:text="*{parentTicketCd}"></span>
+                                        </td>
+                                        <th>등록일</th>
+                                        <td>
+                                            <span id="createDt" th:text="*{createDt}"></span>
                                         </td>
                                     </tr>
                                     <tr th:if="${userClass != 'USER'}">

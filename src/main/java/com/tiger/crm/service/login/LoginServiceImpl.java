@@ -7,6 +7,7 @@ import com.tiger.crm.repository.mapper.MailMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import jakarta.mail.MessagingException;
@@ -26,7 +27,8 @@ public class LoginServiceImpl implements LoginService{
     PasswordEncoder passwordEncoder;
     @Autowired
     private MailMapper mailMapper;
-
+    @Value("${app.base-url}")
+    private String baseUrl;
     private Logger LOGGER = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -61,7 +63,7 @@ public class LoginServiceImpl implements LoginService{
             Map<String, Object> model = new HashMap<>();
             model.put("userName", loginMapper.getUserName(user.getUserId()));
             model.put("password", tempPassword);
-
+            model.put("loginUrl", baseUrl);
             mailService.sendEmail(user.getUserId(), "비밀번호 초기화", "password-reset-email", model);
 
         } catch (Exception e) {

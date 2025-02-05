@@ -42,7 +42,9 @@ public class MailService {
         try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-
+            if (!isValidEmail(to)) {
+                throw new IllegalArgumentException("잘못된 이메일 형식: " + to);
+            }
             helper.setFrom("ygnam@tigrison.com");       // 발송인(crm 관리자 계정으로 보낼거니까 고정)
             helper.setTo(to);                             // 수령인
             helper.setSubject("[타이거컴퍼니]" + subject);  // 제목
@@ -69,7 +71,10 @@ public class MailService {
             throw new CustomException("메일 발송 이력 저장 중 오류가 발생했습니다.", e);
         }
     }
-
+    public boolean isValidEmail(String email) {
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+        return email.matches(emailRegex);
+    }
     // 템플릿을 렌더링하는 메서드
     private String generateHtmlContent(String templateName, Map<String, Object> model) {
         try {

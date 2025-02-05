@@ -90,16 +90,18 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>등록일</th>
-                                        <td>
-                                            <span id="createDt" th:text="*{createDt}"></span>
-                                        </td>
                                         <th>담당자</th>
                                         <td>
                                             <span id="managerName" th:text="*{managerName}"></span>
                                             <input type="hidden" id="managerId" th:field="*{managerId}">
                                         </td>
-
+                                        <th>중요도</th>
+                                        <td>
+                                            <span th:switch="*{priorityYn}">
+                                                <span th:case="'Y'">긴급</span>
+                                                <span th:case="'N'">일반</span>
+                                            </span>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>작업구분</th>
@@ -113,21 +115,19 @@
                                                 <span th:case="'ETC'">기타</span>
                                             </span>
                                         </td>
-                                        <th>중요도</th>
-                                        <td>
-                                            <span th:switch="*{priorityYn}">
-                                                <span th:case="'Y'">긴급</span>
-                                                <span th:case="'N'">일반</span>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
                                         <th>지원범위</th>
                                         <td>
                                             <span th:switch="*{supportCd}">
                                                 <span th:case="'ST'">기본</span>
                                                 <span th:case="'ADD'">추가</span>
                                             </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+
+                                        <th>희망완료일</th>
+                                        <td>
+                                            <span id="expectedCompleteDt" name="expectedCompleteDt" th:text="*{expectedCompleteDt}"></span>
                                         </td>
                                         <th>진행상태</th>
                                         <td>
@@ -138,7 +138,10 @@
                                                             th:field="*{statusCd}" th:disabled="${userClass == 'USER'}">
                                                         <option th:each="op : ${statusCd}"
                                                                 th:value="${op.key}"
-                                                                th:text="${op.value}"></option>
+                                                                th:text="${op.value}"
+                                                                th:attr="style=${user.userClass == 'USER' and (op.key == 'OPEN' or op.key == 'RECEIPT' or op.key == 'PROGRESS')} ? 'display: none;' : null">
+
+                                                        </option>
                                                     </select>
                                                 </div>
                                                 <div>
@@ -150,13 +153,15 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>희망완료일</th>
-                                        <td>
-                                            <span id="expectedCompleteDt" name="expectedCompleteDt" th:text="*{expectedCompleteDt}"></span>
-                                        </td>
+
                                         <th>연관요청</th>
                                         <td>
                                             <span id="parentTicketCd" name="parentTicketCd" th:text="*{parentTicketCd}"></span>
+                                        </td>
+
+                                        <th>등록일</th>
+                                        <td>
+                                            <span id="createDt" th:text="*{createDt}"></span>
                                         </td>
                                     </tr>
                                     <tr>
@@ -408,11 +413,11 @@
     //삭제
     function deleteTicket(){
         if (showConfirm("question","삭제하시겠습니까?","")) {}
-    }
-
-    //확인창에서 호출하는 함수
+    }    //확인창에서 호출하는 함수
     function afterConfirm(){
         var id = $("#ticketId").val();
+
+
         var url = `/deleteTicket`;
         fetch(url, {
             method: 'DELETE',

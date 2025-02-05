@@ -12,7 +12,7 @@
             B.TITLE,
             B.CREATE_ID,
             U.USER_NAME,
-            B.CREATE_DT
+            DATE_FORMAT(B.CREATE_DT, '%Y-%m-%d %H:%i:%s') as CREATE_DT
         FROM T_BOARD B
         LEFT JOIN T_BOARD_OPEN_COMPANY OC
             ON B.BOARD_ID = OC.BOARD_ID

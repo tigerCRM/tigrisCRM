@@ -9,4 +9,5 @@ public interface LoginService {
 
     // 비밀번호 초기화
     public void resetPassword(UserLoginDto user) throws MessagingException;
+
 }

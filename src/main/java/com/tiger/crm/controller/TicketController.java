@@ -201,6 +201,7 @@ public class TicketController {
             ticketCreate.setExpectedCompleteDt(expDate);
             ticketCreate.setStatusCd("OPEN");
             ticketCreate.setTicketId(null);
+            ticketCreate.setCreateDt(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
             if (id!=null){  //연관요청 요청일경우
                 // 요청 상세 정보 조회 - 로그인한 본인 회사만 볼수있음
                 TicketDto parentTicketDetails = ticketService.getTicketDetails(id);

@@ -134,7 +134,7 @@
         CREATE_DT, UPDATE_ID, UPDATE_DT, FILE_ID, PARENT_TICKET_CD, SUPPORT_CD, MD)
         VALUES (#{companyId}, #{companyName}, #{statusCd}, #{requestTypeCd}, #{expectedCompleteDt},
         #{completeDt}, #{priorityYn}, #{title}, #{content}, #{managerId}, #{createId}, #{createName},
-        sysdate(), #{updateId}, sysdate(), #{fileId}, #{parentTicketCd}, #{supportCd}, #{md});
+        NOW(), #{updateId}, sysdate(), #{fileId}, #{parentTicketCd}, #{supportCd}, #{md});
     </insert>
 
     <update id="updateTicketInfo" parameterType="com.tiger.crm.repository.dto.ticket.TicketDto"  useGeneratedKeys="true" keyProperty="ticketId">
@@ -151,7 +151,7 @@
             MD = #{md},
             PARENT_TICKET_CD = #{parentTicketCd},
             UPDATE_ID = #{updateId},
-            UPDATE_DT = sysdate()
+            UPDATE_DT = NOW()
         WHERE TICKET_ID = #{ticketId};
     </update>
 

@@ -171,7 +171,8 @@
                                             th:if="${mode == 'read'}"
                                             onclick="getModifyBoard()">수정</button>
                                     <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'read'}" onclick="deleteBoardConfirm()">삭제</button>
-                                    <button type="button" class="btn btn--m  secondary-btn" onclick="location.href='/systemBoardList';">목록</button>
+                                    <button type="button" class="btn btn--m  secondary-btn" th:if="${mode != 'modify'}"onclick="location.href='/systemBoardList';">목록</button>
+                                    <button type="button" class="btn btn--m  secondary-btn" th:if="${mode == 'modify'}" onclick="goBack();">취소</button>
                                 </div>
                                 <!--//버튼그룹-->
                             </div>
@@ -209,7 +210,9 @@
                 }
             );
     });
-
+    function goBack(){
+        window.history.back();
+    }
     //3. form submit 전 작업
     function beforeSubmit(){
         // 에디터 안의 html 콘텐츠를 가져와서 hidden input 안에 데이터를 넣고 전송

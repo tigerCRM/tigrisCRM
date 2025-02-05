@@ -2,26 +2,26 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>비밀번호 변경 안내</title>
+    <title>가입 정보 안내</title>
 </head>
 <body style="font-family: 'Arial', sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
 
 <div style="width: 100%; max-width: 600px; margin: 30px auto; background: #ffffff; padding: 20px;
             border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
 
-    <div style="background: #D9534F; color: #ffffff; text-align: center; padding: 15px; font-size: 24px;
+    <div style="background: #0D349B; color: #ffffff; text-align: center; padding: 15px; font-size: 24px;
                 font-weight: bold; border-radius: 8px 8px 0 0;">
-        비밀번호 변경 안내
+        가입을 환영합니다!
     </div>
 
     <div style="padding: 20px; font-size: 16px; color: #333333;">
-        <p><strong th:text="${userName}"></strong>님, 안녕하세요! 🔒</p>
-        <p>임시비밀번호가 발급되었습니다.</p>
+        <p><strong th:text="${userName}"></strong>님, 안녕하세요! 🎉</p>
+        <p>아래 정보로 회원가입이 완료되었습니다.</p>
 
         <div style="background: #f9f9f9; padding: 15px; border-radius: 6px; margin: 10px 0;
-                    border-left: 5px solid #D9534F;">
-            <p><strong>임시 비밀번호:</strong> <span th:text="${password}"></span></p>
-            <p>보안을 위해 로그인 후 반드시 비밀번호를 변경해 주세요.</p>
+                    border-left: 5px solid #0D349B;">
+            <p><strong>아이디:</strong> <span th:text="${userId}"></span></p>
+            <p><strong>패스워드:</strong> <span th:text="${password}"></span></p>
         </div>
 
         <p>아래 버튼을 클릭하여 로그인해주세요.</p>
@@ -35,7 +35,7 @@
     <div style="text-align: center; font-size: 14px; color: #777777; margin-top: 20px; padding-top: 10px;
                 border-top: 1px solid #dddddd;">
         &copy; 2025 tigerCompany. All rights reserved.<br>
-        이 메일은 (주)타이거컴퍼니에서 보내는 보안 알림 메일입니다.
+        이 메일은 (주)타이거컴퍼니에서 보내는 정보 메일입니다.
     </div>
 </div>
 

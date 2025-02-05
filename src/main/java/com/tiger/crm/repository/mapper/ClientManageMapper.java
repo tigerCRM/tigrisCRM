@@ -33,5 +33,14 @@ public interface ClientManageMapper {
     void createCompany(ClientManageDto clientManageDto);
 
     // 신규 고객 등록
-    void createClient(@Param("clientManageDto") ClientManageDto clientManageDto, @Param("tempPwd") String tempPwd);
+    void createClient(@Param("clientManageDto") ClientManageDto clientManageDto);
+
+    // 고객사 수정
+    void updateCompany(ClientManageDto clientManageDto);
+
+    // 사용자 수정
+    void updateClient(ClientManageDto clientManageDto);
+
+    //연락망
+    List<ClientManageDto> getContacts();
 }

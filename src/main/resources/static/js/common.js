@@ -389,7 +389,7 @@ var common = {
                             window.location.href = '/noticeBoardList';
                         } else if (title === '시스템게시글삭제' || title === '시스템게시글저장') {
                             window.location.href = '/systemBoardList';
-                        } else if (title === "필수값" || title === "팝업차단") {
+                        } else if (title === "필수값" || title === "팝업차단" || title === "저장") {
 
                             //location.reload();
                         } else {
@@ -426,7 +426,7 @@ var common = {
             showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
             confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
             cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
-            confirmButtonText: '승인', // confirm 버튼 텍스트 지정
+            confirmButtonText: '확인', // confirm 버튼 텍스트 지정
             cancelButtonText: '취소', // cancel 버튼 텍스트 지정
        //     html: `<span style="font-size: 15px; font-weight: bold;">${text}</span>`,  // 메시지 텍스트 스타일
         }).then((result) => {

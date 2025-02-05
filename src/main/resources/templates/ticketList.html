@@ -52,7 +52,7 @@
                                                    class="input--s input01" placeholder="검색어를 입력해주세요."
                                                    th:value="${searchKeyword}"
                                                    onkeydown="if (event.keyCode === 13) searchTickets(this);">
-                                            <button class="icon-btn search__btn" onclick="searchTickets(this);">
+                                            <button class="icon-btn search__btn" onclick="searchTickets(this);" style="padding-right: 10px;">
                                                 <svg class="icon">
                                                     <use th:href="@{/assets/images/icon/sprite-sheet.svg#search}"/>
                                                 </svg>
@@ -78,7 +78,7 @@
                                                     <svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use></svg>
                                                 </button>
                                             </div>
-                                            <button type="button" class="btn_close02" id="searchClose">
+                                            <button type="button" class="btn_close02" id="searchClose" >
                                                 <svg class="icon"><use href="./assets/images/icon/sprite-sheet.svg#close"></use></svg>
                                             </button>
                                         </div>

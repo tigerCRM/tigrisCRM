@@ -9,10 +9,12 @@
         SELECT COMPANY_ID,
                COMPANY_NAME
         FROM T_COMPANY_INFO
-        WHERE USE_YN = 'Y'
+       <!-- WHERE USE_YN = 'Y'-->
+        <where>
         <if test="searchCompany != null and searchCompany != ''">
-            AND COMPANY_NAME LIKE CONCAT('%', #{searchCompany}, '%')
+            COMPANY_NAME LIKE CONCAT('%', #{searchCompany}, '%')
         </if>
+        </where>
         <!-- 페이지 처리 (페이징 처리) -->
         <if test="page != null">
             LIMIT #{offset}, #{size} <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
@@ -33,7 +35,10 @@
     <select id="getCompanyDetail" resultType="com.tiger.crm.repository.dto.client.ClientManageDto">
         select COMPANY_ID,
                COMPANY_NAME,
-               (SELECT USER_NAME FROM T_USER_INFO WHERE USER_ID = MANAGER_ID) AS MANAGER_ID
+                MANAGER_ID,
+               (SELECT USER_NAME FROM T_USER_INFO WHERE USER_ID = MANAGER_ID) AS MANAGER_NAME,
+                NOTES,
+                USE_YN as companyuseYn
         from T_COMPANY_INFO
         where COMPANY_ID = #{companyId}
     </select>
@@ -51,16 +56,13 @@
                END  AS USER_CLASS
         FROM T_USER_INFO TUI
         LEFT JOIN T_COMPANY_INFO TCI ON (TUI.COMPANY_ID = TCI.COMPANY_ID)
-        WHERE TUI.USE_YN = 'Y'
-        <if test="userId != null and userId != ''">
-            AND TUI.USER_ID LIKE CONCAT('%', #{userId}, '%')
-        </if>
-        <if test="userName != null and userName != ''">
-            AND TUI.USER_NAME LIKE CONCAT('%', #{userName}, '%')
-        </if>
-        <if test="searchCompany != null and searchCompany != ''">
-            AND TCI.COMPANY_NAME LIKE CONCAT('%', #{searchCompany}, '%')
-        </if>
+        <where>
+            <!--TUI.USE_YN = 'Y'-->
+            <if test="userId != null and userId != ''">
+                TUI.USER_ID LIKE CONCAT('%', #{userId}, '%') OR TUI.USER_NAME LIKE CONCAT('%', #{userId}, '%') OR TCI.COMPANY_NAME LIKE CONCAT('%', #{userId}, '%')
+            </if>
+
+        </where>
         <!-- 페이지 처리 (페이징 처리) -->
         <if test="page != null">
             LIMIT #{offset}, #{size} <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
@@ -72,35 +74,40 @@
         SELECT COUNT(*)
         FROM T_USER_INFO TUI
         LEFT JOIN T_COMPANY_INFO TCI ON (TUI.COMPANY_ID = TCI.COMPANY_ID)
-        WHERE TUI.USE_YN = 'Y'
-        <if test="userId != null and userId != ''">
-            AND TUI.USER_ID LIKE CONCAT('%', #{userId}, '%')
-        </if>
-        <if test="userName != null and userName != ''">
-            AND TUI.USER_NAME LIKE CONCAT('%', #{userName}, '%')
-        </if>
-        <if test="searchCompany != null and searchCompany != ''">
-            AND TCI.COMPANY_NAME LIKE CONCAT('%', #{searchCompany}, '%')
-        </if>
+        <!--WHERE TUI.USE_YN = 'Y'-->
+        <where>
+            <if test="userId != null and userId != ''">
+                AND TUI.USER_ID LIKE CONCAT('%', #{userId}, '%')
+            </if>
+            <if test="userName != null and userName != ''">
+                AND TUI.USER_NAME LIKE CONCAT('%', #{userName}, '%')
+            </if>
+            <if test="searchCompany != null and searchCompany != ''">
+                AND TCI.COMPANY_NAME LIKE CONCAT('%', #{searchCompany}, '%')
+            </if>
+        </where>
     </select>
 
     <!-- 고객 상세 조회 -->
     <select id="getClientDetail" resultType="com.tiger.crm.repository.dto.client.ClientManageDto">
         SELECT TUI.USER_NAME,
-               TUI.USER_id,
-               TUI.COMPANY_ID,
-               TCI.COMPANY_NAME,
-               CASE
-                   WHEN TUI.USER_CLASS = 'USER' THEN '일반사용자'
-                   WHEN TUI.USER_CLASS = 'ADMIN' THEN '관리자'
-                   WHEN TUI.USER_CLASS = 'SYSADMIN' THEN '최고관리자'
-               END AS USER_CLASS,
-               TUI.EMAIL,
-               TUI.PHONE
+            TUI.USER_ID,
+            TUI.COMPANY_ID,
+            TCI.COMPANY_NAME,
+            TUI.USER_CLASS,
+            <!--CASE
+               WHEN TUI.USER_CLASS = 'USER' THEN '일반사용자'
+               WHEN TUI.USER_CLASS = 'ADMIN' THEN '관리자'
+               WHEN TUI.USER_CLASS = 'SYSADMIN' THEN '최고관리자'
+            END AS USER_CLASS,-->
+            TUI.EMAIL,
+            TUI.PHONE,
+            TUI.USE_YN as useruseYn
         FROM T_USER_INFO TUI
         LEFT JOIN T_COMPANY_INFO TCI ON (TUI.COMPANY_ID = TCI.COMPANY_ID)
-        WHERE TUI.USE_YN = 'Y'
-          and TUI.USER_ID = #{userId}
+        WHERE
+        <!--TUI.USE_YN = 'Y' and -->
+        TUI.USER_ID = #{userId}
     </select>
 
     <!-- 신규 고객사 등록 -->
@@ -115,12 +122,23 @@
         )VALUES (
             #{companyName},
             #{managerId},
-            SYSDATE(),
+            NOW(),
             #{userId},
             #{notes},
             'Y'
         )
     </insert>
+
+    <update id="updateCompany" >
+        UPDATE T_COMPANY_INFO
+        SET COMPANY_NAME = #{companyName},
+        MANAGER_ID = #{managerId},
+        NOTES = #{notes},
+        UPDATE_DT = NOW(),
+        UPDATE_ID = #{userId},
+        USE_YN = #{companyuseYn}
+        WHERE COMPANY_ID = #{companyId}
+    </update>
 
     <!-- 신규 고객 등록 -->
     <insert id="createClient" parameterType="map">
@@ -138,14 +156,37 @@
         )VALUES (
             #{clientManageDto.userId},
             #{clientManageDto.userName},
-            #{tempPwd},
-            '0', /* 관리자가 고객 등록 시 회사번호 0 */
+            #{clientManageDto.userPw},
+            #{clientManageDto.clientcompanyId},
             #{clientManageDto.userClass},
             #{clientManageDto.email},
             #{clientManageDto.phone},
             #{clientManageDto.createId},
-            SYSDATE(),
+            NOW(),
             'Y'
         )
     </insert>
+
+    <update id="updateClient" >
+        UPDATE T_USER_INFO
+        SET  USER_NAME = #{userName},
+        COMPANY_ID= #{clientcompanyId},
+        USER_CLASS = #{userClass},
+        EMAIL = #{email},
+        PHONE = #{phone},
+        USE_YN = #{useruseYn},
+        UPDATE_ID = #{updateId},
+        UPDATE_DT = NOW()
+        WHERE USER_ID = #{userId}
+    </update>
+
+    <select id="getContacts" resultType="com.tiger.crm.repository.dto.client.ClientManageDto">
+        SELECT TUI.USER_NAME,
+            TUI.USER_ID,
+            TUI.EMAIL,
+            TUI.PHONE
+        FROM T_USER_INFO TUI
+        where USE_YN = 'Y' AND USER_CLASS !='USER'
+    </select>
+
 </mapper>

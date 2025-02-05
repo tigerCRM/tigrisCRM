@@ -59,6 +59,10 @@ public class TicketServiceImpl implements TicketService {
         // [알림, 메일] 발송 파트
         if(resultCount > 0){
             Map<String, Object> model = new HashMap<>();
+            model.put("userName", ticketDto.getManagerName());
+            model.put("ticketTitle", ticketDto.getTitle());
+            model.put("ticketStatus", ticketDto.getStatusCd());
+            model.put("ticketUrl", baseUrl + "/ticketView?id=" + ticketDto.getTicketId() + "&redirect=/ticketView?id=" + ticketDto.getTicketId());
             mailService.sendEmail(ticketDto.getManagerId(),"요청등록", "ticket-email", model);
             alertService.sendAlert(AlertType.TICKET_STATUS, ticketDto.getStatusCd(), ticketId, ticketDto.getTitle(), ticketDto.getCreateId(), ticketDto.getManagerId());
         }

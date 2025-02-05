@@ -1369,6 +1369,7 @@ div::-webkit-scrollbar-button:end:increment {
 
 .search__btn {
     color: var(--gray-700);
+    padding-right:10px
 }
 
 /* 상세 검색 버튼 추가 */
@@ -3927,7 +3928,7 @@ td:nth-child(13), td:nth-child(14), td:nth-child(15), td:nth-child(16) {
 }
 /* [고객관리] 푸터 조정 */
 .client-footer {
-    margin-top: 55%;
+    margin-top: 5%;
     margin-bottom: 4%;
 }
 /* [고객관리] 푸터 조정2 */
@@ -3938,5 +3939,9 @@ td:nth-child(13), td:nth-child(14), td:nth-child(15), td:nth-child(16) {
 /* [고객관리] 비밀번호 초기화 버튼 */
 #resetPasswordBtn{
     margin-top: 1%;
+}
+
+.table__content{
+    height:510px;
 }
 /* ---------------------------------------------END : 고객관리 css */

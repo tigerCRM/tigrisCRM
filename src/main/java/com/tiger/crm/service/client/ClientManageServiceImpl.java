@@ -79,18 +79,33 @@ public class ClientManageServiceImpl implements ClientManageService {
         clientManageMapper.createCompany(clientManageDto);
     }
 
-    // 신규 고객 등록
+    //고객사 수정
+    @Override
+    public void updateCompany(ClientManageDto clientManageDto) {
+        clientManageMapper.updateCompany(clientManageDto);
+    }
+
+    // 신규 사용자 등록
     @Override
     public void createClient(ClientManageDto clientManageDto) {
 
-        // 관리자가 고객을 임의로 생성하는 경우 초기 패스워드로 저장
+/*        // 관리자가 고객을 임의로 생성하는 경우 초기 패스워드로 저장
         LocalDate today = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String tempPwd = "@" + today.format(formatter) ;
 
-
-        clientManageMapper.createClient(clientManageDto, passwordEncoder.encode(tempPwd));
+        clientManageMapper.createClient(clientManageDto, passwordEncoder.encode(tempPwd));*/
+        clientManageMapper.createClient(clientManageDto);
     }
 
+    //사용자 수정
+    @Override
+    public void updateClient(ClientManageDto clientManageDto) {
+        clientManageMapper.updateClient(clientManageDto);
+    }
 
+    @Override
+    public List<ClientManageDto> getContacts() {
+        return clientManageMapper.getContacts();
+    }
 }

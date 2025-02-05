@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" >
 <!-- <head> 공통   -->
-<head th:replace="~{common/frame_head :: head('고객사 및 고객 관리')}"></head>
+<head th:replace="~{common/frame_head :: head('고객사 및 사용자 관리')}"></head>
 <body>
 <div class="wrapper">
     <!-- 왼쪽 메뉴  -->
@@ -19,7 +19,7 @@
                             <div class="content-header">
                                 <h2 class="text-body1">
                                     <div class="flex flex-align_center gap--8">
-                                        <b>고객사/고객 관리 페이지</b>
+                                        <b>고객사/사용자 관리 페이지</b>
                                     </div>
                                 </h2>
                                 <!-- 검색영역 -->
@@ -28,7 +28,7 @@
                                         <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
                                             <select class="dropdown__selected" id="clientType" onchange="generateList(this)">
                                                 <option value="COMPANY" selected>고객사 관리</option>
-                                                <option value="CLIENT">고객 관리</option>
+                                                <option value="CLIENT">사용자 관리</option>
                                             </select>
                                         </div>
                                     </div>
@@ -53,7 +53,7 @@
                                     <div id="srchClient_id" style="display: none;">
                                         <div class="search-wrap">
                                             <input type="text" id="srch_client_id" name="srch_client_id"
-                                                   class="input--s input01" placeholder="사용자 아이디를 입력해주세요."
+                                                   class="input--s input01" placeholder="고객명 or 회사명"
                                                    th:value="${userId}"
                                                    onkeydown="if (event.keyCode === 13) searchClient(this);">
                                             <button class="icon-btn search__btn" onclick="searchClient(this);">
@@ -61,28 +61,7 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <div id="srchClient_nm" style="display: none;">
-                                        <div class="search-wrap">
-                                            <input type="text" id="srch_client_nm" name="srch_client_nm"
-                                                   class="input--s input01" placeholder="사용자 이름을 입력해주세요."
-                                                   th:value="${userName}"
-                                                   onkeydown="if (event.keyCode === 13) searchClient(this);">
-                                            <button class="icon-btn search__btn" onclick="searchClient(this);">
-                                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#search}"/></svg>
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div id="srchClient_company" style="display: none;">
-                                        <div class="search-wrap">
-                                            <input type="text" id="srch_client_company" name="srch_client_company"
-                                                   class="input--s input01" placeholder="회사명을 입력해주세요."
-                                                   th:value="${companyName}"
-                                                   onkeydown="if (event.keyCode === 13) searchClient(this);">
-                                            <button class="icon-btn search__btn" onclick="searchClient(this);">
-                                                <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#search}"/></svg>
-                                            </button>
-                                        </div>
-                                    </div>
+
                                     <div style="align-content: center;">
                                         <button class="btn just-icon btn--24" onclick="searchClient(this);" id="refresh2" style="display: none;">
                                             <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#refresh}"/></svg>
@@ -99,7 +78,7 @@
                             <!-- 고객사 목록 -->
                             <div class="flex1 widget-list" id="companyList" style="display: none; display: flex; flex-direction: column; min-height: 100%; justify-content: space-between;">
                                 <section class="clientList-parts">
-                                    <div class="widget__content">
+                                    <div class="table__content">
                                         <div class="client_button">
                                             <button type="button" class="btn btn--s primary-btn" onclick="createCompanyModal()">고객사 등록</button>
                                         </div>
@@ -137,12 +116,12 @@
                                     <!-- //페이징 버튼 템플릿 -->
                                 </section>
                             </div>
-                            <!-- 고객 목록 -->
+                            <!-- 사용자 목록 -->
                             <div class="flex1 widget-list" id="clientList" style="display: none;">
                                 <section class="clientList-parts2">
-                                    <div class="widget__content">
+                                    <div class="table__content">
                                         <div class="client_button">
-                                            <button type="button" class="btn btn--s primary-btn" onclick="createClientModal()">고객 등록</button>
+                                            <button type="button" class="btn btn--s primary-btn" onclick="createClientModal()">사용자 등록</button>
                                         </div>
                                         <div class="is_full">
                                             <div class="board-list board--m list-wrap ">
@@ -154,9 +133,9 @@
                                                     </colgroup>
                                                     <thead>
                                                     <tr>
-                                                        <th>고객 명</th>
+                                                        <th>사용자 명</th>
                                                         <th>회사 명</th>
-                                                        <th>고객 권한</th>
+                                                        <th>사용자 권한</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody id="clientBody">
@@ -186,6 +165,7 @@
                                                     <b>고객사 상세</b>
                                                 </div>
                                             </h2>
+                                            <button type="button" class="btn btn--s primary-btn" onclick="updateCompany()">수정</button>
                                         </div>
                                         <table class="table table03 table--h table--xs">
                                             <colgroup>
@@ -197,19 +177,38 @@
                                                 <tr>
                                                     <th>고객사 아이디</th>
                                                     <td colspan="2">
-                                                        <span id="companyId" th:each="detail : ${companyDetail}" th:text="${detail.companyId}"></span>
+                                                        <span id="detailcompanyId"></span>
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <th>고객사 명</th>
                                                     <td colspan="2">
-                                                        <span id="companyName" th:each="detail : ${companyDetail}" th:text="${detail.companyName}"></span>
+                                                        <input type="text" id="detailcompanyName" class="input--s input01 input--full" />
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <th>담당자(PM)</th>
                                                     <td colspan="2">
-                                                        <span id="managerId" th:each="detail : ${companyDetail}" th:text="${detail.managerId}"></span>
+                                                        <span id="detailmanagerName" style="padding-right: 10px;padding-left: 10px;"></span>
+                                                        <input type="text" id="detailmanagerId" class="input--s input01" style="width:80%" />
+
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>비고</th>
+                                                    <td colspan="2">
+                                                        <input type="text" id="detailnotes" class="input--s input01 input--full" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>사용여부</th>
+                                                    <td colspan="2">
+                                                        <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
+                                                            <select class="dropdown__selected" id="detailcompanyuseYn" >
+                                                                <option value="Y">Y</option>
+                                                                <option value="N">N</option>
+                                                            </select>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             </tbody>
@@ -220,13 +219,14 @@
                             <!-- 고객 상세 -->
                             <div class="flex1 widget-detail" id="clientDetailView" style="display: none;">
                                 <section class="clientList-parts2">
-                                    <div class="widget__content"  id="clientDetail">
+                                    <div class="table__content"  id="clientDetail">
                                         <div class="content-header">
                                             <h2 class="text-body1">
                                                 <div class="flex flex-align_center gap--8">
-                                                    <b>고객 상세</b>
+                                                    <b>사용자 상세</b>
                                                 </div>
                                             </h2>
+                                            <button type="button" class="btn btn--s primary-btn" onclick="updateClient()">수정</button>
                                         </div>
                                         <table class="table table03 table--h table--xs">
                                             <colgroup>
@@ -237,23 +237,64 @@
                                             <tbody>
                                                 <tr>
                                                     <th>아이디</th>
-                                                    <td colspan="2"><span id="userId"></span></td>
+                                                    <td colspan="2">
+                                                        <span id="clientuserId"></span>
+                                                    </td>
                                                 </tr>
                                                 <tr>
-                                                    <th>사원명</th>
-                                                    <td colspan="2"><span id="userName"></span></td>
+                                                    <th>사용자명</th>
+                                                    <td colspan="2">
+                                                        <input type="text" id="clientuserName" class="input--s input01 input--full" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>회사명</th>
+                                                    <td colspan="2">
+                                                        <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
+                                                            <select class="dropdown__selected" id="clientcompanyNm" name="clientcompanyNm"
+                                                                    th:value="${clientcompanyName}">
+                                                                <option value="">==고객사==</option>
+                                                                <option th:each="op : ${companyOptions}"
+                                                                        th:value="${op.companyId}"
+                                                                        th:text="${op.companyName}"></option>
+                                                            </select>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <th>권한</th>
-                                                    <td colspan="2"><span id="userClass"></span></td>
+                                                    <td colspan="2">
+                                                        <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
+                                                            <select class="dropdown__selected" id="clientuserClass" >
+                                                                <option value="USER">일반사용자</option>
+                                                                <option value="ADMIN">관리자</option>
+                                                                <option value="SYSADMIN">최고관리자</option>
+                                                            </select>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <th>이메일</th>
-                                                    <td colspan="2"><span id="email"></span></td>
+                                                    <td colspan="2">
+                                                        <input type="text" id="clientemail" class="input--s input01 input--full" />
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <th>전화번호</th>
-                                                    <td colspan="2"><span id="phone"></span></td>
+                                                    <td colspan="2">
+                                                        <input type="text" id="clientphone" class="input--s input01 input--full" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>사용여부</th>
+                                                    <td colspan="2">
+                                                        <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
+                                                            <select class="dropdown__selected" id="clientuseYn" >
+                                                                <option value="Y">Y</option>
+                                                                <option value="N">N</option>
+                                                            </select>
+                                                        </div>
+                                                    </td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -289,15 +330,15 @@
                     <tbody>
                         <tr>
                             <th>회사명</th>
-                            <td colspan="2"><input type="text" id="companyName" class="input--s input01 input--full" name="companyName" placeholder="회사명을 입력하세요" required /></td>
+                            <td colspan="2"><input type="text" id="companyName" class="input--s input01 input--full" name="companyName" placeholder="회사명을 입력하세요" /></td>
                         </tr>
                         <tr>
                             <th>담당자(PM) 아이디</th>
-                            <td colspan="2"><input type="text" id="managerId" class="input--s input01 input--full" name="managerId" placeholder="담당자 아이디를 입력하세요" required /></td>
+                            <td colspan="2"><input type="text" id="managerId" class="input--s input01 input--full" name="managerId" placeholder="담당자 아이디를 입력하세요" /></td>
                         </tr>
                         <tr>
                             <th>비고</th>
-                            <td colspan="2"><input type="text" id="notes" class="input--s input01 input--full" name="notes" placeholder="비고" required /></td>
+                            <td colspan="2"><input type="text" id="notes" class="input--s input01 input--full" name="notes" placeholder="비고" /></td>
                         </tr>
                     </tbody>
                 </table>
@@ -315,7 +356,7 @@
 <!--모달팝업(고객 등록) 영역-->
 <div class="layerpopup-wrap2 layerpopup--l layerpopup--center contact-layer" style="display: none;">
     <div class="layerpopup__header">
-        <h1 class="layerpopup__title">고객 등록</h1>
+        <h1 class="layerpopup__title">사용자 등록</h1>
         <button class="btn icon-btn close-btn" onclick="closeLayerpopup2()"><svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#close"/></svg></button>
     </div>
     <div class="layerpopup__content">
@@ -331,29 +372,43 @@
                     <tbody>
                     <tr>
                         <th>아이디</th>
-                        <td colspan="4"><input type="text" id="userId" class="input--s input01 input--full" name="userId" placeholder="아이디를 입력하세요" required /></td>
+                        <td colspan="4"><input type="text" id="userId" class="input--s input01 input--full" name="userId" placeholder="아이디를 입력하세요" /></td>
+                    </tr>
+                    <tr>
+                        <th>사용자명</th>
+                        <td colspan="4"><input type="text" id="userName" class="input--s input01 input--full" name="userName" placeholder="사용자명을 입력하세요" /></td>
                     </tr>
                     <tr>
                         <th>회사명</th>
-                        <td colspan="4"><input type="text" id="userName" class="input--s input01 input--full" name="userName" placeholder="이름을 입력하세요" required /></td>
+                        <td colspan="4">
+                            <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
+                                <select class="dropdown__selected" id="clientcompanyName" name="clientcompanyName"
+                                        th:value="${clientcompanyName}">
+                                    <option value="">==고객사==</option>
+                                    <option th:each="op : ${companyOptions}"
+                                            th:value="${op.companyId}"
+                                            th:text="${op.companyName}"></option>
+                                </select>
+                            </div>
+                        </td>
                     </tr>
                     <tr>
                         <th>권한</th>
                         <td colspan="4">
-                            <select id="userClass" class="dropdown dropdown--s wd120 dropdown__selected input--s input01 input--full" name="userClass" required>
-                                <option value="USER">USER</option>
-                                <option value="ADMIN">ADMIN</option>
-                                <option value="SYSADMIN">SYSADMIN</option>
+                            <select id="userClass" class="dropdown dropdown--s wd120 dropdown__selected input--s input01 input--full" name="userClass">
+                                <option value="USER">일반사용자</option>
+                                <option value="ADMIN">관리자</option>
+                                <option value="SYSADMIN">시스템관리자</option>
                             </select>
                         </td>
                     </tr>
                     <tr>
                         <th>이메일</th>
-                        <td colspan="4"><input type="text" id="email" class="input--s input01 input--full" name="email" placeholder="이메일을 입력하세요" required /></td>
+                        <td colspan="4"><input type="text" id="email" class="input--s input01 input--full" name="email" placeholder="이메일을 입력하세요" /></td>
                     </tr>
                     <tr>
                         <th>전화번호</th>
-                        <td colspan="4"><input type="text" id="phone" class="input--s input01 input--full" name="phone" placeholder="전화번호를 입력하세요" required /></td>
+                        <td colspan="4"><input type="text" id="phone" class="input--s input01 input--full" name="phone" placeholder="전화번호를 입력하세요" /></td>
                     </tr>
                     </tbody>
                 </table>
@@ -375,7 +430,7 @@
     // ------------------
     $(document).ready(function () {
         $('#companyList').show();        // 고객사 목록 보이기
-        $('#companyDetailView').show();  // 고객 상세 보이기
+        $('#companyDetailView').hide();  // 고객 상세 보이기
         $('#srch_Company').show();       // 고객사명 검색란 보이
         $("#refresh1").show();           // 새로고침 버튼
     });
@@ -428,11 +483,11 @@
 
             // 클릭 표시 제거 및 상세정보 초기화
             $('#clientList tbody .click-row').removeClass('active');
-            $('#userId').text('');
-            $('#userName').text('');
-            $('#userClass').text('');
-            $('#email').text('');
-            $('#phone').text('');
+            $('#clientuserId').text('');
+            $('#clientuserName').val('');
+            $('#clientuserClass').val('');
+            $('#clientemail').val('');
+            $('#clientphone').val('');
 
             // 회사명 검색어 비활성화
             $("#searchCompany").val('');
@@ -502,15 +557,19 @@
     // 고객사 상세 조회
     // ------------------
     $(document).on('click', '#companyList .click-row, #companyBody .click-row', function(event) {
+        $("#companyDetailView").show()
         var companyId = $(this).data('id');
         $.ajax({
             url: '/companyDetailData',
             type: 'GET',
             data: {companyId: companyId},
             success: function (response) {
-                $('#companyDetailView #companyId').text(response.companyId);     // 회사코드 업데이트
-                $('#companyDetailView #companyName').text(response.companyName); // 회사명 업데이트
-                $('#companyDetailView #managerId').text(response.managerId); // 담당자 업데이트
+                $('#detailcompanyId').text(response.companyId);     // 회사코드 업데이트
+                $('#detailcompanyName').val(response.companyName); // 회사명 업데이트
+                $('#detailmanagerName').text(response.managerName); // 담당자 업데이트
+                $('#detailmanagerId').val(response.managerId); // 담당자 업데이트
+                $('#detailnotes').val(response.notes);
+                $('#detailcompanyuseYn').val(response.companyuseYn);
             },
             error: function (xhr, status, error) {
                 console.error('Error:', error);
@@ -526,18 +585,14 @@
      function searchClient(obj) {
          if (obj.id == "refresh2"){
              $("#srch_client_id").val("");
-             $("#srch_client_nm").val("");
-             $("#srch_client_company").val("");
          }
          var userId = $("#srch_client_id").val();
-         var userName = $("#srch_client_nm").val();
-         var searchCompany = $("#srch_client_company").val();
          var page = ($("#currentPage").val() === undefined || $("#currentPage").val() === "") ? '' : $("#currentPage").val();
 
         $.ajax({
             url: '/clientListData',
             type: 'POST',
-            data: {userId: userId, userName:userName, searchCompany: searchCompany, page: page},
+            data: {userId: userId, page: page},
             success: function (response) {
                 const clientList = response.clientList;
 
@@ -586,11 +641,14 @@
                 type: 'GET',
                 data: {userId: userId},
                 success: function (response) {
-                    $('#clientDetailView #userId').text(response.userId);
-                    $('#clientDetailView #userName').text(response.userName);
-                    $('#clientDetailView #userClass').text(response.userClass);
-                    $('#clientDetailView #email').text(response.email);
-                    $('#clientDetailView #phone').text(response.phone);
+                    $('#clientuserId').text(response.userId);
+                    $('#clientuserName').val(response.userName);
+                    $('#clientuserClass').val(response.userClass);
+                    $('#clientemail').val(response.email);
+                    $('#clientphone').val(response.phone);
+                    $('#clientuseYn').val(response.useyn);
+                    $('#clientcompanyNm').val(response.clientcompanyId);
+
                 },
                 error: function (xhr, status, error) {
                     console.error('Error:', error);
@@ -608,36 +666,118 @@
         var managerId = $('#companyForm #managerId').val();
         var notes = $('#companyForm #notes').val();
 
-        if (!companyName || !managerId || !notes) {
+        if (!companyName || !managerId ) {
             alert("모든 필드를 입력해 주세요.");
             return;
         }
+        if(showConfirm("question","등록하시겠습니까?","")) {
+        }
 
-        if(confirm("고객사를 등록하시겠습니까?")){
-            $.ajax({
-                url: '/createCompany',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({companyName: companyName, managerId: managerId, notes: notes}),
-                success: function(response) {
-                    alert('등록 성공!');
-
+    }
+    function afterConfirm(){
+        var companyName = $('#companyForm #companyName').val();
+        var managerId = $('#companyForm #managerId').val();
+        var notes = $('#companyForm #notes').val();
+        $.ajax({
+            url: '/createCompany',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({companyName: companyName, managerId: managerId, notes: notes}),
+            success: function(response) {
+                if (response.status=="error"){
+                    showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
+                }else{
+                    showMessage('info', '성공', '저장하였습니다.');
                     // 팝업 내 필드값 초기화 및 팝업 닫기
                     $('#companyForm #companyName').val("");
                     $('#companyForm #managerId').val("");
                     $('#companyForm #notes').val("");
                     closeLayerpopup();
                     searchCompany(this);
-                },
-                error: function(xhr, status, error) {
-                    alert('등록 실패: ' + error);
                 }
-            });
-        }else{
-            alert("고객사 등록을 취소하였습니다.");
-            closeLayerpopup();
-        }
+
+            },
+            error: function(xhr, status, error) {
+                alert('등록 실패: ' + error);
+            }
+        });
     }
+
+     // -------------------
+    // 고객사 수정 저장
+    // ------------------
+    function updateCompany() {
+        var companyId = $('#detailcompanyId').text();
+        var companyName = $('#detailcompanyName').val();
+        var managerId = $('#detailmanagerId').val();
+        var notes = $('#detailnotes').val();
+        var companyuseYn = $('#detailcompanyuseYn').val();
+
+        if (!companyName || !managerId ) {
+            alert("모든 필드를 입력해 주세요.");
+            return;
+        }
+        $.ajax({
+            url: '/updateCompany',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({companyId: companyId, companyName: companyName, managerId: managerId, notes: notes, companyuseYn: companyuseYn}),
+            success: function(response) {
+                if (response.status=="error"){
+                    showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
+                }else{
+                    showMessage('info', '성공', '저장하였습니다.');
+                    // 팝업 내 필드값 초기화 및 팝업 닫기
+                    $('#companyForm #companyName').val("");
+                    $('#companyForm #managerId').val("");
+                    $('#companyForm #notes').val("");
+                    closeLayerpopup();
+                    searchCompany(this);
+                }
+
+            },
+            error: function(xhr, status, error) {
+                showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
+            }
+        });
+    }
+    // -------------------
+    // 사용자 수정 저장
+    // ------------------
+    function updateClient() {
+        var clientuserId = $('#clientuserId').text();
+        var clientuserName = $('#clientuserName').val();
+        var clientuserClass = $('#clientuserClass').val();
+        var clientemail = $('#clientemail').val();
+        var clientphone = $('#clientphone').val();
+        var clientuseYn = $('#clientuseYn').val();
+        var clientcompanyNm = $('#clientcompanyNm').val();
+
+        if (!clientuserId || !clientuserName || !clientuserClass || !clientemail || !clientcompanyNm) {
+            alert("모든 필드를 입력해 주세요.");
+            return;
+        }
+
+        $.ajax({
+            url: '/updateClient',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({userId: clientuserId, userName: clientuserName, userClass: clientuserClass, email: clientemail, phone: clientphone, useruseYn:clientuseYn, clientcompanyId: clientcompanyNm}),
+            success: function(response) {
+                if (response.status=="error"){
+                    showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
+                }else{
+                    showMessage('info', '저장', '저장하였습니다.');
+                    searchClient(this);
+                }
+
+            },
+            error: function(xhr, status, error) {
+                showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
+            }
+        });
+    }
+
 
     // -------------------
     // 신규 고객 등록
@@ -648,39 +788,40 @@
         var userClass = $('#clientForm #userClass').val();
         var email = $('#clientForm #email').val();
         var phone = $('#clientForm #phone').val();
+        var clientcompanyId = $('#clientcompanyName').val();
 
-        if (!userId || !userName || !userClass || !email || !phone) {
+        if (!userId || !userName || !userClass || !email ) {
             alert("모든 필드를 입력해 주세요.");
             return;
         }
 
-        if(confirm("고객을 등록하시겠습니까?")){
-            $.ajax({
-                url: '/createClient',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({userId: userId, userName: userName, userClass: userClass, email: email, phone: phone}),
-                success: function(response) {
-                    alert('신규 고객 등록 성공!');
-
+        $.ajax({
+            url: '/createClient',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({userId: userId, userName: userName, userClass: userClass, email: email, phone: phone, clientcompanyId: clientcompanyId}),
+            success: function(response) {
+                if (response.status=="error"){
+                    showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
+                }else{
+                    showMessage('success', '저장', '저장하였습니다.');
                     // 팝업 내 필드값 초기화 및 팝업 닫기
-                    $('#companyForm #userId').val("");
-                    $('#companyForm #userName').val("");
-                    $('#companyForm #userClass').val("");
-                    $('#companyForm #email').val("");
-                    $('#companyForm #phone').val("");
-
+                    $('#userId').val("");
+                    $('#userName').val("");
+                    $('#userClass').val("");
+                    $('#email').val("");
+                    $('#phone').val("");
+                    $('#clientcompanyName').val("");
                     closeLayerpopup2();
                     searchClient(this);
-                },
-                error: function(xhr, status, error) {
-                    alert('등록 실패: ' + error);
                 }
-            });
-        }else{
-            alert("고객사 등록을 취소하였습니다.");
-            closeLayerpopup2();
-        }
+
+            },
+            error: function(xhr, status, error) {
+                showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
+            }
+        });
+
     }
 
     // -------------------
@@ -688,7 +829,11 @@
     // ------------------
     function goPage(url, page) {
         $("#currentPage").val(page);
-        searchClient(this);
+        if (url == "companyList" || url == "companyListData"){
+            searchCompany(this);
+        }else{
+            searchClient(this);
+        }
     }
 
     // -------------------
@@ -735,7 +880,7 @@
     // 비밀번호 초기화
     // ------------------
     function resetPasswordBtn(){
-        let userId = $('#clientDetailView #userId').text().trim();
+        let userId = $('#clientuserId').text().trim();
 
         if (!userId) { // null, empty 체크
             alert("비밀번호를 초기화할 사용자를 선택해주세요.");
@@ -767,6 +912,15 @@
             alert("비밀번호 초기화를 취소하였습니다.");
         }
     }
+    $(document).ready(function () {
+        $('#companyNm').select2();
+    });
+    $('#companyNm').on('select2:open', function() {
+      $('body').css('overflow', 'hidden');
+    });
+    $('#companyNm').on('select2:close', function() {
+      $('body').css('overflow', '');
+    });
 
 </script>
 </body>

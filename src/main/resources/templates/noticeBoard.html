@@ -207,7 +207,8 @@
                                             th:if="${mode == 'read'}"
                                             onclick="getModifyBoard()">수정</button>
                                     <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'read'}" onclick="deleteBoardConfirm()">삭제</button>
-                                    <button type="button" class="btn btn--m  secondary-btn" onclick="location.href='/noticeBoardList';">목록</button>
+                                    <button type="button" class="btn btn--m  secondary-btn" th:if="${mode != 'modify'}" onclick="location.href='/noticeBoardList';">목록</button>
+                                    <button type="button" class="btn btn--m  secondary-btn" th:if="${mode == 'modify'}" onclick="goBack();">취소</button>
                                 </div>
                                 <!--//버튼그룹-->
                             </div>
@@ -222,7 +223,7 @@
     </div>
     <!-- //컨텐츠 영역 -->
     <!--모달 영역-->
-    <div class="layerpopup-wrap layerpopup--xl layerpopup--center contact-layer" style="display: none;">
+    <div id="noticeBoardCompanySelectModal" class="layerpopup-wrap layerpopup--xl layerpopup--center contact-layer" style="display: none;">
         <div class="layerpopup__header">
             <h1 class="layerpopup__title">열람 회사 선택</h1>
             <button class="btn icon-btn close-btn" onclick="closeLayerpopup()"><svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#close"/></svg></button>
@@ -452,7 +453,7 @@
 
                     document.getElementById('openYn').value = 'N';
 
-                    document.querySelector('.layerpopup-wrap').style.display = 'block';
+                    document.querySelector('#noticeBoardCompanySelectModal').style.display = 'block';
                     document.querySelector('.layer-wrap.dimmed').style.display = 'block';
 
                 }else if (this.value === 'y' && this.checked) { //모두열람일 경우
@@ -477,7 +478,7 @@
 
     //11. 팝업창 닫기
     function closeLayerpopup(){
-        document.querySelector('.layerpopup-wrap').style.display = 'none';
+        document.querySelector('#noticeBoardCompanySelectModal').style.display = 'none';
         document.querySelector('.layer-wrap.dimmed').style.display = 'none';
     }
 
@@ -591,7 +592,9 @@
             }
         }
     }
-
+    function goBack(){
+        window.history.back();
+    }
 
 </script>
 </body>

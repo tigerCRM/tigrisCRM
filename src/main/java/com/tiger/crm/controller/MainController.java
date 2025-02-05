@@ -1,11 +1,14 @@
 package com.tiger.crm.controller;
 
 import com.tiger.crm.common.context.ConfigProperties;
+import com.tiger.crm.common.util.AESUtils;
 import com.tiger.crm.repository.dto.board.NoticeBoardDto;
+import com.tiger.crm.repository.dto.client.ClientManageDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.mail.MailService;
 import com.tiger.crm.service.board.NoticeBoardService;
+import com.tiger.crm.service.client.ClientManageService;
 import com.tiger.crm.service.common.CommonService;
 import com.tiger.crm.service.main.MainService;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
@@ -38,7 +41,8 @@ public class MainController
 	@Autowired
 	private NoticeBoardService noticeBoardService;
 	private Logger LOGGER = LoggerFactory.getLogger(getClass());
-
+	@Autowired
+	private ClientManageService clientManageService;
 	/*
 	 * 랜딩페이지
 	 * 설명 : 세션이 살아 있으면 메인페이지로, 세션이 없으면 로그인으로 리다이렉트
@@ -148,5 +152,16 @@ public class MainController
 		}
 
 		return ResponseEntity.ok(noticeBoardDtoList);
+	}
+
+	@GetMapping("/contacts")
+	public String showEmergencyContacts(Model model) {
+
+		List<ClientManageDto> contactDetail = clientManageService.getContacts();
+		//String decodedString = AESUtils.decrypt(contactDetail.getPhone(), AESUtils.decodeKey(configProperties.getAesSecretKey()));
+		//contactDetail.put("phone", decodedString);
+
+		model.addAttribute("companyDetail", contactDetail);
+		return "emergency_contacts";
 	}
 }

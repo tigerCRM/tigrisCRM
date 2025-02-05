@@ -42,12 +42,12 @@
 }
 
 .main-sidebar .quickmenu {
-    position: absolute;
-    bottom: 5.6rem;
+/*    position: absolute;*/
+    bottom: 4.6rem;
     width: 100%;
-    padding: 0 1.6rem;
+    padding: 0 1.6rem 1rem 1.6rem
 }
-.main-sidebar .quickmenu:before {
+/*.main-sidebar .quickmenu:before {
     position: absolute;
     left: 0;
     top: -7.2rem;
@@ -56,7 +56,7 @@
     height: 7.2rem;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, #FFF 57.64%);
     content: '';
-}
+}*/
 
 .main-sidebar--compact .quickmenu {
     padding: 0 1.2rem;
@@ -75,7 +75,7 @@
 .main-lnb {
     height: calc(100vh - 36rem);
     margin: 2.4rem 0 0;
-    padding-bottom: 7.2rem;
+    padding-bottom: 3.2rem;
     overflow-y: auto;
     -ms-overflow-style: none;
     /* 인터넷 익스플로러 */
@@ -562,7 +562,7 @@
 .wrap_condition .calendar {display:none;position:absolute;top:113px}
 .search_more {
 	float:left;display:inline-block;
-	height:3.2rem;color:#bcbdc5;font-size:14px;background-color:transparent;
+	height:3.1rem;color:#bcbdc5;font-size:14px;background-color:transparent;
 }
 .search_more > p {
 	width:20px;height:20px;background:url(../images/icon/icons/btn-search-filter-hover.svg) no-repeat;text-indent:-300px;
