@@ -50,7 +50,7 @@ tigris-crm 서비스 개발
       - ngrok 서버접속 후 로그인: ```https://ngrok.com/```
       - ngrok 설치 후 exe실행
       - 명령어 실행 : ``` ngrok http 192.168.0.240:8080(프로젝트 포트 8081아닌, 젠킨스 8080 포트 등록) ``` 
-      - 깃허브 웹훅에 등록 : settings -> webhooks -> ``` https://f4d3-61-74-221-49.ngrok-free.app/github-webhook/ ```
+      - 깃허브 웹훅에 등록 : settings -> webhooks -> ``` https://e9ea-61-74-221-49.ngrok-free.app/github-webhook/ ```
       <br/>
   - 실행 안될 시
       - 작업관리자 -> 기존 ngrok 프로세스 삭제 후 위 과정 실행
