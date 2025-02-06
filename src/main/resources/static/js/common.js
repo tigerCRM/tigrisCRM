@@ -475,6 +475,43 @@ var common = {
         });
     }
 
+    function showPasswordChangeModal(afterFunction) {
+        Swal.fire({
+            title: '비밀번호 변경',
+            html: `
+                <input type="password" id="newPassword" class="swal2-input" placeholder="새 비밀번호 입력">
+                <input type="password" id="confirmPassword" class="swal2-input" placeholder="비밀번호 확인">
+            `,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '변경',
+            cancelButtonText: '취소',
+            preConfirm: () => {
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+
+                if (!newPassword || !confirmPassword) {
+                    Swal.showValidationMessage('비밀번호를 입력하세요.');
+                    return false;
+                }
+                if (newPassword !== confirmPassword) {
+                    Swal.showValidationMessage('비밀번호가 일치하지 않습니다.');
+                    return false;
+                }
+                return newPassword; // 유효성 검사 통과 시, 새로운 비밀번호 반환
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if (typeof afterFunction === 'function') {
+                    afterFunction(result.value); // 변경된 비밀번호를 콜백 함수로 전달
+                } else {
+                    console.log("새 비밀번호:", result.value);
+                }
+            }
+        });
+    }
+
+
     function callPage() {
        const target = event.target.closest("a[data-url][data-page]"); // `data-url` 및 `data-page` 속성이 있는 <a> 태그만 선택
        if (target) {

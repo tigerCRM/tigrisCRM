@@ -20,7 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +55,8 @@ public class MainController {
 	private ConfigProperties configProperties;
 	@Value("${file.logindir}")
 	private String uploadDir;
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	/*
 	 * 랜딩페이지
 	 * 설명 : 세션이 살아 있으면 메인페이지로, 세션이 없으면 로그인으로 리다이렉트
@@ -241,7 +245,28 @@ public class MainController {
 		return ResponseEntity.ok(response);
 	}
 
+	/*
+	 * 비밀번호변경
+	 */
+	@PostMapping("/changePassword")
+	@ResponseBody
+	public Map<String, Object> changePassword(@RequestBody ClientManageDto clientManageDto, HttpServletRequest request) {
+		Map<String, Object> response = new HashMap<>();
+		try {
+			UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
+			clientManageDto.setUserId(loginUser.getUserId()); // 등록/수정자 용도
 
+			clientManageDto.setUserPw(passwordEncoder.encode(clientManageDto.getUserPw()));
+			clientManageService.changePassword(clientManageDto);
+
+			response.put("status", "success");
+
+		}catch (Exception e){
+			response.put("status", "error");
+			LOGGER.error("비밀번호변경 중 오류가 발생했습니다.", e);
+		}
+		return response;
+	}
 
 }
 

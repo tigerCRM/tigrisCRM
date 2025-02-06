@@ -47,7 +47,7 @@
                     <!-- 설정(톱니바퀴) 드롭다운 메뉴 추가 -->
                     <ul class="dropdown-menu" id="settingDropdownMenu" style="display:none">
                         <li id="changePw">
-                            <a href="#" onclick="if(confirm('로그아웃 하시겠습니까?')) window.location.href='/logout'; else alert('취소하였습니다.'); return false;">로그아웃</a>
+                            <a href="#" onclick="showPasswordChangeModal(changePassword);">비밀번호 변경</a>
                         </li>
                         <li id="logout">
                             <a href="#" onclick="if(confirm('로그아웃 하시겠습니까?')) window.location.href='/logout'; else alert('취소하였습니다.'); return false;">로그아웃</a>
@@ -548,6 +548,22 @@
                 });
 
             }
+
+            function changePassword(newPassword) {
+                $.ajax({
+                    url: "/changePassword",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ userPw: newPassword }),
+                    success: function(response) {
+                        showMessage("success","성공", "비밀번호가 변경되었습니다.");
+                    },
+                    error: function() {
+                        showMessage('error', '오류', '비밀번호 변경 중 문제가 발생했습니다.');
+                    }
+                });
+            }
+
         </script>
     </div>
 </body>

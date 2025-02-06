@@ -108,4 +108,9 @@ public class ClientManageServiceImpl implements ClientManageService {
     public List<ClientManageDto> getContacts() {
         return clientManageMapper.getContacts();
     }
+    @Override
+    public void changePassword(ClientManageDto clientManageDto) {
+        clientManageMapper.changePassword(clientManageDto);
+    }
+
 }

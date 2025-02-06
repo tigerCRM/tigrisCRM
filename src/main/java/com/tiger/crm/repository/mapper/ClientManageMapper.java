@@ -40,6 +40,8 @@ public interface ClientManageMapper {
 
     // 사용자 수정
     void updateClient(ClientManageDto clientManageDto);
+    // 비밀번호 수정
+    void changePassword(ClientManageDto clientManageDto);
 
     //연락망
     List<ClientManageDto> getContacts();

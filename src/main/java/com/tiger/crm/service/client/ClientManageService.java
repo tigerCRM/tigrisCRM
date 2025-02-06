@@ -35,4 +35,8 @@ public interface ClientManageService {
 
     // 고객 목록 조회
     List<ClientManageDto> getContacts();
+    //비밀번호 수정
+    void changePassword(ClientManageDto clientManageDto);
+
+
 }
