@@ -19,17 +19,20 @@ import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 @Controller
-public class MainController
-{
+public class MainController {
 	@Autowired
 	private CommonService commonService;
 	@Autowired
@@ -43,15 +46,18 @@ public class MainController
 	private Logger LOGGER = LoggerFactory.getLogger(getClass());
 	@Autowired
 	private ClientManageService clientManageService;
+	@Autowired
+	private ConfigProperties configProperties;
+	@Value("${file.logindir}")
+	private String uploadDir;
 	/*
 	 * 랜딩페이지
 	 * 설명 : 세션이 살아 있으면 메인페이지로, 세션이 없으면 로그인으로 리다이렉트
 	 * */
 	@RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
-	public String intro(@ModelAttribute("user") UserLoginDto user, HttpServletRequest request, HttpServletResponse response)
-	{
+	public String intro(@ModelAttribute("user") UserLoginDto user, HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession(false);
-		if(session == null){
+		if (session == null) {
 			LOGGER.info("세션 없음");
 			return "redirect:login";
 		}
@@ -59,25 +65,25 @@ public class MainController
 	}
 
 	/*
-	* 메인페이지
-	* 설명 : 세션이 살아있으면 세션 정보 화면으로 보내줌, 세션 없으면 로그인 페이지로
-	* */
+	 * 메인페이지
+	 * 설명 : 세션이 살아있으면 세션 정보 화면으로 보내줌, 세션 없으면 로그인 페이지로
+	 * */
 	@RequestMapping(value = {"main"}, method = RequestMethod.GET)
 	public String mainPage(@ModelAttribute PagingRequest pagingRequest, @ModelAttribute("user") UserLoginDto user, HttpServletRequest request, Model model) {
 
 		HttpSession session = request.getSession(false);
 
-		if (session == null){
+		if (session == null) {
 			LOGGER.info("세션 없음");
 			return "redirect:login";
 		}
 
 		// 유저정보
-		user = (UserLoginDto)session.getAttribute("loginUser");
+		user = (UserLoginDto) session.getAttribute("loginUser");
 		LOGGER.info("세션정보 : " + user.toString());
 		model.addAttribute("user", user);
 		String userClass = String.valueOf(user.getUserClass());
-		model.addAttribute("userClass",userClass);
+		model.addAttribute("userClass", userClass);
 		// 메인 페이지 요청내역 조회
 		List<Map<String, Object>> ticketList = mainService.getMainTicketList(user);
 		// 메인 페이지 완료내역 조회
@@ -95,14 +101,14 @@ public class MainController
 	/*
 	 * 1. 메일발송내역 페이지(초기 접속 시)
 	 */
-	@GetMapping(value = { "mailHistory"})
-	public String mailHistory(@ModelAttribute PagingRequest pagingRequest, Model model)	{
+	@GetMapping(value = {"mailHistory"})
+	public String mailHistory(@ModelAttribute PagingRequest pagingRequest, Model model) {
 		try {
 			// 메일 발송 내역 조회
 			PagingResponse<Map<String, Object>> pageResponse = mailService.getMailHistList(pagingRequest);
 			model.addAttribute("mailHistList", pageResponse);
 			model.addAttribute("searchOptions", commonService.getSelectOptions("mh_search"));
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -112,8 +118,8 @@ public class MainController
 	/*
 	 * 2. 메일발송내역 페이지(상세 검색 시)
 	 */
-	@PostMapping(value = { "mailHistory"})
-	public String searchMailHistory(@ModelAttribute PagingRequest pagingRequest, Model model)	{
+	@PostMapping(value = {"mailHistory"})
+	public String searchMailHistory(@ModelAttribute PagingRequest pagingRequest, Model model) {
 
 		try {
 			// 메일 발송 내역 조회
@@ -135,19 +141,20 @@ public class MainController
 
 		return "mailHistory";
 	}
+
 	/*
-	* getPopup
-	* 작성자 : 제예솔
-	* 설명 : 팝업공지 내용 가져옴
-	* */
-	@PostMapping(value = { "/loadPopup"})
-	public ResponseEntity<List<NoticeBoardDto>> getPopup(HttpServletRequest request, HttpServletResponse response)	{
+	 * getPopup
+	 * 작성자 : 제예솔
+	 * 설명 : 팝업공지 내용 가져옴
+	 * */
+	@PostMapping(value = {"/loadPopup"})
+	public ResponseEntity<List<NoticeBoardDto>> getPopup(HttpServletRequest request, HttpServletResponse response) {
 
 		HttpSession session = request.getSession(false);
-		UserLoginDto loginUser = (UserLoginDto)session.getAttribute("loginUser");
+		UserLoginDto loginUser = (UserLoginDto) session.getAttribute("loginUser");
 
 		List<NoticeBoardDto> noticeBoardDtoList = noticeBoardService.getPopupNoticeBoardList(loginUser);
-		if(noticeBoardDtoList == null|| noticeBoardDtoList.isEmpty()){
+		if (noticeBoardDtoList == null || noticeBoardDtoList.isEmpty()) {
 			return ResponseEntity.noContent().build();
 		}
 
@@ -155,13 +162,78 @@ public class MainController
 	}
 
 	@GetMapping("/contacts")
-	public String showEmergencyContacts(Model model) {
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> showEmergencyContacts() {
+		Map<String, Object> response = new HashMap<>();
+		try {
+			// 1. 연락처 목록 조회
+			List<ClientManageDto> contactDetail = clientManageService.getContacts();
 
-		List<ClientManageDto> contactDetail = clientManageService.getContacts();
-		//String decodedString = AESUtils.decrypt(contactDetail.getPhone(), AESUtils.decodeKey(configProperties.getAesSecretKey()));
-		//contactDetail.put("phone", decodedString);
+			// 2. 리스트 내 모든 데이터의 phone 값 디코딩
+			for (ClientManageDto contact : contactDetail) {
+				try {
+					String decodedString = AESUtils.decrypt(
+							contact.getPhone(),
+							AESUtils.decodeKey(configProperties.getAesSecretKey())
+					);
+					contact.setPhone(decodedString); // 디코딩된 전화번호를 다시 설정
+				} catch (Exception e) {
+					LOGGER.error("전화번호 복호화 중 오류 발생: " + contact.getPhone(), e);
+					contact.setPhone(""); // 오류 발생 시 기본값 설정
+				}
+			}
 
-		model.addAttribute("companyDetail", contactDetail);
-		return "emergency_contacts";
+			// 3. JSON 응답 데이터 구성
+			response.put("status", "success");
+			response.put("data", contactDetail);
+
+			return ResponseEntity.ok(response); // HTTP 200 OK 반환
+		} catch (Exception e) {
+			LOGGER.error("연락처 조회 중 오류 발생", e);
+			response.put("status", "error");
+			response.put("message", "연락처 조회 중 오류가 발생했습니다.");
+
+			// HTTP 500 INTERNAL_SERVER_ERROR 반환
+			return ResponseEntity.ok(response);
+		}
 	}
+
+	@GetMapping("/managePage")
+	public String managePage(@ModelAttribute PagingRequest pagingRequest, Model model) {
+		try {
+			// 메일 발송 내역 조회
+			//PagingResponse<Map<String, Object>> pageResponse = mailService.getMailHistList(pagingRequest);
+			//model.addAttribute("mailHistList", pageResponse);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "managePage";
+	}
+
+	// 로그인 이미지 업로드 처리
+	@PostMapping("/uploadLoginImage")
+	public ResponseEntity<Map<String, Object>> uploadLoginImage(@RequestParam("imageFile") MultipartFile imageFile) {
+		Map<String, Object> response = new HashMap<>();
+
+		try {
+			// 파일 저장 경로 지정
+			File targetFile = new File(uploadDir + "/login-bg.png");
+			// 이미지 파일 저장
+			imageFile.transferTo(targetFile);
+
+			response.put("status", "success");
+			response.put("message", "이미지 업로드 성공");
+		} catch (Exception e) {
+			LOGGER.error("파일 저장 중 오류가 발생했습니다", e);
+			response.put("status", "error");
+			response.put("message", "파일 저장 중 오류가 발생했습니다");
+		}
+
+		return ResponseEntity.ok(response);
+	}
+
+
+
 }
+

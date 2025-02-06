@@ -333,31 +333,66 @@
         const url = `/changeStatus`;
         var id = $("#ticketId").val();
         var newStatus = $("#statusCd").val();
-        const requestData = { status: newStatus,id : id};
+        const requestData = {status: newStatus, id : id};
 
-        // 비동기 요청 (POST 방식)
-        fetch(url, {
-            method: 'PUT',
-            headers: {
-            'Content-Type': 'application/json',
-        },
-            body: JSON.stringify(requestData),
-        })
-        .then(response => {
-            if (!response.ok) {
-            return response.text().then(text => { throw new Error(text); });
+        if (newStatus == "CLOSED"){
+            showFeedbackConfirm(
+                '피드백을 주세요',
+                '서비스에 대해 어떻게 생각하시나요?',
+                (result) => {
+                    if (result === 'satisfied') {
+                        showMessage('success', '성공', '피드백 감사합니다.');
+                    } else if (result === 'unsatisfied') {
+                        fetch('/chSatisfaction', {
+                            method: 'POST',
+                            headers: {
+                            'Content-Type': 'application/json',
+                        },
+                            body: JSON.stringify(requestData),
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                            return response.text().then(text => { throw new Error(text); });
+                        }
+                        return response.json();
+                        })
+                        .then(data => {
+                            showMessage('success', '성공', '피드백 감사합니다.');
+                        })
+                        .catch(error => {
+                            console.error('Error updating status:', error);
+                            showMessage('error', '실패', '오류가 발생했습니다:');
+                        });
+                    } else if (result === 'cancelled') {
+                        console.log('사용자가 취소했습니다.');
+                    }
+                }
+            )
+        }else{
+            fetch(url, {
+                method: 'PUT',
+                headers: {
+                'Content-Type': 'application/json',
+            },
+                body: JSON.stringify(requestData),
+            })
+            .then(response => {
+                if (!response.ok) {
+                return response.text().then(text => { throw new Error(text); });
+            }
+            return response.json();
+            })
+            .then(data => {
+                console.log('Status updated successfully:', data);
+                showMessage('success', '성공', '진행상태가 변경되었습니다.');
+               // location.reload();
+            })
+            .catch(error => {
+                console.error('Error updating status:', error);
+                showMessage('error', '실패', '상태 업데이트 중 오류가 발생했습니다:');
+            });
         }
-        return response.json();
-        })
-        .then(data => {
-            console.log('Status updated successfully:', data);
-            showMessage('success', '성공', '진행상태가 변경되었습니다.');
-           // location.reload();
-        })
-        .catch(error => {
-            console.error('Error updating status:', error);
-            showMessage('error', '실패', '상태 업데이트 중 오류가 발생했습니다:');
-        });
+
     }
 
     // 댓글 작성

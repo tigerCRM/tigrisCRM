@@ -442,6 +442,39 @@ var common = {
         });
     }
 
+    function showFeedbackConfirm(title, text, afterFunction) {
+        Swal.fire({
+            title: `<span style="font-size: 20px;">${title}</span>`,
+            html: `<span style="font-size: 15px;">${text}</span>`,
+            icon: 'question',
+            showCancelButton: true,
+            showDenyButton: true,
+            confirmButtonColor: '#3085d6',
+            denyButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: `<span style="font-size: 13px;">만족</span>`,
+            denyButtonText: `<span style="font-size: 13px;">불만족</span>`,
+            cancelButtonText: `<span style="font-size: 13px;">취소</span>`
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // 만족을 선택한 경우
+                if (typeof afterFunction === 'function') {
+                    afterFunction('satisfied');
+                }
+            } else if (result.isDenied) {
+                // 불만족을 선택한 경우
+                if (typeof afterFunction === 'function') {
+                    afterFunction('unsatisfied');
+                }
+            } else if (result.isDismissed) {
+                // 취소를 선택한 경우
+                if (typeof afterFunction === 'function') {
+                    afterFunction('cancelled');
+                }
+            }
+        });
+    }
+
     function callPage() {
        const target = event.target.closest("a[data-url][data-page]"); // `data-url` 및 `data-page` 속성이 있는 <a> 태그만 선택
        if (target) {

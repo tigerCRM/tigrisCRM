@@ -86,6 +86,8 @@ aes256:
 # File
 file:
   dir: /home/crmdevuser/files
+  logindir: /var/lib/jenkins/workspace/tigerCRM/src/main/resources/static/assets/images/common
+  #logindir: D:\tigrisCRM\src\main\resources\static\assets\images\common
   #dir: C:\Temp\fileUpload
 
 # Cookie

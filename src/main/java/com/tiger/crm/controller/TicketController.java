@@ -609,6 +609,25 @@ public class TicketController {
         }
         return ResponseEntity.ok("업로드되었습니다.");
     }
+    //진행 상태 수정
+    @PostMapping("/chSatisfaction")
+    public ResponseEntity<Map<String, String>> chSatisfaction(HttpServletRequest request, @RequestBody Map<String, String> RequestBody,CommentDto commentDto) {
+        try {
 
+            String newStatus = RequestBody.get("status");
+            int id = Integer.parseInt(RequestBody.get("id")); // id는 String으로 전달되므로 변환
+            UserLoginDto user = (UserLoginDto) request.getAttribute("user");
+            String updateId = user.getUserId();
+            //진행상태변경
+            ticketService.chSatisfaction(id, newStatus,updateId);
+            // JSON 응답
+            Map<String, String> response = new HashMap<>();
+            response.put("status", "success");
+            response.put("message", "Step status updated successfully");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            throw new CustomException("changeStatus : 예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
+        }
+    }
 
 }

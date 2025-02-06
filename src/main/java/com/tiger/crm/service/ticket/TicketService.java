@@ -24,6 +24,8 @@ public interface TicketService {
 
     void changeStatus(int ticketId, String newStatus, String updateId) throws MessagingException;
 
+    void chSatisfaction(int ticketId, String newStatus, String updateId) throws MessagingException;
+
     void setTicketFileId(String fileId, int ticketId);
 
     int addComment(CommentDto commentDto);

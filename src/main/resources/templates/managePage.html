@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" >
+
+<!-- <head> 공통   -->
+<head th:replace="~{common/frame_head :: head('관리자페이지')}"></head>
+
+<body>
+<div class="wrapper">
+    <!-- 왼쪽 메뉴  -->
+    <div th:replace="~{common/frame_left_menu :: frame_left_menu}" />
+
+    <!-- 컨텐츠 영역 -->
+    <div class="main-area">
+        <!-- 내용 영역 -->
+        <main class="form-content">
+            <div class="container">
+                <div>
+                    <div class="search--box">
+                        <div class="content-header">
+                            <h2 class="text-body1">
+                                <div class="flex flex-align_center gap--8">
+                                    <b>로그인 이미지 변경</b>
+                                </div>
+                            </h2>
+                        </div>
+                    </div>
+                    <div>
+                        <form id="imageUploadForm" enctype="multipart/form-data">
+                            <div class="input-group">
+                                <input type="file" id="imageFile" name="imageFile" accept="image/*" required />
+                            </div>
+                            <div class="image-preview" id="imagePreview">
+                                <img id="previewImage" src="./assets/images/common/login-bg.png" alt="이미지 미리보기" />
+                            </div>
+                            <button type="submit" class="btn btn--l primary-btn quick-btn">이미지 업로드</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    // 이미지 미리보기 기능
+    document.getElementById("imageFile").addEventListener("change", function(event) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById("previewImage").src = e.target.result;
+        }
+        reader.readAsDataURL(event.target.files[0]);
+    });
+
+    // 폼 제출 처리 (AJAX로 업로드)
+    document.getElementById("imageUploadForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // 폼 제출 기본 동작 방지
+
+        var formData = new FormData(this); // FormData 객체에 폼 데이터 추가
+        fetch('/uploadLoginImage', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                showMessage('success', '성공', '이미지가 성공적으로 업로드되었습니다');
+            } else {
+                showMessage('error', '오류','업로드 실패: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showMessage('error', '오류', '서버 오류가 발생했습니다.');ㅜ
+        });
+    });
+</script>
+</body>
+</html>

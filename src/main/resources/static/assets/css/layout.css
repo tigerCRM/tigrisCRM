@@ -578,3 +578,34 @@
 .wrap_radio.type_button3 input[type="radio"] + label {float:left;display:inline-block;padding:0 15px;margin-right:7px;min-width:61px;height:30px;color:#757c92;font-size:12px;line-height:30px;text-align:center;border-radius:5px;background-color:#e1e4eb;cursor:pointer;font-family:'Noto Sans KR D';}
 .wrap_radio.type_button2 input[type="radio"]:checked + label,
 .wrap_radio.type_button3 input[type="radio"]:checked + label {color:#FFF;background-color:#489FF1;}
+ .input-group {
+    margin-bottom: 20px;
+}
+/*input[type="file"] {
+    padding: 10px;
+    font-size: 16px;
+}*/
+.submit-btn {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #0D349B;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+.image-preview {
+    width: 50%;
+    margin: 20px 0;
+    text-align: center;
+}
+.image-preview img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}

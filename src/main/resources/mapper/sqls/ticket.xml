@@ -203,6 +203,19 @@
         WHERE TICKET_ID = #{ticketId}
     </update>
 
+    <!--불만족인 경우-->
+    <update id="chSatisfaction" parameterType="map">
+        UPDATE T_TICKET_INFO
+        SET STATUS_CD = #{newStatus}, SATISFACTION = 'N',
+        UPDATE_DT = NOW(),
+        UPDATE_ID = #{updateId}
+        <if test="newStatus == 'CLOSED'"> <!--완료일경우 완료일 update-->
+            , COMPLETE_DT = NOW()
+        </if>
+        WHERE TICKET_ID = #{ticketId}
+    </update>
+
+
     <update id="updateTicketFileId" parameterType="map">
         UPDATE T_TICKET_INFO
         SET FILE_ID = #{fileId}
