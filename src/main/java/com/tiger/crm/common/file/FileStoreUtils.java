@@ -35,7 +35,7 @@ public class FileStoreUtils {
     public String getFullPath(String loc){
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         // 전체 경로 생성
-        String fullPath = fileDir + "\\" + loc + "\\" + today;
+        String fullPath = fileDir + "/" + loc + "/" + today;
         Path path = Paths.get(fullPath);
         try {
             // 경로가 존재하지 않으면 폴더 생성

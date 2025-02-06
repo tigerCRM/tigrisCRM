@@ -30,7 +30,8 @@ public class WebConfig implements WebMvcConfigurer {
 						"/Style/**",		 // 외부에 공개된 자원 2
 						"/favicon.ico",      // 파비콘
 						"/main**",  		 // /main과 /main;jsessionid= 모두 예외 처리
-						"/loadPopup"		 // 팝업공지사항
+						"/loadPopup",		 // 팝업공지사항
+						"/files/Login"
 				);
 	}
 }
