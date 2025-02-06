@@ -27,6 +27,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -219,6 +222,11 @@ public class MainController {
 		try {
 			// 파일 저장 경로 지정
 			File targetFile = new File(uploadDir + "/login-bg.png");
+			Path path = Paths.get(uploadDir);
+			// 경로가 존재하지 않으면 폴더 생성
+			if (!Files.exists(path)) {
+				Files.createDirectories(path);
+			}
 			// 이미지 파일 저장
 			imageFile.transferTo(targetFile);
 
