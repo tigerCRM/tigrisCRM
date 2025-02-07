@@ -153,7 +153,7 @@ public class NoticeBoardController {
             model.addAttribute("mode", "write");//글작성
             model.addAttribute("uploadFiles",null);
         }
-
+        model.addAttribute("userClass", loginUser.getUserClass()); //사용자 레벨
         return "noticeBoard";
     }
     

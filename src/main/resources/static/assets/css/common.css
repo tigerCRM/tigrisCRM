@@ -1281,7 +1281,7 @@ div::-webkit-scrollbar-button:end:increment {
 .wrap_date {position:relative;}
 .wrap_search {position:relative;}
 .wrap_input {
-	overflow:hidden;position:relative;width: 350px; height:3.2rem;border:1px solid var(--tigris-background-regular);
+	overflow:hidden;position:relative;width: 400px; height:3.2rem;border:1px solid var(--tigris-background-regular);
 	z-index:5
 	}
 .wrap_input > .input01 {
@@ -3398,6 +3398,7 @@ ul[class*='list-tree--'] {
 .wd110 { width: 11rem; }
 .wd120 { width: 12rem; }
 .wd130 { width: 13rem; }
+.wd140 { width: 14.5rem; }
 .wd150 { width: 15rem; }
 .wd170 { width: 17.5rem; }
 .wd160 { width: 16rem; }

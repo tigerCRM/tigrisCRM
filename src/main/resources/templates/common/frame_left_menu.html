@@ -295,11 +295,9 @@
                                 alerts.forEach(alert => {
                                     alertListHtml += `
                                         <li class="${alert.readYn === 'Y' ? 'read-alert' : ''} alarm--item">
-                                            <button type='button' name='close-btn' class='btn icon-btn close-btn'>
-                                                <svg class='icon'><use href='./assets/images/icon/sprite-sheet.svg#close'/></svg>
-                                            </button>
+
                                             <a>
-                                                <span class="${alert.readYn === 'Y' ? '' : 'badge badge--s'}"></span>
+
                                                 <div class='profile' name='alarmview' data-id="${alert.alertId}" data-alertObjectId="${alert.alertObjectId}">
                                                     <div class='profile__info'>
                                                         <p class='alarm__user-info'>
@@ -325,6 +323,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div><span class="${alert.readYn === 'Y' ? '' : 'badge badge--s'}"></span></div>
                                             </a>
                                       </li>
                                     `;

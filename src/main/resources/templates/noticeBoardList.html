@@ -50,8 +50,8 @@
                         <div th:fragment="noticeBoardListFragment" id="noticeBoardListContainer">
                         <!-- 리스트 상단 영역 -->
                             <div class="flex flex-justify_between flex-align_center ">
-                                <div class="flex gap--4">
-                                    <button type="button" class="btn btn--s primary-btn" th:onclick="'window.location.href=\'' + @{/noticeBoard} + '\''">작성</button>
+                                <div class="flex gap--4" >
+                                    <button type="button" class="btn btn--s primary-btn" th:style="${userClass == 'USER'} ? 'display: none;' : ''" th:onclick="'window.location.href=\'' + @{/noticeBoard} + '\''">작성</button>
                                 </div>
                             </div>
                             <div class="pageinfo">
@@ -82,7 +82,7 @@
                                                 <tr th:if="${noticeBoardList == null or #lists.isEmpty(noticeBoardList)}">
                                                     <td colspan="10" style="text-align:center;">등록된 시스템 정보가 없습니다.</td>
                                                 </tr>
-                                                <tr th:classappend="${noticeBoard['TOP_YN'] == 'Y' ? 'selected selected-bold' : ''}" th:each="noticeBoard : ${noticeBoardList.dataList}">
+                                                <tr th:classappend="${noticeBoard['TOP_YN'] == 'Y' ? 'selected' : ''}" th:each="noticeBoard : ${noticeBoardList.dataList}">
                                                     <td><span th:text="${noticeBoard['BOARD_ID']}"></span></td>
                                                     <td class="text-left">
                                                         <a th:href="@{/noticeBoard(boardId=${noticeBoard['BOARD_ID']})}"

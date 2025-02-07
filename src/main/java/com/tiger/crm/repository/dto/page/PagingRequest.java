@@ -20,7 +20,7 @@ public class PagingRequest {
     private String companyId;              // 회사 코드
     private int totalcnt;
     private String createId;
-
+    private String searchSupportCd;        //범위
     public PagingRequest() {
         this.page = 1;  // 기본값 설정
         this.size = 10; // 기본값 설정

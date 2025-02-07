@@ -135,7 +135,7 @@
                                                 <div class="dropdown dropdown--s wd130" aria-expanded="false"
                                                      tabindex="0">
                                                     <select class="dropdown__selected" id="statusCd" name="statusCd"
-                                                            th:field="*{statusCd}" th:disabled="${userClass == 'USER'}">
+                                                            th:field="*{statusCd}" th:disabled="${user.userClass == 'USER'}">
                                                         <option th:each="op : ${statusCd}"
                                                                 th:value="${op.key}"
                                                                 th:text="${op.value}"
@@ -146,7 +146,10 @@
                                                 </div>
                                                 <div>
                                                     <button type="button" class="btn btn--s primary-btn"
-                                                            onclick="changeStatus()">상태저장
+                                                            onclick="changeStatus()" th:style="${user.userClass == 'USER'} ? 'display: none;' : ''">상태저장
+                                                    </button>
+                                                    <button type="button" class="btn btn--s primary-btn"
+                                                            onclick="changeStatus()" th:style="${user.userClass == 'USER'} ? '' : 'display: none;'">완료처리
                                                     </button>
                                                 </div>
                                             </div>
@@ -263,9 +266,9 @@
                                 <!--//댓글 영역-->
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
-                                    <button type="submit" class="btn btn--m primary-btn">수정</button>
-                                    <button type="button" class="btn btn--m danger-btn" th:if="${user != null and (user.userName == ticketinfo.createName or user.userClass != 'USER')}" onclick="deleteTicket()">삭제</button>
-                                    <button type="button" class="btn btn--m secondary-btn"
+                                    <button type="submit" class="btn btn--m primary-btn" th:style="${user.userClass == 'USER' and ticketinfo.statusCd != 'OPEN'} ? 'display: none;' : ''">수정</button>
+                                    <button type="button" class="btn btn--m danger-btn" th:if="${user != null and (user.userName == ticketinfo.createName or user.userClass != 'USER')}" th:style="${user.userClass == 'USER'} ? 'display: none;' : ''" onclick="deleteTicket()">삭제</button>
+                                    <button type="button" class="btn btn--m secondary-btn" th:style="${ticketinfo.statusCd != 'COMPLETE'} ? 'display: none;' : ''"
                                             onclick="goReRequest()">재요청</button>
                                     <button type="button" class="btn btn--m secondary-btn"
                                             onclick="goBack()">목록

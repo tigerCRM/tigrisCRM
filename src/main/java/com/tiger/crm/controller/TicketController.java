@@ -141,6 +141,30 @@ public class TicketController {
         }
     }
 
+    @PostMapping("/ticketListAdmin")
+    public String searchTicketsAdmin(@ModelAttribute PagingRequest pagingRequest, HttpServletRequest request, Model model) {
+        try {
+            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
+            String userClass = String.valueOf(loginUser.getUserClass());
+            String userid = String.valueOf(loginUser.getUserId());
+            String companyId = String.valueOf(loginUser.getCompanyId());
+            pagingRequest.setUserClass(userClass);
+            if (pagingRequest.getCreateId().equals("true")){
+                pagingRequest.setCreateId(userid);
+            }else{
+                pagingRequest.setCreateId("");
+            }
+            pagingRequest.setCompanyId(companyId);
+            // 요청 조회
+            PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
+            model.addAttribute("userClass",userClass);
+            model.addAttribute("ticketList", pageResponse);
+            // 부분 뷰 렌더링 (리스트 부분만 갱신)
+            return "ticketListAdmin :: ticketListFragment";
+        } catch (Exception e) {
+            throw new CustomException("ticketList : 예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
+        }
+    }
     /*
      * 엑셀다운로드
      * 설명 : 공통 쿼리문 사용하기위해서 Page와 Size값 fix로 사용(이후 변경 필요)
@@ -430,6 +454,7 @@ public class TicketController {
             model.addAttribute("commentList",commentList);
             model.addAttribute("statusCd", commonService.getSelectOptions("t_status"));
             model.addAttribute("user", loginUser);
+            model.addAttribute("userClass", userClass); //작성자 레벨
             model.addAttribute("ticketinfo", ticketDetails);
             return "ticketView";
         } catch (Exception e) {

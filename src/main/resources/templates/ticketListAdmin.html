@@ -37,8 +37,8 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div th:if="${userClass != 'USER'}">
-                                        <div class="dropdown dropdown--s wd110" aria-expanded="false" tabindex="0">
+                                    <div>
+                                        <div class="dropdown dropdown--s wd140" aria-expanded="false" tabindex="0">
                                             <select class="dropdown__selected" id="searchCompany" name="searchCompany"
                                                     th:value="${searchCompany}" onchange="searchTickets(this);">
                                                 <option value="">==고객사==</option>
@@ -46,59 +46,67 @@
                                                         th:value="${op.companyId}"
                                                         th:text="${op.companyName}"></option>
                                             </select>
-                                            <!--<input list="companyOptions" name="searchCompany" id="searchCompany" autocomplete="off">
-                                            <datalist id="companyOptions" th:field="*{companyOptions}">
-                                                <option value="">==고객사==</option>
-                                                <option th:each="op : ${companyOptions}" th:value="${op.companyId}" th:utext="${op.companyName}"></option>
-                                            </datalist>-->
-
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
-                                            <select class="dropdown__selected" id="searchType" name="searchType"
-                                                    th:value="${searchType}">
-                                                <option value="">==검색조건==</option>
-                                                <option th:each="op : ${searchOptions}"
-                                                        th:value="${op.key}"
-                                                        th:text="${op.value}"></option>
+                                        <div class="dropdown dropdown--s wd110" aria-expanded="false" tabindex="0">
+                                            <select class="dropdown__selected" id="searchSupportCd"
+                                                    th:value="${searchSupportCd}" onchange="searchTickets(this);">
+                                                <option value="">==범위==</option>
+                                                <option value="ST">기본</option>
+                                                <option value="ADD">추가</option>
                                             </select>
                                         </div>
                                     </div>
-
-                                    <div>
-                                        <div th:include="fragments/datepicker :: datepicker('startDate', 'endDate')"></div>
-                                    </div>
-                                    <div>
-                                        <div class="search-wrap">
+                                    <div class="wrap_search" style="padding-left: 10px;">
+                                        <div class="wrap_input">
+                                            <button type="button" class="search_more" id="btnSearchDetail">
+                                                <p style="color:#E1E4EB; font-size:12px;"></p>
+                                            </button>
                                             <input type="text" id="searchKeyword" name="searchKeyword"
                                                    class="input--s input01" placeholder="검색어를 입력해주세요."
                                                    th:value="${searchKeyword}"
                                                    onkeydown="if (event.keyCode === 13) searchTickets(this);">
-                                            <button class="icon-btn search__btn" onclick="searchTickets(this);">
+                                            <button class="icon-btn search__btn" onclick="searchTickets(this);" style="padding-right: 10px;">
                                                 <svg class="icon">
                                                     <use th:href="@{/assets/images/icon/sprite-sheet.svg#search}"/>
                                                 </svg>
                                             </button>
                                         </div>
+                                        <div id="searchDetail" class="wrap_condition" style="display: none;">
+                                            <div class="detail_condition group">
+                                                <div class="wrap_radio type_button">
+                                                    <input type="radio" name="filterType" id="group01" value="TITLEANDCONTENTS" checked=""> <label for="group01">제목+내용</label>
+                                                    <input type="radio" name="filterType" id="group02" value="TITLE"><label for="group02">제목</label>
+                                                    <input type="radio" name="filterType" id="group03" value="CONTENTS"><label for="group03">내용</label>
+                                                    <input type="radio" name="filterType" id="group04" value="WRITER"><label for="group04">작성자</label>
+                                                    <input type="radio" name="filterType" id="group05" value="USERNAME"><label for="group05">담당자</label>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <input type="text" class="input--s input01 datepicker-input start-date" placeholder="시작 일자" id="startDate" th:name="${startDateId}">
+                                                <button type="button" class="btn just-icon btn--24 calendar-btn">
+                                                    <svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use></svg>
+                                                </button>
+                                                ~
+                                                <input type="text" class="input--s input01 datepicker-input end-date" placeholder="종료 일자" id="endDate" th:name="${endDateId}">
+                                                <button type="button" class="btn just-icon btn--24 calendar-btn">
+                                                    <svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use></svg>
+                                                </button>
+                                            </div>
+                                            <button type="button" class="btn_close02" id="searchClose" >
+                                                <svg class="icon"><use href="./assets/images/icon/sprite-sheet.svg#close"></use></svg>
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div style="align-content: center;">
+
+                                    <div style="align-content: center;display:none">
                                         <button class="btn just-icon btn--24" onclick="searchTickets(this);"
                                                 id="refresh">
                                             <i class="ri-find-replace-line"></i>
-                                           <!-- <svg class="icon">
-                                                <use th:href="@{/assets/images/icon/sprite-sheet.svg#refresh}"/>
-                                            </svg>-->
                                         </button>
                                     </div>
-                                    <div style="align-content: center;">
-                                        <label class="checkbox02">
-                                            <input type="checkbox"
-                                                   id="writerYn"
-                                                   th:onclick="searchTickets(this);">
-                                            <span>내가 작성한 글 보기</span>
-                                        </label>
-                                    </div>
+
                                     <div style="margin-left:auto;">
                                         <button class="btn btn--s  secondary-btn" onclick="exceldownload(this);"
                                                 id="excelticket">엑셀다운로드
@@ -226,6 +234,31 @@
             sessionStorage.removeItem("fromTicketView");
         }
     });
+$("#btnSearchDetail").click(function(){
+
+		if($('#searchDetail').css("display")=="none") {
+			$('#searchDetail').show();
+		}else {
+			$('#searchDetail').hide();
+		}
+
+	});
+	$("#searchClose").click(function(){
+
+		if($('#searchDetail').css("display")=="none") {
+			$('#searchDetail').show();
+		}else {
+			$('#searchDetail').hide();
+			$("#searchType").val("");
+           // $("#searchStatus").val("");
+           // $("#searchCompany").val("");
+            $("#searchKeyword").val("");
+            $("#startDate").val("");
+            $("#endDate").val("");
+           // document.getElementById('writerYn').checked = false
+		}
+
+	});
 
     function filterOptions() {
         const searchText = document.getElementById('searchBox').value.toLowerCase();
@@ -246,20 +279,28 @@
         if (obj.id == "refresh"){
           $("#searchType").val("");
           $("#searchStatus").val("");
-          $("#searchCompany").val("");ticketList.html
+          $("#searchCompany").val("");
           $("#searchKeyword").val("");
           $("#startDate").val("");
           $("#endDate").val("");
+          $("#searchSupportCd").val("");
           document.getElementById('writerYn').checked = false
         }
         var searchType = $("#searchType").val();
+        const checkedRadio = document.querySelector('input[name="filterType"]:checked');
+        if (checkedRadio) {
+            // 체크된 라디오 버튼의 value 값
+            const value = checkedRadio.value;
+            searchType = value
+        }
         var searchStatus = $("#searchStatus").val();
         var searchCompany = $("#searchCompany").val();
         var searchKeyword = $("#searchKeyword").val();
         var startDt = ($("#startDate").val() === undefined || $("#startDate").val() === "") ? '1999-01-01' : $("#startDate").val();
         var endDt = ($("#endDate").val() === undefined || $("#endDate").val() === "") ? '2030-01-01' : $("#endDate").val();
         var page = ($("#currentPage").val() === undefined || $("#currentPage").val() === "") ? '' : $("#currentPage").val();
-        var writerYn = document.getElementById('writerYn').checked;
+        var writerYn = $("#writerYn").checked;
+        var searchSupportCd =   $("#searchSupportCd").val();
 
         //내가 작성한글 페이징 처리하기
         const data = new URLSearchParams({
@@ -267,6 +308,7 @@
           searchStatus: searchStatus,
           searchCompany: searchCompany,
           searchKeyword: searchKeyword,
+          searchSupportCd: searchSupportCd,
           startDt: startDt,
           endDt: endDt,
           page: page,
@@ -274,7 +316,7 @@
         });
 
         // Ajax 요청
-        fetch('/ticketList', {
+        fetch('/ticketListAdmin', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/x-www-form-urlencoded',

@@ -38,6 +38,11 @@
             <if test="searchCompany != null and searchCompany != ''">
                 AND T.COMPANY_ID = #{searchCompany}
             </if>
+            <!-- 지원범위 -->
+            <if test="searchSupportCd != null and searchSupportCd != ''">
+                AND T.SUPPORT_CD = #{searchSupportCd}
+            </if>
+
             <!-- 검색 유형 (searchType이 제목, 내용, 담당자, 등 선택된 경우) -->
             <if test="searchType != null and searchType != ''">
                 <choose>
@@ -96,6 +101,9 @@
             <!-- 고객사명 검색  -->
             <if test="searchCompany != null and searchCompany != ''">
                 AND T.COMPANY_ID = #{searchCompany}
+            </if>
+            <if test="searchSupportCd != null and searchSupportCd != ''">
+                AND T.SUPPORT_CD = #{searchSupportCd}
             </if>
             <!-- 검색 유형 (searchType이 제목, 내용, 담당자, 등 선택된 경우) -->
             <if test="searchType != null and searchType != ''">

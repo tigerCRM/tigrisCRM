@@ -153,8 +153,8 @@
                                         </td>
                                         <th>진행상태</th>
                                         <td>
-                                            <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
-                                                <select class="dropdown__selected" id="statusCd" name="statusCd" th:field="*{statusCd}">
+                                            <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0" >
+                                                <select class="dropdown__selected" id="statusCd" name="statusCd" th:field="*{statusCd}" th:disabled="${userClass == 'USER'}">
                                                     <option th:each="op : ${statusCd}"
                                                             th:value="${op.key}"
                                                             th:text="${op.value}"></option>
