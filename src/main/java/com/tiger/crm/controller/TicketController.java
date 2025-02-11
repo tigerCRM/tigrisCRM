@@ -640,13 +640,30 @@ public class TicketController {
         try {
 
             String newStatus = RequestBody.get("status");
-            String result = RequestBody.get("result"); //만족도 점수
+            String result = RequestBody.get("result");        //만족도 점수
+            String sComment = RequestBody.get("comment");      //만족도의견
             int id = Integer.parseInt(RequestBody.get("id")); // id는 String으로 전달되므로 변환
             UserLoginDto user = (UserLoginDto) request.getAttribute("user");
             String updateId = user.getUserId();
             //진행상태변경
             ticketService.chSatisfaction(id, newStatus, result, updateId);
-            // JSON 응답
+            String comment = "요청 진행상태를 [완료]로 변경하였습니다.\n";
+            String score = "";
+            switch (result) {
+                case "1": score = "매우불만"; break;
+                case "2": score = "불만"; break;
+                case "3": score = "보통"; break;
+                case "4": score = "만족"; break;
+                case "5": score = "매우만족"; break;
+                default:
+                    score = ""; break;
+            }
+            comment = comment+ "[" +score +"]"+ sComment;
+            commentDto.setTicketId(id);
+            commentDto.setContent(comment);
+            commentDto.setCreateId(user.getUserId());
+            commentDto.setStatusCd(newStatus);
+            ticketService.addComment(commentDto);
             Map<String, String> response = new HashMap<>();
             response.put("status", "success");
             response.put("message", "Step status updated successfully");

@@ -178,14 +178,14 @@
                                 <!--//사용자 입력 영역-->
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
-                                    <button type="submit" class="btn btn--m primary-btn" th:if="${mode == 'write'}">등록</button>
-                                    <button type="button" class="btn btn--m primary-btn" th:if="${mode == 'modify'}" onclick="modifiedBoardConfirm()">저장</button>
+                                    <button type="submit" class="btn btn--m primary-btn" th:if="${mode == 'write' and user.userClass != 'USER'}">등록</button>
+                                    <button type="button" class="btn btn--m primary-btn" th:if="${mode == 'modify' and user.userClass != 'USER'}" onclick="modifiedBoardConfirm()">저장</button>
                                     <button type="button" class="btn btn--m primary-btn"
-                                            th:if="${mode == 'read'}"
+                                            th:if="${mode == 'read' and user.userClass != 'USER'}"
                                             onclick="getModifyBoard()">수정</button>
-                                    <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'read'}" onclick="deleteBoardConfirm()">삭제</button>
+                                    <button type="button" class="btn btn--m danger-btn" th:if="${mode == 'read' and user.userClass != 'USER'}" onclick="deleteBoardConfirm()">삭제</button>
                                     <button type="button" class="btn btn--m  secondary-btn" th:if="${mode != 'modify'}" onclick="location.href='/noticeBoardList';">목록</button>
-                                    <button type="button" class="btn btn--m  secondary-btn" th:if="${mode == 'modify'}" onclick="goBack();">취소</button>
+                                    <button type="button" class="btn btn--m  secondary-btn" th:if="${mode == 'modify' and user.userClass != 'USER'}" onclick="goBack();">취소</button>
                                 </div>
                                 <!--//버튼그룹-->
                             </div>

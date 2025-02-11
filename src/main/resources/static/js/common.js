@@ -464,6 +464,8 @@ var common = {
                         <input type="radio" name="feedback" value="1" style="margin-right: 8px;">매우불만
                     </label>
                 </div>
+                <textarea id="feedbackText" placeholder="피드백 의견을 입력해주세요."
+                    style="width: 100%; height: 80px; margin-top: 15px; font-size: 14px; border: 1px solid #ccc; border-radius: 4px; resize: none;"></textarea>
             `,
             icon: 'question',
             showCancelButton: true,
@@ -477,11 +479,15 @@ var common = {
             },
             preConfirm: () => {
                 const selectedOption = document.querySelector('input[name="feedback"]:checked');
+                const feedbackText = document.getElementById('feedbackText').value.trim();
                 if (!selectedOption) {
                     Swal.showValidationMessage('의견을 선택하세요.');
                     return false;
                 }
-                return selectedOption.value;
+               return {
+                   feedback: selectedOption.value,
+                   comment: feedbackText
+               };
             }
         }).then((result) => {
             if (result.isConfirmed) {

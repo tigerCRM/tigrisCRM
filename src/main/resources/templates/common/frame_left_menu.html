@@ -100,6 +100,17 @@
                         </p>
                     </a>
                 </li>
+                <li >
+                    <a href="opReportList" class="menu-item">
+                        <span class="menu-icon">
+                           <i class="ri-file-text-line"></i>
+                        </span>
+                        <p class="menu-title">
+                            <span class="menu-title__text">운영지원보고서</span>
+                            <span class="menu-title__num"></span>
+                        </p>
+                    </a>
+                </li>
                 <!--통계 현황 -->
                 <li class="tree-item" th:if="${userClass != 'USER'}">
                     <a href="#" class="menu-item" id="analytics">
@@ -157,14 +168,14 @@
                     </a>
                     <!-- 하위 메뉴 (초기에는 숨김) -->
                     <ul class="tree-list--sub-2" style="display: none;">
-                        <li >
+                        <!--<li >
                             <a href="opReportList" class="menu-item">
                                 <p class="menu-title">
                                     <span class="menu-title__text">운영지원보고서</span>
                                     <span class="menu-title__num"></span>
                                 </p>
                             </a>
-                        </li>
+                        </li>-->
                         <li>
                             <a href="mailHistory" class="menu-item">
                                 <p class="menu-title">
@@ -234,8 +245,7 @@
                         </table>
                         <!-- 모달 푸터 -->
                         <div style="padding: 15px; text-align: center; border-top: 1px solid #ddd;">
-                            <button onclick="openContact()"
-                                    style="background-color: gray; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">
+                            <button onclick="openContact()" class="btn btn--s secondary-btn">
                                 닫기
                             </button>
                         </div>

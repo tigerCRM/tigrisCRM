@@ -149,7 +149,7 @@
                                                     </button>
                                                     <button type="button" class="btn btn--s primary-btn"
                                                             onclick="changeStatus('CLOSED')"
-                                                            th:style="${user.userClass == 'USER' AND ticketinfo.statusCd != 'CLOSED'} ? '' : 'display: none;'">
+                                                             th:style="${user.userClass == 'USER' AND ticketinfo.statusCd == 'REVIEW'} ? '' : 'display: none;'">
                                                         완료처리
                                                     </button>
                                                 </div>
@@ -269,7 +269,7 @@
                                 <div class="button-group align-right">
                                     <button type="submit" class="btn btn--m primary-btn" th:style="${user.userClass == 'USER' and ticketinfo.statusCd != 'OPEN'} ? 'display: none;' : ''">수정</button>
                                     <button type="button" class="btn btn--m danger-btn" th:if="${user != null and (user.userName == ticketinfo.createName or user.userClass != 'USER')}" th:style="${user.userClass == 'USER'} ? 'display: none;' : ''" onclick="deleteTicket()">삭제</button>
-                                    <button type="button" class="btn btn--m secondary-btn" th:style="${ticketinfo.statusCd != 'COMPLETE'} ? 'display: none;' : ''"
+                                    <button type="button" class="btn btn--m secondary-btn" th:style="${ticketinfo.statusCd != 'CLOSED'} ? 'display: none;' : ''"
                                             onclick="goReRequest()">재요청</button>
                                     <button type="button" class="btn btn--m secondary-btn"
                                             onclick="goBack()">목록
@@ -346,7 +346,7 @@
                 '피드백을 주세요',
                 '서비스에 대해 어떻게 생각하시나요?',
                 (result) => {
-                    requestData = {status: newStatus, id: id, result: result};
+                    requestData = {status: newStatus, id: id, result: result.feedback, comment: result.comment};
                     if (result != 'cancelled') {
                         fetch('/chSatisfaction', {
                             method: 'POST',
