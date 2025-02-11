@@ -192,53 +192,57 @@
                 </li>
             </ul>
         </nav>
-        <div class="quickmenu">
-            <button type="button" class="btn btn--l primary-btn quick-btn"  th:onclick="openContact();">
-       <!--         <svg class="icon"><i class="ri-customer-service-2-line"></i></svg>-->
-                <span>담당자 비상 연락망</span>
-            </button>
-            <!-- 🛑 비상연락망 모달 시작 -->
-            <div id="emergencyContact" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
-                <div style="background-color: white; width: 30%; margin: 10% auto; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
 
-                    <!-- 모달 헤더 -->
-                    <div style="background-color: #79b3f1; color: white; padding: 15px; font-size: 18px; font-weight: bold; text-align: center; border-radius: 8px 8px 0 0;">
-                        📞 비상연락망
-                        <span onclick="openContact()" style="float: right; cursor: pointer;">✖</span>
-                    </div>
-
-                    <!-- 모달 본문 -->
-                    <div style="padding: 20px;">
-                        <table style="width: 100%; border-collapse: collapse;" id ="contactTable">
-                            <thead>
-                            <tr style="background-color: #79b3f1;">
-                                <th style="padding: 10px; border-bottom: 2px solid #ddd;font-size: 13px;">이름</th>
-                                <th style="padding: 10px; border-bottom: 2px solid #ddd;font-size: 13px;">이메일</th>
-                                <th style="padding: 10px; border-bottom: 2px solid #ddd;font-size: 13px;">연락처</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <!-- 모달 푸터 -->
-                    <div style="padding: 15px; text-align: center; border-top: 1px solid #ddd;">
-                        <button onclick="openContact()"
-                                style="background-color: gray; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">
-                            닫기
-                        </button>
-                    </div>
-
-                </div>
-            </div>
-            <!-- 🛑 비상연락망 모달 끝 -->
-        </div>
         <div class="quickmenu">
             <button type="button" class="btn btn--l primary-btn quick-btn"  th:onclick="'window.location.href=\'' + @{/ticketCreate} + '\''">
                 <svg class="icon"><use th:href="@{/assets/images/icon/sprite-sheet.svg#pencil}"/></svg>
                 <span>빠른 작성</span>
             </button>
+        </div>
+        <div class="quickmenu">
+            <button type="button" class="btn btn--l secondary-btn quick-btn"  th:onclick="openContact();">
+                <!--         <svg class="icon"><i class="ri-customer-service-2-line"></i></svg>-->
+                <span>담당자 비상 연락망</span>
+            </button>
+            <!-- 🛑 비상연락망 모달 시작 -->
+            <div id="emergencyContact" class="widget__content" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+                <!-- 모달 헤더 -->
+
+                <div class="is_full" style="background-color: white; width: 30%; margin: 10% auto; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
+                    <h2 class="widget-title">
+                        비상연락망
+                    </h2>
+                    <div class="board-list board--m list-wrap" style="border-top:1px solid var(--gray-900)">
+
+                        <!-- 모달 본문 -->
+                        <table class="table table01 table-ellipsis" id ="contactTable">
+                            <colgroup>
+                                <col style="width: 30%;">
+                                <col style="width: 35%;">
+                                <col style="width: 35%;">
+                            </colgroup>
+                            <thead>
+                                <tr id="tableNm">
+                                    <th>이름</th>
+                                    <th>이메일</th>
+                                    <th>연락처</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                        <!-- 모달 푸터 -->
+                        <div style="padding: 15px; text-align: center; border-top: 1px solid #ddd;">
+                            <button onclick="openContact()"
+                                    style="background-color: gray; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;">
+                                닫기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 🛑 비상연락망 모달 끝 -->
         </div>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
@@ -323,7 +327,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div><span class="${alert.readYn === 'Y' ? '' : 'badge badge--s'}"></span></div>
+                                                <div><span class="${alert.readYn === 'Y' ? '' : 'alarm--badge--s'}"></span></div>
                                             </a>
                                       </li>
                                     `;

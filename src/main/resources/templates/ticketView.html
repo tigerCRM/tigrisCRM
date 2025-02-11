@@ -140,7 +140,6 @@
                                                                 th:value="${op.key}"
                                                                 th:text="${op.value}"
                                                                 th:attr="style=${user.userClass == 'USER' and (op.key == 'OPEN' or op.key == 'RECEIPT' or op.key == 'PROGRESS')} ? 'display: none;' : null">
-
                                                         </option>
                                                     </select>
                                                 </div>
@@ -149,7 +148,9 @@
                                                             onclick="changeStatus()" th:style="${user.userClass == 'USER'} ? 'display: none;' : ''">상태저장
                                                     </button>
                                                     <button type="button" class="btn btn--s primary-btn"
-                                                            onclick="changeStatus()" th:style="${user.userClass == 'USER'} ? '' : 'display: none;'">완료처리
+                                                            onclick="changeStatus('CLOSED')"
+                                                            th:style="${user.userClass == 'USER' AND ticketinfo.statusCd != 'CLOSED'} ? '' : 'display: none;'">
+                                                        완료처리
                                                     </button>
                                                 </div>
                                             </div>
@@ -332,20 +333,21 @@
         fileInput.value = ''; // 파일 선택창 초기화
     });
     //상태변경
-    function changeStatus() {
+    function changeStatus(status) {
         const url = `/changeStatus`;
         var id = $("#ticketId").val();
         var newStatus = $("#statusCd").val();
-        const requestData = {status: newStatus, id : id};
-
+        var requestData = {status: newStatus, id: id, result: '0'};
+        if (status=="CLOSED"){
+            newStatus = "CLOSED"
+        }
         if (newStatus == "CLOSED"){
             showFeedbackConfirm(
                 '피드백을 주세요',
                 '서비스에 대해 어떻게 생각하시나요?',
                 (result) => {
-                    if (result === 'satisfied') {
-                        showMessage('success', '성공', '피드백 감사합니다.');
-                    } else if (result === 'unsatisfied') {
+                    requestData = {status: newStatus, id: id, result: result};
+                    if (result != 'cancelled') {
                         fetch('/chSatisfaction', {
                             method: 'POST',
                             headers: {
@@ -366,7 +368,7 @@
                             console.error('Error updating status:', error);
                             showMessage('error', '실패', '오류가 발생했습니다:');
                         });
-                    } else if (result === 'cancelled') {
+                    }else if (result === 'cancelled') {
                         console.log('사용자가 취소했습니다.');
                     }
                 }

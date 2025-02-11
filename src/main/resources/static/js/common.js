@@ -445,35 +445,57 @@ var common = {
     function showFeedbackConfirm(title, text, afterFunction) {
         Swal.fire({
             title: `<span style="font-size: 20px;">${title}</span>`,
-            html: `<span style="font-size: 15px;">${text}</span>`,
+            html: `
+                <span style="font-size: 15px;">${text}</span>
+                <div style="display: flex; flex-direction: column; margin-left:95px; margin-top: 15px;">
+                    <label style="display: flex; align-items: center; font-size: 14px;">
+                        <input type="radio" name="feedback" value="5" style="margin-right: 8px;" selected>매우만족
+                    </label>
+                    <label style="display: flex; align-items: center; font-size: 14px; margin-top: 8px;">
+                        <input type="radio" name="feedback" value="4" style="margin-right: 8px;">만족
+                    </label>
+                    <label style="display: flex; align-items: center; font-size: 14px; margin-top: 8px;">
+                        <input type="radio" name="feedback" value="3" style="margin-right: 8px;">보통
+                    </label>
+                    <label style="display: flex; align-items: center; font-size: 14px; margin-top: 8px;">
+                        <input type="radio" name="feedback" value="2" style="margin-right: 8px;">불만
+                    </label>
+                    <label style="display: flex; align-items: center; font-size: 14px; margin-top: 8px;">
+                        <input type="radio" name="feedback" value="1" style="margin-right: 8px;">매우불만
+                    </label>
+                </div>
+            `,
             icon: 'question',
             showCancelButton: true,
-            showDenyButton: true,
-            confirmButtonColor: '#3085d6',
-            denyButtonColor: '#d33',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: `<span style="font-size: 13px;">만족</span>`,
-            denyButtonText: `<span style="font-size: 13px;">불만족</span>`,
-            cancelButtonText: `<span style="font-size: 13px;">취소</span>`
+         //   confirmButtonColor: '#3085d6',
+         //   cancelButtonColor: '#6c757d',
+            confirmButtonText: '확인',
+            cancelButtonText: '취소',
+            customClass: {
+                confirmButton: 'btn btn--s primary-btn',
+                cancelButton: 'btn btn--s secondary-btn'
+            },
+            preConfirm: () => {
+                const selectedOption = document.querySelector('input[name="feedback"]:checked');
+                if (!selectedOption) {
+                    Swal.showValidationMessage('의견을 선택하세요.');
+                    return false;
+                }
+                return selectedOption.value;
+            }
         }).then((result) => {
             if (result.isConfirmed) {
-                // 만족을 선택한 경우
                 if (typeof afterFunction === 'function') {
-                    afterFunction('satisfied');
-                }
-            } else if (result.isDenied) {
-                // 불만족을 선택한 경우
-                if (typeof afterFunction === 'function') {
-                    afterFunction('unsatisfied');
+                    afterFunction(result.value);
                 }
             } else if (result.isDismissed) {
-                // 취소를 선택한 경우
                 if (typeof afterFunction === 'function') {
                     afterFunction('cancelled');
                 }
             }
         });
     }
+
 
     function showPasswordChangeModal(afterFunction) {
         Swal.fire({
@@ -486,6 +508,12 @@ var common = {
             showCancelButton: true,
             confirmButtonText: '변경',
             cancelButtonText: '취소',
+         //   confirmButtonColor: '#0D349B',
+         //   cancelButtonColor: '#3085d6',
+             customClass: {
+                        confirmButton: 'btn btn--s primary-btn',
+                        cancelButton: 'btn btn--s secondary-btn'
+                    },
             preConfirm: () => {
                 const newPassword = document.getElementById('newPassword').value;
                 const confirmPassword = document.getElementById('confirmPassword').value;

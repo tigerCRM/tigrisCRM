@@ -15,7 +15,8 @@
         T.CREATE_NAME,
         U.USER_NAME,
         DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d') AS CREATE_DT,
-        IFNULL(DATE_FORMAT(IFNULL(COMPLETE_DT, ''), '%Y-%m-%d'),'') as COMPLETE_DT
+        IFNULL(DATE_FORMAT(IFNULL(COMPLETE_DT, ''), '%Y-%m-%d'),'') as COMPLETE_DT,
+        SATISFACTION
         FROM T_TICKET_INFO as T
         LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
         <where>
@@ -214,7 +215,7 @@
     <!--불만족인 경우-->
     <update id="chSatisfaction" parameterType="map">
         UPDATE T_TICKET_INFO
-        SET STATUS_CD = #{newStatus}, SATISFACTION = 'N',
+        SET STATUS_CD = #{newStatus}, SATISFACTION = #{result},
         UPDATE_DT = NOW(),
         UPDATE_ID = #{updateId}
         <if test="newStatus == 'CLOSED'"> <!--완료일경우 완료일 update-->

@@ -130,8 +130,8 @@ public class TicketServiceImpl implements TicketService {
         }
     }
 
-    public void chSatisfaction(int ticketId, String newStatus,String updateId) throws MessagingException {
-        int resultCount = ticketMapper.chSatisfaction(ticketId,newStatus,updateId);
+    public void chSatisfaction(int ticketId, String newStatus,String result, String updateId) throws MessagingException {
+        int resultCount = ticketMapper.chSatisfaction(ticketId,newStatus,result,updateId);
     }
 
     //첨부파일 저장 후 요청정보에 첨부파일 아이디 업데이트

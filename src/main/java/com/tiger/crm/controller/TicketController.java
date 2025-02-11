@@ -640,11 +640,12 @@ public class TicketController {
         try {
 
             String newStatus = RequestBody.get("status");
+            String result = RequestBody.get("result"); //만족도 점수
             int id = Integer.parseInt(RequestBody.get("id")); // id는 String으로 전달되므로 변환
             UserLoginDto user = (UserLoginDto) request.getAttribute("user");
             String updateId = user.getUserId();
             //진행상태변경
-            ticketService.chSatisfaction(id, newStatus,updateId);
+            ticketService.chSatisfaction(id, newStatus, result, updateId);
             // JSON 응답
             Map<String, String> response = new HashMap<>();
             response.put("status", "success");
