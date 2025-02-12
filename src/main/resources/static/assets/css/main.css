@@ -42,7 +42,7 @@
 .main-widget-wrap {
     display: flex;
     gap: var(--grid-gutter);
-    height: 50%;
+    /*height: 50%;*/
 }
 
 .main-widget-wrap>.flex1 {

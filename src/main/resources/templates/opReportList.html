@@ -156,16 +156,24 @@
         printWindow.document.write(`
             <html>
                 <head>
-                    <title>운영지원보고서</title>
+                    <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
+                    <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
+                    <link rel="stylesheet" type="text/css" href="/assets/css/layout.css">
+                    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
+                    <link rel="stylesheet" type="text/css" href="/assets/css/intro.css" />
                     <style>
-                        @page { size: auto; margin: 0; }
-                        body { font-family: Arial, sans-serif; margin: 20px; }
-                        table { width: 100%; border-collapse: collapse; }
-                        th, td { border: 1px solid #ddd; padding: 0px; text-align: left; }
-                        th { background-color: #f2f2f2; }
-                        tr { height: 20px; }
+                        .table th, .table td {
+                            padding: 0.8rem 1.2rem;
+                            border-bottom: 1px solid var(--gray-300);
+                            background-color: var(--white);
+                            text-align: center;
+                            line-height: 1.7em;
+                            font-size: 1.0rem;
+                        }
                         @media print { button, svg {display: none;} }
+
                     </style>
+
                 </head>
                 <body>${printContent}</body>
             </html>
@@ -174,11 +182,13 @@
         // 문서 작성 완료 후 인쇄 실행
         printWindow.document.close();
         printWindow.focus(); // 일부 브라우저에서 안정성을 위해 포커스 필요
-        printWindow.print();
 
+        setTimeout(() => {
+          printWindow.print();
+        }, 100);
         // 일정 시간 뒤에 새 창을 닫기
         setTimeout(() => {
-            printWindow.close();
+          //  printWindow.close();
         }, 100);
     }
 

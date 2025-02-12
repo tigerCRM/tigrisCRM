@@ -1,23 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, maximum-scale=1, width=device-width" />
-    <title>시스템 정보</title>
-    <link rel="stylesheet" as="style" href="/assets/font/pretendard-subset.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/color.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/common.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/layout.css">
-    <link rel="stylesheet" type="text/css" href="/assets/css/main.css">
-    <script src="/lib/jquery/jquery-2.2.2.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
-    <!--toast ui 설정-->
-    <link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
-    <script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
-    <!--기타 전역에서 쓸 공통javascript 설정. commit-->
-    <script src="/js/common.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <head th:replace="~{common/frame_head :: head('시스템 정보')}"></head>
 </head>
 <body>
 <div class="wrapper">

@@ -5,7 +5,7 @@
 </head>
 <body>
     <div th:fragment="opReport" id ="mailHistListContainer">
-        <h2 style="text-align: center">운영지원 보고서</h2>
+        <h2 style="text-align: center;margin-top: 10px;">운영지원 보고서</h2>
         <div th:if="${opReport != null}">
             <!-- 프린트 버튼 -->
             <button onclick="printReport()" style="border: none; background: none; cursor: pointer;">
@@ -13,85 +13,66 @@
                     <use th:href="@{/assets/images/common/print.svg#print-icon}" />
                 </svg>
             </button>
-            <table class="table table03 table--h table--xs">
+            <table class="table table01 table-ellipsis">
                 <colgroup>
                     <col style="width: 18%;">
-                    <col style="width: auto;">
+                    <col style="width: 32%;">
                     <col style="width: 18%;">
-                    <col style="width: auto;">
+                    <col style="width: 32%;">
                 </colgroup>
                 <tbody>
                     <tr>
                         <th colspan="4" style="text-align: center">고객정보</th>
                     </tr>
                     <tr>
-                        <th>고객사</th>
+                        <th>회사명</th>
                         <td><span id="customerCompany" th:text="${opReport.customerCompany}"></span></td>
-                        <th>담당자</th>
-                        <td><span id="customerName" th:text="${opReport.customerUserName}"></span></td>
+                        <th>담당자(PM)</th>
+                        <td><span id="customerName" th:text="${opReport.supportUserName}"></span></td>
+                    </tr>
+                    <tr>
+                        <th>지원기간</th>
+                        <td><span id="supportPeriod" th:text="${opReport.supportPeriod}"></span></td>
+                        <th>MD</th>
+                        <td><span id="totalMd" th:text="${opReport.totalMd}"></span></td>
                     </tr>
                     <tr></tr>
                     <tr>
-                        <th colspan="4" style="text-align: center">지원사 정보</th>
-                    </tr>
-                    <tr>
-                        <th>회사</th>
-                        <td><span id="companyName" th:text="${opReport.supportCompany}"></span></td>
-                        <th>담당자</th>
-                        <td><span id="createName" th:text="${opReport.supportUserName}"></span></td>
-                    </tr>
-                    <tr></tr>
-                    <tr></tr>
-                    <tr>
-                        <th colspan="4" style="text-align: center">상세내역</th>
-                    </tr>
-                    <tr>
-                        <table class="table table04 table--h table--xss">
+                        <table class="table table01 table-ellipsis">
                             <colgroup>
-                                <col style="width: 2%;">
                                 <col style="width: 5%;">
                                 <col style="width: 40%;">
+                                <col style="width: 10%;">
+                                <col style="width: 10%;">
+                                <col style="width: 10%;">
+                                <col style="width: 10%;">
+                                <col style="width: 7%;">
                                 <col style="width: 5%;">
-                                <col style="width: 6%;">
-                                <col style="width: 9%;">
-                                <col style="width: 9%;">
-                                <col style="width: 9%;">
-                                <col style="width: 8%;">
-                                <col style="width: 3%;">
                             </colgroup>
                             <tbody>
+
+                            <div style="margin-bottom: 40px;text-align:center;"><span style="margin-bottom: 1rem;font-weight: 700;font-size: 2.0rem;">상세내역</span></div>
                             <div class="pagetotal" style="margin-top: -30px">
                                 <span class="text-body4">전체 <strong class="color-navy500"  th:text="${opReportCnt}"></strong>건</span>
                             </div>
                                 <tr>
-                                    <th>no</th>
-                                    <th style="text-align: center">상태</th>
+                                    <th>No</th>
                                     <th>제목</th>
                                     <th>구분</th>
                                     <th>담당자</th>
                                     <th>요청일</th>
-                                    <th>희망일</th>
                                     <th>완료일</th>
-                                    <th>지원범위</th>
+                                    <th>범위</th>
                                     <th>MD</th>
                                 </tr>
                                 <!-- 데이터가 없을 때 -->
                                 <tr th:if="${opReport.details == null or #lists.isEmpty(opReport.details)}">
-                                    <td colspan="10" style="text-align: center;">데이터가 없습니다.</td>
+                                    <td colspan="9" style="text-align: center;">데이터가 없습니다.</td>
                                 </tr>
                                 <!-- 데이터가 있을 때 -->
                                 <tr th:each="items, iterStat : ${opReport.details}">
                                     <td style="text-align: center">
                                         <span th:text="${iterStat.index + 1}"></span>
-                                    </td>
-                                    <td style="text-align: center">
-                                        <span th:switch="${items['STATUS_CD']}">
-                                            <span th:case="'OPEN'" class="tag tag--blue">등록</span>
-                                            <span th:case="'RECEIPT'" class="tag tag--navy">접수</span>
-                                            <span th:case="'PROGRESS'" class="tag tag--green">진행</span>
-                                            <span th:case="'REVIEW'" class="tag tag--orange">검토</span>
-                                            <span th:case="'CLOSED'" class="tag tag--gray">완료</span>
-                                        </span>
                                     </td>
                                     <td><span th:text="${items['TITLE']}"></span></td>
                                     <td>
@@ -106,7 +87,6 @@
                                     </td>
                                     <td><span th:text="${items['MANAGER_NM']}"></span></td>
                                     <td><span th:text="${items['CREATE_DT']}"></span></td>
-                                    <td><span th:text="${items['EXPECTED_COMPLETE_DT']}"></span></td>
                                     <td><span th:text="${items['COMPLETE_DT']}"></span></td>
                                     <td>
                                         <span th:switch="${items['SUPPORT_CD']}">

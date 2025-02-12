@@ -406,8 +406,9 @@
         var ticketId = $("#ticketId").val();
         const statusCd = $("#statusCd").val();
      //   const fileInput = $('#commnetFileInput')[0].files;
-        if (!comment) {
+        if (!content) {
             showMessage('info', '정보', '댓글 내용을 입력하세요.');
+            document.getElementById("comment").focus();
             return;
         }
         // JSON 데이터 생성
@@ -572,7 +573,8 @@
 
     function goBack(){
         sessionStorage.setItem("fromTicketView", "true");
-        window.history.back();
+         location.href = "/ticketList"
+        //window.history.back();
     }
 </script>
 </body>

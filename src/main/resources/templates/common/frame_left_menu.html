@@ -287,6 +287,7 @@
 
                             const $alertBadge = $('#alertBadge');
                             const $alertDropdownMenu = $('#alertDropdownMenu'); // 알림 드롭다운 메뉴
+                            const $alramlistContent = $('#alramlistContent');   //메인화면 알림내역
 
                             // 알림 배지 표시
                             if (alertCount > 0) {
@@ -297,7 +298,8 @@
 
                             // 드롭다운 내용 추가
                             if (alerts && alerts.length > 0) {
-                                let alertListHtml = `<div class="layerpopup__header">
+                                let alertListHtml = '';
+                                let alertList = `<div class="layerpopup__header">
                                                             <h1 class="layerpopup__title">알림</h2>
                                                             <div class="flex gap--8">
                                                                 <button type="button" id="markAllAsRead"  class="btn btn--s ghost-btn">모두 읽음</button>
@@ -342,9 +344,11 @@
                                       </li>
                                     `;
                                 });
-                                alertListHtml +='</ul></div>';
+                                alertList += alertListHtml
+                                alertList +='</ul></div>';
                                 // 알림 리스트를 드롭다운에 추가
-                                $alertDropdownMenu.html(alertListHtml);
+                                $alertDropdownMenu.html(alertList);
+                                $alramlistContent.html(alertListHtml)
                             } else {
                                 // 알림이 없으면 "알림 없음" 표시
                                 $alertDropdownMenu.html('<li style="text-align: center;">알림이 없습니다.</li>');

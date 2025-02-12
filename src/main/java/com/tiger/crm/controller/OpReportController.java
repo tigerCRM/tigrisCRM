@@ -39,7 +39,7 @@ public class OpReportController {
             }else{
                 companyOptionDto.setCompanyId(0); // 전체조회
             }
-
+            model.addAttribute("userClass", loginUser.getUserClass());
             // 유저의 고객사 정보 조회(담당자 있음)
             List<CompanyOptionDto> companyOptions = commonService.getCompanyOption2(companyOptionDto);
             model.addAttribute("companyOptions", companyOptions);

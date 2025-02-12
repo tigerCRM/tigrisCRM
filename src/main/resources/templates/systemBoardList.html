@@ -75,15 +75,13 @@
                                 <div class="board-list board--m list-wrap ">
                                     <table class="table table01 table-ellipsis">
                                         <colgroup>
-                                            <col style="width: 15%;">
-                                            <col style="width: 15%;">
-                                            <col style="width: 30%;">
                                             <col style="width: 20%;">
+                                            <col style="width: 30%;">
+                                            <col style="width: 30%;">
                                             <col style="width: 20%;">
                                         </colgroup>
                                         <thead>
                                         <tr>
-                                            <th>글번호</th>
                                             <th>고객사</th>
                                             <th class="board-title">서버명</th>
                                             <th>작성자</th>
@@ -93,10 +91,9 @@
                                         <div>
                                             <tbody>
                                                 <tr th:if="${systemBoardList == null or systemBoardList.dataList == null or #lists.isEmpty(systemBoardList.dataList)}">
-                                                    <td colspan="10" style="text-align:center;">등록된 시스템 정보가 없습니다.</td>
+                                                    <td colspan="4" style="text-align:center;">등록된 시스템 정보가 없습니다.</td>
                                                 </tr>
                                                 <tr th:each="systemBoard : ${systemBoardList.dataList}">
-                                                    <td><span th:text="${systemBoard['BOARD_ID']}"></span></td>
                                                     <td><span th:text="${systemBoard['COMPANY_NAME']}"></span></td>
                                                     <td>
                                                         <a th:href="@{/systemBoard(boardId=${systemBoard['BOARD_ID']})}"

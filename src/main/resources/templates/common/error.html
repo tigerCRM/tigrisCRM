@@ -29,7 +29,7 @@
         .error-container h1 {
             font-size: 72px;
             margin: 0;
-            color: #ff6b6b;
+            color: red;
         }
 
         .error-container p {
@@ -37,17 +37,7 @@
             margin: 10px 0;
         }
 
-        .error-container .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            margin-top: 15px;
-            background: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: background 0.3s ease;
-        }
+
 
         .error-container .btn:hover {
             background: #0056b3;
@@ -61,11 +51,10 @@
 </head>
 <body>
 <div class="error-container">
-    <img src="/assets/images/common/error-icon.png" alt="Error Icon">
     <h1>Oops!</h1>
     <h1 class="error-title"  th:text="${errorcode}">404</h1>
     <p th:text="${errorMessage}">Something went wrong on our end.</p> <!-- 동적 에러 메시지 -->
-    <a href="/main" class="btn">Go Back to Home</a>
+    <a href="/main" class="btn btn--l primary-btn quick-btn">Go Back to Home</a>
 </div>
 </body>
 </html>

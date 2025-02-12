@@ -294,7 +294,7 @@ $("#btnSearchDetail").click(function(){
           $("#startDate").val("");
           $("#endDate").val("");
           $("#searchSupportCd").val("");
-          document.getElementById('writerYn').checked = false
+        //  document.getElementById('writerYn').checked = false
         }
         var searchType = $("#searchType").val();
         const checkedRadio = document.querySelector('input[name="filterType"]:checked');
@@ -309,7 +309,8 @@ $("#btnSearchDetail").click(function(){
         var startDt = ($("#startDate").val() === undefined || $("#startDate").val() === "") ? '1999-01-01' : $("#startDate").val();
         var endDt = ($("#endDate").val() === undefined || $("#endDate").val() === "") ? '2030-01-01' : $("#endDate").val();
         var page = ($("#currentPage").val() === undefined || $("#currentPage").val() === "") ? '' : $("#currentPage").val();
-        var writerYn = $("#writerYn").checked;
+     //   var writerYn = $("#writerYn").checked;
+        var writerYn = "";
         var searchSupportCd =   $("#searchSupportCd").val();
 
         //내가 작성한글 페이징 처리하기
@@ -348,7 +349,8 @@ $("#btnSearchDetail").click(function(){
         var searchCompany = $("#searchCompany").val();
         var startDt = ($("#startDate").val() === undefined || $("#startDate").val() === "") ? '1999-01-01' : $("#startDate").val();
         var endDt = ($("#endDate").val() === undefined || $("#endDate").val() === "") ? '2030-01-01' : $("#endDate").val();
-        var writerYn = document.getElementById('writerYn').checked;
+        //var writerYn = document.getElementById('writerYn').checked;
+        var writerYn = "";
         const data = new URLSearchParams({
           searchType: searchType,
           searchStatus: searchStatus,

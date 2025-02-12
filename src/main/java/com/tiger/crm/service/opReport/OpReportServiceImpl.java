@@ -1,10 +1,13 @@
 package com.tiger.crm.service.opReport;
 
+import com.tiger.crm.common.exception.CustomException;
 import com.tiger.crm.repository.dto.opReport.OpReportDto;
 import com.tiger.crm.repository.mapper.OpReportMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -23,24 +26,50 @@ public class OpReportServiceImpl implements OpReportService {
     // 운영지원 보고서 내용 조회
     @Override
     public OpReportDto getOpReportContent(OpReportDto opReportDto) {
-
-        // 1. 고객 정보 조회
-        Map<String, Object> customerInfo = opReportMapper.getCustomerInfo(opReportDto);
-
-        // 2. 지원사 정보 조회
-        Map<String, Object> supportCompanyInfo = opReportMapper.getSupportCompanyInfo(opReportDto);
-
-        // 3. 상세 내역 조회
-        List<Map<String, Object>> details = opReportMapper.getDetails(opReportDto);
-
-        // 4. OpReportDto에 데이터 바인딩
         OpReportDto resultDto = new OpReportDto();
-        resultDto.setCustomerCompany((String) customerInfo.get("COMPANY_NAME")); // 고객사 회사명 설정
-        resultDto.setCustomerUserName((String) customerInfo.get("USER_NAME"));   // 고객사 이름 설정
-        resultDto.setSupportCompany((String) supportCompanyInfo.get("COMPANY_NAME"));   // 담당자 회사명 설정
-        resultDto.setSupportUserName((String) supportCompanyInfo.get("USER_NAME"));      // 담당자 이름 설정
-        resultDto.setDetails(details); // 상세 내역 설정
-
+        try {
+            // 1. 고객 정보 조회
+            Map<String, Object> customerInfo = opReportMapper.getCustomerInfo(opReportDto);
+            // 2. 지원사 정보 조회
+            Map<String, Object> supportCompanyInfo = opReportMapper.getSupportCompanyInfo(opReportDto);
+            // 3. 상세 내역 조회
+            List<Map<String, Object>> details = opReportMapper.getDetails(opReportDto);
+            // 4. OpReportDto에 데이터 바인딩
+            resultDto.setCustomerCompany((String) customerInfo.get("COMPANY_NAME")); // 고객사 회사명 설정
+            resultDto.setCustomerUserName((String) customerInfo.get("USER_NAME"));   // 고객사 이름 설정
+            resultDto.setSupportCompany((String) supportCompanyInfo.get("COMPANY_NAME"));   // 담당자 회사명 설정
+            resultDto.setSupportUserName((String) supportCompanyInfo.get("USER_NAME"));      // 담당자 이름 설정
+            // 기존 값
+            String opReportId = String.valueOf(opReportDto.getOpReportId());
+            // 변환을 위한 날짜 포맷 정의
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyyMM");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy년 MM월");
+            // 문자열을 Date 객체로 변환
+            Date date = inputFormat.parse(opReportId);
+            // 원하는 포맷으로 변환
+            String formattedDate = outputFormat.format(date);
+            resultDto.setSupportPeriod(formattedDate);      //지원기간
+            double totalMD = 0.0;
+            for (Map<String, Object> detail : details) {
+                Object mdValue = detail.get("MD");
+                if (mdValue != null) {
+                    // Object를 Double로 변환합니다.
+                    if (mdValue instanceof Number) {
+                        totalMD += ((Number) mdValue).doubleValue();
+                    } else if (mdValue instanceof String) {
+                        try {
+                            totalMD += Double.parseDouble((String) mdValue);
+                        } catch (NumberFormatException e) {
+                            System.out.println("MD 값을 숫자로 변환할 수 없습니다: " + mdValue);
+                        }
+                    }
+                }
+            }
+            resultDto.setTotalMd(totalMD); //MD
+            resultDto.setDetails(details); // 상세 내역 설정
+        } catch (Exception e) {
+            throw new CustomException("exceldownload : 예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
+        }
         return resultDto;
     }
 
