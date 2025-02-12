@@ -50,7 +50,7 @@
                                                 <tr th:each="item : ${ticketList}">
                                                     <td><span th:text="${item.TICKET_ID}"></span></td>
                                                     <td><span th:if="${item.PRIORITY_YN == 'Y'}" class="tag tag--red">긴급</span></td>
-                                                    <td>
+                                                    <td style="text-align: left;">
                                                         <a th:href="@{/ticketView(id=${item.TICKET_ID})}">
                                                             <span th:text="${item.TITLE}"></span>
                                                         </a>
@@ -105,7 +105,7 @@
                                                     </tr>
                                                     <tr th:each="item : ${ticketList2}">
                                                         <td><span th:text="${item.TICKET_ID}"></span></td>
-                                                        <td>
+                                                        <td style="text-align: left;">
                                                             <a th:href="@{/ticketView(id=${item.TICKET_ID})}">
                                                                 <span th:text="${item.TITLE}"></span>
                                                             </a>
@@ -127,7 +127,7 @@
                     <!-- 알림 미리보기 -->
                     <div class="flex1">
                         <section id="alramlist" class="widget-item">
-                            <h2 class="widget-title"><a href="" class="">알림내역</a></h2>
+                            <h2 class="widget-title"><span>알림내역</span></h2>
                             <div>
                                 <ul style="overflow-y: auto;height: 300px;" id="alramlistContent">
 
@@ -144,14 +144,12 @@
                                     <div class="board-list board--m list-wrap ">
                                         <table class="table table01 table-ellipsis">
                                             <colgroup>
-                                                <col style="width: 15%;">
                                                 <col style="width: 50%;">
                                                 <col style="width: 20%;">
-                                                <col style="width: 20%;">
+                                                <col style="width: 30%;">
                                             </colgroup>
                                             <thead>
                                             <tr>
-                                                <th>번호</th>
                                                 <th class="board-title">제목</th>
                                                 <th>작성자</th>
                                                 <th>작성일</th>
@@ -160,11 +158,10 @@
                                             <tbody>
                                             <div id="noticeList" th:if="${noticeList != null}">
                                                 <tr th:if="${noticeList == null or #lists.isEmpty(noticeList)}">
-                                                    <td colspan="4" style="text-align:center;">내역이 없습니다</td>
+                                                    <td colspan="3" style="text-align:center;">내역이 없습니다</td>
                                                 </tr>
                                                 <tr th:each="item : ${noticeList}">
-                                                    <td><span th:text="${item.BOARD_ID}"></span></td>
-                                                    <td>
+                                                    <td style="text-align: left;">
                                                         <a th:href="@{/noticeBoard(boardId=${item.BOARD_ID})}">
                                                             <span th:text="${item.TITLE}"></span>
                                                         </a>
