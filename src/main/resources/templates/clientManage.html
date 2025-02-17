@@ -53,7 +53,7 @@
                                     <div id="srchClient_id" style="display: none;">
                                         <div class="search-wrap">
                                             <input type="text" id="srch_client_id" name="srch_client_id"
-                                                   class="input--s input01" placeholder="고객명 or 회사명"
+                                                   class="input--s input01" placeholder="회사명 or 사용자명"
                                                    th:value="${userId}"
                                                    onkeydown="if (event.keyCode === 13) searchClient(this);">
                                             <button class="icon-btn search__btn" onclick="searchClient(this);">
@@ -86,21 +86,18 @@
                                             <div class="board-list board--m list-wrap ">
                                                 <table class="table table01 table-ellipsis">
                                                     <colgroup>
-                                                        <col style="width: 25%;">
                                                         <col style="width: 75%;">
                                                     </colgroup>
                                                     <thead>
                                                     <tr>
-                                                        <th>고객사 아이디</th>
                                                         <th>고객사 명</th>
                                                     </tr>
                                                     </thead>
                                                     <tbody id="companyBody">
                                                         <tr th:if="${companyList == null or #lists.isEmpty(companyList)}">
-                                                            <td colspan="2" style="text-align:center;">내역이 없습니다</td>
+                                                            <td style="text-align:center;">내역이 없습니다</td>
                                                         </tr>
                                                         <tr th:each="item : ${companyList.dataList}" class="click-row" th:attr="data-id=${item['COMPANY_ID']}" >
-                                                            <td><span th:text="${item['COMPANY_ID']}"></span></td>
                                                             <td><span th:text="${item['COMPANY_NAME']}"></span></td>
                                                         </tr>
                                                     </tbody>
@@ -133,8 +130,8 @@
                                                     </colgroup>
                                                     <thead>
                                                     <tr>
-                                                        <th>사용자 명</th>
-                                                        <th>회사 명</th>
+                                                        <th>사용자명</th>
+                                                        <th>회사명</th>
                                                         <th>사용자 권한</th>
                                                     </tr>
                                                     </thead>
@@ -181,7 +178,7 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <th>고객사 명</th>
+                                                    <th>고객사명</th>
                                                     <td colspan="2">
                                                         <input type="text" id="detailcompanyName" class="input--s input01 input--full" />
                                                     </td>
@@ -250,7 +247,7 @@
                                                 <tr>
                                                     <th>회사명</th>
                                                     <td colspan="2">
-                                                        <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
+                                                        <div class="dropdown dropdown--s wd160" aria-expanded="false" tabindex="0">
                                                             <select class="dropdown__selected" id="clientcompanyNm" name="clientcompanyNm"
                                                                     th:value="${clientcompanyName}">
                                                                 <option value="">==고객사==</option>
@@ -381,7 +378,7 @@
                     <tr>
                         <th>회사명</th>
                         <td colspan="4">
-                            <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
+                            <div class="dropdown dropdown--s wd160" aria-expanded="false" tabindex="0">
                                 <select class="dropdown__selected" id="clientcompanyName" name="clientcompanyName"
                                         th:value="${clientcompanyName}">
                                     <option value="">==고객사==</option>
@@ -532,7 +529,6 @@
                     companyList.forEach(function (item) {
                         const row = `
                                         <tr class="click-row" data-id="${item.COMPANY_ID}">
-                                            <td><span>${item.COMPANY_ID}</span></td>
                                             <td><span>${item.COMPANY_NAME}</span></td>
                                         </tr>
                                     `;

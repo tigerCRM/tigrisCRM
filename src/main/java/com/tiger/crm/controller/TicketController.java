@@ -379,6 +379,10 @@ public class TicketController {
                 String formattedDate = getdate.format(formatter);
                 ticketDto.setCompleteDt(formattedDate);
             }
+            //사용자는 무조건 등록일 경우에만 수정가능 함
+            if (userClass.equals("USER")){
+                ticketDto.setStatusCd("OPEN");
+            }
             // 요청 수정 업데이트
             ticketId = ticketService.saveTicketModify(ticketDto);
 
@@ -516,6 +520,7 @@ public class TicketController {
             commentDto.setContent(comment);
             commentDto.setCreateId(updateId);
             commentDto.setStatusCd(newStatus);
+            commentDto.setAlarmYN("N");
             ticketService.addComment(commentDto);
             // JSON 응답
             Map<String, String> response = new HashMap<>();

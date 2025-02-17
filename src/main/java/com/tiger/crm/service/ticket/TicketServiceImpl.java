@@ -140,25 +140,38 @@ public class TicketServiceImpl implements TicketService {
     }
 
     //댓글 저장
-    public int addComment(CommentDto commentDto) {
+    public int addComment(CommentDto commentDto) throws MessagingException {
         int result = ticketMapper.insertTicketComment(commentDto);
-        if(result != 1){
+        if (result != 1) {
             return 0;
         }
 
-        // 고유번호가 TicketDto에 저장됨
-        int commentId = commentDto.getAnswerId();
+        int commentId = commentDto.getAnswerId(); // 혹시 getCommentId()가 맞는지 확인 필요
 
-        // [알림, 메일] 발송 파트
-        if(result > 0){
-            // 댓글시 상대방 조회(본인 x)
-            String receiverId = ticketMapper.findOtherUser(commentDto.getTicketId(), commentDto.getCreateId());
-            alertService.sendAlert(AlertType.TICKET_COMMENT ,"COMMENT", commentDto.getTicketId(), commentDto.getContent(), commentDto.getCreateId(), receiverId);
+        TicketDto ticketDto = ticketMapper.selectTicketDetails(commentDto.getTicketId());
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("userName", commentDto.getCreateName());
+        model.put("ticketTitle", ticketDto.getTitle());
+        model.put("ticketStatus", ticketDto.getStatusCd());
+        model.put("comment", commentDto.getContent());
+        model.put("ticketUrl", baseUrl + "/ticketView?id=" + ticketDto.getTicketId());
+
+        // 댓글 상대방 조회 (본인 제외)
+        String receiverId = ticketMapper.findOtherUser(commentDto.getTicketId(), commentDto.getCreateId());
+        if (receiverId != null) {
+            //진행상태 변경일경우에는 댓글알림은 보내지 않는다!
+            if (!commentDto.getAlarmYN().equals("N")){
+                mailService.sendEmail(receiverId, "댓글알림", "ticket-comment-email", model);
+            }
+            alertService.sendAlert(AlertType.TICKET_COMMENT, "COMMENT", commentDto.getTicketId(),
+                    commentDto.getContent(), commentDto.getCreateId(), receiverId);
+        } else {
+         //   log.warn("댓글 알림 대상 없음: ticketId={}, createId={}", commentDto.getTicketId(), commentDto.getCreateId());
         }
 
         return commentId;
     }
-
     //첨부파일 저장 후 댓글정보에 첨부파일 아이디 업데이트
     public void setCommentFileId(String fileId,int Id) {
         ticketMapper.updateCommentFileId(fileId, Id);

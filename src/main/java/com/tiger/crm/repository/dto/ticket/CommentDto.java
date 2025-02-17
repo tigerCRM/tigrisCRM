@@ -22,5 +22,6 @@ public class CommentDto {
     private String fileId;             // 파일ID
     private String userClass;          //사용자 권한
     private String statusCd;        //진행상태
+    private String alarmYN = "Y";        //알람여부
     private List<UploadFileDto> attachFiles;
 }

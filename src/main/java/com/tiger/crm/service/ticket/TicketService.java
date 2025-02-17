@@ -28,7 +28,7 @@ public interface TicketService {
 
     void setTicketFileId(String fileId, int ticketId);
 
-    int addComment(CommentDto commentDto);
+    int addComment(CommentDto commentDto) throws MessagingException;
 
     List<CommentDto> getCommentsByTicketId(int ticketId);
 

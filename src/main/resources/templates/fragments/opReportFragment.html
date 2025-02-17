@@ -31,7 +31,7 @@
                         <td><span id="customerName" th:text="${opReport.supportUserName}"></span></td>
                     </tr>
                     <tr>
-                        <th>지원기간</th>
+                        <th>기술지원월</th>
                         <td><span id="supportPeriod" th:text="${opReport.supportPeriod}"></span></td>
                         <th>MD</th>
                         <td><span id="totalMd" th:text="${opReport.totalMd}"></span></td>
@@ -74,7 +74,7 @@
                                     <td style="text-align: center">
                                         <span th:text="${iterStat.index + 1}"></span>
                                     </td>
-                                    <td><span th:text="${items['TITLE']}"></span></td>
+                                    <td style="text-align: left"><span th:text="${items['TITLE']}"></span></td>
                                     <td>
                                         <span th:switch="${items['REQUEST_TYPE_CD']}">
                                             <span th:case="'QA'">문의답변</span>

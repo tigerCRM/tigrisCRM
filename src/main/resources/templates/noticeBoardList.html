@@ -77,8 +77,8 @@
                                         </thead>
                                         <div>
                                             <tbody>
-                                                <tr th:if="${noticeBoardList == null or #lists.isEmpty(noticeBoardList)}">
-                                                    <td colspan="3" style="text-align:center;">등록된 시스템 정보가 없습니다.</td>
+                                                <tr th:if="${noticeBoardList.dataList == null or #lists.isEmpty(noticeBoardList.dataList)}">
+                                                    <td colspan="3" style="text-align:center;">등록된 공지사항이 없습니다.</td>
                                                 </tr>
                                                 <tr th:classappend="${noticeBoard['TOP_YN'] == 'Y' ? 'selected' : ''}" th:each="noticeBoard : ${noticeBoardList.dataList}">
                                                     <td class="text-left">

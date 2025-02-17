@@ -267,7 +267,7 @@
                                 <!--//댓글 영역-->
                                 <!--버튼그룹-->
                                 <div class="button-group align-right">
-                                    <button type="submit" class="btn btn--m primary-btn" th:style="${user.userClass == 'USER' and ticketinfo.statusCd != 'OPEN'} ? 'display: none;' : ''">수정</button>
+                                    <button type="submit" class="btn btn--m primary-btn" th:if="${user != null and ticketinfo.statusCd == 'OPEN' and (user.userName == ticketinfo.createName or user.userClass != 'USER')}">수정</button>
                                     <button type="button" class="btn btn--m danger-btn" th:if="${user != null and (user.userName == ticketinfo.createName or user.userClass != 'USER')}" th:style="${user.userClass == 'USER'} ? 'display: none;' : ''" onclick="deleteTicket()">삭제</button>
                                     <button type="button" class="btn btn--m secondary-btn" th:style="${ticketinfo.statusCd != 'CLOSED'} ? 'display: none;' : ''"
                                             onclick="goReRequest()">재요청</button>

@@ -9,6 +9,7 @@
         COMPANY_NAME
         FROM T_COMPANY_INFO
         WHERE USE_YN = 'Y'
+        order by COMPANY_NAME
     </select>
 
     <!-- 고객사별 회사 불러오기-->
@@ -20,5 +21,6 @@
         <if test="companyId != 0">
             AND COMPANY_ID = #{companyId}
         </if>
+        order by COMPANY_NAME
     </select>
 </mapper>
