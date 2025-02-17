@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{common/frame_head :: head('요청관리')}"></head>
+<head th:replace="~{common/frame_head :: head('요청관리(관리자)')}"></head>
 <body>
 <div class="wrapper">
     <!-- 왼쪽 메뉴  -->
@@ -38,7 +38,7 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="dropdown dropdown--s wd160" aria-expanded="false" tabindex="0">
+                                        <div class="dropdown dropdown--s wd170" aria-expanded="false" tabindex="0">
                                             <select class="dropdown__selected" id="searchCompany" name="searchCompany"
                                                     th:value="${searchCompany}" onchange="searchTickets(this);">
                                                 <option value="">==고객사==</option>
@@ -169,7 +169,7 @@
                                         <div>
                                             <tbody>
                                             <tr th:if="${ticketList == null or ticketList.dataList == null or #lists.isEmpty(ticketList.dataList)}">
-                                                <td colspan="11" style="text-align:center;">등록된 요청이 없습니다.</td>
+                                                <td colspan="12" style="text-align:center;">등록된 요청이 없습니다.</td>
                                             </tr>
 
                                             <tr th:each="ticket : ${ticketList.dataList}" th:attr="data-id=${ticket['TICKET_ID']}" >

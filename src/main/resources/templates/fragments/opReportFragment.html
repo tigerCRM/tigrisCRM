@@ -31,7 +31,7 @@
                         <td><span id="customerName" th:text="${opReport.supportUserName}"></span></td>
                     </tr>
                     <tr>
-                        <th>기술지원월</th>
+                        <th>기술지원 월</th>
                         <td><span id="supportPeriod" th:text="${opReport.supportPeriod}"></span></td>
                         <th>MD</th>
                         <td><span id="totalMd" th:text="${opReport.totalMd}"></span></td>
@@ -43,11 +43,11 @@
                                 <col style="width: 5%;">
                                 <col style="width: 40%;">
                                 <col style="width: 10%;">
-                                <col style="width: 10%;">
-                                <col style="width: 10%;">
-                                <col style="width: 10%;">
+                                <col style="width: 8%;">
+                                <col style="width: 12%;">
+                                <col style="width: 12%;">
                                 <col style="width: 7%;">
-                                <col style="width: 5%;">
+                                <col style="width: 7%;">
                             </colgroup>
                             <tbody>
 
@@ -67,7 +67,7 @@
                                 </tr>
                                 <!-- 데이터가 없을 때 -->
                                 <tr th:if="${opReport.details == null or #lists.isEmpty(opReport.details)}">
-                                    <td colspan="9" style="text-align: center;">데이터가 없습니다.</td>
+                                    <td colspan="8" style="text-align: center;">데이터가 없습니다.</td>
                                 </tr>
                                 <!-- 데이터가 있을 때 -->
                                 <tr th:each="items, iterStat : ${opReport.details}">

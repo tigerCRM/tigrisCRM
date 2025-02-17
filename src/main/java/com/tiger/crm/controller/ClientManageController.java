@@ -263,7 +263,7 @@ public class ClientManageController {
             model.put("userId", clientManageDto.getUserId());
             model.put("password", tempPassword);
             model.put("loginUrl", baseUrl);
-            mailService.sendEmail(clientManageDto.getUserId(),"가입안내", "info-email", model);
+            mailService.sendEmail(clientManageDto.getEmail(),"가입안내", "info-email", model);
             response.put("status", "success");
         }catch (Exception e) {
             response.put("status", "error");

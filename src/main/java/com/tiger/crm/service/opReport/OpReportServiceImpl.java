@@ -30,7 +30,10 @@ public class OpReportServiceImpl implements OpReportService {
         try {
             // 1. 고객 정보 조회
             Map<String, Object> customerInfo = opReportMapper.getCustomerInfo(opReportDto);
-            // 2. 지원사 정보 조회
+            if (customerInfo == null){
+                throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", new IllegalStateException("고객사 사용자가 등록되지 않았습니다."));
+            }
+            // 2. 지원 정보 조회
             Map<String, Object> supportCompanyInfo = opReportMapper.getSupportCompanyInfo(opReportDto);
             // 3. 상세 내역 조회
             List<Map<String, Object>> details = opReportMapper.getDetails(opReportDto);
@@ -49,26 +52,27 @@ public class OpReportServiceImpl implements OpReportService {
             // 원하는 포맷으로 변환
             String formattedDate = outputFormat.format(date);
             resultDto.setSupportPeriod(formattedDate);      //지원기간
-            double totalMD = 0.0;
-            for (Map<String, Object> detail : details) {
-                Object mdValue = detail.get("MD");
-                if (mdValue != null) {
-                    // Object를 Double로 변환합니다.
-                    if (mdValue instanceof Number) {
-                        totalMD += ((Number) mdValue).doubleValue();
-                    } else if (mdValue instanceof String) {
-                        try {
-                            totalMD += Double.parseDouble((String) mdValue);
-                        } catch (NumberFormatException e) {
-                            System.out.println("MD 값을 숫자로 변환할 수 없습니다: " + mdValue);
+            double totalMD = details.stream()
+                    .mapToDouble(detail -> {
+                        Object mdValue = detail.get("MD");
+                        if (mdValue instanceof Number) {
+                            return ((Number) mdValue).doubleValue();
+                        } else if (mdValue instanceof String) {
+                            try {
+                                return Double.parseDouble((String) mdValue);
+                            } catch (NumberFormatException e) {
+                                System.out.println("MD 값을 숫자로 변환할 수 없습니다: " + mdValue);
+                            }
                         }
-                    }
-                }
-            }
+                        return 0.0;
+                    })
+                    .sum();
             resultDto.setTotalMd(totalMD); //MD
             resultDto.setDetails(details); // 상세 내역 설정
+        }catch (CustomException e) {
+            throw e; // 커스텀 예외 그대로 전파
         } catch (Exception e) {
-            throw new CustomException("exceldownload : 예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
+            throw new CustomException("예기치 않은 오류가 발생했습니다. 다시 시도해주세요.", e);
         }
         return resultDto;
     }

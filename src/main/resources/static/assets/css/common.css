@@ -1835,9 +1835,14 @@ label.checkbox02 input[type="checkbox"]:disabled+span {
     table-layout: fixed;
 }
 .table-ellipsis td {
-    text-overflow: ellipsis;
+   /* text-overflow: ellipsis;
     white-space: nowrap;
+    overflow: hidden;*/
+    text-overflow: ellipsis;
     overflow: hidden;
+    word-break: break-word;  /* 긴 단어를 줄바꿈 */
+    overflow-wrap: break-word; /* 긴 내용이 잘릴 경우 줄바꿈 */
+    white-space: normal; /* 자동 줄바꿈 허용 */
 }
 
 .table01 {
@@ -1894,11 +1899,6 @@ label.checkbox02 input[type="checkbox"]:disabled+span {
 
 .table-ellipsis {
     table-layout: fixed;
-}
-.table-ellipsis td {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
 }
 
 /* 테이블 리스트 */
@@ -3412,6 +3412,7 @@ ul[class*='list-tree--'] {
 .wd170 { width: 17.5rem; }
 .wd160 { width: 16rem; }
 .wd180 { width: 18rem; }
+.wd190 { width: 19rem; }
 .wd240 { width: 24rem; }
 .wd380 { width: 38rem; }
 
