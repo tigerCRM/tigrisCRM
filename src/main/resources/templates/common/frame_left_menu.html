@@ -7,7 +7,7 @@
         <div class="profile">
             <div class="profile__img profile__img--48">
                 <a>
-                    <img th:src="@{/assets/images/temp/profile.png}" alt="">
+                    <img th:src="@{${userClass == 'USER'} ? '/assets/images/temp/profile_user.png' : '/assets/images/temp/profile_admin.png'}" alt="Profile Image">
                 </a>
             </div>
             <div class="profile__info">
@@ -50,7 +50,8 @@
                             <a href="#" onclick="showPasswordChangeModal(changePassword);">비밀번호 변경</a>
                         </li>
                         <li id="logout">
-                            <a href="#" onclick="if(confirm('로그아웃 하시겠습니까?')) window.location.href='/logout'; else alert('취소하였습니다.'); return false;">로그아웃</a>
+                           <!-- <a href="#" onclick="if(confirm('로그아웃 하시겠습니까?')) window.location.href='/logout'; else alert('취소하였습니다.'); return false;">로그아웃</a>-->
+                            <a href="#" onclick="if (showConfirm('question','로그아웃하시겠습니까?','',logout)) {}">로그아웃</a>
                         </li>
                     </ul>
                 </li>
@@ -195,7 +196,7 @@
                         <li>
                             <a href="/managePage" class="menu-item">
                                 <p class="menu-title">
-                                    <span class="menu-title__text">관리기능</span>
+                                    <span class="menu-title__text">로그인화면변경</span>
                                 </p>
                             </a>
                         </li>
@@ -215,7 +216,7 @@
                 <!--         <svg class="icon"><i class="ri-customer-service-2-line"></i></svg>-->
                 <span>담당자 비상 연락망</span>
             </button>
-            <!-- 🛑 비상연락망 모달 시작 -->
+            <!-- 비상연락망 모달 시작 -->
             <div id="emergencyContact" class="widget__content" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
                 <!-- 모달 헤더 -->
 
@@ -252,7 +253,7 @@
                     </div>
                 </div>
             </div>
-            <!-- 🛑 비상연락망 모달 끝 -->
+            <!-- 비상연락망 모달 끝 -->
         </div>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
@@ -351,7 +352,14 @@
                                 $alramlistContent.html(alertListHtml)
                             } else {
                                 // 알림이 없으면 "알림 없음" 표시
-                                $alertDropdownMenu.html('<li style="text-align: center;">알림이 없습니다.</li>');
+
+                                $alertDropdownMenu.html(`<div class="layerpopup__header">
+                                                            <h1 class="layerpopup__title">알림</h2>
+                                                        </div>
+                                                         <div class='alarm-content'><ul class='alarm-list'>
+                                                         <li style="text-align: center;font-size: 1.4rem;">알림이 없습니다.</li>
+                                                         </ul></div>
+                                                    `);
                             }
                         },
                         error: function (xhr, status, error) {
@@ -581,6 +589,9 @@
                 });
             }
 
+            function afterConfirm(){
+                window.location.href='/logout';
+            }
         </script>
     </div>
 </body>

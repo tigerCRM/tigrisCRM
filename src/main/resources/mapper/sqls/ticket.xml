@@ -221,7 +221,7 @@
     <!--불만족인 경우-->
     <update id="chSatisfaction" parameterType="map">
         UPDATE T_TICKET_INFO
-        SET STATUS_CD = #{newStatus}, SATISFACTION = #{result},
+        SET STATUS_CD = #{newStatus}, SATISFACTION = #{result}, FEEDBACK = #{feedback},
         UPDATE_DT = NOW(),
         UPDATE_ID = #{updateId}
         <if test="newStatus == 'CLOSED'"> <!--완료일경우 완료일 update-->

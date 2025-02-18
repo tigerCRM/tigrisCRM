@@ -27,8 +27,8 @@
                                 <!-- 검색영역 -->
                                 <div class="searchbar">
                                     <div>
-                                        <div class="dropdown--s wd170" aria-expanded="false" tabindex="0">
-                                            <select class="dropdown__selected" id="companySelect" onchange="generateReportList(this)" th:disabled="${userClass == 'USER'}">
+                                        <div class="dropdown--s wd170" aria-expanded="false" tabindex="0" th:style="${userClass == 'USER'} ? 'display: none;' : ''">
+                                            <select class="dropdown__selected" id="companySelect" onchange="generateReportList(this)">
                                                 <option th:each="op : ${companyOptions}"
                                                         th:value="${op.companyId}"
                                                         th:data-name="${op.companyName}"

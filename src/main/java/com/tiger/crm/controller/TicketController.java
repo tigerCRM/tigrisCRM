@@ -651,7 +651,7 @@ public class TicketController {
             UserLoginDto user = (UserLoginDto) request.getAttribute("user");
             String updateId = user.getUserId();
             //진행상태변경
-            ticketService.chSatisfaction(id, newStatus, result, updateId);
+            ticketService.chSatisfaction(id, newStatus, result, sComment, updateId);
             String comment = "요청 진행상태를 [완료]로 변경하였습니다.\n";
             String score = "";
             switch (result) {

@@ -1,34 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
 </head>
-<body style="font-family: Arial, sans-serif; background-color: #f4f4f9; color: #333; margin: 0; padding: 0;">
-<div style="max-width: 700px; width: 90%; margin: 50px auto; background-color: #ffffff; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); text-align: center;">
-    <h2 style="color: #0D349B; font-size: 22px; margin-bottom: 20px;">댓글 알림</h2>
-    <p style="font-size: 16px; line-height: 1.6; color: #555;">
-        <span style="font-size: 18px; font-weight: bold; color: #0D349B;"></span> 아래 요청에 대한 댓글 알림이 도착했습니다.
-    </p>
-    <br>
-    <div style="text-align: left; padding: 0 20%;">
-        <p style="font-size: 16px; line-height: 1.6; color: #555;">
-            요청 제목: <span style="font-size: 18px; font-weight: bold; color: #0D349B;" th:text="${ticketTitle}">Sample Ticket Title</span>
-        </p>
-        <p style="font-size: 16px; line-height: 1.6; color: #555;">
-            댓글 내용: <span style="font-size: 18px; font-weight: bold; color: #0D349B;" th:text="${comment}"></span>
-        </p>
+<body style="font-family: 'Arial', sans-serif; background-color: #f4f4f4; margin: 0; padding: 0;">
+
+<div style="width: 100%; max-width: 600px; margin: 30px auto; background: #ffffff; padding: 20px;
+            border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+    <div style="background: #0D349B; color: #ffffff; text-align: center; padding: 15px; font-size: 24px;
+                font-weight: bold; border-radius: 8px 8px 0 0;">댓글 알림</div>
+    <div style="padding: 20px; font-size: 16px; color: #333333;">
+        <p>아래 요청에 대한 댓글 알림이 도착했습니다.</p>
+
+        <div style="background: #f9f9f9; padding: 15px; border-radius: 6px; margin: 10px 0;
+                    border-left: 5px solid #0D349B;">
+            <p><strong>요청 제목:</strong> <span th:text="${ticketTitle}"></span></p>
+            <p><strong>댓글 내용:</strong> <span th:text="${comment}"></span></p>
+        </div>
+
+        <p>아래 버튼을 클릭하여 댓글 내용을 확인하세요.</p>
+        <a th:href="${ticketUrl}"
+           style="display: inline-block; background: #0D349B; color: #ffffff; padding: 12px 20px;
+                  text-decoration: none; border-radius: 5px; font-size: 16px; margin-top: 15px;">
+            요청 상세 보기
+        </a>
     </div>
-    <br>
-    <a href="${ticketUrl}"
-       style="display: inline-block; background-color: #0D349B; color: #ffffff; padding: 12px 20px; margin: 20px 0; text-decoration: none; font-size: 16px; font-weight: bold; border-radius: 8px; transition: background-color 0.3s; width: 100%; max-width: 250px; text-align: center;"
-       th:href="${ticketUrl}">
-        요청 상세 보기
-    </a>
-    <div style="font-size: 14px; color: #999; margin-top: 30px;">
-        <p>&copy; 2025 tigerCompany. All rights reserved.</p>
+
+    <div style="text-align: center; font-size: 14px; color: #777777; margin-top: 20px; padding-top: 10px;
+                border-top: 1px solid #dddddd;">
+        &copy; 2025 tigerCompany. All rights reserved.<br>
+        이 메일은 (주)타이거컴퍼니에서 보내는 정보 메일입니다.
     </div>
 </div>
+
 </body>
 </html>
