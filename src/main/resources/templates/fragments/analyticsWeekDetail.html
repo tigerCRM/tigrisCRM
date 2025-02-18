@@ -1,0 +1,84 @@
+<div th:fragment="analyticsWeekDetail">
+    <table class="table table01 table-ellipsis">
+        <colgroup>
+            <col style="width: 10%;">
+            <col style="width: 10%;">
+            <col style="width: 4%;">
+            <col style="width: 21%;">
+            <col style="width: 5%;">
+            <col style="width: 5%;">
+            <col style="width: 5%;">
+            <col style="width: 10%;">
+            <col style="width: 7%;">
+            <col style="width: 10%;">
+            <col style="width: 10%;">
+            <col style="width: 10%;">
+        </colgroup>
+        <thead>
+        <tr>
+            <th>요청번호</th>
+            <th>고객사</th>
+            <th></th>
+            <th class="board-title">제목</th>
+            <th>분류</th>
+            <th>상태</th>
+            <th>범위</th>
+            <th>담당</th>
+            <th>MD</th>
+            <th>등록일</th>
+            <th>완료일</th>
+            <th>만족도</th>
+        </tr>
+        </thead>
+        <div>
+            <tbody>
+            <tr th:if="${ticketList == null}">
+                <td colspan="12" style="text-align:center;">등록된 요청이 없습니다.</td>
+            </tr>
+
+            <tr th:each="ticket : ${ticketList.dataList}" th:attr="data-id=${ticket['TICKET_ID']}" >
+                <td><span th:text="${ticket['TICKET_ID']}"></span></td>
+                <td><span th:text="${ticket['COMPANY_NAME']}"></span></td>
+                <td><span th:if="${ticket['PRIORITY_YN'] == 'Y'}" class="tag tag--red">긴급</span>
+                </td>
+                <td class="text-left" >
+                    <a th:text="${ticket['TITLE']}" th:attr="data-id=${ticket['TICKET_ID']}" style="cursor: pointer;" onclick="gotoTicket(this)"></a>
+                </td>
+                <td><span th:switch="${ticket['REQUEST_TYPE_CD']}" >
+                                                    <span th:case="'QA'">문의답변</span>
+                                                    <span th:case="'ERR'">오류수정</span>
+                                                    <span th:case="'ADD'">기능추가</span>
+                                                    <span th:case="'CH'">기능변경</span>
+                                                    <span th:case="'SP'">기술지원</span>
+                                                    <span th:case="'ETC'">기타</span>
+                                                </span></td>
+                <td><span th:switch="${ticket['STATUS_CD']}">
+                                                    <span th:case="'OPEN'" class="tag tag--blue">등록</span>
+                                                    <span th:case="'RECEIPT'" class="tag tag--navy">접수</span>
+                                                    <span th:case="'PROGRESS'" class="tag tag--green">진행</span>
+                                                    <span th:case="'REVIEW'" class="tag tag--orange">검토</span>
+                                                    <span th:case="'CLOSED'" class="tag tag--gray">완료</span>
+                                                    <span th:case="*"></span> <!-- 기본 값 -->
+                                                </span></td>
+                <td><span th:switch="${ticket['SUPPORT_CD']}">
+                                                    <span th:case="'ST'">기본</span>
+                                                    <span th:case="'ADD'">추가</span>
+                                                </span></td>
+                <td><span th:text="${ticket['USER_NAME']}"></span></td>
+                <td><span th:text="${ticket['MD']}"></span></td>
+                <td><span th:text="${ticket['CREATE_DT']}"></span></td>
+                <td><span th:text="${ticket['COMPLETE_DT']}"></span></td>
+                <td><span th:switch="${ticket['SATISFACTION']}">
+                                                    <span th:case="'0'"></span>
+                                                    <span th:case="'1'" style="color:red">매우불만</span>
+                                                    <span th:case="'2'" style="color:orange">불만</span>
+                                                    <span th:case="'3'" style="color:green">보통</span>
+                                                    <span th:case="'4'" style="color:skyblue">만족</span>
+                                                    <span th:case="'5'" style="color:blue">매우만족</span>
+                                                </span></td>
+            </tr>
+            </tbody>
+        </div>
+    </table>
+
+</div>
