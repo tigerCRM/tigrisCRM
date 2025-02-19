@@ -127,14 +127,14 @@
                     </a>
                     <!-- 하위 메뉴 (초기에는 숨김) -->
                     <ul class="tree-list--sub-2">
-                        <li>
+                        <!--<li>
                             <a href="analytics_openAndClose" class="menu-item">
                                 <p class="menu-title">
                                     <span class="menu-title__text">요청/처리 현황</span>
                                     <span class="menu-title__num"></span>
                                 </p>
                             </a>
-                        </li>
+                        </li>-->
                         <li>
                             <a href="analytics_week" class="menu-item">
                                 <p class="menu-title">
@@ -143,14 +143,14 @@
                                 </p>
                             </a>
                         </li>
-                        <li>
+                        <!--<li>
                             <a href="analytics_leftover" class="menu-item">
                                 <p class="menu-title">
                                     <span class="menu-title__text">고객사별 잔여 현황</span>
                                     <span class="menu-title__num"></span>
                                 </p>
                             </a>
-                        </li>
+                        </li>-->
                     </ul>
                 </li>
                 <!--//통계 현황-->
@@ -300,6 +300,7 @@
                             // 드롭다운 내용 추가
                             if (alerts && alerts.length > 0) {
                                 let alertListHtml = '';
+                                let alertListHtmlmain = '';
                                 let alertList = `<div class="layerpopup__header">
                                                             <h1 class="layerpopup__title">알림</h2>
                                                             <div class="flex gap--8">
@@ -344,12 +345,44 @@
                                             </a>
                                       </li>
                                     `;
+                                    //메인알림내역 바인딩
+                                    alertListHtmlmain += `
+                                        <li class="alarm--item">
+                                            <a>
+                                                <div class='profile' name='alarmview' data-id="${alert.alertId}" data-alertObjectId="${alert.alertObjectId}">
+                                                    <div class='profile__info'>
+                                                        <p class='alarm__user-info'>
+                                                            <span class='name'>${alert.userName}</span>
+                                                            <span class='date'>${alert.alertDt}</span>
+                                                        </p>
+                                                        <div class='alarm__text-wrap'>
+                                                            <span class="${alert.alertType === 'OPEN' ? 'tag tag--blue'
+                                                                            : alert.alertType === 'RECEIPT' ? 'tag tag--navy'
+                                                                            : alert.alertType === 'PROGRESS' ? 'tag tag--green'
+                                                                            : alert.alertType === 'REVIEW' ? 'tag tag--orange'
+                                                                            : alert.alertType === 'CLOSED' ? 'tag tag--gray' : 'tag tag--purple'}">
+                                                                  ${alert.alertType === 'OPEN' ? '등록'
+                                                                            : alert.alertType === 'RECEIPT' ? '접수'
+                                                                            : alert.alertType === 'PROGRESS' ? '진행'
+                                                                            : alert.alertType === 'REVIEW' ? '검토'
+                                                                            : alert.alertType === 'CLOSED' ? '완료' : '댓글'}
+                                                            </span>
+                                                            <p class='alarm__text'>
+                                                                ${alert.content}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                      </li>
+                                    `;
                                 });
                                 alertList += alertListHtml
                                 alertList +='</ul></div>';
                                 // 알림 리스트를 드롭다운에 추가
                                 $alertDropdownMenu.html(alertList);
-                                $alramlistContent.html(alertListHtml)
+                                //메인알림내역 바인딩
+                                $alramlistContent.html(alertListHtmlmain)
                             } else {
                                 // 알림이 없으면 "알림 없음" 표시
 

@@ -69,13 +69,13 @@
                 <td><span th:text="${ticket['CREATE_DT']}"></span></td>
                 <td><span th:text="${ticket['COMPLETE_DT']}"></span></td>
                 <td><span th:switch="${ticket['SATISFACTION']}">
-                                                    <span th:case="'0'"></span>
-                                                    <span th:case="'1'" style="color:red">매우불만</span>
-                                                    <span th:case="'2'" style="color:orange">불만</span>
-                                                    <span th:case="'3'" style="color:green">보통</span>
-                                                    <span th:case="'4'" style="color:skyblue">만족</span>
-                                                    <span th:case="'5'" style="color:blue">매우만족</span>
-                                                </span></td>
+                    <span th:case="'0'"></span>
+                    <span th:case="'1'" style="color:red">매우불만</span>
+                    <span th:case="'2'" style="color:orange">불만</span>
+                    <span th:case="'3'" style="color:green">보통</span>
+                    <span th:case="'4'" style="color:skyblue">만족</span>
+                    <span th:case="'5'" style="color:blue">매우만족</span>
+                </span></td>
             </tr>
             </tbody>
         </div>

@@ -44,6 +44,7 @@ public interface TicketService {
 
     void deleteTicketAnswerFileById(int Id);
 
+    PagingResponse<Map<String, Object>> getTicketListAnalytics(PagingRequest pagingRequest);
 }
 
 

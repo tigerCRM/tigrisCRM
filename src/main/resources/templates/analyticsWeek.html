@@ -24,7 +24,7 @@
                                 </h2>
                                 <!--//헤더 -->
                                 <!-- 검색영역 -->
-                                <div class="searchbar gap2">
+                                <div class="searchbar gap2" style="display:none">
                                     <span class="filter-label">고객사</span>
                                     <div>
                                         <div class="dropdown dropdown--s wd180" aria-expanded="false" tabindex="0">
@@ -38,8 +38,8 @@
                                         </div>
                                     </div>
 
-                                    <span class="filter-label">지원범위</span>
-                                    <div class="input-list--h">
+                                   <!-- <span class="filter-label">지원범위</span>
+                                    <div class="input-list&#45;&#45;h">
                                         <label class="checkbox02">
                                             <input type="checkbox">
                                             <span>기본지원</span>
@@ -51,7 +51,7 @@
                                     </div>
 
                                     <span class="filter-label">요청종류</span>
-                                    <div class="input-list--h">
+                                    <div class="input-list&#45;&#45;h">
                                         <label class="checkbox02">
                                             <input type="checkbox">
                                             <span>문의답변</span>
@@ -76,7 +76,7 @@
                                             <input type="checkbox">
                                             <span>기타</span>
                                         </label>
-                                    </div>
+                                    </div>-->
                                 </div>
                                 <!-- //검색영역 -->
                             </div>
@@ -121,9 +121,9 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr name="sum">
-                                                    <td data-userid="total">합계</td>
-                                                    <td class="text-bold text-red" onclick="openTicketList('leftover')"></td>
+                                                <tr name="sum" class="receipt-list">
+                                                    <td data-userid="total" onclick="openTicketList('all')">합계</td>
+                                                    <td class="text-bold text-red" onclick="openTicketList('all')"></td>
                                                     <td  onclick="openTicketList()"></td>
                                                     <td  onclick="openTicketList()"></td>
                                                     <td  onclick="openTicketList()"></td>
@@ -141,25 +141,25 @@
                                                     <td class="text-bold" onclick="openTicketList()"></td>
                                                     <td class="text-bold" onclick="openTicketList()"></td>
                                                 </tr>
-                                                <tr th:each="receipt : ${weekReceiptList}" name="data">
-                                                    <td th:text="${receipt.userName}" th:attr="data-userid=${receipt.userId}"></td>
-                                                    <td th:text="${receipt.leftover}" class="text-bold text-red"  onclick="openTicketList('leftover')"></td>
+                                                <tr th:each="receipt : ${weekReceiptList}" name="data" class="receipt-list" >
+                                                    <td th:text="${receipt.userName}" th:attr="data-userid=${receipt.userId}"  onclick="openTicketList('progress')"></td>
+                                                    <td th:text="${receipt.leftover}" class="text-bold text-red" onclick="openTicketList('progress')"></td>
                                                     <td th:text="${receipt.monReceipt}"  onclick="openTicketList()"></td>
-                                                    <td th:text="${receipt.monComplete}" onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.monComplete}" onclick="openTicketList('CLOSED')"></td>
                                                     <td th:text="${receipt.tueReceipt}"  onclick="openTicketList()"></td>
-                                                    <td th:text="${receipt.tueComplete}"  onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.tueComplete}"  onclick="openTicketList('CLOSED')"></td>
                                                     <td th:text="${receipt.wedReceipt}"  onclick="openTicketList()"></td>
-                                                    <td th:text="${receipt.wedComplete}"  onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.wedComplete}"  onclick="openTicketList('CLOSED')"></td>
                                                     <td th:text="${receipt.thuReceipt}"  onclick="openTicketList()"></td>
-                                                    <td th:text="${receipt.thuComplete}"  onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.thuComplete}"  onclick="openTicketList('CLOSED')"></td>
                                                     <td th:text="${receipt.friReceipt}"  onclick="openTicketList()"></td>
-                                                    <td th:text="${receipt.friComplete}"  onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.friComplete}"  onclick="openTicketList('CLOSED')"></td>
                                                     <td th:text="${receipt.satReceipt}"  onclick="openTicketList()"></td>
-                                                    <td th:text="${receipt.satComplete}"  onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.satComplete}"  onclick="openTicketList('CLOSED')"></td>
                                                     <td th:text="${receipt.sunReceipt}"  onclick="openTicketList()"></td>
-                                                    <td th:text="${receipt.sunComplete}"  onclick="openTicketList()"></td>
+                                                    <td th:text="${receipt.sunComplete}"  onclick="openTicketList('CLOSED')"></td>
                                                     <td class="text-bold" onclick="openTicketList()"></td>
-                                                    <td class="text-bold" onclick="openTicketList()"></td>
+                                                    <td class="text-bold" onclick="openTicketList('CLOSED')"></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -170,11 +170,130 @@
                         <!--//통계 메인컨텐츠 -->
                         <!-- 티켓 리스트 -->
                         <div class="ticket-list">
-                            <section id="ticketlistDetail" class="">
-                                <div class="widget__content"  id="analyticsWeekDetail">
-                                    <div th:replace="~{fragments/analyticsWeekDetail}" />
+                            <div class="widget__content">
+                                <div th:fragment="analyticsWeekDetail" id="analyticsWeekDetailContainer">
+                                    <table class="table table01 table-ellipsis">
+                                        <colgroup>
+                                            <col style="width: 10%;">
+                                            <col style="width: 10%;">
+                                            <col style="width: 4%;">
+                                            <col style="width: 21%;">
+                                            <col style="width: 5%;">
+                                            <col style="width: 5%;">
+                                            <col style="width: 5%;">
+                                            <col style="width: 10%;">
+                                            <col style="width: 7%;">
+                                            <col style="width: 10%;">
+                                            <col style="width: 10%;">
+                                            <col style="width: 10%;">
+                                        </colgroup>
+                                        <thead>
+                                        <tr>
+                                            <th>요청번호</th>
+                                            <th>고객사</th>
+                                            <th></th>
+                                            <th class="board-title">제목</th>
+                                            <th>분류</th>
+                                            <th>상태</th>
+                                            <th>범위</th>
+                                            <th>담당</th>
+                                            <th>MD</th>
+                                            <th>등록일</th>
+                                            <th>완료일</th>
+                                            <th>만족도</th>
+                                        </tr>
+                                        </thead>
+                                        <div>
+                                            <tbody>
+                                            <tr th:if="${ticketList == null or ticketList.dataList == null or #lists.isEmpty(ticketList.dataList)}">
+                                                <td colspan="12" style="text-align:center;">등록된 요청이 없습니다.</td>
+                                            </tr>
+
+                                            <tr th:each="ticket : ${ticketList.dataList}" th:attr="data-id=${ticket['TICKET_ID']}" >
+                                                <td><span th:text="${ticket['TICKET_ID']}"></span></td>
+                                                <td><span th:text="${ticket['COMPANY_NAME']}"></span></td>
+                                                <td><span th:if="${ticket['PRIORITY_YN'] == 'Y'}" class="tag tag--red">긴급</span>
+                                                </td>
+                                                <td class="text-left" >
+                                                    <a th:text="${ticket['TITLE']}" th:attr="data-id=${ticket['TICKET_ID']}" style="cursor: pointer;" onclick="gotoTicket(this)"></a>
+                                                </td>
+                                                <td><span th:switch="${ticket['REQUEST_TYPE_CD']}" >
+                                                    <span th:case="'QA'">문의답변</span>
+                                                    <span th:case="'ERR'">오류수정</span>
+                                                    <span th:case="'ADD'">기능추가</span>
+                                                    <span th:case="'CH'">기능변경</span>
+                                                    <span th:case="'SP'">기술지원</span>
+                                                    <span th:case="'ETC'">기타</span>
+                                                </span></td>
+                                                <td><span th:switch="${ticket['STATUS_CD']}">
+                                                    <span th:case="'OPEN'" class="tag tag--blue">등록</span>
+                                                    <span th:case="'RECEIPT'" class="tag tag--navy">접수</span>
+                                                    <span th:case="'PROGRESS'" class="tag tag--green">진행</span>
+                                                    <span th:case="'REVIEW'" class="tag tag--orange">검토</span>
+                                                    <span th:case="'CLOSED'" class="tag tag--gray">완료</span>
+                                                    <span th:case="*"></span> <!-- 기본 값 -->
+                                                </span></td>
+                                                <td><span th:switch="${ticket['SUPPORT_CD']}">
+                                                    <span th:case="'ST'">기본</span>
+                                                    <span th:case="'ADD'">추가</span>
+                                                </span></td>
+                                                <td><span th:text="${ticket['USER_NAME']}"></span></td>
+                                                <td><span th:text="${ticket['MD']}"></span></td>
+                                                <td><span th:text="${ticket['CREATE_DT']}"></span></td>
+                                                <td><span th:text="${ticket['COMPLETE_DT']}"></span></td>
+                                                <td><span th:switch="${ticket['SATISFACTION']}">
+                                                    <span th:case="'0'"></span>
+                                                        <span th:case="'0'">
+                                                            <i class="fa-regular fa-star"></i>
+                                                            <i class="fa-regular fa-star"></i>
+                                                            <i class="fa-regular fa-star"></i>
+                                                            <i class="fa-regular fa-star"></i>
+                                                            <i class="fa-regular fa-star"></i>
+                                                        </span>
+                                                        <span th:case="'1'" style="color:orange">
+                                                            <i class="fa-solid fa-star"></i>
+                                                            <i class="fa-regular fa-star"></i>
+                                                            <i class="fa-regular fa-star"></i>
+                                                            <i class="fa-regular fa-star"></i>
+                                                            <i class="fa-regular fa-star"></i>
+                                                        </span>
+                                                        <span th:case="'2'" style="color:orange">
+                                                            <i class="fa-solid fa-star"></i>
+                                                            <i class="fa-solid fa-star"></i>
+                                                            <i class="fa-regular fa-star"></i>
+                                                            <i class="fa-regular fa-star"></i>
+                                                            <i class="fa-regular fa-star"></i>
+                                                        </span>
+                                                        <span th:case="'3'" style="color:orange">
+                                                            <i class="fa-solid fa-star"></i>
+                                                            <i class="fa-solid fa-star"></i>
+                                                            <i class="fa-solid fa-star"></i>
+                                                            <i class="fa-regular fa-star"></i>
+                                                            <i class="fa-regular fa-star"></i>
+                                                        </span>
+                                                        <span th:case="'4'" style="color:orange">
+                                                            <i class="fa-solid fa-star"></i>
+                                                            <i class="fa-solid fa-star"></i>
+                                                            <i class="fa-solid fa-star"></i>
+                                                            <i class="fa-solid fa-star"></i>
+                                                            <i class="fa-regular fa-star"></i>
+                                                        </span>
+                                                        <span th:case="'5'" style="color:orange">
+                                                            <i class="fa-solid fa-star"></i>
+                                                            <i class="fa-solid fa-star"></i>
+                                                            <i class="fa-solid fa-star"></i>
+                                                            <i class="fa-solid fa-star"></i>
+                                                            <i class="fa-solid fa-star"></i>
+                                                        </span>
+                                                </span></td>
+                                            </tr>
+                                            </tbody>
+                                        </div>
+                                    </table>
+
                                 </div>
-                            </section>
+                            </div>
+
                         </div>
                         <!--//티켓 리스트 -->
                     </div>
@@ -205,7 +324,10 @@
     });
 
     //숫자 클릭시 티켓 리스트 뿌려줌
-    function openTicketList(leftover){
+    function openTicketList(status){
+        var startDt = "";
+        var endDt = "";
+
         const td = event.target;
         const content = td.textContent.trim();
         if (!content) {
@@ -214,7 +336,11 @@
 
          // 2. td가 속한 row의 첫 번째 td 값 구하기
         const row = td.closest('tr'); // td가 속한 행(tr)을 가져옴
-        const index1 = row ? row.querySelector('td:first-child').dataset.userid.trim() : '';
+        //담당자id
+        var managerid = row ? row.querySelector('td:first-child').dataset.userid.trim() : '';
+        if (managerid=='total'){
+            managerid = '';
+        }
 
         // 3. td가 속한 열의 인덱스 구하기
         var colIndex = Array.from(row.children).indexOf(td);
@@ -226,15 +352,39 @@
         const table = td.closest('table');
         const rows = Array.from(table.querySelectorAll('tr'));
 
-        if(typeof leftover == "undefined" || leftover == null || leftover == ""){
-            const index2 = rows[0] ? rows[0].querySelectorAll('th')[colIndexSpan2].innerText.trim() : '';
-            const index3 = rows[1] ? rows[1].querySelectorAll('th')[colIndex-2].innerText.trim() : '';
-            console.log('index1:', index1, 'index2:', index2, 'index3:', index3);
-        }else{
-            console.log('index1:', index1, '잔여');
+        if(typeof status == "undefined" || status == null || status == ""){
+            startDt = rows[0] ? rows[0].querySelectorAll('th')[colIndexSpan2].innerText.trim() : '';
+           // status = rows[1] ? rows[1].querySelectorAll('th')[colIndex-2].innerText.trim() : '';
+            status = "progress";
+            console.log('managerid:', managerid, '해당일:', startDt, 'status:', status);
+        }
+        else if(status == "CLOSED"){
+            endDt = rows[0] ? rows[0].querySelectorAll('th')[colIndexSpan2].innerText.trim() : '';
+        }
+        else{
+            console.log('managerid:', managerid, '잔여');
         }
 
 
+        const data = new URLSearchParams({
+            searchStatus: status,
+            searchKeyword: managerid,
+            startDt: startDt,
+            endDt: endDt
+        });
+        fetch('/analytics_week_detail', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: data.toString()
+        })
+        .then(response => response.text())
+        .then(data => {
+          // 응답받은 HTML fragment를 페이지에 삽입
+            document.getElementById('analyticsWeekDetailContainer').innerHTML = data;
+        })
+        .catch(error => console.error('검색 중 오류 발생:', error));
 
     }
 

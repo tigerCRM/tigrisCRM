@@ -15,6 +15,9 @@ public interface TicketMapper {
     //요청조회
     List<Map<String, Object>> getTicketList(PagingRequest pagingRequest);
 
+    //주간처리현황
+    List<Map<String, Object>> getTicketListAnalytics(PagingRequest pagingRequest);
+
     //요청카운트
     Integer getTicketListCount(PagingRequest pagingRequest);
 

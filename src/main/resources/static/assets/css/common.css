@@ -2533,7 +2533,7 @@ label.checkbox02 input[type="checkbox"]:disabled+span {
 }
 /*.datepicker .datepicker-input {*/
 .datepicker-input {
-    width: 11rem;
+    width: 11.4rem;
     text-align: center;
 }
 .datepicker .calendar-btn {
@@ -3956,3 +3956,10 @@ td:nth-child(13), td:nth-child(14), td:nth-child(15), td:nth-child(16) {
     height:510px;
 }
 /* ---------------------------------------------END : 고객관리 css */
+
+
+.receipt-list td:hover{
+    cursor: pointer;
+    text-decoration: underline;
+
+}

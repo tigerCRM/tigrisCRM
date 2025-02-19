@@ -142,6 +142,50 @@
 
     </select>
 
+    <select id="getTicketListAnalytics" resultType="java.util.HashMap">
+        SELECT TICKET_ID,
+        PRIORITY_YN,
+        COMPANY_NAME,
+        STATUS_CD,
+        REQUEST_TYPE_CD,
+        SUPPORT_CD,
+        IFNULL(MD, '') as MD,
+        TITLE,
+        T.CREATE_NAME,
+        U.USER_NAME,
+        DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d') AS CREATE_DT,
+        IFNULL(DATE_FORMAT(IFNULL(COMPLETE_DT, ''), '%Y-%m-%d'),'') as COMPLETE_DT,
+        SATISFACTION
+        FROM T_TICKET_INFO as T
+        LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
+        <where>
+            DELETE_YN = 'N'
+            <!-- 상태 검색 조건 (상태가 존재하는 경우) -->
+            <if test="searchStatus == 'progress'">
+                AND STATUS_CD != 'CLOSED'
+            </if>
+            <if test="searchStatus == 'CLOSED'">
+                AND STATUS_CD = 'CLOSED'
+            </if>
+            <!-- 고객사명 검색  -->
+            <if test="searchCompany != null and searchCompany != ''">
+                AND T.COMPANY_ID = #{searchCompany}
+            </if>
+            <if test="searchKeyword != null and searchKeyword!= ''">
+                AND U.USER_ID LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 담당자ID로 검색 -->
+            </if>
+            <!-- 시작일 필터링 -->
+            <if test="startDt != null and startDt != ''">
+                AND T.CREATE_DT BETWEEN #{startDt} AND CONCAT(#{startDt}, ' 23:59:59')
+            </if>
+            <if test="endDt != null and endDt != ''">
+                AND T.COMPLETE_DT BETWEEN #{endDt} AND CONCAT(#{endDt}, ' 23:59:59')
+            </if>
+        </where>
+        order by TICKET_ID desc
+
+    </select>
+
     <insert id="insertTicketInfo" parameterType="com.tiger.crm.repository.dto.ticket.TicketDto"  useGeneratedKeys="true" keyProperty="ticketId">
         INSERT INTO T_TICKET_INFO
         (COMPANY_ID, COMPANY_NAME, STATUS_CD, REQUEST_TYPE_CD, EXPECTED_COMPLETE_DT,

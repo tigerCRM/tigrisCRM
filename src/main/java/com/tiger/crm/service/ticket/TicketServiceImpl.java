@@ -45,6 +45,15 @@ public class TicketServiceImpl implements TicketService {
         Integer count = ticketMapper.getTicketListCount(pagingRequest);  // Integer로 받아서 null 체크
         return count != null ? count : 0;  // null일 경우 0 반환
     }
+    @Override
+    public PagingResponse<Map<String, Object>> getTicketListAnalytics(PagingRequest pagingRequest) {
+
+        List<Map<String, Object>> ticketList = ticketMapper.getTicketListAnalytics(pagingRequest);
+
+        int totalRecords = 0;
+
+        return new PagingResponse<>(ticketList, totalRecords, pagingRequest);
+    }
 
     //요청저장
     public int saveTicket(TicketDto ticketDto) throws MessagingException {

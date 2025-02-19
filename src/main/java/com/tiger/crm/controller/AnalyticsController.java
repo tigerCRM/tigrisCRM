@@ -96,7 +96,7 @@ public class AnalyticsController {
     public String getAnalyticsWeekSearchWeekDetail(HttpServletRequest request, HttpServletResponse response, Model model,PagingRequest pagingRequest) {
 
         // 요청 조회
-        PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
+        PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketListAnalytics(pagingRequest);
         model.addAttribute("ticketList", pageResponse);
         return "analyticsWeek :: analyticsWeekDetail";
     }
