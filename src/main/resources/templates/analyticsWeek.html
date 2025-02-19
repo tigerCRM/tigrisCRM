@@ -139,7 +139,7 @@
                                                     <td  onclick="openTicketList()"></td>
                                                     <td  onclick="openTicketList()"></td>
                                                     <td class="text-bold" onclick="openTicketList()"></td>
-                                                    <td class="text-bold" onclick="openTicketList()"></td>
+                                                    <td class="text-bold" onclick="openTicketList('CLOSED')"></td>
                                                 </tr>
                                                 <tr th:each="receipt : ${weekReceiptList}" name="data" class="receipt-list" >
                                                     <td th:text="${receipt.userName}" th:attr="data-userid=${receipt.userId}"  onclick="openTicketList('progress')"></td>
@@ -158,7 +158,7 @@
                                                     <td th:text="${receipt.satComplete}"  onclick="openTicketList('CLOSED')"></td>
                                                     <td th:text="${receipt.sunReceipt}"  onclick="openTicketList()"></td>
                                                     <td th:text="${receipt.sunComplete}"  onclick="openTicketList('CLOSED')"></td>
-                                                    <td class="text-bold" onclick="openTicketList()"></td>
+                                                    <td class="text-bold" onclick="openTicketList('progress')"></td>
                                                     <td class="text-bold" onclick="openTicketList('CLOSED')"></td>
                                                 </tr>
                                             </tbody>
@@ -364,7 +364,11 @@
         else{
             console.log('managerid:', managerid, '잔여');
         }
-
+        //금주합계(접수)
+        if (colIndexSpan2 == "9" || colIndexSpan2 == "10"){
+            startDt = rows[0] ? rows[0].querySelectorAll('th')[2].innerText.trim() : '';
+            endDt = rows[0] ? rows[0].querySelectorAll('th')[8].innerText.trim() : '';
+        }
 
         const data = new URLSearchParams({
             searchStatus: status,

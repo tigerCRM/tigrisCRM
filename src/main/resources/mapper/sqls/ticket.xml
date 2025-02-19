@@ -143,47 +143,64 @@
     </select>
 
     <select id="getTicketListAnalytics" resultType="java.util.HashMap">
-        SELECT TICKET_ID,
+        SELECT
+        TICKET_ID,
         PRIORITY_YN,
         COMPANY_NAME,
         STATUS_CD,
         REQUEST_TYPE_CD,
         SUPPORT_CD,
-        IFNULL(MD, '') as MD,
+        IFNULL(MD, '') AS MD,
         TITLE,
         T.CREATE_NAME,
         U.USER_NAME,
         DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d') AS CREATE_DT,
-        IFNULL(DATE_FORMAT(IFNULL(COMPLETE_DT, ''), '%Y-%m-%d'),'') as COMPLETE_DT,
+        IFNULL(DATE_FORMAT(T.COMPLETE_DT, '%Y-%m-%d'), '') AS COMPLETE_DT,
         SATISFACTION
-        FROM T_TICKET_INFO as T
-        LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
+        FROM T_TICKET_INFO AS T
+        LEFT JOIN T_USER_INFO AS U ON T.MANAGER_ID = U.USER_ID
         <where>
             DELETE_YN = 'N'
-            <!-- 상태 검색 조건 (상태가 존재하는 경우) -->
+
+            <!-- 상태 검색 조건 -->
             <if test="searchStatus == 'progress'">
                 AND STATUS_CD != 'CLOSED'
             </if>
             <if test="searchStatus == 'CLOSED'">
                 AND STATUS_CD = 'CLOSED'
             </if>
-            <!-- 고객사명 검색  -->
+
+            <!-- 고객사 검색 -->
             <if test="searchCompany != null and searchCompany != ''">
                 AND T.COMPANY_ID = #{searchCompany}
             </if>
-            <if test="searchKeyword != null and searchKeyword!= ''">
-                AND U.USER_ID LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 담당자ID로 검색 -->
+
+            <!-- 담당자 ID 검색 -->
+            <if test="searchKeyword != null and searchKeyword != ''">
+                AND U.USER_ID LIKE CONCAT('%', #{searchKeyword}, '%')
             </if>
-            <!-- 시작일 필터링 -->
-            <if test="startDt != null and startDt != ''">
-                AND T.CREATE_DT BETWEEN #{startDt} AND CONCAT(#{startDt}, ' 23:59:59')
+
+            <!-- 날짜 필터링 -->
+            <if test="startDt != null and startDt != '' and (endDt == null or endDt == '')">
+                AND T.CREATE_DT BETWEEN STR_TO_DATE(#{startDt}, '%Y-%m-%d')
+                AND STR_TO_DATE(CONCAT(#{startDt}, ' 23:59:59'), '%Y-%m-%d %H:%i:%s')
             </if>
-            <if test="endDt != null and endDt != ''">
-                AND T.COMPLETE_DT BETWEEN #{endDt} AND CONCAT(#{endDt}, ' 23:59:59')
+            <if test="endDt != null and endDt != '' and (startDt == null or startDt == '')">
+                AND T.COMPLETE_DT BETWEEN STR_TO_DATE(#{endDt}, '%Y-%m-%d')
+                AND STR_TO_DATE(CONCAT(#{endDt}, ' 23:59:59'), '%Y-%m-%d %H:%i:%s')
+            </if>
+            <if test="startDt != null and startDt != '' and endDt != null and endDt != ''">
+                <if test="searchStatus == 'CLOSED'">
+                    AND T.COMPLETE_DT BETWEEN STR_TO_DATE(#{startDt}, '%Y-%m-%d')
+                    AND STR_TO_DATE(CONCAT(#{endDt}, ' 23:59:59'), '%Y-%m-%d %H:%i:%s')
+                </if>
+                <if test="searchStatus == 'progress'">
+                    AND T.CREATE_DT BETWEEN STR_TO_DATE(#{startDt}, '%Y-%m-%d')
+                    AND STR_TO_DATE(CONCAT(#{endDt}, ' 23:59:59'), '%Y-%m-%d %H:%i:%s')
+                </if>
             </if>
         </where>
-        order by TICKET_ID desc
-
+        ORDER BY TICKET_ID DESC
     </select>
 
     <insert id="insertTicketInfo" parameterType="com.tiger.crm.repository.dto.ticket.TicketDto"  useGeneratedKeys="true" keyProperty="ticketId">
