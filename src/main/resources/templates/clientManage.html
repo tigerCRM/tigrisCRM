@@ -666,8 +666,10 @@
             alert("모든 필드를 입력해 주세요.");
             return;
         }
-        if(showConfirm("question","등록하시겠습니까?","")) {
-        }
+        showConfirm("question","등록하시겠습니까?","", function(){
+                afterConfirm();
+            }
+        );
 
     }
     function afterConfirm(){

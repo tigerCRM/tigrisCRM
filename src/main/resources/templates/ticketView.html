@@ -451,36 +451,35 @@
         window.location.href = '/ticketCreate/'+id;
     }
 
-    //삭제
-    function deleteTicket(){
-        if (showConfirm("question","삭제하시겠습니까?","")) {}
-    }    //확인창에서 호출하는 함수
-    function afterConfirm(){
-        var id = $("#ticketId").val();
 
-
-        var url = `/deleteTicket`;
-        fetch(url, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ Id: id }),
-        })
-        .then(response => {
-            if (response.ok) {
-                showMessage('success', '삭제', '해당 요청 정보가 삭제되었습니다.');
-            } else {
-                response.text().then(message => {
-                    showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showMessage('error', '실패', '오류가 발생해 서버로 요청을 전송하지 못했습니다');
+    function deleteTicket() {
+        showConfirm("question", "삭제하시겠습니까?","", function() {
+            var id = $("#ticketId").val();
+            var url = `/deleteTicket`;
+            fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ Id: id }),
+            })
+            .then(response => {
+                if (response.ok) {
+                    showMessage('success', '삭제', '해당 요청 정보가 삭제되었습니다.');
+                } else {
+                    response.text().then(message => {
+                        showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showMessage('error', '실패', '오류가 발생해 서버로 요청을 전송하지 못했습니다');
+            });
         });
     }
+
+
 
     function delComment(obj){
         var id = obj.getAttribute('data-comment-id');

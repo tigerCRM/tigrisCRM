@@ -51,7 +51,7 @@
                         </li>
                         <li id="logout">
                            <!-- <a href="#" onclick="if(confirm('로그아웃 하시겠습니까?')) window.location.href='/logout'; else alert('취소하였습니다.'); return false;">로그아웃</a>-->
-                            <a href="#" onclick="if (showConfirm('question','로그아웃하시겠습니까?','',logout)) {}">로그아웃</a>
+                            <a href="#" onclick="showConfirm('question', '로그아웃 하시겠습니까?','', function() { window.location.href='/logout'; });">로그아웃</a>
                         </li>
                     </ul>
                 </li>

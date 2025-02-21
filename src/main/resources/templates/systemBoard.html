@@ -187,8 +187,7 @@
     document.querySelector('#boardSubmitArea').addEventListener('submit', function (e) {
         e.preventDefault();
             const form = this;
-            showConfirm("question","저장하시겠습니까?","",
-                function(){
+            showConfirm("question","저장하시겠습니까?","", function(){
                     beforeSubmit();
                     form.submit();
                 }
@@ -215,7 +214,9 @@
 
     //4. 삭제 의사 확인
     function deleteBoardConfirm(){
-        if (showConfirm("question","삭제하시겠습니까?","",deleteBoard)) {}
+        showConfirm("question","삭제하시겠습니까?","",function(){
+            deleteBoard();
+        });
     }
 
     //5. 글 삭제
@@ -251,7 +252,9 @@
 
     //7. 글 수정 의사 확인
     function modifiedBoardConfirm(){
-        if (showConfirm("question","수정한 게시글을 저장하시겠습니까?","",submitModifiedBoard)) {}
+        showConfirm("question","수정한 게시글을 저장하시겠습니까?","",function(){
+            submitModifiedBoard();
+        });
     }
 
     //8. 글 수정후 저장

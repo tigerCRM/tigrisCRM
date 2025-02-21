@@ -322,11 +322,14 @@
 
     //삭제
     function deleteTicket(){
-        if (showConfirm("question","삭제하시겠습니까?","")) {}
+        showConfirm("question","삭제하시겠습니까?","",function(){
+                deleteTicketConfirm();
+            }
+        );
     }
 
     //확인창에서 호출하는 함수
-    function afterConfirm(){
+    function deleteTicketConfirm(){
         var id = $("#ticketId").val();
         var url = `/deleteTicket`;
         fetch(url, {
