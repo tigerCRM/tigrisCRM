@@ -259,7 +259,10 @@
         var searchKeyword = $("#searchKeyword").val();
         var startDt = ($("#startDate").val() === undefined || $("#startDate").val() === "") ? '1999-01-01' : $("#startDate").val();
         var endDt = ($("#endDate").val() === undefined || $("#endDate").val() === "") ? '2030-01-01' : $("#endDate").val();
-        var page = ($("#currentPage").val() === undefined || $("#currentPage").val() === "") ? '' : $("#currentPage").val();
+        var page = 1;
+        if (obj =="page"){
+            page = ($("#currentPage").val() === undefined || $("#currentPage").val() === "") ? '' : $("#currentPage").val();
+        }
         var writerYn = document.getElementById('writerYn').checked;
 
         //내가 작성한글 페이징 처리하기
@@ -355,7 +358,7 @@
     function goPage(url, page) {
         $("#currentPage").val(page);
         // 실제 페이지 이동 로직 구현
-        searchTickets(this);
+        searchTickets("page");
     }
 
 </script>

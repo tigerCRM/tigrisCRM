@@ -16,7 +16,8 @@
         U.USER_NAME,
         DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d') AS CREATE_DT,
         IFNULL(DATE_FORMAT(IFNULL(COMPLETE_DT, ''), '%Y-%m-%d'),'') as COMPLETE_DT,
-        SATISFACTION
+        SATISFACTION,
+        FEEDBACK
         FROM T_TICKET_INFO as T
         LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
         <where>

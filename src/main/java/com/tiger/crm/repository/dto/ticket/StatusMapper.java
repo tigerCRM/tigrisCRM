@@ -64,4 +64,21 @@ public class StatusMapper {
         }
         return supportMap.getOrDefault(code, "알 수 없음");
     }
+
+    public static String getSatisText(String code) {
+        switch (code) {
+            case "1":
+                return "매우불만족";
+            case "2":
+                return "불만족";
+            case "3":
+                return "보통";
+            case "4":
+                return "만족";
+            case "5":
+                return "매우만족";
+            default:
+                return "";
+        }
+    }
 }

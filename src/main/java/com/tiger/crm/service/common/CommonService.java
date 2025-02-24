@@ -81,7 +81,7 @@ public class CommonService {
         // CellStyle 생성 (헤더 스타일)
         CellStyle headerStyle = workbook.createCellStyle();
         // 배경색 설정 (예: 파란색)
-        headerStyle.setFillForegroundColor(IndexedColors.LIGHT_BLUE.getIndex());
+        headerStyle.setFillForegroundColor(IndexedColors.GREY_25_PERCENT.getIndex());
         headerStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
         // 글자색 설정 (예: 흰색)
         Font font = workbook.createFont();
@@ -90,7 +90,7 @@ public class CommonService {
         // 헤더 생성
         if (Objects.equals(location, "ticketList")){
             // 헤더 컬럼명 지정 (고정값)
-            String[] headerColumns = {"요청번호", "고객사", "제목", "분류", "상태", "범위", "담당", "MD", "등록일", "완료일"};
+            String[] headerColumns = {"요청번호", "고객사", "제목", "분류", "상태", "범위", "담당", "MD", "등록일", "완료일","만족도","만족도의견"};
             Row headerRow = sheet.createRow(0);
             int headerIndex = 0;
             for (String columnName : headerColumns) {
@@ -112,6 +112,10 @@ public class CommonService {
 
                 String supportCd = data.get("SUPPORT_CD") != null ? data.get("SUPPORT_CD").toString() : "";
                 String displaySupportCd = StatusMapper.getSupportText(supportCd);
+
+                String satis = data.get("SATISFACTION") != null ? data.get("SATISFACTION").toString() : "";
+                String displaySatis = StatusMapper.getSatisText(satis);
+                
                 // 각 열의 순서대로 데이터를 넣기
                 row.createCell(cellIndex++).setCellValue(data.get("TICKET_ID") != null ? data.get("TICKET_ID").toString() : "");
                 row.createCell(cellIndex++).setCellValue(data.get("COMPANY_NAME") != null ? data.get("COMPANY_NAME").toString() : "");
@@ -123,6 +127,8 @@ public class CommonService {
                 row.createCell(cellIndex++).setCellValue(data.get("MD") != null ? data.get("MD").toString() : "");
                 row.createCell(cellIndex++).setCellValue(data.get("CREATE_DT") != null ? data.get("CREATE_DT").toString() : "");
                 row.createCell(cellIndex++).setCellValue(data.get("COMPLETE_DT") != null ? data.get("COMPLETE_DT").toString() : "");
+                row.createCell(cellIndex++).setCellValue(displaySatis);
+                row.createCell(cellIndex++).setCellValue(data.get("FEEDBACK") != null ? data.get("FEEDBACK").toString() : "");
             }
         }else{
             if (!dataList.isEmpty()) {
