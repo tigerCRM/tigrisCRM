@@ -11,8 +11,6 @@ server:
     redirect-to-https: true # http로 접근시 https로 redirect
 
 spring:
-  profiles:
-    active: dev
 
   messages:
     basename:messages
@@ -22,14 +20,14 @@ spring:
     prefix: classpath:/templates/  # 템플릿 경로 설정
     suffix: .html                  # 파일 확장자 설정
     cache: false
-
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
   datasource:
     url: jdbc:mariadb://61.74.221.49:30190/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
     driver-class-name: org.mariadb.jdbc.Driver
     username: crmadmin
     password: Xkdlrj@2024!
-    hikari:
-      maximum-pool-size: 5
+
   servlet:
     multipart:
       max-file-size: 30MB #파일 하나의 최대 크기
@@ -53,7 +51,7 @@ app:
   # 개발
   # base-url: https://192.168.0.240:8081
   # 로컬
-   base-url: https://localhost:8081
+  base-url: https://localhost:8081
 
 # mybatis path setting
 mybatis:
