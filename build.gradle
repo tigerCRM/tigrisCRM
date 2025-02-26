@@ -18,6 +18,10 @@ bootJar {
     mainClass = 'com.tiger.crm.CrmApplication'
 }
 
+bootRun {
+    systemProperty "spring.profiles.active", System.getProperty("spring.profiles.active")
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor

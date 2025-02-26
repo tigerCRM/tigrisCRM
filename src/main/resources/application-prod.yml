@@ -1,4 +1,4 @@
-# server
+# prod server
 server:
   port: 8081
   ssl:
@@ -13,9 +13,11 @@ server:
 spring:
   application:
     name: crm
+
   config:
     activate:
-      on-profile: dev
+      on-profile: prod
+
   messages:
     basename:messages
     encoding:UTF-8
@@ -43,6 +45,7 @@ spring:
     hikari:
       maximum-pool-size: 5
 
+
   servlet:
     multipart:
       max-file-size: 30MB #파일 하나의 최대 크기
@@ -50,6 +53,7 @@ spring:
     session:
       timeout: 1800
       tracking-modes: cookie
+
 
   mail:
     host: smtp.sirteam.net  # SMTP 서버
@@ -84,8 +88,8 @@ aes256:
 
 # File
 file:
-  dir: /home/crmdevuser/files
-  logindir: /home/crmdevuser/files/Login
+  dir: /home/crmadmin/files
+  logindir: /home/crmadmin/files/Login
   #logindir: D:\tigrisCRM\src\main\resources\static\assets\images\common
   #dir: C:\Temp\fileUpload
 
