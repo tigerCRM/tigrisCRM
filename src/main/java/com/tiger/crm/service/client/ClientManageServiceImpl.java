@@ -34,6 +34,25 @@ public class ClientManageServiceImpl implements ClientManageService {
 
         return new PagingResponse<>(companyList, totalRecords, pagingRequest);
     }
+    // 그룹 목록 조회
+    @Override
+    public PagingResponse<Map<String, Object>> getGroupList(PagingRequest pagingRequest) {
+        List<Map<String, Object>> groupList = clientManageMapper.getGroupList(pagingRequest);
+        int totalRecords = clientManageMapper.getGroupListCount(pagingRequest);
+
+        return new PagingResponse<>(groupList, totalRecords, pagingRequest);
+    }
+
+    // 그룹 상세 조회
+    @Override
+    public List<ClientManageDto> getGroupDetail(ClientManageDto clientManageDto) {
+        return clientManageMapper.getGroupDetail(clientManageDto);
+    }
+
+    @Override
+    public List<ClientManageDto> getGroupAuthList(ClientManageDto clientManageDto) {
+        return clientManageMapper.getGroupAuthList(clientManageDto);
+    }
 
     // 전체 요청 수를 조회하는 메서드
     private int getCompanyListCount(PagingRequest pagingRequest) {
@@ -108,9 +127,21 @@ public class ClientManageServiceImpl implements ClientManageService {
     public List<ClientManageDto> getContacts() {
         return clientManageMapper.getContacts();
     }
+
     @Override
     public void changePassword(ClientManageDto clientManageDto) {
         clientManageMapper.changePassword(clientManageDto);
     }
 
+    // 신규 권한 그룹 등록
+    @Override
+    public void createGroup(ClientManageDto clientManageDto) {
+        clientManageMapper.createGroup(clientManageDto);
+    }
+
+    //권한 그룹 수정
+    @Override
+    public void updateGroup(ClientManageDto clientManageDto) {
+        clientManageMapper.updateGroup(clientManageDto);
+    }
 }

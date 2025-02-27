@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" >
+<!-- <head> 공통   -->
+<head th:replace="~{common/frame_head :: head('그룹 관리')}"></head>
+<body>
+<div class="wrapper">
+    <!-- 왼쪽 메뉴  -->
+    <div th:replace="~{common/frame_left_menu :: frame_left_menu}" />
+
+    <!-- 컨텐츠 영역 -->
+    <div class="main-area">
+        <!-- 내용 영역 -->
+        <main class="form-content">
+            <div class="container">
+                <div class="orReport-widget-wrap">
+                    <div class="content">
+                        <!-- 검색 영역 -->
+                        <div class="search--box">
+                            <div class="content-header">
+                                <h2 class="text-body1">
+                                    <div class="flex flex-align_center gap--8">
+                                        <b>그룹 관리 페이지</b>
+                                    </div>
+                                </h2>
+                            </div>
+                        </div>
+
+                        <!-- 리스트 영역 -->
+                        <div class="flex-container">
+                            <!-- 고객사 목록 -->
+                            <div class="flex1 widget-list" id="groupList" style="display: flex; flex-direction: column; min-height: 100%; justify-content: space-between;">
+                                <section class="clientList-parts">
+                                    <div class="table__content">
+                                        <div class="client_button">
+                                            <button type="button" class="btn btn--s primary-btn" onclick="createGroupModal()">그룹 등록</button>
+                                        </div>
+                                        <div class="is_full">
+                                            <div class="board-list board--m list-wrap ">
+                                                <table class="table table01 table-ellipsis">
+                                                    <colgroup>
+                                                        <col style="width: 75%;">
+                                                    </colgroup>
+                                                    <thead>
+                                                    <tr>
+                                                        <th>그룹 명</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="groupBody">
+                                                        <tr th:if="${groupList == null or #lists.isEmpty(groupList)}">
+                                                            <td style="text-align:center;">내역이 없습니다</td>
+                                                        </tr>
+                                                        <tr th:each="item : ${groupList.dataList}" class="click-row" th:attr="data-id=${item['groupCode']}" >
+                                                            <td><span th:text="${item['groupName']}"></span></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 페이징 버튼 템플릿 -->
+                                    <div class="client-footer">
+                                        <div th:replace="~{fragments/pagination :: pagination(${groupList}, 'groupList')}"/>
+                                    </div>
+                                    <input type="hidden" id ="currentPage"  th:field="${groupList.currentPage}" readonly>
+                                    <!-- //페이징 버튼 템플릿 -->
+                                </section>
+                            </div>
+                            <!-- 고객사 상세 -->
+                            <div th:fragment="groupDetailFragment" class="flex1 widget-detail" id="groupDetailView">
+                                <section class="clientList-parts">
+                                    <div class="widget__content"  id="groupDetail">
+                                        <div class="content-header">
+                                            <h2 class="text-body1">
+                                                <div class="flex flex-align_center gap--8">
+                                                    <b>그룹 상세</b>
+                                                </div>
+                                            </h2>
+                                            <button type="button" class="btn btn--s primary-btn" onclick="updategroup()">수정</button>
+                                        </div>
+                                        <table class="table table03 table--h table--xs">
+                                            <colgroup>
+                                                <col style="width: 18%;">
+                                                <col style="width: 32%;">
+                                                <col style="width: 18%;">
+                                            </colgroup>
+                                            <tbody>
+                                                <tr>
+                                                    <th>그룹 코드</th>
+                                                    <td colspan="2">
+                                                        <span id="detailgroupCode" th:text="${groupCode}"></span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>그룹명</th>
+                                                    <td colspan="2">
+                                                        <input type="text" id="detailgroupName" th:value="${groupName}" class="input--s input01 input--full" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>비고</th>
+                                                    <td colspan="2">
+                                                        <input type="text" id="detailnotes" th:value="${groupNotes}" class="input--s input01 input--full" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <th>사용여부</th>
+                                                    <td colspan="2">
+                                                        <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
+                                                            <select class="dropdown__selected" id="detailgroupuseYn">
+                                                                <option value="Y" th:selected="${groupuseYn == 'Y'}">Y</option>
+                                                                <option value="N" th:selected="${groupuseYn == 'N'}">N</option>
+                                                            </select>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                        <!--해당 권한 관리자-->
+                                        <div class="is_full">
+                                            <div class="board-list board--m list-wrap ">
+                                                <table class="table table01 table-ellipsis">
+                                                    <colgroup>
+                                                        <col style="width: 75%;">
+                                                    </colgroup>
+                                                    <thead>
+                                                    <tr>
+                                                        <th>권한 관리자</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="">
+                                                    <tr th:if="${authList == null or #lists.isEmpty(authList)}">
+                                                        <td style="text-align:center;">내역이 없습니다</td>
+                                                    </tr>
+                                                    <tr th:each="item : ${authList}" class="click-row" th:attr="data-id=${item.userId}">
+                                                        <td><span th:text="${item.userName}"></span></td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- //내용 영역 -->
+    </div>
+    <!-- //컨텐츠 영역 -->
+</div>
+
+<!--모달팝업 영역-->
+<div class="layerpopup-wrap layerpopup--l layerpopup--center contact-layer" style="display: none;">
+    <div class="layerpopup__header">
+        <h1 class="layerpopup__title">그룹 등록</h1>
+        <button class="btn icon-btn close-btn" onclick="closeLayerpopup()"><svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#close"/></svg></button>
+    </div>
+    <div class="layerpopup__content">
+        <div id="group_info">
+            <form id="groupForm">
+                <table class="table table03 table--h table--xs">
+                    <colgroup>
+                        <col style="width: 18%;">
+                        <col style="width: 32%;">
+                        <col style="width: 18%;">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <th>그룹코드</th>
+                            <td colspan="2"><input type="text" id="groupCode" class="input--s input01 input--full" name="groupName" placeholder="그룹코드를 입력하세요" /></td>
+                        </tr>
+                        <tr>
+                            <th>그룹명</th>
+                            <td colspan="2"><input type="text" id="groupName" class="input--s input01 input--full" name="managerId" placeholder="그룹명을 입력하세요" /></td>
+                        </tr>
+                        <tr>
+                            <th>비고</th>
+                            <td colspan="2"><input type="text" id="groupNotes" class="input--s input01 input--full" name="notes" placeholder="비고" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+    <div class="layerpopup__footer">
+        <div class="flex flex-justify_center gap--8 btn-wrap">
+            <button type="button" class="btn btn--s primary-btn" onclick="createGroup()">등록</button>
+            <button type="button" class="btn btn--s mono-outline-btn" onclick="closeLayerpopup()">취소</button>
+        </div>
+    </div>
+</div>
+<!--모달팝업(고객사 등록) 영역-->
+
+<script>
+
+    $(document).ready(function () {
+        $("#groupDetailView").show()
+    });
+    //그룹선택시 그룹상세 정보와 권한 관리자 호출
+    $(document).on('click', '#groupList .click-row, #groupBody .click-row', function(event) {
+        $("#groupDetailView").show()
+        var groupCode = $(this).data('id');
+        $.ajax({
+            url: '/groupDetailData',
+            type: 'GET',
+            data: {groupCode: groupCode},
+            success: function (response) {
+                document.getElementById('groupDetailView').innerHTML = response;
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                alert('요청 실패: ' + xhr.responseText);
+            }
+        });
+    })
+    // -------------------
+    // 신규 고객사 등록
+    // ------------------
+    function createGroup() {
+        var groupName = $('#groupName').val();
+        var groupCode = $('#groupCode').val();
+        var groupNotes = $('#groupNotes').val();
+
+        if (!groupCode || !groupName ) {
+            alert("모든 필드를 입력해 주세요.");
+            return;
+        }
+        showConfirm("question","등록하시겠습니까?","", function(){
+                afterConfirm();
+            }
+        );
+
+    }
+
+    function afterConfirm(){
+        var groupName = $('#groupName').val();
+        var groupCode = $('#groupCode').val();
+        var groupNotes = $('#groupNotes').val();
+        $.ajax({
+            url: '/createGroup',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({groupName: groupName, groupCode: groupCode, groupNotes: groupNotes}),
+            success: function(response) {
+                if (response.status=="error"){
+                    showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
+                }else{
+                    showMessage('info', '성공', '저장하였습니다.');
+                    // 팝업 내 필드값 초기화 및 팝업 닫기
+                    $('#groupName').val("");
+                    $('#groupCode').val("");
+                    $('#groupNotes').val("");
+                    closeLayerpopup();
+                 //   searchCompany(this);
+                }
+
+            },
+            error: function(xhr, status, error) {
+                alert('등록 실패: ' + error);
+            }
+        });
+    }
+
+         // -------------------
+        // 고객사 수정 저장
+        // ------------------
+        function updateCompany() {
+            var companyId = $('#detailcompanyId').text();
+            var companyName = $('#detailcompanyName').val();
+            var managerId = $('#detailmanagerId').val();
+            var notes = $('#detailnotes').val();
+            var companyuseYn = $('#detailcompanyuseYn').val();
+
+            if (!companyName || !managerId ) {
+                alert("모든 필드를 입력해 주세요.");
+                return;
+            }
+            $.ajax({
+                url: '/updateCompany',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({companyId: companyId, companyName: companyName, managerId: managerId, notes: notes, companyuseYn: companyuseYn}),
+                success: function(response) {
+                    if (response.status=="error"){
+                        showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
+                    }else{
+                        showMessage('info', '성공', '저장하였습니다.');
+                        // 팝업 내 필드값 초기화 및 팝업 닫기
+                        $('#companyForm #companyName').val("");
+                        $('#companyForm #managerId').val("");
+                        $('#companyForm #notes').val("");
+                        closeLayerpopup();
+                        searchCompany(this);
+                    }
+
+                },
+                error: function(xhr, status, error) {
+                    showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
+                }
+            });
+        }
+
+
+        // -------------------
+        // pagination 내 함수 선언
+        // ------------------
+        function goPage(url, page) {
+            $("#currentPage").val(page);
+            if (url == "companyList" || url == "companyListData"){
+                searchCompany(this);
+            }else{
+                searchClient(this);
+            }
+        }
+
+        // -------------------
+        // 클릭 시 css 활성화(이벤트 위임을 사용하여 각 li 요소에 active 클래스 추가)
+        // ------------------
+        $('#companyList').on('click', 'tbody tr', function () {
+            $('#companyList tbody .click-row').removeClass('active');
+            $(this).addClass('active');
+        });
+        $('#clientList').on('click', 'tbody tr', function () {
+            $('#clientList tbody .click-row').removeClass('active');
+            $(this).addClass('active');
+        });
+
+        // -------------------
+        // 모달 팝업 열기
+        // ------------------
+        function createGroupModal(){
+            $('.layerpopup-wrap').css("display", "block");
+        }
+
+        // -------------------
+        // 모달 팝업 닫기
+        // ------------------
+        function closeLayerpopup(){
+            $('.layerpopup-wrap').css("display", "none");
+        }
+
+        // -------------------
+        // 모달 팝업 열기(고객 등록)
+        // ------------------
+        function createClientModal(){
+            $('.layerpopup-wrap2').css("display", "block");
+        }
+
+        $(document).ready(function () {
+            $('#companyNm').select2();
+        });
+        $('#companyNm').on('select2:open', function() {
+          $('body').css('overflow', 'hidden');
+        });
+        $('#companyNm').on('select2:close', function() {
+          $('body').css('overflow', '');
+        });
+
+</script>
+</body>
+</html>

@@ -24,7 +24,14 @@
           <if test="userClass == 'ADMIN'">
             AND TTI.MANAGER_ID = #{userId}
           </if>
-
+            <!-- userClass가 ADMIN인 경우 그룹 권한 필터 추가 -->
+            <if test="userClass == 'ADMIN'">
+                AND EXISTS (
+                SELECT 1 FROM T_GROUP_AUTH GA
+                WHERE GA.GROUP_CODE = TCI.GROUP_CODE
+                AND GA.USER_ID = #{userId}
+                )
+            </if>
         ORDER BY CREATE_DT DESC
         LIMIT 5
     </select>
@@ -48,7 +55,14 @@
         <if test="userClass == 'ADMIN'">
             AND TTI.MANAGER_ID = #{userId}
         </if>
-
+        <!-- userClass가 ADMIN인 경우 그룹 권한 필터 추가 -->
+        <if test="userClass == 'ADMIN'">
+            AND EXISTS (
+            SELECT 1 FROM T_GROUP_AUTH GA
+            WHERE GA.GROUP_CODE = TCI.GROUP_CODE
+            AND GA.USER_ID = #{userId}
+            )
+        </if>
         ORDER BY CREATE_DT DESC
         LIMIT 5
     </select>

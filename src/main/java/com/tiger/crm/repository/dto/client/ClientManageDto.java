@@ -26,4 +26,10 @@ public class ClientManageDto {
     private String useruseYn;
     private String userPw;
     private String updateId;        // 생성자 아이디
+    //그룹정보
+    private String groupId;       // 그룹코드
+    private String groupCode;       // 그룹코드
+    private String groupName;       // 그룹명
+    private String groupNotes;      // 그룹 비고(설명)
+    private String groupuseYn;
 }

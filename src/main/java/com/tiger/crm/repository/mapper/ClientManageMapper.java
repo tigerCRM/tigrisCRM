@@ -45,4 +45,23 @@ public interface ClientManageMapper {
 
     //연락망
     List<ClientManageDto> getContacts();
+
+    // 그룹 조회
+    List<Map<String, Object>> getGroupList(PagingRequest pagingRequest);
+
+    // 그룹 카운트
+    Integer getGroupListCount(PagingRequest pagingRequest);
+
+    // 고객사 상세 조회
+    List<ClientManageDto> getGroupDetail(ClientManageDto clientManageDto);
+
+    //권한 관리자 리스트
+    List<ClientManageDto> getGroupAuthList(ClientManageDto clientManageDto);
+
+    // 신규 권한 그룹 등록
+    void createGroup(ClientManageDto clientManageDto);
+    // 고객사 수정
+    void updateGroup(ClientManageDto clientManageDto);
+
+
 }

@@ -4,34 +4,43 @@
 
 <mapper namespace="com.tiger.crm.repository.mapper.TicketMapper">
     <select id="getTicketList" resultType="java.util.HashMap">
-        SELECT TICKET_ID,
-        PRIORITY_YN,
-        COMPANY_NAME,
-        STATUS_CD,
-        REQUEST_TYPE_CD,
-        SUPPORT_CD,
-        IFNULL(MD, '') as MD,
-        TITLE,
+        SELECT T.TICKET_ID,
+        T.PRIORITY_YN,
+        T.COMPANY_NAME,
+        T.STATUS_CD,
+        T.REQUEST_TYPE_CD,
+        T.SUPPORT_CD,
+        IFNULL(T.MD, '') as MD,
+        T.TITLE,
         T.CREATE_NAME,
         U.USER_NAME,
         DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d') AS CREATE_DT,
-        IFNULL(DATE_FORMAT(IFNULL(COMPLETE_DT, ''), '%Y-%m-%d'),'') as COMPLETE_DT,
-        SATISFACTION,
-        FEEDBACK
+        IFNULL(DATE_FORMAT(IFNULL(T.COMPLETE_DT, ''), '%Y-%m-%d'),'') as COMPLETE_DT,
+        T.SATISFACTION,
+        T.FEEDBACK,
+        C.GROUP_CODE
         FROM T_TICKET_INFO as T
         LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
+        LEFT JOIN T_COMPANY_INFO as C on C.COMPANY_ID = T.COMPANY_ID
         <where>
             DELETE_YN = 'N'
             <!-- userClass가 고객인 경우 -->
             <if test="userClass == 'USER'">
                 AND T.COMPANY_ID = #{companyId}
             </if>
+            <!-- userClass가 ADMIN인 경우 그룹 권한 필터 추가 -->
+            <if test="userClass == 'ADMIN'">
+                AND EXISTS (
+                SELECT 1 FROM T_GROUP_AUTH GA
+                WHERE GA.GROUP_CODE = C.GROUP_CODE
+                AND GA.USER_ID = #{userId}
+                )
+            </if>
             <!-- 검색어 조건 (검색어가 존재하는 경우 제목, 내용 필드에서 LIKE 검색) -->
             <if test="searchStatus == '' and searchType == '' and (searchKeyword != null or searchKeyword != '')">
                 AND (TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
                 OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%'))
             </if>
-
             <!-- 상태 검색 조건 (상태가 존재하는 경우) -->
             <if test="searchStatus != null and searchStatus != ''">
                 AND STATUS_CD = #{searchStatus}
@@ -87,11 +96,20 @@
         SELECT COUNT(*)
         FROM T_TICKET_INFO as T
         LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
+        LEFT JOIN T_COMPANY_INFO as C on C.COMPANY_ID = T.COMPANY_ID
         <where>
             DELETE_YN = 'N'
             <!-- userClass가 고객인 경우 -->
             <if test="userClass == 'USER'">
                 AND T.COMPANY_ID = #{companyId}
+            </if>
+            <!-- userClass가 ADMIN인 경우 그룹 권한 필터 추가 -->
+            <if test="userClass == 'ADMIN'">
+                AND EXISTS (
+                SELECT 1 FROM T_GROUP_AUTH GA
+                WHERE GA.GROUP_CODE = C.GROUP_CODE
+                AND GA.USER_ID = #{userId}
+                )
             </if>
             <!-- 검색어 조건 (검색어가 존재하는 경우 제목, 내용 필드에서 LIKE 검색) -->
             <if test="searchStatus == '' and searchType == '' and (searchKeyword != null or searchKeyword != '')">

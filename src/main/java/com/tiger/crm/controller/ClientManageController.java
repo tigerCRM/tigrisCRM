@@ -25,10 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class ClientManageController {
@@ -54,7 +51,7 @@ public class ClientManageController {
      * 고객사 목록 페이지(최초 접속 시)
      */
     @GetMapping("/clientManage")
-    public String getOpReportList(@ModelAttribute PagingRequest pagingRequest, ClientManageDto clientManageDto, Model model) {
+    public String getclientManage(@ModelAttribute PagingRequest pagingRequest, ClientManageDto clientManageDto, Model model) {
         try {
             // 최초 접속 파라미터
             clientManageDto.setCompanyId(1);
@@ -65,6 +62,8 @@ public class ClientManageController {
             List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
             model.addAttribute("companyOptions", companyOptions);
             // 2. 고객사 상세 조회
+            PagingResponse<Map<String, Object>> groupOptions = clientManageService.getGroupList(pagingRequest);
+            model.addAttribute("groupOptions", groupOptions.getDataList());
             List<ClientManageDto> companyDetail = clientManageService.getCompanyDetail(clientManageDto);
             model.addAttribute("companyDetail", companyDetail);
 
@@ -106,7 +105,46 @@ public class ClientManageController {
             throw new CustomException("고객사 목록(상세검색) 데이터를 불러오는 중 오류가 발생했습니다.", e);
         }
     }
+    //그룹권한 코드
+    @GetMapping("/groupManage")
+    public String getgroupManage(@ModelAttribute PagingRequest pagingRequest, Model model) {
+        try {
+            //그룹정보 호출
+            PagingResponse<Map<String, Object>> pageResponse = clientManageService.getGroupList(pagingRequest);
+            model.addAttribute("groupList", pageResponse);
+            List<ClientManageDto> groupAuthList = new ArrayList<>();
+            model.addAttribute("authList", groupAuthList);
+            return "groupManage";
 
+        } catch (Exception e) {
+            throw new CustomException("그룹관리 초기 데이터를 불러오는 중 오류가 발생했습니다.", e);
+        }
+    }
+    /*
+     * 그룹권한 상세
+     */
+    @GetMapping("/groupDetailData")
+    public String groupDetailData(ClientManageDto clientManageDto, Model model) {
+        try {
+            // 고객사 상세 정보 조회
+            List<ClientManageDto> companyDetail = clientManageService.getGroupDetail(clientManageDto);
+            if (!companyDetail.isEmpty()) {
+                ClientManageDto detail = companyDetail.get(0); // 첫 번째 고객사 정보 가져오기
+                model.addAttribute("groupCode", detail.getGroupCode());
+                model.addAttribute("groupName", detail.getGroupName());
+                model.addAttribute("groupNotes", detail.getGroupNotes());
+                model.addAttribute("groupuseYn", detail.getGroupuseYn());
+            }
+
+            // 권한 관리자 목록 추가
+            List<ClientManageDto> groupAuthList = clientManageService.getGroupAuthList(clientManageDto);
+            model.addAttribute("authList", groupAuthList);
+            return "groupManage :: groupDetailFragment";
+
+        } catch (Exception e) {
+            throw new CustomException("고객사의 상세 데이터를 불러오는 중 오류가 발생했습니다.", e);
+        }
+    }
     /*
      * 고객사 상세 조회
      */
@@ -128,6 +166,7 @@ public class ClientManageController {
                 response.put("managerId", detail.getManagerId());
                 response.put("notes", detail.getNotes());
                 response.put("companyuseYn", detail.getCompanyuseYn());
+                response.put("groupCode",detail.getGroupCode());
             }
 
             return response;
@@ -302,5 +341,40 @@ public class ClientManageController {
         return response;
     }
 
+    /*
+     * 신규 권한 그룹 추가
+     */
+    @PostMapping("/createGroup")
+    @ResponseBody
+    public Map<String, Object> createGroup(@RequestBody ClientManageDto clientManageDto, HttpServletRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
+            clientManageDto.setUserId(loginUser.getUserId()); // 등록/수정자 용도
 
+            clientManageService.createGroup(clientManageDto);
+            response.put("status", "success");
+        }catch (Exception e) {
+            response.put("status", "error");
+            LOGGER.error("고객사 등록 중 오류가 발생했습니다.", e);
+        }
+        return response;
+    }
+
+    @PostMapping("/updateGroup")
+    @ResponseBody
+    public Map<String, Object> updateGroup(@RequestBody ClientManageDto clientManageDto, HttpServletRequest request) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            UserLoginDto loginUser = (UserLoginDto) request.getAttribute("user");
+            clientManageDto.setUserId(loginUser.getUserId()); // 등록/수정자 용도
+
+            clientManageService.updateGroup(clientManageDto);
+            response.put("status", "success");
+        }catch (Exception e) {
+            response.put("status", "error");
+            LOGGER.error("고객사 수정 중 오류가 발생했습니다.", e);
+        }
+        return response;
+    }
 }

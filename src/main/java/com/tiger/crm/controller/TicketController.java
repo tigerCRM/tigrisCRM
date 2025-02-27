@@ -74,6 +74,7 @@ public class TicketController {
             model.addAttribute("statusOptions", commonService.getSelectOptions("t_status"));
             model.addAttribute("searchOptions", commonService.getSelectOptions("t_search"));
             pagingRequest.setCreateId("");
+            pagingRequest.setUserId(loginUser.getUserId());
             // 요청 조회
             PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
             model.addAttribute("ticketList", pageResponse);
@@ -102,6 +103,7 @@ public class TicketController {
                 pagingRequest.setCreateId("");
             }
             pagingRequest.setCompanyId(companyId);
+            pagingRequest.setUserId(loginUser.getUserId());
             // 요청 조회
             PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
             model.addAttribute("userClass",userClass);
@@ -132,6 +134,7 @@ public class TicketController {
             model.addAttribute("statusOptions", commonService.getSelectOptions("t_status"));
             model.addAttribute("searchOptions", commonService.getSelectOptions("t_search"));
             pagingRequest.setCreateId("");
+            pagingRequest.setUserId(loginUser.getUserId());
             // 요청 조회
             PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
             model.addAttribute("ticketList", pageResponse);
@@ -155,6 +158,7 @@ public class TicketController {
                 pagingRequest.setCreateId("");
             }
             pagingRequest.setCompanyId(companyId);
+            pagingRequest.setUserId(loginUser.getUserId());
             // 요청 조회
             PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
             model.addAttribute("userClass",userClass);
