@@ -40,8 +40,8 @@ spring:
     host: smtp.sirteam.net  # SMTP 서버
     #host:  smtp.naver.com  # SMTP 서버
     port: 465  # 포트
-    username: ygnam@tigrison.com  # 발송자 이메일
-    password: 0pCd^3%G # 발송자 이메일 비밀번호
+    username: tiger-care@tigrison.com  # 발송자 이메일
+    password: ^1s7!lRG # 발송자 이메일 비밀번호
     properties:
       mail.smtp.auth: true  # SMTP 인증
       mail.smtp.starttls.enable: false  # STARTTLS 사용

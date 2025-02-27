@@ -1290,12 +1290,14 @@ div::-webkit-scrollbar-button:end:increment {
 .wrap_date {position:relative;}
 .wrap_search {position:relative;}
 .wrap_input {
-	overflow:hidden;position:relative;width: 400px; height:3.2rem;border:1px solid var(--tigris-background-regular);
+	overflow:hidden;position:relative;width: 350px; height:3.2rem;border:1px solid var(--tigris-background-regular);
 	z-index:5
-	}
+}
+
 .wrap_input > .input01 {
     width: 100%;
 }
+
 .wrap_input .icon-btn:focus-visible {
     color: var(--primary-navy-500);
     outline: none;
@@ -1318,7 +1320,7 @@ div::-webkit-scrollbar-button:end:increment {
 }
 
 .wrap_input > .input01 {
-    width: 75%;
+    width: 100%;
     height: 3.2rem;
     border-radius: 0.4rem;
 }

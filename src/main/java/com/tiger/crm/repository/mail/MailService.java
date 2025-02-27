@@ -45,7 +45,7 @@ public class MailService {
             if (!isValidEmail(to)) {
                 throw new IllegalArgumentException("잘못된 이메일 형식: " + to);
             }
-            helper.setFrom("ygnam@tigrison.com");       // 발송인(crm 관리자 계정으로 보낼거니까 고정)
+            helper.setFrom("tiger-care@tigrison.com");       // 발송인(crm 관리자 계정으로 보낼거니까 고정)
             helper.setTo(to);                             // 수령인
             helper.setSubject("[타이거컴퍼니]" + subject);  // 제목
             helper.setText(htmlContent, true);       // html양식
@@ -63,7 +63,7 @@ public class MailService {
             mail.setTitle(subject);                     // 제목
             mail.setContent(htmlContent);               // html양식
             mail.setReceiverAddr(to);                   // 수령인
-            mail.setSenderAddr("ygnam@tigrison.com"); // 발송인(crm 관리자 계정으로 보낼거니까 고정)
+            mail.setSenderAddr("tiger-care@tigrison.com"); // 발송인(crm 관리자 계정으로 보낼거니까 고정)
 
             mailMapper.saveMailHist(mail);
 

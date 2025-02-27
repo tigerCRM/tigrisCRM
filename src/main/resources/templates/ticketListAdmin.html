@@ -59,11 +59,11 @@
                                         </div>
                                     </div>
                                     <div class="wrap_search" style="padding-left: 10px;">
-                                        <div class="wrap_input">
+                                        <div class="wrap_input" style="width: 400px;">
                                             <button type="button" class="search_more" id="btnSearchDetail">
                                                 <p style="color:#E1E4EB; font-size:12px;"></p>
                                             </button>
-                                            <input type="text" id="searchKeyword" name="searchKeyword"
+                                            <input type="text" id="searchKeyword" name="searchKeyword"  style="padding-left: 35px;"
                                                    class="input--s input01" placeholder="검색어를 입력해주세요."
                                                    th:value="${searchKeyword}"
                                                    onkeydown="if (event.keyCode === 13) searchTickets(this);">

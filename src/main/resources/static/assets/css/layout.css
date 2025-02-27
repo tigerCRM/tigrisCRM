@@ -561,7 +561,7 @@
 }
 .wrap_condition .calendar {display:none;position:absolute;top:113px}
 .search_more {
-	float:left;display:inline-block;
+	float:left;display:inline-block;position:absolute;
 	height:3.1rem;color:#bcbdc5;font-size:14px;background-color:transparent;
 }
 .search_more > p {

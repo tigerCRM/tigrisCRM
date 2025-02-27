@@ -29,6 +29,7 @@
                                             <select class="dropdown__selected" id="clientType" onchange="generateList(this)">
                                                 <option value="COMPANY" selected>고객사 관리</option>
                                                 <option value="CLIENT">사용자 관리</option>
+                                                <option value="GROUP">그룹 관리</option>
                                             </select>
                                         </div>
                                     </div>
@@ -497,6 +498,9 @@
 
             $("#refresh2").show();
             $("#refresh1").hide();
+        }else if (selectedType === 'GROUP') {
+
+
         }
     }
 
