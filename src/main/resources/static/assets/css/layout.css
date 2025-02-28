@@ -609,3 +609,8 @@
     height: auto;
     border-radius: 8px;
 }
+.swal2-validation-message {
+    font-size: 12px !important;  /* 폰트 크기 */
+    font-weight: bold !important; /* 굵은 글씨 */
+    color: darkred !important;    /* 글자 색상 */
+}

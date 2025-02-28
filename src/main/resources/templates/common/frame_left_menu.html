@@ -47,7 +47,7 @@
                     <!-- 설정(톱니바퀴) 드롭다운 메뉴 추가 -->
                     <ul class="dropdown-menu" id="settingDropdownMenu" style="display:none">
                         <li id="changePw">
-                            <a href="#" onclick="showPasswordChangeModal(changePassword);">비밀번호 변경</a>
+                            <a href="#" th:attr="data-user-id=${#strings.arraySplit(user.userId, '@')[0]}" onclick="changePasswordFromLink(this)">비밀번호 변경</a>
                         </li>
                         <li id="logout">
                            <!-- <a href="#" onclick="if(confirm('로그아웃 하시겠습니까?')) window.location.href='/logout'; else alert('취소하였습니다.'); return false;">로그아웃</a>-->
@@ -632,6 +632,11 @@
 
             function afterConfirm(){
                 window.location.href='/logout';
+            }
+
+            function changePasswordFromLink(element) {
+                const userId = element.getAttribute('data-user-id');
+                showPasswordChangeModal(changePassword, userId);
             }
         </script>
     </div>

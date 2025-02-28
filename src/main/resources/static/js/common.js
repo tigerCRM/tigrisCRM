@@ -503,10 +503,13 @@ var common = {
     }
 
 
-    function showPasswordChangeModal(afterFunction) {
+    function showPasswordChangeModal(afterFunction, userId) {
         Swal.fire({
             title: '비밀번호 변경',
             html: `
+                <div style="color: red; font-size: 14px; margin-top: 5px;">
+                    * 비밀번호는 8자리 이상, 대문자, 소문자, 숫자, 특수문자를 각각 1개 이상 포함해야 하며, ID와 동일한 문자를 포함할 수 없습니다.
+                </div>
                 <input type="password" id="newPassword" class="swal2-input" placeholder="새 비밀번호 입력">
                 <input type="password" id="confirmPassword" class="swal2-input" placeholder="비밀번호 확인">
             `,
@@ -514,15 +517,14 @@ var common = {
             showCancelButton: true,
             confirmButtonText: '변경',
             cancelButtonText: '취소',
-         //   confirmButtonColor: '#0D349B',
-         //   cancelButtonColor: '#3085d6',
-             customClass: {
-                        confirmButton: 'btn btn--s primary-btn',
-                        cancelButton: 'btn btn--s secondary-btn'
-                    },
+            customClass: {
+                confirmButton: 'btn btn--s primary-btn',
+                cancelButton: 'btn btn--s secondary-btn'
+            },
             preConfirm: () => {
                 const newPassword = document.getElementById('newPassword').value;
                 const confirmPassword = document.getElementById('confirmPassword').value;
+                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
                 if (!newPassword || !confirmPassword) {
                     Swal.showValidationMessage('비밀번호를 입력하세요.');
@@ -530,6 +532,15 @@ var common = {
                 }
                 if (newPassword !== confirmPassword) {
                     Swal.showValidationMessage('비밀번호가 일치하지 않습니다.');
+                    return false;
+                }
+                if (!passwordRegex.test(newPassword)) {
+                                Swal.showValidationMessage('비밀번호는 8자리 이상, 대문자, 소문자, 숫자, 특수문자를 각각 1개 이상 포함해야 합니다.');
+                                return false;
+                            }
+                // ID와 동일한 문자 포함 여부 체크
+                if (newPassword.toLowerCase().includes(userId.toLowerCase())) {
+                    Swal.showValidationMessage('비밀번호에 ID와 동일한 문자를 포함할 수 없습니다.');
                     return false;
                 }
                 return newPassword; // 유효성 검사 통과 시, 새로운 비밀번호 반환
@@ -544,6 +555,7 @@ var common = {
             }
         });
     }
+
 
 
     function callPage() {

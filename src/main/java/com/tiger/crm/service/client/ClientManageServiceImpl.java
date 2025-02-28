@@ -133,15 +133,28 @@ public class ClientManageServiceImpl implements ClientManageService {
         clientManageMapper.changePassword(clientManageDto);
     }
 
-    // 신규 권한 그룹 등록
+    //그룹 권한 등록
     @Override
     public void createGroup(ClientManageDto clientManageDto) {
         clientManageMapper.createGroup(clientManageDto);
     }
 
-    //권한 그룹 수정
+    //그룹 권한 수정
     @Override
     public void updateGroup(ClientManageDto clientManageDto) {
         clientManageMapper.updateGroup(clientManageDto);
     }
+
+    //사용자 그룹 권한 등록
+    @Override
+    public void createAuth(ClientManageDto clientManageDto) {
+        clientManageMapper.createAuth(clientManageDto);
+    }
+
+    //사용자 권한 수정
+    @Override
+    public void updateAuth(ClientManageDto clientManageDto) {
+        clientManageMapper.updateAuth(clientManageDto);
+    }
+
 }

@@ -54,4 +54,10 @@ public interface ClientManageService {
     // 그룹 권한 수정
     void updateGroup(ClientManageDto clientManageDto);
 
+    // 사용자 권한 등록
+    void createAuth(ClientManageDto clientManageDto);
+
+    // 그룹 권한 수정
+    void updateAuth(ClientManageDto clientManageDto);
+
 }

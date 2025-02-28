@@ -38,10 +38,10 @@ spring:
     # username: crmservice
     # password: mp$0wnEgq*d(0CzH
 
-    url: jdbc:mariadb://61.74.221.49:30190/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
+    url: jdbc:mariadb://211.47.7.56:30190/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
     driver-class-name: org.mariadb.jdbc.Driver
-    username: crmservice
-    password: mp$0wnEgq*d(0CzH
+    username: tiger-care@tigrison.com  # 발송자 이메일
+    password: ^1s7!lRG # 발송자 이메일 비밀번호
     hikari:
       maximum-pool-size: 5
 
@@ -57,7 +57,6 @@ spring:
 
   mail:
     host: smtp.sirteam.net  # SMTP 서버
-    #host:  smtp.naver.com  # SMTP 서버
     port: 465  # 포트
     username: ygnam@tigrison.com  # 발송자 이메일
     password: 0pCd^3%G # 발송자 이메일 비밀번호
@@ -68,7 +67,7 @@ spring:
 # 메일 용 url
 app:
   # 개발
-  base-url: https://192.168.0.240:8081
+  base-url: https://211.47.7.56:8081
   # 로컬
   # base-url: https://localhost:8081
 

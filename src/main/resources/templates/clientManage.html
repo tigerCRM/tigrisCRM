@@ -94,12 +94,12 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody id="companyBody">
-                                                        <tr th:if="${companyList == null or #lists.isEmpty(companyList)}">
-                                                            <td style="text-align:center;">내역이 없습니다</td>
-                                                        </tr>
-                                                        <tr th:each="item : ${companyList.dataList}" class="click-row" th:attr="data-id=${item['COMPANY_ID']}" >
-                                                            <td><span th:text="${item['COMPANY_NAME']}"></span></td>
-                                                        </tr>
+                                                    <tr th:if="${companyList == null or #lists.isEmpty(companyList)}">
+                                                        <td style="text-align:center;">내역이 없습니다</td>
+                                                    </tr>
+                                                    <tr th:each="item : ${companyList.dataList}" class="click-row" th:attr="data-id=${item['COMPANY_ID']}" >
+                                                        <td><span th:text="${item['COMPANY_NAME']}"></span></td>
+                                                    </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -136,10 +136,10 @@
                                                     </tr>
                                                     </thead>
                                                     <tbody id="clientBody">
-                                                        <!-- 데이터가 동적으로 추가될 영역 -->
-                                                        <tr>
-                                                            <td colspan="4" style="text-align:center;">내역이 없습니다</td>
-                                                        </tr>
+                                                    <!-- 데이터가 동적으로 추가될 영역 -->
+                                                    <tr>
+                                                        <td colspan="4" style="text-align:center;">내역이 없습니다</td>
+                                                    </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -171,59 +171,59 @@
                                                 <col style="width: 18%;">
                                             </colgroup>
                                             <tbody>
-                                                <tr>
-                                                    <th>고객사 아이디</th>
-                                                    <td colspan="2">
-                                                        <span id="detailcompanyId"></span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>고객사명</th>
-                                                    <td colspan="2">
-                                                        <input type="text" id="detailcompanyName" class="input--s input01 input--full" />
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>담당자(PM)</th>
-                                                    <td colspan="2">
-                                                        <span id="detailmanagerName" style="padding-right: 10px;padding-left: 10px;"></span>
-                                                        <input type="text" id="detailmanagerId" class="input--s input01" style="width:80%" />
+                                            <tr>
+                                                <th>고객사 아이디</th>
+                                                <td colspan="2">
+                                                    <span id="detailcompanyId"></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>고객사명</th>
+                                                <td colspan="2">
+                                                    <input type="text" id="detailcompanyName" class="input--s input01 input--full" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>담당자(PM)</th>
+                                                <td colspan="2">
+                                                    <span id="detailmanagerName" style="padding-right: 10px;padding-left: 10px;"></span>
+                                                    <input type="text" id="detailmanagerId" class="input--s input01" style="width:80%" />
 
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>그룹 권한</th>
-                                                    <td colspan="2">
-                                                        <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
-                                                            <select class="dropdown__selected" id="detailgroupCode"
-                                                                    th:value="${detailgroupCode}">
-                                                                <option value="">==그룹==</option>
-                                                                <option th:each="op : ${groupOptions}"
-                                                                        th:value="${op['groupCode']}"
-                                                                        th:text="${op['groupName']}"
-                                                                        th:selected="${op['groupCode'] == detailgroupCode}">
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>비고</th>
-                                                    <td colspan="2">
-                                                        <input type="text" id="detailnotes" class="input--s input01 input--full" />
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>사용여부</th>
-                                                    <td colspan="2">
-                                                        <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
-                                                            <select class="dropdown__selected" id="detailcompanyuseYn" >
-                                                                <option value="Y">Y</option>
-                                                                <option value="N">N</option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>그룹 권한</th>
+                                                <td colspan="2">
+                                                    <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
+                                                        <select class="dropdown__selected" id="detailgroupCode"
+                                                                th:value="${detailgroupCode}">
+                                                            <option value="">==그룹==</option>
+                                                            <option th:each="op : ${groupOptions}"
+                                                                    th:value="${op['groupCode']}"
+                                                                    th:text="${op['groupName']}"
+                                                                    th:selected="${op['groupCode'] == detailgroupCode}">
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>비고</th>
+                                                <td colspan="2">
+                                                    <input type="text" id="detailnotes" class="input--s input01 input--full" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>사용여부</th>
+                                                <td colspan="2">
+                                                    <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
+                                                        <select class="dropdown__selected" id="detailcompanyuseYn" >
+                                                            <option value="Y">Y</option>
+                                                            <option value="N">N</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -248,67 +248,67 @@
                                                 <col style="width: 18%;">
                                             </colgroup>
                                             <tbody>
-                                                <tr>
-                                                    <th>아이디</th>
-                                                    <td colspan="2">
-                                                        <span id="clientuserId"></span>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>사용자명</th>
-                                                    <td colspan="2">
-                                                        <input type="text" id="clientuserName" class="input--s input01 input--full" />
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>회사명</th>
-                                                    <td colspan="2">
-                                                        <div class="dropdown dropdown--s wd160" aria-expanded="false" tabindex="0">
-                                                            <select class="dropdown__selected" id="clientcompanyNm" name="clientcompanyNm"
-                                                                    th:value="${clientcompanyName}">
-                                                                <option value="">==고객사==</option>
-                                                                <option th:each="op : ${companyOptions}"
-                                                                        th:value="${op.companyId}"
-                                                                        th:text="${op.companyName}"></option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>사용자 권한</th>
-                                                    <td colspan="2">
-                                                        <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
-                                                            <select class="dropdown__selected" id="clientuserClass" >
-                                                                <option value="USER">일반사용자</option>
-                                                                <option value="ADMIN">관리자</option>
-                                                                <option value="SYSADMIN">최고관리자</option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>이메일</th>
-                                                    <td colspan="2">
-                                                        <input type="text" id="clientemail" class="input--s input01 input--full" />
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>전화번호</th>
-                                                    <td colspan="2">
-                                                        <input type="text" id="clientphone" class="input--s input01 input--full" />
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th>사용여부</th>
-                                                    <td colspan="2">
-                                                        <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
-                                                            <select class="dropdown__selected" id="clientuseYn" >
-                                                                <option value="Y">Y</option>
-                                                                <option value="N">N</option>
-                                                            </select>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                            <tr>
+                                                <th>아이디</th>
+                                                <td colspan="2">
+                                                    <span id="clientuserId"></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>사용자명</th>
+                                                <td colspan="2">
+                                                    <input type="text" id="clientuserName" class="input--s input01 input--full" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>회사명</th>
+                                                <td colspan="2">
+                                                    <div class="dropdown dropdown--s wd160" aria-expanded="false" tabindex="0">
+                                                        <select class="dropdown__selected" id="clientcompanyNm" name="clientcompanyNm"
+                                                                th:value="${clientcompanyName}">
+                                                            <option value="">==고객사==</option>
+                                                            <option th:each="op : ${companyOptions}"
+                                                                    th:value="${op.companyId}"
+                                                                    th:text="${op.companyName}"></option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>사용자 권한</th>
+                                                <td colspan="2">
+                                                    <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
+                                                        <select class="dropdown__selected" id="clientuserClass" >
+                                                            <option value="USER">일반사용자</option>
+                                                            <option value="ADMIN">관리자</option>
+                                                            <option value="SYSADMIN">최고관리자</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>이메일</th>
+                                                <td colspan="2">
+                                                    <input type="text" id="clientemail" class="input--s input01 input--full" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>전화번호</th>
+                                                <td colspan="2">
+                                                    <input type="text" id="clientphone" class="input--s input01 input--full" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>사용여부</th>
+                                                <td colspan="2">
+                                                    <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
+                                                        <select class="dropdown__selected" id="clientuseYn" >
+                                                            <option value="Y">Y</option>
+                                                            <option value="N">N</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                         <button type="button" id="resetPasswordBtn" class="btn btn--s primary-btn" onclick="resetPasswordBtn()">비밀번호 초기화</button>
@@ -341,34 +341,34 @@
                         <col style="width: 18%;">
                     </colgroup>
                     <tbody>
-                        <tr>
-                            <th>회사명</th>
-                            <td colspan="2"><input type="text" id="companyName" class="input--s input01 input--full" name="companyName" placeholder="회사명을 입력하세요" /></td>
-                        </tr>
-                        <tr>
-                            <th>담당자(PM) 아이디</th>
-                            <td colspan="2"><input type="text" id="managerId" class="input--s input01 input--full" name="managerId" placeholder="담당자 아이디를 입력하세요" /></td>
-                        </tr>
-                        <tr>
-                            <th>그룹 권한</th>
-                            <td colspan="2">
-                                <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
-                                    <select class="dropdown__selected" id="groupCode"
-                                            th:value="${detailgroupCode}">
-                                        <option value="">==그룹==</option>
-                                        <option th:each="op : ${groupOptions}"
-                                                th:value="${op['groupCode']}"
-                                                th:text="${op['groupName']}"
-                                                th:selected="${op['groupCode'] == detailgroupCode}">
-                                        </option>
-                                    </select>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>비고</th>
-                            <td colspan="2"><input type="text" id="notes" class="input--s input01 input--full" name="notes" placeholder="비고" /></td>
-                        </tr>
+                    <tr>
+                        <th>회사명</th>
+                        <td colspan="2"><input type="text" id="companyName" class="input--s input01 input--full" name="companyName" placeholder="회사명을 입력하세요" /></td>
+                    </tr>
+                    <tr>
+                        <th>담당자(PM) 아이디</th>
+                        <td colspan="2"><input type="text" id="managerId" class="input--s input01 input--full" name="managerId" placeholder="담당자 아이디를 입력하세요" /></td>
+                    </tr>
+                    <tr>
+                        <th>그룹 권한</th>
+                        <td colspan="2">
+                            <div class="dropdown dropdown--s wd120" aria-expanded="false" tabindex="0">
+                                <select class="dropdown__selected" id="groupCode"
+                                        th:value="${detailgroupCode}">
+                                    <option value="">==그룹==</option>
+                                    <option th:each="op : ${groupOptions}"
+                                            th:value="${op['groupCode']}"
+                                            th:text="${op['groupName']}"
+                                            th:selected="${op['groupCode'] == detailgroupCode}">
+                                    </option>
+                                </select>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>비고</th>
+                        <td colspan="2"><input type="text" id="notes" class="input--s input01 input--full" name="notes" placeholder="비고" /></td>
+                    </tr>
                     </tbody>
                 </table>
             </form>

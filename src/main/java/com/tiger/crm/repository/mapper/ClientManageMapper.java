@@ -58,10 +58,15 @@ public interface ClientManageMapper {
     //권한 관리자 리스트
     List<ClientManageDto> getGroupAuthList(ClientManageDto clientManageDto);
 
-    // 신규 권한 그룹 등록
+    // 그룹 권한 등록
     void createGroup(ClientManageDto clientManageDto);
-    // 고객사 수정
+    // 고객사 권한 수정
     void updateGroup(ClientManageDto clientManageDto);
+
+    // 사용자 권한 등록
+    void createAuth(ClientManageDto clientManageDto);
+    // 사용자 권한 수정
+    void updateAuth(ClientManageDto clientManageDto);
 
 
 }

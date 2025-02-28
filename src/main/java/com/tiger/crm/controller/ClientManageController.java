@@ -280,6 +280,7 @@ public class ClientManageController {
         }
         return response;
     }
+
     /*
      * 신규 고객 등록
      */
@@ -297,6 +298,9 @@ public class ClientManageController {
             clientManageDto.setUserPw(passwordEncoder.encode(tempPassword));
             // 2. 신규 고객 등록
             clientManageService.createClient(clientManageDto);
+            // 3. 사용자 권한 등록
+           // clientManageService.createAuth(clientManageDto);
+
             Map<String, Object> model = new HashMap<>();
             model.put("userName", clientManageDto.getUserName());
             model.put("userId", clientManageDto.getUserId());
@@ -306,12 +310,11 @@ public class ClientManageController {
             response.put("status", "success");
         }catch (Exception e) {
             response.put("status", "error");
-            LOGGER.error("신규 고객사 등록 중 오류가 발생했습니다.", e);
-          //  throw new CustomException("신규 고객사 등록 중 오류가 발생했습니다.", e);
-
+            LOGGER.error("신규 사용자 등록 중 오류가 발생했습니다.", e);
         }
         return response;
     }
+
     @PostMapping("/updateClient")
     @ResponseBody
     public Map<String, Object> updateClient(@RequestBody ClientManageDto clientManageDto, HttpServletRequest request) {
@@ -333,16 +336,18 @@ public class ClientManageController {
 
             // 3. 고객사 수정
             clientManageService.updateClient(clientManageDto);
+            // 4. 사용자 권한 등록
+          //  clientManageService.updateAuth(clientManageDto);
             response.put("status", "success");
         } catch (Exception e) {
             response.put("status", "error");
-            LOGGER.error("신규 고객사 등록 중 오류가 발생했습니다.", e);
+            LOGGER.error("사용자 수정 중 오류가 발생했습니다.", e);
         }
         return response;
     }
 
     /*
-     * 신규 권한 그룹 추가
+     * 신규 그룹 권한 추가
      */
     @PostMapping("/createGroup")
     @ResponseBody
@@ -356,7 +361,7 @@ public class ClientManageController {
             response.put("status", "success");
         }catch (Exception e) {
             response.put("status", "error");
-            LOGGER.error("고객사 등록 중 오류가 발생했습니다.", e);
+            LOGGER.error("그룹 권한 등록 중 오류가 발생했습니다.", e);
         }
         return response;
     }
@@ -373,7 +378,7 @@ public class ClientManageController {
             response.put("status", "success");
         }catch (Exception e) {
             response.put("status", "error");
-            LOGGER.error("고객사 수정 중 오류가 발생했습니다.", e);
+            LOGGER.error("그룹 권한 수정 중 오류가 발생했습니다.", e);
         }
         return response;
     }

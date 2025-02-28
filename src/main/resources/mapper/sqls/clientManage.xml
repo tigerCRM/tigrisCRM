@@ -242,7 +242,7 @@
         WHERE USER_ID = #{userId}
     </update>
 
-    <!-- 권한 그룹 등록 -->
+    <!-- 그룹 권한 등록 -->
     <insert id="createGroup">
         INSERT INTO T_GROUP_CODE(
             GROUP_CODE,
@@ -263,26 +263,24 @@
         WHERE GROUP_CODE = #{groupCode}
     </update>
 
-    <!-- 권한 그룹 등록 -->
+    <!-- 사용자 권한 등록 -->
     <insert id="createAuth">
-        INSERT INTO T_GROUP_CODE(
+        INSERT INTO T_GROUP_AUTH(
         GROUP_CODE,
         USER_ID,
-        USER_NAME,
-        USE_YN
+        USER_NAME
         )VALUES (
         #{groupCode},
         #{userId},
-        #{userName},
-        'Y'
+        #{userName}
         )
     </insert>
 
     <update id="updateAuth" >
         UPDATE T_GROUP_AUTH
-        SET GROUP_CODE = #{companyName},
-        USER_ID = #{managerId},
-        USER_NAME = #{notes}
-        WHERE COMPANY_ID = #{companyId}
+        SET GROUP_CODE = #{groupCode},
+        USER_ID = #{userId},
+        USER_NAME = #{userName}
+        WHERE GROUP_ID = #{groupId}
     </update>
 </mapper>

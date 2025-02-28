@@ -6,6 +6,7 @@ import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
 import com.tiger.crm.repository.mapper.MailMapper;
 import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +47,9 @@ public class MailService {
             if (!isValidEmail(to)) {
                 throw new IllegalArgumentException("잘못된 이메일 형식: " + to);
             }
-            helper.setFrom("tiger-care@tigrison.com");       // 발송인(crm 관리자 계정으로 보낼거니까 고정)
+          //  helper.setFrom("tiger-care@tigrison.com");       // 발송인(crm 관리자 계정으로 보낼거니까 고정)
+            helper.setFrom(new InternetAddress("tiger-care@tigrison.com", "타이거컴퍼니 고객센터"));
+
             helper.setTo(to);                             // 수령인
             helper.setSubject("[타이거컴퍼니]" + subject);  // 제목
             helper.setText(htmlContent, true);       // html양식
@@ -54,6 +58,8 @@ public class MailService {
 
         } catch (MessagingException e) {
             throw new CustomException("이메일 발송 중 오류가 발생했습니다.", e);
+        } catch (UnsupportedEncodingException e) {
+//            throw new RuntimeException(e);
         }
 
         // 3. 메일 발송 이력 저장
