@@ -35,8 +35,13 @@ spring:
       max-file-size: 30MB #파일 하나의 최대 크기
       max-request-size: 30MB #한번에 최대 업로드 가능용량
     session:
-      timeout: 1800
-      tracking-modes: cookie
+      tracking-modes: cookie  # 쿠키 방식으로 세션을 추적
+      cookie:
+        name: JSESSIONID  # 세션 쿠키 이름
+        http-only: true  # HttpOnly 속성 설정
+        secure: false  # HTTPS에서만 쿠키를 전송하려면 true로 설정
+        same-site: Lax  # SameSite 속성 설정
+        max-age: 1800  # 쿠키 만료 시간 (초 단위)
 
   mail:
     host: smtp.sirteam.net  # SMTP 서버
@@ -76,7 +81,3 @@ file:
   #logindir: D:\tigrisCRM\src\main\resources\static\assets\images\common
   #dir: C:\Temp\fileUpload
 
-# Cookie
-cookie:
-  domain: localhost
-  name: _crmSystem
