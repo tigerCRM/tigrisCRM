@@ -78,7 +78,7 @@
 
             <!-- 시작일 필터링 -->
             <if test="startDt != '' and startDt != null and endDt != '' and endDt != null ">
-                AND T.CREATE_DT BETWEEN #{startDt} AND #{endDt}
+                AND DATE(T.CREATE_DT) BETWEEN #{startDt} AND #{endDt}
             </if>
             <!-- 본인 작성 건 검색 추가  -->
             <if test="createId != ''">
@@ -151,7 +151,7 @@
             </if>
             <!-- 시작일 필터링 -->
             <if test="startDt != '' and startDt != null and endDt != '' and endDt != null ">
-                AND T.CREATE_DT BETWEEN #{startDt} AND #{endDt}
+                AND DATE(T.CREATE_DT) BETWEEN #{startDt} AND #{endDt}
             </if>
             <!-- 본인 작성 건 검색 추가  -->
             <if test="createId != ''">

@@ -290,7 +290,12 @@
     overflow: hidden;
     height: 100%;
 }
-
+/* 헤더 */
+.main-area-pop{
+    flex: 1;
+    overflow: auto;
+    height: 100%;
+}
 .header {
     height: 7.2rem;
     border-bottom: 1px solid var(--gray-400);
