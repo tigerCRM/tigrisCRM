@@ -238,7 +238,7 @@
 
     <update id="changePassword" >
         UPDATE T_USER_INFO
-        SET  USER_PW = #{userPw}
+        SET  USER_PW = #{userPw}, PW_CH ='N'
         WHERE USER_ID = #{userId}
     </update>
 
@@ -283,4 +283,14 @@
         USER_NAME = #{userName}
         WHERE GROUP_ID = #{groupId}
     </update>
+
+    <select id="getClientListAll" resultType="com.tiger.crm.repository.dto.client.ClientManageDto">
+        SELECT TUI.USER_NAME,
+        TUI.USER_ID,
+        TUI.EMAIL,
+        TUI.PHONE
+        FROM T_USER_INFO TUI
+        where USE_YN = 'Y' AND USER_CLASS = 'USER' and USER_ID ='user1@test.com' OR USER_ID ='user2@test.com'
+    </select>
+
 </mapper>

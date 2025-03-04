@@ -21,9 +21,9 @@
             AND TTI.COMPANY_ID = #{companyId}
           </if>
           /* 관리자(ADMIN)일 경우, 할당된 요청만 */
-          <if test="userClass == 'ADMIN'">
+          <!--<if test="userClass == 'ADMIN'">
             AND TTI.MANAGER_ID = #{userId}
-          </if>
+          </if>-->
             <!-- userClass가 ADMIN인 경우 그룹 권한 필터 추가 -->
             <if test="userClass == 'ADMIN'">
                 AND EXISTS (
@@ -52,9 +52,9 @@
             AND TTI.COMPANY_ID = #{companyId}
         </if>
         /* 관리자(ADMIN)일 경우, 할당된 요청만 */
-        <if test="userClass == 'ADMIN'">
+        <!--<if test="userClass == 'ADMIN'">
             AND TTI.MANAGER_ID = #{userId}
-        </if>
+        </if>-->
         <!-- userClass가 ADMIN인 경우 그룹 권한 필터 추가 -->
         <if test="userClass == 'ADMIN'">
             AND EXISTS (

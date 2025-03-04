@@ -7,8 +7,10 @@ import com.tiger.crm.repository.dto.client.ClientManageDto;
 import com.tiger.crm.repository.dto.company.CompanyOptionDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
 import com.tiger.crm.repository.dto.page.PagingResponse;
+import com.tiger.crm.repository.dto.ticket.CommentDto;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 import com.tiger.crm.repository.mail.MailService;
+import com.tiger.crm.repository.mapper.LoginMapper;
 import com.tiger.crm.service.client.ClientManageService;
 import com.tiger.crm.service.common.CommonService;
 import com.tiger.crm.service.login.LoginService;
@@ -43,6 +45,8 @@ public class ClientManageController {
     private MailService mailService;
     @Autowired
     private LoginServiceImpl LoginServiceImpl;
+    @Autowired
+    private LoginMapper loginMapper;
     @Autowired
     PasswordEncoder passwordEncoder;
     @Value("${app.base-url}")
@@ -227,7 +231,10 @@ public class ClientManageController {
                 response.put("userId", detail.getUserId());
                 response.put("userClass", detail.getUserClass());
                 response.put("email", detail.getEmail());
-                String decodedString = AESUtils.decrypt(detail.getPhone(), AESUtils.decodeKey(configProperties.getAesSecretKey()));
+                String decodedString = "";
+                if (detail.getPhone()!=null){
+                    decodedString = AESUtils.decrypt(detail.getPhone(), AESUtils.decodeKey(configProperties.getAesSecretKey()));
+                }
                 response.put("phone", decodedString);
                 response.put("useyn", detail.getUseruseYn());
                 response.put("clientcompanyId", detail.getCompanyId());
@@ -379,6 +386,41 @@ public class ClientManageController {
         }catch (Exception e) {
             response.put("status", "error");
             LOGGER.error("그룹 권한 수정 중 오류가 발생했습니다.", e);
+        }
+        return response;
+    }
+
+    /*
+     * 가입 메일 일괄 발송
+     */
+    @GetMapping ("/clientInfoMailAll")
+    @ResponseBody
+    public  Map<String, Object> clientInfoMailAll(ClientManageDto clientManageDto) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            //등록된 고객 호출
+            List<ClientManageDto> clientList = clientManageService.getClientListAll();
+            for (ClientManageDto client : clientList) {
+                //임시 비밀번호 생성 비밀번호 업데이트
+                String tempPassword = LoginServiceImpl.generateTempPassword();
+                // User 객체 생성
+                UserLoginDto user = new UserLoginDto();
+                user.setUserId(client.getUserId());
+                user.setUserPw(passwordEncoder.encode(tempPassword)); // 암호화 후 저장
+                loginMapper.resetPassword(user);
+                //가입 메일 일괄 발송
+                Map<String, Object> model = new HashMap<>();
+                model.put("userName", client.getUserName());
+                model.put("userId", client.getUserId());
+                model.put("password", tempPassword);
+                model.put("loginUrl", baseUrl);
+                mailService.sendEmail(client.getEmail(),"가입안내", "info-email", model);
+            }
+
+            response.put("status", "success");
+        }catch (Exception e) {
+            response.put("status", "error");
+            LOGGER.error("가입 메일 일괄 발송 중 오류가 발생했습니다.", e);
         }
         return response;
     }

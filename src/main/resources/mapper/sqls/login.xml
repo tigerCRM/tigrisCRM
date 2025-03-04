@@ -10,7 +10,8 @@
             U.USER_NAME as USER_NAME,
             U.COMPANY_ID as COMPANY_ID,
             C.COMPANY_NAME as COMPANY_NAME,
-            U.USER_CLASS as USER_CLASS
+            U.USER_CLASS as USER_CLASS,
+            U.PW_CH as PW_CH
             FROM T_USER_INFO as U
             LEFT JOIN T_COMPANY_INFO as C
         on U.COMPANY_ID = C.COMPANY_ID

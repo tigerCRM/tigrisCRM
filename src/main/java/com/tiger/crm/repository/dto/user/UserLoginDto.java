@@ -21,5 +21,6 @@ public class UserLoginDto {
     private String userClass;
     //전화번호
     private String phone;
-    //todo : (예솔) 일단은 임시로 만들어 놨는데 제대로 쓸거면 객체 더 추가 해야 함
+    //비밀번호 필수변경
+    private String pwCh;
 }

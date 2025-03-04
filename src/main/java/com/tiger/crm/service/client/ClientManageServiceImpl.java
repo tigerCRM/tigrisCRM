@@ -157,4 +157,9 @@ public class ClientManageServiceImpl implements ClientManageService {
         clientManageMapper.updateAuth(clientManageDto);
     }
 
+    //고객 사용자 리스트 호출
+    @Override
+    public List<ClientManageDto> getClientListAll() {
+        return clientManageMapper.getClientListAll();
+    }
 }

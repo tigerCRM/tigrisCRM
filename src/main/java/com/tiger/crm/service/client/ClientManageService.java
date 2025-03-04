@@ -60,4 +60,7 @@ public interface ClientManageService {
     // 그룹 권한 수정
     void updateAuth(ClientManageDto clientManageDto);
 
+    //고객 사용자 리스트 호출
+    List<ClientManageDto> getClientListAll();
+
 }
