@@ -85,7 +85,7 @@
                 AND T.CREATE_ID = #{createId}
             </if>
         </where>
-        order by TICKET_ID desc
+        order by T.CREATE_DT desc
         <!-- 페이지 처리 (페이징 처리) -->
         <if test="page != null">
             LIMIT #{offset}, #{size} <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
@@ -219,7 +219,7 @@
                 </if>
             </if>
         </where>
-        ORDER BY TICKET_ID DESC
+        ORDER BY T.CREATE_DT DESC
     </select>
 
     <insert id="insertTicketInfo" parameterType="com.tiger.crm.repository.dto.ticket.TicketDto"  useGeneratedKeys="true" keyProperty="ticketId">

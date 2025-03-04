@@ -331,7 +331,7 @@ var common = {
     작성자 : 제예솔
     */
     openPopup : function(data){
-        const popup = window.open('/html/popup.html', '_blank', 'width=568,height=750');
+        const popup = window.open('/html/popup.html', '_blank', 'width=800,height=750');
         if (!popup || popup.closed || typeof popup.closed === "undefined") {
             // 팝업 차단
             showMessage('info', '팝업차단', "팝업 차단이 활성화되어 있습니다. 팝업 차단을 해제해주세요.");
