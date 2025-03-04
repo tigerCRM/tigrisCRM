@@ -103,7 +103,7 @@ public class LoginController
 			//	bindingResult.reject("error.notExistMember");
 			LOGGER.info("로그인 실패={}", bindingResult);
 			model.addAttribute("showPasswordChangeModal", true);
-			return "Login";
+			return "login";
 		}
 		// 리다이렉트 URL이 없다면 기본 메인 페이지로 이동
 		return "redirect:/main";
