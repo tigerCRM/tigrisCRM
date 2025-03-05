@@ -37,7 +37,7 @@ public interface TicketMapper {
     TicketDto selectTicketDetails(int ticketId);
 
     //요청 상태 업데이트
-    int updateTicketStatus(int ticketId, String newStatus, String updateId);
+    int updateTicketStatus(int ticketId, String newStatus, String updateId,String md);
 
     //요청 상태 업데이트
     int chSatisfaction(int ticketId, String newStatus,String result, String feedback, String updateId);

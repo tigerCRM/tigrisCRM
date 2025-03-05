@@ -22,7 +22,7 @@ public interface TicketService {
 
     TicketDto getTicketDetails(int ticketId);
 
-    void changeStatus(int ticketId, String newStatus, String updateId) throws MessagingException;
+    void changeStatus(int ticketId, String newStatus, String updateId, String md) throws MessagingException;
 
     void chSatisfaction(int ticketId, String newStatus, String result, String feedback, String updateId) throws MessagingException;
 

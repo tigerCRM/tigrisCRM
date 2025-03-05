@@ -495,8 +495,9 @@ public class TicketController {
             if ("USER".equals(user.getUserClass())){
                 manageId = "";  //사용자가 진행상태 변경한 경우 담당자는 변경되지않음
             }
+            String md = RequestBody.get("md");
             //진행상태변경
-            ticketService.changeStatus(id, newStatus, manageId);
+            ticketService.changeStatus(id, newStatus, manageId,md);
             //OPEN:등록,RECEIPT:접수,PROGRESS:진행,REVIEW:검토,CLOSED:완료
             String comment = "";
             switch (newStatus) {

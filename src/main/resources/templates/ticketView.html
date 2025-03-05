@@ -27,7 +27,7 @@
                         <!-- //헤더 영역 -->
                         <!-- form 영역 -->
                         <form action="/ticketModify" method="post" enctype="multipart/form-data"
-                              th:object="${ticketinfo}">
+                              th:object="${ticketinfo}" onsubmit="return preventEnterSubmit(event)">
                             <div>
                                 <!--사용자 입력 영역-->
                                 <table class="table table03 table--h table--xs">
@@ -175,7 +175,11 @@
                                         </td>
                                         <th>처리일수</th>
                                         <td>
-                                            <span id="md" th:text="*{md}"></span>
+                                            <input type="text" class="input--s input01" id="md"
+                                                   th:field="*{md}"
+                                                   onchange="validatemd()"
+                                                   onkeypress="return event.keyCode !== 13;"
+                                                   th:attr="disabled=${user.userClass == 'USER' ? 'disabled' : null}" />
                                         </td>
                                     </tr>
                                     <tr>
@@ -332,12 +336,36 @@
         });
         fileInput.value = ''; // 파일 선택창 초기화
     });
+
+    function preventEnterSubmit(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            return false;
+        }
+    }
+
+    function validatemd(){
+        const md = document.getElementById("md");
+        const isNumberOrDecimal = /^\d+(\.\d+)?$/;
+        if (md!=null){
+            // 숫자만 입력 제한
+            if (md.value != '' & !isNumberOrDecimal.test(md.value) ) {
+                md.classList.add("input--error");
+                md.focus();
+                showMessage('info', '필수값', '숫자와 소수점만 입력할 수 있습니다.');
+                return false;
+            }
+            md.classList.remove("input--error");
+        }
+    }
     //상태변경
     function changeStatus(status) {
         const url = `/changeStatus`;
         var id = $("#ticketId").val();
         var newStatus = $("#statusCd").val();
-        var requestData = {status: newStatus, id: id, result: '0'};
+        validatemd();
+        var md = $("#md").val();
+        var requestData = {status: newStatus, id: id, md:md, result: '0'};
         if (status=="CLOSED"){
             newStatus = "CLOSED"
         }

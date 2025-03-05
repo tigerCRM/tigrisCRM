@@ -121,8 +121,8 @@ public class TicketServiceImpl implements TicketService {
     }
 
     //진행상태 변경
-    public void changeStatus(int ticketId, String newStatus, String updateId) throws MessagingException {
-        int resultCount = ticketMapper.updateTicketStatus(ticketId,newStatus,updateId);
+    public void changeStatus(int ticketId, String newStatus, String updateId, String md) throws MessagingException {
+        int resultCount = ticketMapper.updateTicketStatus(ticketId,newStatus,updateId,md);
 
         // [알림, 메일] 발송 파트
         if(resultCount > 0){

@@ -285,7 +285,7 @@
 
     <update id="updateTicketStatus" parameterType="map">
         UPDATE T_TICKET_INFO
-        SET STATUS_CD = #{newStatus},
+        SET STATUS_CD = #{newStatus}, MD=#{md},
         <!-- userClass가 고객아닐경우 -->
         <if test="updateId != '' and newStatus != 'CLOSED'">
             MANAGER_ID = #{updateId},
