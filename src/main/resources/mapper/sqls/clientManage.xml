@@ -290,7 +290,7 @@
         TUI.EMAIL,
         TUI.PHONE
         FROM T_USER_INFO TUI
-        where USE_YN = 'Y' AND (USER_ID ='ygnam@tigrison.com' OR USER_ID ='whopper@tigrison.com' OR USER_ID ='user1@test.com'OR USER_ID ='user2@test.com')
+        where USE_YN = 'Y' AND (USER_ID ='kslim@tigrison.com')
         <!--USER_CLASS != 'USER'-->
     </select>
 

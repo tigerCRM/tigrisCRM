@@ -31,7 +31,7 @@ public class WebConfig implements WebMvcConfigurer {
 						"/favicon.ico",      // 파비콘
 						"/main**",  		 // /main과 /main;jsessionid= 모두 예외 처리
 						"/loadPopup",		 // 팝업공지사항
-						"/files/login/**",
+						"/files/Login/**",
 						"/changePasswordLogin" //
 				);
 	}
