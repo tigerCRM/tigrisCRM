@@ -1,6 +1,6 @@
 # prod server
 server:
-  port: 8081
+  port: 443
   ssl:
     key-store: classpath:certificate.p12
     key-store-type: PKCS12
@@ -18,9 +18,6 @@ spring:
     activate:
       on-profile: prod
 
-  resources:
-    static-locations: file:/home/crmadmin/files/
-
   messages:
     basename:messages
     encoding:UTF-8
@@ -31,24 +28,18 @@ spring:
     cache: false
 
   datasource:
-    # url: jdbc:mariadb://localhost:3306/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
-    # driver-class-name: org.mariadb.jdbc.Driver
-    # username: root
-    # password: Xkdlrj@2024!
-    # 사무실
-    # url: jdbc:mariadb://192.168.0.240:3306/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
-    # driver-class-name: org.mariadb.jdbc.Driver
+    #운영
+    # url: jdbc:mariadb://211.47.7.56:30190/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
+    # url: jdbc:mariadb://192.168.0.19:3306/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
     # username: crmservice
-    # password: mp$0wnEgq*d(0CzH
-
-  # url: jdbc:mariadb://211.47.7.56:30190/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
-   # url: jdbc:mariadb://192.168.0.19:3306/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
-    url: jdbc:mariadb://192.168.0.240:3306/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
+    # password: v5*SA@sa)MeV_6vA
+    #개발
+    url: jdbc:mariadb://61.74.221.49:30250/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
     driver-class-name: org.mariadb.jdbc.Driver
    # username: crmservice
-   # password: v5*SA@sa)MeV_6vA
+    #password: v5*SA@sa)MeV_6vA
     username: crmadmin
-    password: Xkdlrj@2024!
+    password: xkDlrj@2025!CRM
     hikari:
       maximum-pool-size: 5
 
@@ -78,10 +69,8 @@ spring:
       mail.smtp.ssl.enable: true # SSL활성화
 # 메일 용 url
 app:
-  # 개발
-  base-url: https://192.168.0.19:8081
-  # 로컬
-  # base-url: https://localhost:8081
+  # 운영
+  base-url: https://service.tigrison.com/
 
 # mybatis path setting
 mybatis:
@@ -106,5 +95,5 @@ file:
 
 # Cookie
 cookie:
-  domain: localhost
+  domain: tigrison
   name: _crmSystem

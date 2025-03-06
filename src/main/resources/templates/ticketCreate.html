@@ -162,7 +162,7 @@
                                         </td>
                                         <th>처리일수</th>
                                         <td>
-                                            <input type="text"  class="input--s input01 input--full" id="md" th:name="${md}" th:field="*{md}">
+                                            <input type="text"  class="input--s input01 input--full" id="md" th:name="${md}" th:field="*{md}" th:disabled="${userClass == 'USER'}">
                                         </td>
                                     </tr>
                                     <tr>

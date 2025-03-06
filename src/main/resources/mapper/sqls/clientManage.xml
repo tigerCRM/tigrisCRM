@@ -163,14 +163,16 @@
             UPDATE_ID,
             NOTES,
             GROUP_CODE,
-            USE_YN
+            USE_YN,
+            PW_CH
         )VALUES (
             #{companyName},
-            #{managerId},
+        TRIM(#{managerId}),
             NOW(),
             #{userId},
             #{notes},
             #{groupCode},
+            'Y',
             'Y'
         )
     </insert>
@@ -178,7 +180,7 @@
     <update id="updateCompany" >
         UPDATE T_COMPANY_INFO
         SET COMPANY_NAME = #{companyName},
-        MANAGER_ID = #{managerId},
+        MANAGER_ID = TRIM(#{managerId}),
         NOTES = #{notes},
         GROUP_CODE = #{groupCode},
         UPDATE_DT = NOW(),
@@ -227,13 +229,15 @@
         WHERE USER_ID = #{userId}
     </update>
 
+    <!--비상 연락망-->
     <select id="getContacts" resultType="com.tiger.crm.repository.dto.client.ClientManageDto">
         SELECT TUI.USER_NAME,
             TUI.USER_ID,
             TUI.EMAIL,
             TUI.PHONE
         FROM T_USER_INFO TUI
-        where USE_YN = 'Y' AND USER_CLASS !='USER'
+        where USE_YN = 'Y' AND USER_CLASS !='USER'  AND TUI.USER_NAME != '인포필'  AND TUI.USER_NAME != '인포필드' AND TUI.USER_NAME != '이성기'
+        order by TUI.USER_NAME
     </select>
 
     <update id="changePassword" >
@@ -290,7 +294,7 @@
         TUI.EMAIL,
         TUI.PHONE
         FROM T_USER_INFO TUI
-        where USE_YN = 'Y' AND (USER_ID ='kslim@tigrison.com')
+        where USE_YN = 'Y' AND (USER_ID ='user2@test.com')
         <!--USER_CLASS != 'USER'-->
     </select>
 

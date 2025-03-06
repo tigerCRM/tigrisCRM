@@ -43,7 +43,7 @@ public interface ClientManageMapper {
     // 비밀번호 수정
     void changePassword(ClientManageDto clientManageDto);
 
-    //연락망
+    // 비상 연락망
     List<ClientManageDto> getContacts();
 
     // 그룹 조회

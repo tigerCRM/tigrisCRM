@@ -413,7 +413,7 @@ public class ClientManageController {
                 model.put("userName", client.getUserName());
                 model.put("userId", client.getUserId());
                 model.put("password", tempPassword);
-                model.put("loginUrl", baseUrl);
+                model.put("loginUrl", baseUrl+ "/login");
                 mailService.sendEmail(client.getEmail(),"가입안내", "info-email", model);
             }
 
