@@ -100,7 +100,7 @@ aes256:
 # File
 file:
   dir: /home/crmadmin/files
-  logindir: /home/crmadmin/files/login
+  logindir: /home/crmadmin/files/Login
   #logindir: D:\tigrisCRM\src\main\resources\static\assets\images\common
   #dir: C:\Temp\fileUpload
 
