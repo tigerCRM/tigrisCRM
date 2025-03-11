@@ -26,10 +26,11 @@
     <select id="getCompanyListCount" resultType="java.lang.Integer">
         SELECT COUNT(*)
         FROM T_COMPANY_INFO
-        WHERE USE_YN = 'Y'
-        <if test="searchCompany != null and searchCompany != ''">
-            AND COMPANY_NAME LIKE CONCAT('%', #{searchCompany}, '%')
-        </if>
+        <where>
+            <if test="searchCompany != null and searchCompany != ''">
+                COMPANY_NAME LIKE CONCAT('%', #{searchCompany}, '%')
+            </if>
+        </where>
     </select>
 
     <!-- 고객사 상세 조회 -->
@@ -236,7 +237,7 @@
             TUI.EMAIL,
             TUI.PHONE
         FROM T_USER_INFO TUI
-        where USE_YN = 'Y' AND USER_CLASS !='USER'  AND TUI.USER_NAME != '인포필'  AND TUI.USER_NAME != '인포필드' AND TUI.USER_NAME != '이성기'
+        where USE_YN = 'Y' AND USER_CLASS !='USER'  AND TUI.USER_NAME != '인포필'  AND TUI.USER_NAME != '인포필드' AND TUI.USER_NAME != '이성기' AND TUI.USER_NAME != '곽병도'
         order by TUI.USER_NAME
     </select>
 

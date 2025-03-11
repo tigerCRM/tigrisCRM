@@ -1,14 +1,16 @@
 # prod server
 server:
+  host: service.tigrison.com
   port: 443
   ssl:
-    key-store: classpath:certificate.p12
-    key-store-type: PKCS12
-    key-store-password: 1111
+    key-store: classpath:tigris.jks
+    key-store-type: JKS
+    key-store-password: k9qr51e4
   # HTTP 리다이렉트 설정
   http:
     enabled: false  # HTTP 포트를 사용하지 않도록 설정
     redirect-to-https: true # http로 접근시 https로 redirect
+  allowed-hosts: service.tigrison.com
 
 spring:
   application:
@@ -95,5 +97,5 @@ file:
 
 # Cookie
 cookie:
-  domain: tigrison
+  domain: tigrison.com
   name: _crmSystem

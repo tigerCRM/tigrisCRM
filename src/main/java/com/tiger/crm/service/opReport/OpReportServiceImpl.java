@@ -52,21 +52,23 @@ public class OpReportServiceImpl implements OpReportService {
             // 원하는 포맷으로 변환
             String formattedDate = outputFormat.format(date);
             resultDto.setSupportPeriod(formattedDate);      //지원기간
-            double totalMD = details.stream()
-                    .mapToDouble(detail -> {
-                        Object mdValue = detail.get("MD");
-                        if (mdValue instanceof Number) {
-                            return ((Number) mdValue).doubleValue();
-                        } else if (mdValue instanceof String) {
-                            try {
-                                return Double.parseDouble((String) mdValue);
-                            } catch (NumberFormatException e) {
-                                System.out.println("MD 값을 숫자로 변환할 수 없습니다: " + mdValue);
-                            }
-                        }
-                        return 0.0;
-                    })
-                    .sum();
+            double totalMD = 0.0;
+
+            for (Map<String, Object> detail : details) {
+                if (detail.containsKey("MD")) { // "MD" 키가 존재하는지 확인
+                    Object value = detail.get("MD");
+
+                    try {
+                        double mdValue = Double.parseDouble(value.toString()); // 문자열 등 타입 변환
+                        totalMD += mdValue; // 합산
+                    } catch (NumberFormatException e) {
+                        System.err.println("MD 값 변환 실패: " + value);
+                    }
+                }
+            }
+            // 소수점 1자리까지 반올림
+            totalMD = Math.round(totalMD * 10) / 10.0;
+
             resultDto.setTotalMd(totalMD); //MD
             resultDto.setDetails(details); // 상세 내역 설정
         }catch (CustomException e) {
