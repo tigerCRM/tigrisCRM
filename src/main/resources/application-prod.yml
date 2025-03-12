@@ -3,9 +3,11 @@ server:
   host: service.tigrison.com
   port: 443
   ssl:
+    enabled: true
     key-store: classpath:tigris.jks
     key-store-type: JKS
     key-store-password: k9qr51e4
+  http-port: 8080
   # HTTP 리다이렉트 설정
   http:
     enabled: false  # HTTP 포트를 사용하지 않도록 설정
@@ -36,12 +38,12 @@ spring:
     # username: crmservice
     # password: v5*SA@sa)MeV_6vA
     #개발
-    url: jdbc:mariadb://61.74.221.49:30250/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
+    url: jdbc:mariadb://localhost:7298/TigerCRM?characterEncoding=UTF-8&serverTimezone=UTC&autoReconnect=true&useSSL=false
     driver-class-name: org.mariadb.jdbc.Driver
    # username: crmservice
     #password: v5*SA@sa)MeV_6vA
-    username: crmadmin
-    password: xkDlrj@2025!CRM
+    username: crmservice
+    password: v5*SA@sa)MeV_6vA
     hikari:
       maximum-pool-size: 5
 
@@ -72,7 +74,7 @@ spring:
 # 메일 용 url
 app:
   # 운영
-  base-url: https://service.tigrison.com/
+  base-url: https://service.tigrison.com
 
 # mybatis path setting
 mybatis:
@@ -90,8 +92,8 @@ aes256:
 
 # File
 file:
-  dir: /home/crmadmin/files
-  logindir: /home/crmadmin/files/Login
+  dir: /home/crmservice/files
+  logindir: /home/crmservice/files/Login
   #logindir: D:\tigrisCRM\src\main\resources\static\assets\images\common
   #dir: C:\Temp\fileUpload
 

@@ -63,7 +63,7 @@ public class LoginServiceImpl implements LoginService{
             Map<String, Object> model = new HashMap<>();
             model.put("userName", loginMapper.getUserName(user.getUserId()));
             model.put("password", tempPassword);
-            model.put("loginUrl", baseUrl);
+            model.put("loginUrl", baseUrl+ "/login");
             mailService.sendEmail(user.getUserId(), "비밀번호 초기화", "password-reset-email", model);
 
         } catch (Exception e) {

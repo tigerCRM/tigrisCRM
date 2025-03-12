@@ -17,7 +17,7 @@
     gap: var(--grid-gutter);
     max-width: 160.8rem;
     margin: 0 auto;
-    padding: 4rem 0;
+    padding: 2rem 0;
 }
 /* 배너 영역 */
 .banner-wrap {

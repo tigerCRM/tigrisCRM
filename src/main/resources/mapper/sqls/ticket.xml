@@ -43,7 +43,14 @@
             </if>
             <!-- 상태 검색 조건 (상태가 존재하는 경우) -->
             <if test="searchStatus != null and searchStatus != ''">
-                AND STATUS_CD = #{searchStatus}
+                <choose>
+                    <when test="searchStatus == 'PROGRESS'">
+                        AND STATUS_CD in ('OPEN','RECEIPT','PROGRESS')
+                    </when>
+                    <otherwise>
+                        AND STATUS_CD = #{searchStatus}
+                    </otherwise>
+                </choose>
             </if>
             <!-- 고객사명 검색  -->
             <if test="searchCompany != null and searchCompany != ''">

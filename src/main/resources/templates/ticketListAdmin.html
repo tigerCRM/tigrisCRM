@@ -31,9 +31,12 @@
                                             <select class="dropdown__selected" id="searchStatus" name="searchStatus"
                                                     th:value="${searchStatus}" onchange="searchTickets(this);">
                                                 <option value="">==상태==</option>
-                                                <option th:each="op : ${statusOptions}"
+                                                <option value="PROGRESS">미완료</option>
+                                                <option value="REVIEW">검토</option>
+                                                <option value="CLOSED">완료</option>
+                                                <!--<option th:each="op : ${statusOptions}"
                                                         th:value="${op.key}"
-                                                        th:text="${op.value}"></option>
+                                                        th:text="${op.value}"></option>-->
                                             </select>
                                         </div>
                                     </div>
@@ -139,8 +142,7 @@
                                         <colgroup>
                                             <col style="width: 9%;">
                                             <col style="width: 10%;">
-                                            <col style="width: 5%;">
-                                            <col style="width: 21%;">
+                                            <col style="width: 26%;">
                                             <col style="width: 5%;">
                                             <col style="width: 5%;">
                                             <col style="width: 5%;">
@@ -154,7 +156,6 @@
                                         <tr>
                                             <th>요청번호</th>
                                             <th>고객사</th>
-                                            <th></th>
                                             <th class="board-title">제목</th>
                                             <th>분류</th>
                                             <th>상태</th>
@@ -175,9 +176,8 @@
                                             <tr th:each="ticket : ${ticketList.dataList}" th:attr="data-id=${ticket['TICKET_ID']}" >
                                                 <td><span th:text="${ticket['TICKET_ID']}"></span></td>
                                                 <td><span th:text="${ticket['COMPANY_NAME']}"></span></td>
-                                                <td><span th:if="${ticket['PRIORITY_YN'] == 'Y'}" class="tag tag--red">긴급</span>
-                                                </td>
                                                 <td class="text-left" >
+                                                    <span th:if="${ticket['PRIORITY_YN'] == 'Y'}" class="tag tag--red" style="margin-right: 5px;">긴급</span>
                                                     <a th:text="${ticket['TITLE']}" th:attr="data-id=${ticket['TICKET_ID']}" style="cursor: pointer;" onclick="gotoTicket(this)"></a>
                                                 </td>
                                                 <td><span th:switch="${ticket['REQUEST_TYPE_CD']}" >

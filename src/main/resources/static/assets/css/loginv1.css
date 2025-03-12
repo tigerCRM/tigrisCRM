@@ -1,5 +1,5 @@
 /*** e-novator login ***/
-.wrapper { position: relative; background: url('/files/Login/login-bg.png') no-repeat 0 0 / cover; }
+.wrapper { position: relative; background: url('../images/common/login-bg.png') no-repeat 0 0 / cover; }
 #login { position: absolute; right: 0; width: 112rem; height: 100%; background-color: var(--white); }
 #login .container { position: relative; display: flex; justify-content: center; align-items: center; height: 100%; }
 

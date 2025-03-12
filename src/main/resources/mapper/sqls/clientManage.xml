@@ -158,8 +158,7 @@
             UPDATE_ID,
             NOTES,
             GROUP_CODE,
-            USE_YN,
-            PW_CH
+            USE_YN
         )VALUES (
             #{companyName},
         TRIM(#{managerId}),
@@ -167,7 +166,6 @@
             #{userId},
             #{notes},
             #{groupCode},
-            'Y',
             'Y'
         )
     </insert>
@@ -196,7 +194,8 @@
             PHONE,
             CREATE_ID,
             CREATE_DT,
-            USE_YN
+            USE_YN,
+            PW_CH
         )VALUES (
             #{clientManageDto.userId},
             #{clientManageDto.userName},
@@ -207,6 +206,7 @@
             #{clientManageDto.phone},
             #{clientManageDto.createId},
             NOW(),
+            'Y',
             'Y'
         )
     </insert>
@@ -288,8 +288,14 @@
         TUI.USER_ID,
         TUI.EMAIL,
         TUI.PHONE
-        FROM T_USER_INFO TUI
-        where USE_YN = 'Y' AND (USER_ID ='user2@test.com')
+        FROM TigerCRM.T_USER_INFO TUI
+        where USE_YN = 'Y' and
+        TUI.USER_ID not in ('whopper@tigrison.com', 'ygnam@tigrison.com','kslim@tigrison.com',
+        '0411@dreamline.co.kr','andrew803@mf.seegene.com','cah0923@nepes.co.kr',
+        'choich84@nepes.co.kr','chring9ae@yupoong.co.kr','cirry@korcham.net',
+        'dhyoo@naramnd.com','dy.son@sslm.co.kr','eagleeye0117@innocean.com','ek.kwon@stunitas.com',
+        'eunji86@dbhitek.com','fki15238@fki.or.kr','hglee1@osanghc.com','hyungchul.lim@renaultsamsungM.com','info@tigrison.com'
+        ,'ishan@heerim.com','jaehyung@tigrison.com','jangys@hy.co.kr','jc_jeon@iparkmall.co.kr')
         <!--USER_CLASS != 'USER'-->
     </select>
 

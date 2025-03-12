@@ -13,7 +13,7 @@
     max-width: 24rem;
     min-width: 7.2rem;
     height: 100vh;
-    padding-top: 1.6rem;
+    padding-top: 2rem;
     border-right: 1px solid var(--gray-400);
     box-sizing: border-box;
     z-index: 10;

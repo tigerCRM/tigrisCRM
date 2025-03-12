@@ -43,7 +43,7 @@ public class SessionInterceptor implements HandlerInterceptor {
             // response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);  // 403 상태 코드 반환
             response.setContentType("text/html; charset=UTF-8");  // 응답 내용 타입과 문자 인코딩 설정
-            response.getWriter().write("<script>alert('접근권한이 없습니다.'); window.history.back();</script>");
+            response.getWriter().write("<script>alert('접근권한이 없습니다.'); window.location.href='/login';</script>");
             response.getWriter().flush();
             return false;
         }
