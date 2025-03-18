@@ -21,7 +21,7 @@
                             <div class="content-header">
                                 <h2 class="text-body1">
                                     <div class="flex flex-align_center gap--8">
-                                        <b>요청관리</b>
+                                        <b>요청관리(관리자)</b>
                                     </div>
                                 </h2>
                                 <!-- 검색영역 -->
@@ -48,6 +48,17 @@
                                                 <option th:each="op : ${companyOptions}"
                                                         th:value="${op.companyId}"
                                                         th:text="${op.companyName}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="dropdown dropdown--s wd110" aria-expanded="false" tabindex="0">
+                                            <select class="dropdown__selected" id="searchManager"
+                                                    th:value="${searchManager}" onchange="searchTickets(this);">
+                                                <option value="">==담당자==</option>
+                                                <option th:each="op : ${managerOptions}"
+                                                        th:value="${op.userId}"
+                                                        th:text="${op.userName}"></option>
                                             </select>
                                         </div>
                                     </div>
@@ -83,7 +94,7 @@
                                                     <input type="radio" name="filterType" id="group02" value="TITLE"><label for="group02">제목</label>
                                                     <input type="radio" name="filterType" id="group03" value="CONTENTS"><label for="group03">내용</label>
                                                     <input type="radio" name="filterType" id="group04" value="WRITER"><label for="group04">작성자</label>
-                                                    <input type="radio" name="filterType" id="group05" value="USERNAME"><label for="group05">담당자</label>
+                                                    <input type="radio" name="filterType" id="group05" value="TICKETID"><label for="group05">요청번호</label>
                                                 </div>
                                             </div>
                                             <div>
@@ -200,6 +211,9 @@
                                                 <td><span th:switch="${ticket['SUPPORT_CD']}">
                                                     <span th:case="'ST'">기본</span>
                                                     <span th:case="'ADD'">추가</span>
+                                                    <span th:case="''">-</span>
+                                                    <span th:case="' '">-</span>
+                                                    <span th:case="'-'">-</span>
                                                 </span></td>
                                                 <td><span th:text="${ticket['USER_NAME']}"></span></td>
                                                 <td><span th:text="${ticket['MD']}"></span></td>
@@ -282,7 +296,18 @@
             sessionStorage.removeItem("fromTicketView");
         }
     });
-$("#btnSearchDetail").click(function(){
+    $(document).ready(function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchStatus = urlParams.get('searchStatus');
+
+        if(searchStatus != null || searchStatus == ""){
+            $("#searchStatus").val(searchStatus);
+        }else{
+            $("#searchStatus").val("PROGRESS");
+        }
+
+    });
+    $("#btnSearchDetail").click(function(){
 
 		if($('#searchDetail').css("display")=="none") {
 			$('#searchDetail').show();
@@ -350,15 +375,16 @@ $("#btnSearchDetail").click(function(){
         if (obj =="page"){
             page = ($("#currentPage").val() === undefined || $("#currentPage").val() === "") ? '' : $("#currentPage").val();
         }
-     //   var writerYn = $("#writerYn").checked;
         var writerYn = "";
         var searchSupportCd =   $("#searchSupportCd").val();
+        var searchManager = $("#searchManager").val();
 
         //내가 작성한글 페이징 처리하기
         const data = new URLSearchParams({
           searchType: searchType,
           searchStatus: searchStatus,
           searchCompany: searchCompany,
+          searchManager: searchManager,
           searchKeyword: searchKeyword,
           searchSupportCd: searchSupportCd,
           startDt: startDt,
@@ -383,55 +409,81 @@ $("#btnSearchDetail").click(function(){
         .catch(error => console.error('검색 중 오류 발생:', error));
     }
 
-    function exceldownload(obj){
+    function exceldownload(obj) {
+        if (obj.id == "refresh"){
+          $("#searchType").val("");
+          $("#searchStatus").val("");
+          $("#searchCompany").val("");
+          $("#searchKeyword").val("");
+          $("#startDate").val("");
+          $("#endDate").val("");
+          $("#searchSupportCd").val("");
+        //  document.getElementById('writerYn').checked = false
+        }
         var searchType = $("#searchType").val();
+        const checkedRadio = document.querySelector('input[name="filterType"]:checked');
+        if (checkedRadio) {
+            // 체크된 라디오 버튼의 value 값
+            const value = checkedRadio.value;
+            searchType = value
+        }
         var searchStatus = $("#searchStatus").val();
-        var searchKeyword = $("#searchKeyword").val();
         var searchCompany = $("#searchCompany").val();
+        var searchKeyword = $("#searchKeyword").val();
         var startDt = ($("#startDate").val() === undefined || $("#startDate").val() === "") ? '1999-01-01' : $("#startDate").val();
         var endDt = ($("#endDate").val() === undefined || $("#endDate").val() === "") ? '2030-01-01' : $("#endDate").val();
-        //var writerYn = document.getElementById('writerYn').checked;
+        var page = 1;
+        if (obj =="page"){
+            page = ($("#currentPage").val() === undefined || $("#currentPage").val() === "") ? '' : $("#currentPage").val();
+        }
         var writerYn = "";
+        var searchSupportCd =   $("#searchSupportCd").val();
+        var searchManager = $("#searchManager").val();
+
+        //내가 작성한글 페이징 처리하기
         const data = new URLSearchParams({
           searchType: searchType,
           searchStatus: searchStatus,
-          searchKeyword: searchKeyword,
           searchCompany: searchCompany,
+          searchManager: searchManager,
+          searchKeyword: searchKeyword,
+          searchSupportCd: searchSupportCd,
           startDt: startDt,
           endDt: endDt,
+          page: page,
           createId: writerYn
         });
-        // 다운로드 파일 이름 설정
-        const now = new Date();
-        const formattedDate = now.getFullYear() +
-        ("0" + (now.getMonth() + 1)).slice(-2) +
-        ("0" + now.getDate()).slice(-2) + "_" +
-        ("0" + now.getHours()).slice(-2) +
-        ("0" + now.getMinutes()).slice(-2) +
-        ("0" + now.getSeconds()).slice(-2);
+
+        const formattedDate = new Date().toISOString().replace(/[-:T]/g, "").slice(0, 14);
         const fileName = `ticket_${formattedDate}.xlsx`;
-         // Ajax 요청
+
         fetch('/excelDownload', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: data.toString()
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: data.toString()
         })
-        .then(response => response.blob())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status}`);
+            }
+            return response.blob();
+        })
         .then(blob => {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = fileName; // 다운로드할 파일명 설정
+            a.download = fileName;
             document.body.appendChild(a);
             a.click();
             a.remove();
+            window.URL.revokeObjectURL(url);
         })
         .catch(error => {
             console.error("Error downloading the file:", error);
+            alert("파일 다운로드 중 오류가 발생했습니다.");
         });
     }
+
 
     // -------------------
     // main > 완료내역 > tickeList로 넘어 올 시

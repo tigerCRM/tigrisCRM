@@ -13,6 +13,8 @@ import java.util.Map;
 public interface TicketService {
 
     PagingResponse<Map<String, Object>> getTicketList(PagingRequest pagingRequest);
+    //관리자
+    PagingResponse<Map<String, Object>> getTicketListAdmin(PagingRequest pagingRequest);
 
     int saveTicket(TicketDto ticketDto) throws MessagingException;
 

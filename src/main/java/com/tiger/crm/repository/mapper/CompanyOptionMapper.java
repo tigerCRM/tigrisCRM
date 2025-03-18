@@ -11,6 +11,7 @@ public interface CompanyOptionMapper {
     * 설명 : getAllCompany - 사용중인 모든 회사 코드 및 이름 가져옴*/
     List<CompanyOptionDto> getAllCompany();
 
+    List<CompanyOptionDto> getManager();
     // 고객사별 회사 불러오기
     List<CompanyOptionDto> getAllCompany2(CompanyOptionDto companyOptionDto);
 }

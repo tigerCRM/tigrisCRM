@@ -14,6 +14,8 @@ import java.util.Map;
 public interface TicketMapper {
     //요청조회
     List<Map<String, Object>> getTicketList(PagingRequest pagingRequest);
+    //요청조회(관리자)
+    List<Map<String, Object>> getTicketListAdmin(PagingRequest pagingRequest);
 
     //주간처리현황
     List<Map<String, Object>> getTicketListAnalytics(PagingRequest pagingRequest);
@@ -21,6 +23,7 @@ public interface TicketMapper {
     //요청카운트
     Integer getTicketListCount(PagingRequest pagingRequest);
 
+    Integer getTicketListAdminCount(PagingRequest pagingRequest);
     //요청등록
     int insertTicketInfo(TicketDto ticketDto);
 

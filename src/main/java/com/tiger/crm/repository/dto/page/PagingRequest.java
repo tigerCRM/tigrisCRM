@@ -22,6 +22,7 @@ public class PagingRequest {
     private String createId;
     private String searchSupportCd;        //범위
     private String satisfaction;    //만족도 조사
+    private String searchManager;   //담당자검색
     
     public PagingRequest() {
         this.page = 1;  // 기본값 설정

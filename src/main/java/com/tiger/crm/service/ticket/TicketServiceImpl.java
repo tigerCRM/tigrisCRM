@@ -40,11 +40,29 @@ public class TicketServiceImpl implements TicketService {
         return new PagingResponse<>(ticketList, totalRecords, pagingRequest);
     }
 
+    // 전체 요청 수 조회 (null 체크 포함)
+    @Override
+    public PagingResponse<Map<String, Object>> getTicketListAdmin(PagingRequest pagingRequest) {
+
+        List<Map<String, Object>> ticketList = ticketMapper.getTicketListAdmin(pagingRequest);
+
+        int totalRecords = getTicketListAdminCount(pagingRequest);
+
+        return new PagingResponse<>(ticketList, totalRecords, pagingRequest);
+    }
+
     // 전체 요청 수를 조회하는 메서드
     private int getTicketListCount(PagingRequest pagingRequest) {
         Integer count = ticketMapper.getTicketListCount(pagingRequest);  // Integer로 받아서 null 체크
         return count != null ? count : 0;  // null일 경우 0 반환
     }
+    // 전체 요청 수를 조회하는 메서드(관리자)
+    private int getTicketListAdminCount(PagingRequest pagingRequest) {
+        Integer count = ticketMapper.getTicketListAdminCount(pagingRequest);  // Integer로 받아서 null 체크
+        return count != null ? count : 0;  // null일 경우 0 반환
+    }
+
+
     @Override
     public PagingResponse<Map<String, Object>> getTicketListAnalytics(PagingRequest pagingRequest) {
 
@@ -66,7 +84,7 @@ public class TicketServiceImpl implements TicketService {
         int ticketId = ticketDto.getTicketId();
 
         // [알림, 메일] 발송 파트
-        if(resultCount > 0){
+        /*if(resultCount > 0){
             Map<String, Object> model = new HashMap<>();
             model.put("userName", ticketDto.getManagerName());
             model.put("ticketTitle", ticketDto.getTitle());
@@ -74,7 +92,7 @@ public class TicketServiceImpl implements TicketService {
             model.put("ticketUrl", baseUrl + "/ticketView?id=" + ticketDto.getTicketId() + "&redirect=/ticketView?id=" + ticketDto.getTicketId());
             mailService.sendEmail(ticketDto.getManagerId(),"요청등록", "ticket-email", model);
             alertService.sendAlert(AlertType.TICKET_STATUS, ticketDto.getStatusCd(), ticketId, ticketDto.getTitle(), ticketDto.getCreateId(), ticketDto.getManagerId());
-        }
+        }*/
 
         return ticketId;
     }

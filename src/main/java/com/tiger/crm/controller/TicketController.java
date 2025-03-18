@@ -133,10 +133,15 @@ public class TicketController {
             model.addAttribute("companyOptions", companyOptions);//회사 옵션 정보 가져오기
             model.addAttribute("statusOptions", commonService.getSelectOptions("t_status"));
             model.addAttribute("searchOptions", commonService.getSelectOptions("t_search"));
+            List<CompanyOptionDto> managerOptions = commonService.getManagerOption();
+            model.addAttribute("managerOptions", managerOptions);
+            //진행중인건으로 고정
+            model.addAttribute("searchStatus","PROGRESS");
+            pagingRequest.setSearchStatus("PROGRESS");
             pagingRequest.setCreateId("");
             pagingRequest.setUserId(loginUser.getUserId());
             // 요청 조회
-            PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
+            PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketListAdmin(pagingRequest);
             model.addAttribute("ticketList", pageResponse);
             return "ticketListAdmin";
         } catch (Exception e) {
@@ -160,7 +165,7 @@ public class TicketController {
             pagingRequest.setCompanyId(companyId);
             pagingRequest.setUserId(loginUser.getUserId());
             // 요청 조회
-            PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
+            PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketListAdmin(pagingRequest);
             model.addAttribute("userClass",userClass);
             model.addAttribute("ticketList", pageResponse);
             // 부분 뷰 렌더링 (리스트 부분만 갱신)
@@ -189,8 +194,9 @@ public class TicketController {
             }else{
                 pagingRequest.setCreateId("");
             }
-            // 데이터 조회
-            PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketList(pagingRequest);
+            pagingRequest.setUserId(loginUser.getUserId());
+            // 데이터 조회searchKeyword
+            PagingResponse<Map<String, Object>> pageResponse = ticketService.getTicketListAdmin(pagingRequest);
             List<Map<String, Object>> dataList = pageResponse.getDataList();
             // 공통 Excel 다운로드 서비스 호출
             commonService.downloadExcel(dataList, response, "ticketList");
@@ -224,8 +230,8 @@ public class TicketController {
             ticketCreate.setCreateId(loginUser.getUserId());        //작성자ID
             ticketCreate.setCompanyName(loginUser.getCompanyName());  //작성자회사
             ticketCreate.setCompanyId(companyId);                   // 작성자회사ID
-            ticketCreate.setManagerId(managerId);               //담당자ID
-            ticketCreate.setManagerName(managerName);       //담당자이름
+           // ticketCreate.setManagerId(managerId);               //담당자ID
+          //  ticketCreate.setManagerName(managerName);       //담당자이름
             ticketCreate.setExpectedCompleteDt(expDate);
             ticketCreate.setStatusCd("OPEN");
             ticketCreate.setTicketId(null);
@@ -250,7 +256,7 @@ public class TicketController {
             List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
             List<TicketDto> ManagerOptions = ticketService.getAllManagerOption();
             model.addAttribute("ManagerOptions", ManagerOptions);
-            model.addAttribute("selectedManagerName", managerName);
+           // model.addAttribute("selectedManagerName", managerName);
             model.addAttribute("companyOptions", companyOptions);
             model.addAttribute("selectedCompanyName", companyName);
             model.addAttribute("userClass", userClass); //작성자 레벨
@@ -414,7 +420,7 @@ public class TicketController {
                 throw new CustomException("첨부파일 저장 중 오류가 발생했습니다.", fileException);
             }
             //내용수정시 댓글 추가
-            String statusText =  StatusMapper.getStatusText(ticketDto.getStatusCd());
+/*            String statusText =  StatusMapper.getStatusText(ticketDto.getStatusCd());
             // comment에 변환된 값 넣기
             var comment = "[" + statusText + "] 요청 내용이 수정되었습니다.";
             CommentDto commentDto = new CommentDto();
@@ -422,7 +428,7 @@ public class TicketController {
             commentDto.setContent(comment);
             commentDto.setCreateId(loginUser.getUserId());
             commentDto.setStatusCd(ticketDto.getStatusCd());
-            ticketService.addComment(commentDto);
+            ticketService.addComment(commentDto);*/
 
         } catch (Exception e) {
             LOGGER.error("요청 수정 중 오류가 발생했습니다.", e);

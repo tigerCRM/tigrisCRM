@@ -71,6 +71,10 @@ public class CommonService {
     public List<CompanyOptionDto> getCompanyOption2(CompanyOptionDto companyOptionDto) {
         return companyOptionMapper.getAllCompany2(companyOptionDto);
     }
+    //담당자 호출
+    public List<CompanyOptionDto> getManagerOption() {
+        return companyOptionMapper.getManager();
+    }
 
 
     public void downloadExcel(List<Map<String, Object>> dataList, HttpServletResponse response, String location) throws IOException {

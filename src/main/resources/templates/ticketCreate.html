@@ -77,11 +77,11 @@
                                         <td>
                                             <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
                                                 <select class="dropdown__selected" onchange="updateManagerName(this)"  th:disabled="${userClass == 'USER'}">
+                                                    <option value=""></option>
                                                     <option th:each="op : ${ManagerOptions}"
                                                             th:value="${op.managerId}"
                                                             th:data-name="${op.managerName}"
-                                                            th:text="${op.managerName}"
-                                                            th:selected="${op.managerName == selectedManagerName}">
+                                                            th:text="${op.managerName}">
                                                     </option>
                                                 </select>
                                             </div>

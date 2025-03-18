@@ -12,6 +12,11 @@
         order by COMPANY_NAME
     </select>
 
+    <select id="getManager" resultType="com.tiger.crm.repository.dto.company.CompanyOptionDto">
+        select USER_ID ,USER_NAME from
+        TigerCRM.T_USER_INFO where USER_CLASS ='ADMIN' and USE_YN ='Y' and USER_ID !='info@tigrison.com' ORDER BY USER_NAME
+    </select>
+
     <!-- 고객사별 회사 불러오기-->
     <select id="getAllCompany2" resultType="com.tiger.crm.repository.dto.company.CompanyOptionDto">
         SELECT COMPANY_ID,

@@ -126,7 +126,14 @@
 
             <!-- 상태 검색 조건 (상태가 존재하는 경우) -->
             <if test="searchStatus != null and searchStatus != ''">
-                AND STATUS_CD = #{searchStatus}
+                <choose>
+                    <when test="searchStatus == 'PROGRESS'">
+                        AND STATUS_CD in ('OPEN','RECEIPT','PROGRESS')
+                    </when>
+                    <otherwise>
+                        AND STATUS_CD = #{searchStatus}
+                    </otherwise>
+                </choose>
             </if>
             <!-- 고객사명 검색  -->
             <if test="searchCompany != null and searchCompany != ''">
@@ -155,6 +162,184 @@
                         AND T.CREATE_NAME LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 요청자로 검색 -->
                     </when>
                 </choose>
+            </if>
+            <!-- 시작일 필터링 -->
+            <if test="startDt != '' and startDt != null and endDt != '' and endDt != null ">
+                AND DATE(T.CREATE_DT) BETWEEN #{startDt} AND #{endDt}
+            </if>
+            <!-- 본인 작성 건 검색 추가  -->
+            <if test="createId != ''">
+                AND T.CREATE_ID = #{createId}
+            </if>
+        </where>
+
+    </select>
+
+    <select id="getTicketListAdmin" resultType="java.util.HashMap">
+        SELECT T.TICKET_ID,
+        T.PRIORITY_YN,
+        T.COMPANY_NAME,
+        T.STATUS_CD,
+        T.REQUEST_TYPE_CD,
+        T.SUPPORT_CD,
+        IFNULL(T.MD, '') as MD,
+        T.TITLE,
+        T.CREATE_NAME,
+        U.USER_NAME,
+        DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d %H:%i') AS CREATE_DT,
+        IFNULL(DATE_FORMAT(IFNULL(T.COMPLETE_DT, ''), '%Y-%m-%d'),'') as COMPLETE_DT,
+        T.SATISFACTION,
+        T.FEEDBACK,
+        C.GROUP_CODE
+        FROM T_TICKET_INFO as T
+        LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
+        LEFT JOIN T_COMPANY_INFO as C on C.COMPANY_ID = T.COMPANY_ID
+        <where>
+            DELETE_YN = 'N'
+            <!-- userClass가 고객인 경우 -->
+            <if test="userClass == 'USER'">
+                AND T.COMPANY_ID = #{companyId}
+            </if>
+            <!-- userClass가 ADMIN인 경우 그룹 권한 필터 추가 -->
+            <if test="userClass == 'ADMIN'">
+                AND EXISTS (
+                SELECT 1 FROM T_GROUP_AUTH GA
+                WHERE GA.GROUP_CODE = C.GROUP_CODE
+                AND GA.USER_ID = #{userId}
+                )
+            </if>
+            <!-- 검색어 조건 (검색어가 존재하는 경우 제목, 내용 필드에서 LIKE 검색) -->
+            <if test="searchType == '' and (searchKeyword != null and searchKeyword != '')">
+                AND (TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
+                OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+            <!-- 상태 검색 조건 (상태가 존재하는 경우) -->
+            <if test="searchStatus != null and searchStatus != ''">
+                <choose>
+                    <when test="searchStatus == 'PROGRESS'">
+                        AND STATUS_CD in ('OPEN','RECEIPT','PROGRESS')
+                    </when>
+                    <otherwise>
+                        AND STATUS_CD = #{searchStatus}
+                    </otherwise>
+                </choose>
+            </if>
+            <!-- 고객사명 검색  -->
+            <if test="searchCompany != null and searchCompany != ''">
+                AND T.COMPANY_ID = #{searchCompany}
+            </if>
+            <!-- 지원범위 -->
+            <if test="searchSupportCd != null and searchSupportCd != ''">
+                AND T.SUPPORT_CD = #{searchSupportCd}
+            </if>
+
+            <!-- 검색 유형 (searchType이 제목, 내용, 담당자, 등 선택된 경우) -->
+            <if test="searchType != null and searchType != '' and searchKeyword != null and searchKeyword != ''">
+                <choose>
+                    <when test="searchType == 'NUM'">
+                        AND TICKET_ID LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 요청번호로 검색 -->
+                    </when>
+                    <when test="searchType == 'TITLE'">
+                        AND TITLE LIKE CONCAT('%', #{searchKeyword}, '%') <!-- 제목으로 검색 -->
+                    </when>
+                    <when test="searchType == 'TITLEANDCONTENTS'">
+                        AND (TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
+                        OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')) <!-- 제목+내용으로 검색 -->
+                    </when>
+                    <when test="searchType == 'WRITER'">
+                        AND T.CREATE_NAME LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 요청자로 검색 -->
+                    </when>
+                    <when test="searchType == 'TICKETID'">
+                        AND T.TICKET_ID = #{searchKeyword}  <!-- 요청번호로 검색 -->
+                    </when>
+                </choose>
+            </if>
+            <if test="searchManager != null and searchManager != ''">
+                AND U.USER_ID LIKE CONCAT('%', #{searchManager}, '%')  <!-- 담당자로 검색 -->
+            </if>
+
+            <!-- 시작일 필터링 -->
+            <if test="startDt != '' and startDt != null and endDt != '' and endDt != null ">
+                AND DATE(T.CREATE_DT) BETWEEN #{startDt} AND #{endDt}
+            </if>
+            <!-- 본인 작성 건 검색 추가  -->
+            <if test="createId != ''">
+                AND T.CREATE_ID = #{createId}
+            </if>
+        </where>
+        order by T.CREATE_DT desc
+        <!-- 페이지 처리 (페이징 처리) -->
+        <if test="page != null">
+            LIMIT #{offset}, #{size} <!-- 10개씩 보여주는 예시 (limit offset, rows) -->
+        </if>
+    </select>
+
+    <select id="getTicketListAdminCount" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM T_TICKET_INFO as T
+        LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
+        LEFT JOIN T_COMPANY_INFO as C on C.COMPANY_ID = T.COMPANY_ID
+        <where>
+            DELETE_YN = 'N'
+            <!-- userClass가 고객인 경우 -->
+            <if test="userClass == 'USER'">
+                AND T.COMPANY_ID = #{companyId}
+            </if>
+            <!-- userClass가 ADMIN인 경우 그룹 권한 필터 추가 -->
+            <if test="userClass == 'ADMIN'">
+                AND EXISTS (
+                SELECT 1 FROM T_GROUP_AUTH GA
+                WHERE GA.GROUP_CODE = C.GROUP_CODE
+                AND GA.USER_ID = #{userId}
+                )
+            </if>
+            <!-- 검색어 조건 (검색어가 존재하는 경우 제목, 내용 필드에서 LIKE 검색) -->
+            <if test="searchType == '' and (searchKeyword != null and searchKeyword != '')">
+                AND (TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
+                OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%'))
+            </if>
+
+            <!-- 상태 검색 조건 (상태가 존재하는 경우) -->
+            <if test="searchStatus != null and searchStatus != ''">
+                <choose>
+                    <when test="searchStatus == 'PROGRESS'">
+                        AND STATUS_CD in ('OPEN','RECEIPT','PROGRESS')
+                    </when>
+                    <otherwise>
+                        AND STATUS_CD = #{searchStatus}
+                    </otherwise>
+                </choose>
+            </if>
+            <!-- 고객사명 검색  -->
+            <if test="searchCompany != null and searchCompany != ''">
+                AND T.COMPANY_ID = #{searchCompany}
+            </if>
+            <if test="searchSupportCd != null and searchSupportCd != ''">
+                AND T.SUPPORT_CD = #{searchSupportCd}
+            </if>
+            <!-- 검색 유형 (searchType이 제목, 내용, 담당자, 등 선택된 경우) -->
+            <if test="searchType != null and searchType != ''">
+                <choose>
+                    <when test="searchType == 'NUM'">
+                        AND TICKET_ID LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 요청번호로 검색 -->
+                    </when>
+                    <when test="searchType == 'TITLE'">
+                        AND TITLE LIKE CONCAT('%', #{searchKeyword}, '%') <!-- 제목으로 검색 -->
+                    </when>
+                    <when test="searchType == 'TITLEANDCONTENTS'">
+                        AND (TITLE LIKE CONCAT('%', #{searchKeyword}, '%')
+                        OR CONTENT LIKE CONCAT('%', #{searchKeyword}, '%')) <!-- 제목+내용으로 검색 -->
+                    </when>
+                    <when test="searchType == 'WRITER'">
+                        AND T.CREATE_NAME LIKE CONCAT('%', #{searchKeyword}, '%')  <!-- 요청자로 검색 -->
+                    </when>
+                    <when test="searchType == 'TICKETID'">
+                        AND T.TICKET_ID = #{searchKeyword}  <!-- 요청번호로 검색 -->
+                    </when>
+                </choose>
+            </if>
+            <if test="searchManager != null and searchManager != ''">
+                AND U.USER_ID LIKE CONCAT('%', #{searchManager}, '%')  <!-- 담당자로 검색 -->
             </if>
             <!-- 시작일 필터링 -->
             <if test="startDt != '' and startDt != null and endDt != '' and endDt != null ">

@@ -580,6 +580,11 @@
 
         document.querySelector('#dateRange').innerText = startDay + " ~ " + endDay ;
     }
+
+    function gotoTicket(row){
+        const ticketId = row.getAttribute("data-id");
+        window.location.href = `/ticketView?id=${ticketId}`;
+    }
 </script>
 </body>
 </html>
