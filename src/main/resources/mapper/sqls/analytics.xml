@@ -147,6 +147,6 @@
         ) SUN2 ON TUI.USER_ID = SUN2.MANAGER_ID
 
         WHERE TUI.COMPANY_ID = 1
-        ORDER BY TUI.USER_ID
+        ORDER BY TUI.USER_NAME
     </select>
 </mapper>
