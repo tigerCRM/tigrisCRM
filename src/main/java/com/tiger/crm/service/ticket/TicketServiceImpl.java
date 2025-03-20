@@ -149,9 +149,11 @@ public class TicketServiceImpl implements TicketService {
             Map<String, Object> model = new HashMap<>();
             model.put("userName", ticketDto.getCreateName());
             model.put("ticketTitle", ticketDto.getTitle());
-            model.put("ticketStatus", ticketDto.getStatusCd());
+            model.put("ticketStatus", ticketDto.getStatusCd());            
             model.put("ticketUrl", baseUrl + "/ticketView?id=" + ticketDto.getTicketId() + "&redirect=/ticketView?id=" + ticketDto.getTicketId());
-
+            model.put("ticketId", ticketDto.getTicketId());
+            model.put("companyName", ticketDto.getCompanyName());
+            
             mailService.sendEmail(ticketDto.getCreateId(), "요청상태변경", "ticket-email", model);
             alertService.sendAlert(AlertType.TICKET_STATUS ,newStatus, ticketId, ticketDto.getTitle(), ticketDto.getCreateId(), ticketDto.getManagerId());
         }
@@ -183,6 +185,8 @@ public class TicketServiceImpl implements TicketService {
         model.put("ticketStatus", ticketDto.getStatusCd());
         model.put("comment", commentDto.getContent());
         model.put("ticketUrl", baseUrl + "/ticketView?id=" + ticketDto.getTicketId());
+        model.put("ticketId", ticketDto.getTicketId());
+        model.put("companyName", ticketDto.getCompanyName());
 
         // 댓글 상대방 조회 (본인 제외)
         String receiverId = ticketMapper.findOtherUser(commentDto.getTicketId(), commentDto.getCreateId());
