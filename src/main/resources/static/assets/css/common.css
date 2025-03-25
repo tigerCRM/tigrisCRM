@@ -1848,6 +1848,10 @@ label.checkbox02 input[type="checkbox"]:disabled+span {
     white-space: nowrap;
 }
 
+.table-ellipsis .td-exceptepplisis {
+     text-overflow: clip !important;
+ }
+
 .table01 {
     border-top: 1px solid var(--black);
 }

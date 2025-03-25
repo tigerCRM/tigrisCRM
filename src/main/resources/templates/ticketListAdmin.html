@@ -3,508 +3,501 @@
 
 <head th:replace="~{common/frame_head :: head('요청관리(관리자)')}"></head>
 <body>
-<div class="wrapper">
-    <!-- 왼쪽 메뉴  -->
-    <div th:replace="~{common/frame_left_menu :: frame_left_menu}"/>
+    <div class="wrapper">
+        <!-- 왼쪽 메뉴  -->
+        <div th:replace="~{common/frame_left_menu :: frame_left_menu}" />
 
-    <!-- 상단 메뉴  -->
-<!--    <div th:replace="~{common/frame_top_menu :: frame_top_menu}"/>-->
+        <!-- 상단 메뉴  -->
+        <!--    <div th:replace="~{common/frame_top_menu :: frame_top_menu}"/>-->
 
-    <!-- 컨텐츠 영역 -->
-    <div class="main-area">
-        <!-- 내용 영역 -->
-        <main class="list-content">
-            <div class="container">
-                <div class="main-widget-wrap">
-                    <div class="content">
-                        <div class="search--box">
-                            <div class="content-header">
-                                <h2 class="text-body1">
-                                    <div class="flex flex-align_center gap--8">
-                                        <b>요청관리(관리자)</b>
-                                    </div>
-                                </h2>
-                                <!-- 검색영역 -->
-                                <div class="searchbar">
-                                    <div>
-                                        <div class="dropdown dropdown--s wd100" aria-expanded="false" tabindex="0">
-                                            <select class="dropdown__selected" id="searchStatus" name="searchStatus"
-                                                    th:value="${searchStatus}" onchange="searchTickets(this);">
-                                                <option value="">==상태==</option>
-                                                <option value="PROGRESS">미완료</option>
-                                                <option value="REVIEW">검토</option>
-                                                <option value="CLOSED">완료</option>
-                                                <!--<option th:each="op : ${statusOptions}"
+        <!-- 컨텐츠 영역 -->
+        <div class="main-area">
+            <!-- 내용 영역 -->
+            <main class="list-content">
+                <div class="container">
+                    <div class="main-widget-wrap">
+                        <div class="content">
+                            <div class="search--box">
+                                <div class="content-header">
+                                    <h2 class="text-body1">
+                                        <div class="flex flex-align_center gap--8">
+                                            <b>요청관리(관리자)</b>
+                                        </div>
+                                    </h2>
+                                    <!-- 검색영역 -->
+                                    <div class="searchbar">
+                                        <div>
+                                            <div class="dropdown dropdown--s wd100" aria-expanded="false" tabindex="0">
+                                                <select class="dropdown__selected" id="searchStatus" name="searchStatus" th:value="${searchStatus}" onchange="searchTickets(this);">
+                                                    <option value="">==상태==</option>
+                                                    <option value="PROGRESS">미완료</option>
+                                                    <option value="REVIEW">검토</option>
+                                                    <option value="CLOSED">완료</option>
+                                                    <!--<option th:each="op : ${statusOptions}"
                                                         th:value="${op.key}"
                                                         th:text="${op.value}"></option>-->
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="dropdown dropdown--s wd170" aria-expanded="false" tabindex="0">
-                                            <select class="dropdown__selected" id="searchCompany" name="searchCompany"
-                                                    th:value="${searchCompany}" onchange="searchTickets(this);">
-                                                <option value="">==고객사==</option>
-                                                <option th:each="op : ${companyOptions}"
-                                                        th:value="${op.companyId}"
-                                                        th:text="${op.companyName}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="dropdown dropdown--s wd110" aria-expanded="false" tabindex="0">
-                                            <select class="dropdown__selected" id="searchManager"
-                                                    th:value="${searchManager}" onchange="searchTickets(this);">
-                                                <option value="">==담당자==</option>
-                                                <option th:each="op : ${managerOptions}"
-                                                        th:value="${op.userId}"
-                                                        th:text="${op.userName}"></option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="dropdown dropdown--s wd110" aria-expanded="false" tabindex="0">
-                                            <select class="dropdown__selected" id="searchSupportCd"
-                                                    th:value="${searchSupportCd}" onchange="searchTickets(this);">
-                                                <option value="">==범위==</option>
-                                                <option value="ST">기본</option>
-                                                <option value="ADD">추가</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="wrap_search" style="padding-left: 10px;">
-                                        <div class="wrap_input" style="width: 400px;">
-                                            <button type="button" class="search_more" id="btnSearchDetail">
-                                                <p style="color:#E1E4EB; font-size:12px;"></p>
-                                            </button>
-                                            <input type="text" id="searchKeyword" name="searchKeyword"  style="padding-left: 35px;"
-                                                   class="input--s input01" placeholder="검색어를 입력해주세요."
-                                                   th:value="${searchKeyword}"
-                                                   onkeydown="if (event.keyCode === 13) searchTickets(this);">
-                                            <button class="icon-btn search__btn" onclick="searchTickets(this);" style="padding-right: 10px;">
-                                                <svg class="icon">
-                                                    <use th:href="@{/assets/images/icon/sprite-sheet.svg#search}"/>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                        <div id="searchDetail" class="wrap_condition" style="display: none;">
-                                            <div class="detail_condition group">
-                                                <div class="wrap_radio type_button">
-                                                    <input type="radio" name="filterType" id="group01" value="TITLEANDCONTENTS" checked=""> <label for="group01">제목+내용</label>
-                                                    <input type="radio" name="filterType" id="group02" value="TITLE"><label for="group02">제목</label>
-                                                    <input type="radio" name="filterType" id="group03" value="CONTENTS"><label for="group03">내용</label>
-                                                    <input type="radio" name="filterType" id="group04" value="WRITER"><label for="group04">작성자</label>
-                                                    <input type="radio" name="filterType" id="group05" value="TICKETID"><label for="group05">요청번호</label>
-                                                </div>
+                                                </select>
                                             </div>
-                                            <div>
-                                                <input type="text" class="input--s input01 datepicker-input start-date" placeholder="시작 일자" id="startDate" th:name="${startDateId}">
-                                                <button type="button" class="btn just-icon btn--24 calendar-btn">
-                                                    <svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use></svg>
-                                                </button>
-                                                ~
-                                                <input type="text" class="input--s input01 datepicker-input end-date" placeholder="종료 일자" id="endDate" th:name="${endDateId}">
-                                                <button type="button" class="btn just-icon btn--24 calendar-btn">
-                                                    <svg class="icon"><use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use></svg>
-                                                </button>
-                                            </div>
-                                            <button type="button" class="btn_close02" id="searchClose" >
-                                                <svg class="icon"><use href="./assets/images/icon/sprite-sheet.svg#close"></use></svg>
-                                            </button>
                                         </div>
-                                    </div>
-
-                                    <div style="align-content: center;display:none">
-                                        <button class="btn just-icon btn--24" onclick="searchTickets(this);"
-                                                id="refresh">
-                                            <i class="ri-find-replace-line"></i>
-                                        </button>
-                                    </div>
-
-                                    <div style="margin-left:auto;">
-                                        <button class="btn btn--s  secondary-btn" onclick="exceldownload(this);"
-                                                id="excelticket">엑셀다운로드
-                                        </button>
-                                    </div>
-                                </div>
-                                <!-- //검색영역 -->
-                            </div>
-                        </div>
-                        <div th:fragment="ticketListFragment" id="ticketListContainer">
-                            <!-- 리스트 상단 영역 -->
-                            <div class="flex flex-justify_between flex-align_center ">
-                                <div class="flex gap--4">
-                                    <button type="button" class="btn btn--s primary-btn"
-                                            th:onclick="'window.location.href=\'' + @{/ticketCreate} + '\''">작성
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="pageinfo">
-                                <div class="pagetotal">
-                                    <span class="text-body4">전체 <strong class="color-navy500"
-                                                                        th:text="${ticketList.totalcnt}"></strong>건</span>
-                                </div>
-                            </div>
-                            <!-- //리스트 상단 영역 -->
-                            <!-- 리스트 영역 -->
-                            <div class="is_full">
-                                <div class="board-list board--m list-wrap ">
-                                    <table class="table table01 table-ellipsis">
-                                        <colgroup>
-                                            <col style="width: 9%;">
-                                            <col style="width: 10%;">
-                                            <col style="width: 26%;">
-                                            <col style="width: 5%;">
-                                            <col style="width: 5%;">
-                                            <col style="width: 5%;">
-                                            <col style="width: 10%;">
-                                            <col style="width: 7%;">
-                                            <col style="width: 10%;">
-                                            <col style="width: 10%;">
-                                            <col style="width: 10%;">
-                                        </colgroup>
-                                        <thead>
-                                        <tr>
-                                            <th>요청번호</th>
-                                            <th>고객사</th>
-                                            <th class="board-title">제목</th>
-                                            <th>분류</th>
-                                            <th>상태</th>
-                                            <th>범위</th>
-                                            <th>담당</th>
-                                            <th>MD</th>
-                                            <th>등록일</th>
-                                            <th>완료일</th>
-                                            <th>만족도</th>
-                                        </tr>
-                                        </thead>
                                         <div>
-                                            <tbody>
-                                            <tr th:if="${ticketList == null or ticketList.dataList == null or #lists.isEmpty(ticketList.dataList)}">
-                                                <td colspan="12" style="text-align:center;">등록된 요청이 없습니다.</td>
-                                            </tr>
-
-                                            <tr th:each="ticket : ${ticketList.dataList}" th:attr="data-id=${ticket['TICKET_ID']}" >
-                                                <td><span th:text="${ticket['TICKET_ID']}"></span></td>
-                                                <td><span th:text="${ticket['COMPANY_NAME']}"></span></td>
-                                                <td class="text-left" >
-                                                    <span th:if="${ticket['PRIORITY_YN'] == 'Y'}" class="tag tag--red" style="margin-right: 5px;">긴급</span>
-                                                    <a th:text="${ticket['TITLE']}" th:attr="data-id=${ticket['TICKET_ID']}" style="cursor: pointer;" onclick="gotoTicket(this)"></a>
-                                                </td>
-                                                <td><span th:switch="${ticket['REQUEST_TYPE_CD']}" >
-                                                    <span th:case="'QA'">문의답변</span>
-                                                    <span th:case="'ERR'">오류수정</span>
-                                                    <span th:case="'ADD'">기능추가</span>
-                                                    <span th:case="'CH'">기능변경</span>
-                                                    <span th:case="'SP'">기술지원</span>
-                                                    <span th:case="'OP'">운영작업</span>
-                                                    <span th:case="'ETC'">기타</span>
-                                                </span></td>
-                                                <td><span th:switch="${ticket['STATUS_CD']}">
-                                                    <span th:case="'OPEN'" class="tag tag--blue">등록</span>
-                                                    <span th:case="'RECEIPT'" class="tag tag--navy">접수</span>
-                                                    <span th:case="'PROGRESS'" class="tag tag--green">진행</span>
-                                                    <span th:case="'REVIEW'" class="tag tag--orange">검토</span>
-                                                    <span th:case="'CLOSED'" class="tag tag--gray">완료</span>
-                                                    <span th:case="*"></span> <!-- 기본 값 -->
-                                                </span></td>
-                                                <td><span th:switch="${ticket['SUPPORT_CD']}">
-                                                    <span th:case="'ST'">기본</span>
-                                                    <span th:case="'ADD'">추가</span>
-                                                    <span th:case="''">-</span>
-                                                    <span th:case="' '">-</span>
-                                                    <span th:case="'-'">-</span>
-                                                </span></td>
-                                                <td><span th:text="${ticket['USER_NAME']}"></span></td>
-                                                <td><span th:text="${ticket['MD']}"></span></td>
-                                                <td><span th:text="${ticket['CREATE_DT']}"></span></td>
-                                                <td><span th:text="${ticket['COMPLETE_DT']}"></span></td>
-                                                <td><span th:switch="${ticket['SATISFACTION']}">
-                                                    <span th:case="'0'"></span>
-                                                        <span th:case="'0'">
-                                                            <i class="fa-regular fa-star"></i>
-                                                            <i class="fa-regular fa-star"></i>
-                                                            <i class="fa-regular fa-star"></i>
-                                                            <i class="fa-regular fa-star"></i>
-                                                            <i class="fa-regular fa-star"></i>
-                                                        </span>
-                                                        <span th:case="'1'" style="color:orange">
-                                                            <i class="fa-solid fa-star"></i>
-                                                            <i class="fa-regular fa-star"></i>
-                                                            <i class="fa-regular fa-star"></i>
-                                                            <i class="fa-regular fa-star"></i>
-                                                            <i class="fa-regular fa-star"></i>
-                                                        </span>
-                                                        <span th:case="'2'" style="color:orange">
-                                                            <i class="fa-solid fa-star"></i>
-                                                            <i class="fa-solid fa-star"></i>
-                                                            <i class="fa-regular fa-star"></i>
-                                                            <i class="fa-regular fa-star"></i>
-                                                            <i class="fa-regular fa-star"></i>
-                                                        </span>
-                                                        <span th:case="'3'" style="color:orange">
-                                                            <i class="fa-solid fa-star"></i>
-                                                            <i class="fa-solid fa-star"></i>
-                                                            <i class="fa-solid fa-star"></i>
-                                                            <i class="fa-regular fa-star"></i>
-                                                            <i class="fa-regular fa-star"></i>
-                                                        </span>
-                                                        <span th:case="'4'" style="color:orange">
-                                                            <i class="fa-solid fa-star"></i>
-                                                            <i class="fa-solid fa-star"></i>
-                                                            <i class="fa-solid fa-star"></i>
-                                                            <i class="fa-solid fa-star"></i>
-                                                            <i class="fa-regular fa-star"></i>
-                                                        </span>
-                                                        <span th:case="'5'" style="color:orange">
-                                                            <i class="fa-solid fa-star"></i>
-                                                            <i class="fa-solid fa-star"></i>
-                                                            <i class="fa-solid fa-star"></i>
-                                                            <i class="fa-solid fa-star"></i>
-                                                            <i class="fa-solid fa-star"></i>
-                                                        </span>
-                                                </span></td>
-                                            </tr>
-                                            </tbody>
+                                            <div class="dropdown dropdown--s wd170" aria-expanded="false" tabindex="0">
+                                                <select class="dropdown__selected" id="searchCompany" name="searchCompany" th:value="${searchCompany}" onchange="searchTickets(this);">
+                                                    <option value="">==고객사==</option>
+                                                    <option th:each="op : ${companyOptions}" th:value="${op.companyId}" th:text="${op.companyName}"></option>
+                                                </select>
+                                            </div>
                                         </div>
-                                    </table>
+                                        <div>
+                                            <div class="dropdown dropdown--s wd110" aria-expanded="false" tabindex="0">
+                                                <select class="dropdown__selected" id="searchManager" th:value="${searchManager}" onchange="searchTickets(this);">
+                                                    <option value="">==담당자==</option>
+                                                    <option th:each="op : ${managerOptions}" th:value="${op.userId}" th:text="${op.userName}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div class="dropdown dropdown--s wd110" aria-expanded="false" tabindex="0">
+                                                <select class="dropdown__selected" id="searchSupportCd" th:value="${searchSupportCd}" onchange="searchTickets(this);">
+                                                    <option value="">==범위==</option>
+                                                    <option value="ST">기본</option>
+                                                    <option value="ADD">추가</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="wrap_search" style="padding-left: 10px;">
+                                            <div class="wrap_input" style="width: 400px;">
+                                                <button type="button" class="search_more" id="btnSearchDetail">
+                                                    <p style="color:#E1E4EB; font-size:12px;"></p>
+                                                </button>
+                                                <input type="text" id="searchKeyword" name="searchKeyword" style="padding-left: 35px;" class="input--s input01" placeholder="검색어를 입력해주세요." th:value="${searchKeyword}" onkeydown="if (event.keyCode === 13) searchTickets(this);">
+                                                <button class="icon-btn search__btn" onclick="searchTickets(this);" style="padding-right: 10px;">
+                                                    <svg class="icon">
+                                                        <use th:href="@{/assets/images/icon/sprite-sheet.svg#search}" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                            <div id="searchDetail" class="wrap_condition" style="display: none;">
+                                                <div class="detail_condition group">
+                                                    <div class="wrap_radio type_button">
+                                                        <input type="radio" name="filterType" id="group01" value="TITLEANDCONTENTS" checked=""> <label for="group01">제목+내용</label>
+                                                        <input type="radio" name="filterType" id="group02" value="TITLE"><label for="group02">제목</label>
+                                                        <input type="radio" name="filterType" id="group03" value="CONTENTS"><label for="group03">내용</label>
+                                                        <input type="radio" name="filterType" id="group04" value="WRITER"><label for="group04">작성자</label>
+                                                        <input type="radio" name="filterType" id="group05" value="TICKETID"><label for="group05">요청번호</label>
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <input type="text" class="input--s input01 datepicker-input start-date" placeholder="시작 일자" id="startDate" th:name="${startDateId}">
+                                                    <button type="button" class="btn just-icon btn--24 calendar-btn">
+                                                        <svg class="icon">
+                                                            <use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use>
+                                                        </svg>
+                                                    </button>
+                                                    ~
+                                                    <input type="text" class="input--s input01 datepicker-input end-date" placeholder="종료 일자" id="endDate" th:name="${endDateId}">
+                                                    <button type="button" class="btn just-icon btn--24 calendar-btn">
+                                                        <svg class="icon">
+                                                            <use href="/assets/images/icon/sprite-sheet.svg#calendar-fill"></use>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                <button type="button" class="btn_close02" id="searchClose">
+                                                    <svg class="icon">
+                                                        <use href="./assets/images/icon/sprite-sheet.svg#close"></use>
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
 
+                                        <div style="align-content: center;display:none">
+                                            <button class="btn just-icon btn--24" onclick="searchTickets(this);" id="refresh">
+                                                <i class="ri-find-replace-line"></i>
+                                            </button>
+                                        </div>
 
+                                        <div style="margin-left:auto;">
+                                            <button class="btn btn--s  secondary-btn" onclick="exceldownload(this);" id="excelticket">엑셀다운로드
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- //검색영역 -->
                                 </div>
                             </div>
-                            <!-- //리스트 영역 -->
-                            <!-- 페이징 버튼 템플릿 -->
-                            <div class="board-footer">
-                                <div th:replace="~{fragments/pagination :: pagination(${ticketList}, 'ticketList')}"/>
+                            <div th:fragment="ticketListFragment" id="ticketListContainer">
+                                <!-- 리스트 상단 영역 -->
+                                <div class="flex flex-justify_between flex-align_center ">
+                                    <div class="flex gap--4">
+                                        <button type="button" class="btn btn--s primary-btn" th:onclick="'window.location.href=\'' + @{/ticketCreate} + '\''">작성
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="pageinfo">
+                                    <div class="pagetotal">
+                                        <span class="text-body4">전체 <strong class="color-navy500" th:text="${ticketList.totalcnt}"></strong>건</span>
+                                    </div>
+                                </div>
+                                <!-- //리스트 상단 영역 -->
+                                <!-- 리스트 영역 -->
+                                <div class="is_full">
+                                    <div class="board-list board--m list-wrap ">
+                                        <table class="table table01 table-ellipsis">
+                                            <colgroup>
+                                                <col style="width: 9%;">
+                                                <col style="width: 10%;">
+                                                <col style="width: 26%;">
+                                                <col style="width: 7%;">
+                                                <col style="width: 5%;">
+                                                <col style="width: 5%;">
+                                                <col style="width: 10%;">
+                                                <col style="width: 7%;">
+                                                <col style="width: 10%;">
+                                                <col style="width: 12%;">
+                                                <col style="width: 10%;">
+                                            </colgroup>
+                                            <thead>
+                                                <tr>
+                                                    <th>요청번호</th>
+                                                    <th>고객사</th>
+                                                    <th class="board-title">제목</th>
+                                                    <th>분류</th>
+                                                    <th>상태</th>
+                                                    <th>범위</th>
+                                                    <th>담당</th>
+                                                    <th>MD</th>
+                                                    <th>등록일</th>
+                                                    <th>완료일</th>
+                                                    <th>만족도</th>
+                                                </tr>
+                                            </thead>
+                                            <div>
+                                                <tbody>
+                                                    <tr th:if="${ticketList == null or ticketList.dataList == null or #lists.isEmpty(ticketList.dataList)}">
+                                                        <td colspan="12" style="text-align:center;">등록된 요청이 없습니다.</td>
+                                                    </tr>
+
+                                                    <tr th:each="ticket : ${ticketList.dataList}" th:attr="data-id=${ticket['TICKET_ID']}">
+                                                        <td><span th:text="${ticket['TICKET_ID']}"></span></td>
+                                                        <td><span th:text="${ticket['COMPANY_NAME']}"></span></td>
+                                                        <td class="text-left">
+                                                            <span th:if="${ticket['PRIORITY_YN'] == 'Y'}" class="tag tag--red" style="margin-right: 5px;">긴급</span>
+                                                            <a th:text="${ticket['TITLE']}" th:attr="data-id=${ticket['TICKET_ID']}" style="cursor: pointer;" onclick="gotoTicket(this)"></a>
+                                                        </td>
+                                                        <td><span th:switch="${ticket['REQUEST_TYPE_CD']}">
+                                                                <span th:case="'QA'">문의답변</span>
+                                                                <span th:case="'ERR'">오류수정</span>
+                                                                <span th:case="'ADD'">기능추가</span>
+                                                                <span th:case="'CH'">기능변경</span>
+                                                                <span th:case="'SP'">기술지원</span>
+                                                                <span th:case="'OP'">운영작업</span>
+                                                                <span th:case="'ETC'">기타</span>
+                                                            </span></td>
+                                                        <td class="td-exceptepplisis">
+                                                            <span th:switch="${ticket['STATUS_CD']}">
+                                                                <span th:case="'OPEN'" class="tag tag--blue">등록</span>
+                                                                <span th:case="'RECEIPT'" class="tag tag--navy">접수</span>
+                                                                <span th:case="'PROGRESS'" class="tag tag--green">진행</span>
+                                                                <span th:case="'REVIEW'" class="tag tag--orange">검토</span>
+                                                                <span th:case="'CLOSED'" class="tag tag--gray">완료</span>
+                                                                <span th:case="*"></span> <!-- 기본 값 -->
+                                                            </span>
+                                                        </td>
+                                                        <td><span th:switch="${ticket['SUPPORT_CD']}">
+                                                                <span th:case="'ST'">기본</span>
+                                                                <span th:case="'ADD'">추가</span>
+                                                                <span th:case="''">-</span>
+                                                                <span th:case="' '">-</span>
+                                                                <span th:case="'-'">-</span>
+                                                            </span></td>
+                                                        <td><span th:text="${ticket['USER_NAME']}"></span></td>
+                                                        <td><span th:text="${ticket['MD']}"></span></td>
+                                                        <td><span th:text="${ticket['CREATE_DT']}"></span></td>
+                                                        <td><span th:text="${ticket['COMPLETE_DT']}"></span></td>
+                                                        <td><span th:switch="${ticket['SATISFACTION']}">
+                                                                <span th:case="'0'"></span>
+                                                                <span th:case="'0'">
+                                                                    <i class="fa-regular fa-star"></i>
+                                                                    <i class="fa-regular fa-star"></i>
+                                                                    <i class="fa-regular fa-star"></i>
+                                                                    <i class="fa-regular fa-star"></i>
+                                                                    <i class="fa-regular fa-star"></i>
+                                                                </span>
+                                                                <span th:case="'1'" style="color:orange">
+                                                                    <i class="fa-solid fa-star"></i>
+                                                                    <i class="fa-regular fa-star"></i>
+                                                                    <i class="fa-regular fa-star"></i>
+                                                                    <i class="fa-regular fa-star"></i>
+                                                                    <i class="fa-regular fa-star"></i>
+                                                                </span>
+                                                                <span th:case="'2'" style="color:orange">
+                                                                    <i class="fa-solid fa-star"></i>
+                                                                    <i class="fa-solid fa-star"></i>
+                                                                    <i class="fa-regular fa-star"></i>
+                                                                    <i class="fa-regular fa-star"></i>
+                                                                    <i class="fa-regular fa-star"></i>
+                                                                </span>
+                                                                <span th:case="'3'" style="color:orange">
+                                                                    <i class="fa-solid fa-star"></i>
+                                                                    <i class="fa-solid fa-star"></i>
+                                                                    <i class="fa-solid fa-star"></i>
+                                                                    <i class="fa-regular fa-star"></i>
+                                                                    <i class="fa-regular fa-star"></i>
+                                                                </span>
+                                                                <span th:case="'4'" style="color:orange">
+                                                                    <i class="fa-solid fa-star"></i>
+                                                                    <i class="fa-solid fa-star"></i>
+                                                                    <i class="fa-solid fa-star"></i>
+                                                                    <i class="fa-solid fa-star"></i>
+                                                                    <i class="fa-regular fa-star"></i>
+                                                                </span>
+                                                                <span th:case="'5'" style="color:orange">
+                                                                    <i class="fa-solid fa-star"></i>
+                                                                    <i class="fa-solid fa-star"></i>
+                                                                    <i class="fa-solid fa-star"></i>
+                                                                    <i class="fa-solid fa-star"></i>
+                                                                    <i class="fa-solid fa-star"></i>
+                                                                </span>
+                                                            </span></td>
+                                                    </tr>
+                                                </tbody>
+                                            </div>
+                                        </table>
+
+
+                                    </div>
+                                </div>
+                                <!-- //리스트 영역 -->
+                                <!-- 페이징 버튼 템플릿 -->
+                                <div class="board-footer">
+                                    <div th:replace="~{fragments/pagination :: pagination(${ticketList}, 'ticketList')}" />
+                                </div>
+                                <input type="hidden" id="currentPage" th:field="${ticketList.currentPage}" readonly>
+                                <!-- //페이징 버튼 템플릿 -->
                             </div>
-                            <input type="hidden" id ="currentPage"  th:field="${ticketList.currentPage}" readonly>
-                            <!-- //페이징 버튼 템플릿 -->
                         </div>
                     </div>
                 </div>
-            </div>
-        </main>
-        <!-- //내용 영역 -->
+            </main>
+            <!-- //내용 영역 -->
+        </div>
+        <!-- //컨텐츠 영역 -->
     </div>
-    <!-- //컨텐츠 영역 -->
-</div>
 
-<script>
-    window.addEventListener("pageshow", function(event) {
-        if (sessionStorage.getItem("fromTicketView") === "true") {
+    <script>
+        window.addEventListener("pageshow", function (event) {
+            if (sessionStorage.getItem("fromTicketView") === "true") {
 
-            sessionStorage.removeItem("fromTicketView");
-        }
-    });
-    $(document).ready(function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const searchStatus = urlParams.get('searchStatus');
-
-        if(searchStatus != null || searchStatus == ""){
-            $("#searchStatus").val(searchStatus);
-        }else{
-            $("#searchStatus").val("PROGRESS");
-        }
-
-    });
-    $("#btnSearchDetail").click(function(){
-
-		if($('#searchDetail').css("display")=="none") {
-			$('#searchDetail').show();
-		}else {
-			$('#searchDetail').hide();
-		}
-
-	});
-	$("#searchClose").click(function(){
-
-		if($('#searchDetail').css("display")=="none") {
-			$('#searchDetail').show();
-		}else {
-			$('#searchDetail').hide();
-			$("#searchType").val("");
-           // $("#searchStatus").val("");
-           // $("#searchCompany").val("");
-            $("#searchKeyword").val("");
-            $("#startDate").val("");
-            $("#endDate").val("");
-           // document.getElementById('writerYn').checked = false
-		}
-
-	});
-
-    function filterOptions() {
-        const searchText = document.getElementById('searchBox').value.toLowerCase();
-        const select = document.getElementById('searchCompany');
-        const options = select.options;
-
-        for (let i = 1; i < options.length; i++) { // 첫 번째 옵션(placeholder)은 제외
-            const optionText = options[i].text.toLowerCase();
-            options[i].style.display = optionText.includes(searchText) ? '' : 'none';
-        }
-    }
-    function gotoTicket(row){
-        const ticketId = row.getAttribute("data-id");
-        const page = $("#currentPage").val();
-        window.location.href = `/ticketView?id=${ticketId}`;
-    }
-    function searchTickets(obj) {
-        if (obj.id == "refresh"){
-          $("#searchType").val("");
-          $("#searchStatus").val("");
-          $("#searchCompany").val("");
-          $("#searchKeyword").val("");
-          $("#startDate").val("");
-          $("#endDate").val("");
-          $("#searchSupportCd").val("");
-        //  document.getElementById('writerYn').checked = false
-        }
-        var searchType = $("#searchType").val();
-        const checkedRadio = document.querySelector('input[name="filterType"]:checked');
-        if (checkedRadio) {
-            // 체크된 라디오 버튼의 value 값
-            const value = checkedRadio.value;
-            searchType = value
-        }
-        var searchStatus = $("#searchStatus").val();
-        var searchCompany = $("#searchCompany").val();
-        var searchKeyword = $("#searchKeyword").val();
-        var startDt = ($("#startDate").val() === undefined || $("#startDate").val() === "") ? '1999-01-01' : $("#startDate").val();
-        var endDt = ($("#endDate").val() === undefined || $("#endDate").val() === "") ? '2030-01-01' : $("#endDate").val();
-        var page = 1;
-        if (obj =="page"){
-            page = ($("#currentPage").val() === undefined || $("#currentPage").val() === "") ? '' : $("#currentPage").val();
-        }
-        var writerYn = "";
-        var searchSupportCd =   $("#searchSupportCd").val();
-        var searchManager = $("#searchManager").val();
-
-        //내가 작성한글 페이징 처리하기
-        const data = new URLSearchParams({
-          searchType: searchType,
-          searchStatus: searchStatus,
-          searchCompany: searchCompany,
-          searchManager: searchManager,
-          searchKeyword: searchKeyword,
-          searchSupportCd: searchSupportCd,
-          startDt: startDt,
-          endDt: endDt,
-          page: page,
-          createId: writerYn
-        });
-
-        // Ajax 요청
-        fetch('/ticketListAdmin', {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: data.toString() // URLSearchParams 객체를 문자열로 변환하여 전송 (POST로 밖에 보낼수 없음)
-        })
-        .then(response => response.text())
-        .then(data => {
-          // 응답받은 HTML을 페이지에 삽입
-          document.getElementById('ticketListContainer').innerHTML = data;
-        })
-        .catch(error => console.error('검색 중 오류 발생:', error));
-    }
-
-    function exceldownload(obj) {
-        if (obj.id == "refresh"){
-          $("#searchType").val("");
-          $("#searchStatus").val("");
-          $("#searchCompany").val("");
-          $("#searchKeyword").val("");
-          $("#startDate").val("");
-          $("#endDate").val("");
-          $("#searchSupportCd").val("");
-        //  document.getElementById('writerYn').checked = false
-        }
-        var searchType = $("#searchType").val();
-        const checkedRadio = document.querySelector('input[name="filterType"]:checked');
-        if (checkedRadio) {
-            // 체크된 라디오 버튼의 value 값
-            const value = checkedRadio.value;
-            searchType = value
-        }
-        var searchStatus = $("#searchStatus").val();
-        var searchCompany = $("#searchCompany").val();
-        var searchKeyword = $("#searchKeyword").val();
-        var startDt = ($("#startDate").val() === undefined || $("#startDate").val() === "") ? '1999-01-01' : $("#startDate").val();
-        var endDt = ($("#endDate").val() === undefined || $("#endDate").val() === "") ? '2030-01-01' : $("#endDate").val();
-        var page = 1;
-        if (obj =="page"){
-            page = ($("#currentPage").val() === undefined || $("#currentPage").val() === "") ? '' : $("#currentPage").val();
-        }
-        var writerYn = "";
-        var searchSupportCd =   $("#searchSupportCd").val();
-        var searchManager = $("#searchManager").val();
-
-        //내가 작성한글 페이징 처리하기
-        const data = new URLSearchParams({
-          searchType: searchType,
-          searchStatus: searchStatus,
-          searchCompany: searchCompany,
-          searchManager: searchManager,
-          searchKeyword: searchKeyword,
-          searchSupportCd: searchSupportCd,
-          startDt: startDt,
-          endDt: endDt,
-          page: page,
-          createId: writerYn
-        });
-
-        const formattedDate = new Date().toISOString().replace(/[-:T]/g, "").slice(0, 14);
-        const fileName = `ticket_${formattedDate}.xlsx`;
-
-        fetch('/excelDownload', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: data.toString()
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Server error: ${response.status}`);
+                sessionStorage.removeItem("fromTicketView");
             }
-            return response.blob();
-        })
-        .then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = fileName;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            window.URL.revokeObjectURL(url);
-        })
-        .catch(error => {
-            console.error("Error downloading the file:", error);
-            alert("파일 다운로드 중 오류가 발생했습니다.");
         });
-    }
+        $(document).ready(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchStatus = urlParams.get('searchStatus');
 
+            if (searchStatus != null || searchStatus == "") {
+                $("#searchStatus").val(searchStatus);
+            } else {
+                $("#searchStatus").val("PROGRESS");
+            }
 
-    // -------------------
-    // main > 완료내역 > tickeList로 넘어 올 시
-    // -------------------
-    $(document).ready(function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const searchStatus = urlParams.get('searchStatus');
+        });
+        $("#btnSearchDetail").click(function () {
 
-        if(searchStatus != null && searchStatus == "CLOSED"){
-            $("#searchStatus").val(searchStatus);
+            if ($('#searchDetail').css("display") == "none") {
+                $('#searchDetail').show();
+            } else {
+                $('#searchDetail').hide();
+            }
+
+        });
+        $("#searchClose").click(function () {
+
+            if ($('#searchDetail').css("display") == "none") {
+                $('#searchDetail').show();
+            } else {
+                $('#searchDetail').hide();
+                $("#searchType").val("");
+                // $("#searchStatus").val("");
+                // $("#searchCompany").val("");
+                $("#searchKeyword").val("");
+                $("#startDate").val("");
+                $("#endDate").val("");
+                // document.getElementById('writerYn').checked = false
+            }
+
+        });
+
+        function filterOptions() {
+            const searchText = document.getElementById('searchBox').value.toLowerCase();
+            const select = document.getElementById('searchCompany');
+            const options = select.options;
+
+            for (let i = 1; i < options.length; i++) { // 첫 번째 옵션(placeholder)은 제외
+                const optionText = options[i].text.toLowerCase();
+                options[i].style.display = optionText.includes(searchText) ? '' : 'none';
+            }
+        }
+        function gotoTicket(row) {
+            const ticketId = row.getAttribute("data-id");
+            const page = $("#currentPage").val();
+            window.location.href = `/ticketView?id=${ticketId}`;
+        }
+        function searchTickets(obj) {
+            if (obj.id == "refresh") {
+                $("#searchType").val("");
+                $("#searchStatus").val("");
+                $("#searchCompany").val("");
+                $("#searchKeyword").val("");
+                $("#startDate").val("");
+                $("#endDate").val("");
+                $("#searchSupportCd").val("");
+                //  document.getElementById('writerYn').checked = false
+            }
+            var searchType = $("#searchType").val();
+            const checkedRadio = document.querySelector('input[name="filterType"]:checked');
+            if (checkedRadio) {
+                // 체크된 라디오 버튼의 value 값
+                const value = checkedRadio.value;
+                searchType = value
+            }
+            var searchStatus = $("#searchStatus").val();
+            var searchCompany = $("#searchCompany").val();
+            var searchKeyword = $("#searchKeyword").val();
+            var startDt = ($("#startDate").val() === undefined || $("#startDate").val() === "") ? '1999-01-01' : $("#startDate").val();
+            var endDt = ($("#endDate").val() === undefined || $("#endDate").val() === "") ? '2030-01-01' : $("#endDate").val();
+            var page = 1;
+            if (obj == "page") {
+                page = ($("#currentPage").val() === undefined || $("#currentPage").val() === "") ? '' : $("#currentPage").val();
+            }
+            var writerYn = "";
+            var searchSupportCd = $("#searchSupportCd").val();
+            var searchManager = $("#searchManager").val();
+
+            //내가 작성한글 페이징 처리하기
+            const data = new URLSearchParams({
+                searchType: searchType,
+                searchStatus: searchStatus,
+                searchCompany: searchCompany,
+                searchManager: searchManager,
+                searchKeyword: searchKeyword,
+                searchSupportCd: searchSupportCd,
+                startDt: startDt,
+                endDt: endDt,
+                page: page,
+                createId: writerYn
+            });
+
+            // Ajax 요청
+            fetch('/ticketListAdmin', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: data.toString() // URLSearchParams 객체를 문자열로 변환하여 전송 (POST로 밖에 보낼수 없음)
+            })
+                .then(response => response.text())
+                .then(data => {
+                    // 응답받은 HTML을 페이지에 삽입
+                    document.getElementById('ticketListContainer').innerHTML = data;
+                })
+                .catch(error => console.error('검색 중 오류 발생:', error));
         }
 
-    });
+        function exceldownload(obj) {
+            if (obj.id == "refresh") {
+                $("#searchType").val("");
+                $("#searchStatus").val("");
+                $("#searchCompany").val("");
+                $("#searchKeyword").val("");
+                $("#startDate").val("");
+                $("#endDate").val("");
+                $("#searchSupportCd").val("");
+                //  document.getElementById('writerYn').checked = false
+            }
+            var searchType = $("#searchType").val();
+            const checkedRadio = document.querySelector('input[name="filterType"]:checked');
+            if (checkedRadio) {
+                // 체크된 라디오 버튼의 value 값
+                const value = checkedRadio.value;
+                searchType = value
+            }
+            var searchStatus = $("#searchStatus").val();
+            var searchCompany = $("#searchCompany").val();
+            var searchKeyword = $("#searchKeyword").val();
+            var startDt = ($("#startDate").val() === undefined || $("#startDate").val() === "") ? '1999-01-01' : $("#startDate").val();
+            var endDt = ($("#endDate").val() === undefined || $("#endDate").val() === "") ? '2030-01-01' : $("#endDate").val();
+            var page = 1;
+            if (obj == "page") {
+                page = ($("#currentPage").val() === undefined || $("#currentPage").val() === "") ? '' : $("#currentPage").val();
+            }
+            var writerYn = "";
+            var searchSupportCd = $("#searchSupportCd").val();
+            var searchManager = $("#searchManager").val();
 
-    function goPage(url, page) {
-        $("#currentPage").val(page);
-        // 실제 페이지 이동 로직 구현
-        searchTickets("page");
-    }
+            //내가 작성한글 페이징 처리하기
+            const data = new URLSearchParams({
+                searchType: searchType,
+                searchStatus: searchStatus,
+                searchCompany: searchCompany,
+                searchManager: searchManager,
+                searchKeyword: searchKeyword,
+                searchSupportCd: searchSupportCd,
+                startDt: startDt,
+                endDt: endDt,
+                page: page,
+                createId: writerYn
+            });
 
-</script>
+            const formattedDate = new Date().toISOString().replace(/[-:T]/g, "").slice(0, 14);
+            const fileName = `ticket_${formattedDate}.xlsx`;
+
+            fetch('/excelDownload', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: data.toString()
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Server error: ${response.status}`);
+                    }
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+                    window.URL.revokeObjectURL(url);
+                })
+                .catch(error => {
+                    console.error("Error downloading the file:", error);
+                    alert("파일 다운로드 중 오류가 발생했습니다.");
+                });
+        }
+
+
+        // -------------------
+        // main > 완료내역 > tickeList로 넘어 올 시
+        // -------------------
+        $(document).ready(function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchStatus = urlParams.get('searchStatus');
+
+            if (searchStatus != null && searchStatus == "CLOSED") {
+                $("#searchStatus").val(searchStatus);
+            }
+
+        });
+
+        function goPage(url, page) {
+            $("#currentPage").val(page);
+            // 실제 페이지 이동 로직 구현
+            searchTickets("page");
+        }
+
+    </script>
 
 </body>
 </html>
