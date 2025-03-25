@@ -162,4 +162,11 @@ public class ClientManageServiceImpl implements ClientManageService {
     public List<ClientManageDto> getClientListAll() {
         return clientManageMapper.getClientListAll();
     }
+    //특정 고객사 사용자 리스트 호출
+    @Override
+    public List<ClientManageDto> getClientListById(int id) {
+        return clientManageMapper.getClientListById(id);
+    }
+
+
 }

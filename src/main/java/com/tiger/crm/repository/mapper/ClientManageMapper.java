@@ -71,4 +71,6 @@ public interface ClientManageMapper {
     //고객 사용자 리스트 호출
     List<ClientManageDto> getClientListAll();
 
+    List<ClientManageDto> getClientListById(int id);
+
 }

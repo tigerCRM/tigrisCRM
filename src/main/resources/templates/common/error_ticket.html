@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Oops! Something went wrong</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .container {
+            text-align: center;
+        }
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        a {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            color: white;
+            background-color: #0D349B;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+        a:hover {
+            background-color: #092885;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>😢 오류가 발생했습니다</h1>
+    <p th:text="${errorMessage ?: '요청하신 페이지를 찾을 수 없습니다.'}"></p>
+    <a href="javascript:window.history.back();">돌아가기</a>
+</div>
+</body>
+</html>
