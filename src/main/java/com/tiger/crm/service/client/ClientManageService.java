@@ -63,4 +63,7 @@ public interface ClientManageService {
     //고객 사용자 리스트 호출
     List<ClientManageDto> getClientListAll();
 
+    //특정 고객사 사용자 리스트 호출
+    List<ClientManageDto> getClientListById(int id);
+
 }

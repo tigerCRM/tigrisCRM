@@ -375,7 +375,7 @@
 
             <!-- 상태 검색 조건 -->
             <if test="searchStatus == 'progress'">
-                AND STATUS_CD != 'CLOSED'
+                AND STATUS_CD != 'CLOSED' AND STATUS_CD != 'REVIEW'
             </if>
             <if test="searchStatus == 'CLOSED'">
                 AND STATUS_CD = 'CLOSED'

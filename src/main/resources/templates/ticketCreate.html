@@ -93,8 +93,18 @@
                                             <tr th:style="${userClass != 'USER' ? '' : 'display: none;'}">
                                                 <th>요청자</th>
                                                 <td>
-                                                    <input title="요청자" type="text" th:field="*{createName}" readonly>
-                                                    <input type="hidden" name="createId" id="createId" th:field="*{createId}">
+                                                    <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
+                                                        <select class="dropdown__selected" onchange="updateCreateName(this)"   id="companyOptions" th:disabled="${userClass == 'USER'}">
+                                                            <option th:each="op : ${userOptions}"
+                                                                    th:value="${op.userId}"
+                                                                    th:data-name="${op.userName}"
+                                                                    th:text="${op.userName}"
+                                                                    th:selected="${op.userId == selectedUserId}">
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <input type="hidden" id="createName" th:field="*{createName}">
+                                                    <input type="hidden" id="createId" th:field="*{createId}">
                                                 </td>
                                                 <th>고객사</th>
                                                 <td>
@@ -285,7 +295,15 @@
             document.getElementById("managerId").value = Id;
             document.getElementById("managerName").value = Name;
         }
+        function updateCreateName(selectElement) {
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            const Name = selectedOption.textContent || selectedOption.innerText;
+            const Id = selectedOption.getAttribute("value");
 
+            // hidden 필드에 선택된 회사명 설정
+            document.getElementById("createId").value = Id;
+            document.getElementById("createName").value = Name;
+        }
         //삭제
         function deleteTicket() {
             showConfirm("question", "삭제하시겠습니까?", "", function () {

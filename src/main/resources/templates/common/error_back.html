@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oops! Something went wrong</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .error-container {
+            text-align: center;
+            padding: 20px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-container h1 {
+            font-size: 72px;
+            margin: 0;
+            color: red;
+        }
+
+        .error-container p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+
+
+        .error-container .btn:hover {
+            background: #0056b3;
+        }
+
+        .error-container img {
+            width: 100px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="error-container">
+    <h1>Oops!</h1>
+    <h1 class="error-title"  th:text="${errorcode}">404</h1>
+    <p th:text="${errorMessage}">Something went wrong on our end.</p> <!-- 동적 에러 메시지 -->
+    <a href="javascript:window.history.back();" class="btn btn--l primary-btn quick-btn">Go Back</a>
+</div>
+</body>
+</html>

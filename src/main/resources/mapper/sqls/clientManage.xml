@@ -299,4 +299,13 @@
         <!--USER_CLASS != 'USER'-->
     </select>
 
+    <select id="getClientListById" resultType="com.tiger.crm.repository.dto.client.ClientManageDto">
+        SELECT TUI.USER_NAME,
+        TUI.USER_ID,
+        TUI.EMAIL,
+        TUI.PHONE
+        FROM TigerCRM.T_USER_INFO TUI
+        where USE_YN = 'Y' and COMPANY_ID = #{id}
+    </select>
+
 </mapper>

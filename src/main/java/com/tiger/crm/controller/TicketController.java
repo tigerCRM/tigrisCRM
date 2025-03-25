@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tiger.crm.common.exception.CustomException;
 import com.tiger.crm.common.file.FileStoreUtils;
+import com.tiger.crm.repository.dto.client.ClientManageDto;
 import com.tiger.crm.repository.dto.company.CompanyOptionDto;
 import com.tiger.crm.repository.dto.file.UploadFileDto;
 import com.tiger.crm.repository.dto.page.PagingRequest;
@@ -13,6 +14,7 @@ import com.tiger.crm.repository.dto.ticket.CommentDto;
 import com.tiger.crm.repository.dto.ticket.StatusMapper;
 import com.tiger.crm.repository.dto.ticket.TicketDto;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
+import com.tiger.crm.service.client.ClientManageService;
 import com.tiger.crm.service.common.CommonService;
 
 import com.tiger.crm.service.file.FileService;
@@ -55,6 +57,9 @@ public class TicketController {
     private FileService fileService;
     @Autowired
     private StatusMapper statusMapper;
+    @Autowired
+    private ClientManageService clientManageService;
+
     /*
      * 요청관리(요청관리)
      * 설명 : 요청관리 페이지 초기화면
@@ -255,6 +260,11 @@ public class TicketController {
             //model에 데이터 바인딩
             List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
             List<TicketDto> ManagerOptions = ticketService.getAllManagerOption();
+            //고객사 사용자 호출
+            List<ClientManageDto> userOptions = clientManageService.getClientListById(Integer.parseInt(companyId));
+            model.addAttribute("userOptions", userOptions);
+            model.addAttribute("selectedUserId", loginUser.getUserId());
+
             model.addAttribute("ManagerOptions", ManagerOptions);
            // model.addAttribute("selectedManagerName", managerName);
             model.addAttribute("companyOptions", companyOptions);
@@ -291,6 +301,9 @@ public class TicketController {
             }
             if (ticketDto.getTitle().isEmpty()) {
                // throw new CustomException("요청 저장에 실패했습니다.");
+            }
+            if (ticketDto.getExpectedCompleteDt() == null || ticketDto.getExpectedCompleteDt().isEmpty() ) {
+                ticketDto.setExpectedCompleteDt(null);
             }
             // 요청 저장
             int ticketId = ticketService.saveTicket(ticketDto);
@@ -334,6 +347,10 @@ public class TicketController {
             //selectbox 데이터 바인딩
             List<CompanyOptionDto> companyOptions = commonService.getCompanyOption();
             List<TicketDto> ManagerOptions = ticketService.getAllManagerOption();
+            //고객사 사용자 호출
+            List<ClientManageDto> userOptions = clientManageService.getClientListById(Integer.parseInt(ticketDetails.getCompanyId()));
+            model.addAttribute("userOptions", userOptions);
+            model.addAttribute("selectedUserId", ticketDetails.getCreateId());
             model.addAttribute("ManagerOptions", ManagerOptions);
             model.addAttribute("selectedManagerName", ticketDetails.getManagerName());
             model.addAttribute("companyOptions", companyOptions);
@@ -388,6 +405,9 @@ public class TicketController {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
                 String formattedDate = getdate.format(formatter);
                 ticketDto.setCompleteDt(formattedDate);
+            }
+            if (ticketDto.getExpectedCompleteDt() == null || ticketDto.getExpectedCompleteDt().isEmpty() ) {
+                ticketDto.setExpectedCompleteDt(null);
             }
             //사용자는 무조건 등록일 경우에만 수정가능 함
             if (userClass.equals("USER")){
@@ -452,6 +472,11 @@ public class TicketController {
             String userClass = String.valueOf(loginUser.getUserClass());
             // 요청 상세 정보 조회 - 로그인한 본인 회사만 볼수있음
             TicketDto ticketDetails = ticketService.getTicketDetails(id);
+            // ticketDetails가 null이면 오류 페이지로 이동
+            if (ticketDetails == null) {
+                model.addAttribute("errorMessage", "요청 정보를 찾을 수 없습니다.");
+                return "common/error_ticket";
+            }
             if (!String.valueOf(ticketDetails.getCompanyId()).equals(companyId) && userClass.equals("USER")) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN);  // 403 상태 코드 반환
                 response.setContentType("text/html; charset=UTF-8");  // 응답 내용 타입과 문자 인코딩 설정
@@ -689,4 +714,19 @@ public class TicketController {
         }
     }
 
+    /*
+     * 특정 고객사 사용자 리스트 호출
+     * */
+
+    @PostMapping("/getCreateUser")
+    @ResponseBody
+    public ResponseEntity<List<ClientManageDto>> getCreateUser(@RequestBody Map<String, Object> data) {
+        try {
+            int id = Integer.parseInt((String) data.get("id"));
+            List<ClientManageDto> userOptions = clientManageService.getClientListById(id);
+            return ResponseEntity.ok(userOptions);
+        } catch (Exception e) {
+            throw new CustomException("userOptions 조회 중 오류가 발생했습니다.", e);
+        }
+    }
 }
