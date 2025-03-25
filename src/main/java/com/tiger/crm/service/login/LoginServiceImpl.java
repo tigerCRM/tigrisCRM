@@ -60,11 +60,16 @@ public class LoginServiceImpl implements LoginService{
             loginMapper.resetPassword(user);
 
             // 3. 메일 발송
+            Map<String, Object> userInfo = loginMapper.getUserNameMail(user.getUserId());
             Map<String, Object> model = new HashMap<>();
-            model.put("userName", loginMapper.getUserName(user.getUserId()));
+            String email = "";
+            if (userInfo != null) {
+                email = userInfo.get("EMAIL") != null ? userInfo.get("EMAIL").toString() : "";
+                model.put("userName", userInfo.get("USER_NAME"));
+            }
             model.put("password", tempPassword);
             model.put("loginUrl", baseUrl+ "/login");
-            mailService.sendEmail(user.getUserId(), "비밀번호 초기화", "password-reset-email", model);
+            mailService.sendEmail(email, "비밀번호 초기화", "password-reset-email", model);
 
         } catch (Exception e) {
             e.getStackTrace();

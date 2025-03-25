@@ -469,9 +469,11 @@
         U.USER_NAME as MANAGER_NAME,
         DATE_FORMAT(T.CREATE_DT, '%Y-%m-%d %H:%i:%s') as CREATE_DT,
         DATE_FORMAT(T.EXPECTED_COMPLETE_DT, '%Y-%m-%d') as EXPECTED_COMPLETE_DT,
-        DATE_FORMAT(COMPLETE_DT, '%Y-%m-%d %H:%i:%s') AS COMPLETE_DT
+        DATE_FORMAT(COMPLETE_DT, '%Y-%m-%d %H:%i:%s') AS COMPLETE_DT,
+        C.EMAIL as CREATE_EMAIL
         FROM T_TICKET_INFO as T
         LEFT JOIN T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
+        LEFT JOIN TigerCRM.T_USER_INFO as C on T.CREATE_ID  = C.USER_ID
         WHERE TICKET_ID = #{ticketId} and  DELETE_YN = 'N'
     </select>
 
@@ -571,12 +573,18 @@
     </update>
 
     <!-- 댓글시 상대방 조회(본인 x) -->
-    <select id="findOtherUser" resultType="java.lang.String">
+    <select id="findOtherUser"  resultType="map">
         SELECT CASE
-                   WHEN CREATE_ID != #{commentId} THEN CREATE_ID
-                   WHEN MANAGER_ID != #{commentId} THEN MANAGER_ID
-                   END AS REMAINING_VALUE
-        FROM T_TICKET_INFO
+            WHEN T.CREATE_ID !=  #{commentId} THEN T.CREATE_ID
+            WHEN T.MANAGER_ID !=  #{commentId} THEN T.MANAGER_ID
+            END AS ID,
+            CASE WHEN T.CREATE_ID !=  #{commentId} THEN C.EMAIL
+            WHEN T.MANAGER_ID !=  #{commentId} THEN U.EMAIL
+            END AS EMAIL
+        FROM TigerCRM.T_TICKET_INFO T
+        LEFT JOIN TigerCRM.T_USER_INFO as U on T.MANAGER_ID = U.USER_ID
+        LEFT JOIN TigerCRM.T_USER_INFO as C on T.CREATE_ID  = C.USER_ID
         WHERE TICKET_ID = #{ticketId}
+
     </select>
 </mapper>

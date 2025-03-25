@@ -3,6 +3,7 @@ package com.tiger.crm.repository.mapper;
 import com.tiger.crm.repository.dto.user.UserLoginDto;
 import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface LoginMapper {
@@ -27,5 +28,5 @@ public interface LoginMapper {
     List<UserLoginDto> getAllManagers(int companyId);
 
     // 메일 발송용 유저 이름 조회
-    String getUserName(String userId);
+    Map<String, Object> getUserNameMail(String userId);
 }

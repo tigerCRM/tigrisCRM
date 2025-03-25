@@ -154,7 +154,7 @@ public class TicketServiceImpl implements TicketService {
             model.put("ticketId", ticketDto.getTicketId());
             model.put("companyName", ticketDto.getCompanyName());
             
-            mailService.sendEmail(ticketDto.getCreateId(), "요청상태변경", "ticket-email", model);
+            mailService.sendEmail(ticketDto.getCreateEmail(), "요청상태변경", "ticket-email", model);
             alertService.sendAlert(AlertType.TICKET_STATUS ,newStatus, ticketId, ticketDto.getTitle(), ticketDto.getCreateId(), ticketDto.getManagerId());
         }
     }
@@ -189,14 +189,16 @@ public class TicketServiceImpl implements TicketService {
         model.put("companyName", ticketDto.getCompanyName());
 
         // 댓글 상대방 조회 (본인 제외)
-        String receiverId = ticketMapper.findOtherUser(commentDto.getTicketId(), commentDto.getCreateId());
-        if (receiverId != null) {
+        Map<String, Object> receiver = ticketMapper.findOtherUser(commentDto.getTicketId(), commentDto.getCreateId());
+
+      //  String receiverId = ticketMapper.findOtherUser(commentDto.getTicketId(), commentDto.getCreateId());
+        if (receiver != null) {
             //진행상태 변경일경우에는 댓글알림은 보내지 않는다!
             if (!commentDto.getAlarmYN().equals("N")){
-                mailService.sendEmail(receiverId, "댓글알림", "ticket-comment-email", model);
+                mailService.sendEmail(receiver.get("EMAIL").toString(), "댓글알림", "ticket-comment-email", model);
             }
             alertService.sendAlert(AlertType.TICKET_COMMENT, "COMMENT", commentDto.getTicketId(),
-                    commentDto.getContent(), commentDto.getCreateId(), receiverId);
+                    commentDto.getContent(), commentDto.getCreateId(), receiver.get("ID").toString());
         } else {
          //   log.warn("댓글 알림 대상 없음: ticketId={}, createId={}", commentDto.getTicketId(), commentDto.getCreateId());
         }

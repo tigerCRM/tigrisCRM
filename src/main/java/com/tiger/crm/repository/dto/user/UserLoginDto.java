@@ -23,4 +23,6 @@ public class UserLoginDto {
     private String phone;
     //비밀번호 필수변경
     private String pwCh;
+
+    private String email;
 }

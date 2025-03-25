@@ -28,8 +28,12 @@ public class TicketDto {
     private String content;         //내용
     private String createId;        //작성자ID
     private String createName;      //작성자이름
+    private String createEmail;     //작성자메일
+    
     private String managerId;       //담당자ID
     private String managerName;     //담당자이름
+    private String managerEmail;     //담당자메일
+    
     private String companyName;     //고객사명
     private String companyId;       //고객사code
     private String completeDt;      //실제완료일
@@ -48,4 +52,6 @@ public class TicketDto {
     private String supportCd;           //지원범위
     private String requestTypeCd;       //작업구분
     private List<MultipartFile> attachFiles;    //첨부파일
+
+   
 }

@@ -66,6 +66,6 @@ public interface TicketMapper {
     int updateCommentFileId(String fileId, int Id);
 
     // 댓글시 상대방 조회(본인 x)
-    String findOtherUser(Integer ticketId, String commentId);
+    Map<String, Object> findOtherUser(Integer ticketId, String commentId);
 
 }
