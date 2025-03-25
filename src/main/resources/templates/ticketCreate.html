@@ -90,7 +90,7 @@
                                                     </div>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <tr th:if="${userClass != 'USER'}">
                                                 <th>요청자</th>
                                                 <td>
                                                     <input title="요청자" type="text" th:field="*{createName}" readonly>
@@ -108,7 +108,7 @@
                                                     <input type="hidden" name="companyName" id="companyName" th:field="*{companyName}">
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <tr th:if="${userClass != 'USER'}">
                                                 <th>담당자</th>
                                                 <td>
                                                     <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
