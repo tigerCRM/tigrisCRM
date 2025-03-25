@@ -2,492 +2,498 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{common/frame_head :: head('요청 등록 상세')}"></head>
 <body>
-<div class="wrapper">
-    <!-- 왼쪽 메뉴  -->
-    <div th:replace="~{common/frame_left_menu :: frame_left_menu}"/>
+    <div class="wrapper">
+        <!-- 왼쪽 메뉴  -->
+        <div th:replace="~{common/frame_left_menu :: frame_left_menu}" />
 
-    <!-- 컨텐츠 영역 -->
-    <div class="main-area">
-        <!-- 내용 영역 -->
-        <main class="form-content">
-            <div class="container">
-                <!--왼쪽화면-->
-                <div class="main-widget-wrap">
-                    <div class="content">
-                        <!-- 헤더 영역 -->
-                        <div class="search--box">
-                            <div class="content-header">
-                                <h2 class="text-body1">
-                                    <div class="flex flex-align_center gap--8">
-                                        <b>요청 정보 상세</b>
-                                    </div>
-                                </h2>
-                            </div>
-                        </div>
-                        <!-- //헤더 영역 -->
-                        <!-- form 영역 -->
-                        <form action="/ticketModify" method="post" enctype="multipart/form-data"
-                              th:object="${ticketinfo}" onsubmit="return preventEnterSubmit(event)">
-                            <div>
-                                <!--사용자 입력 영역-->
-                                <table class="table table03 table--h table--xs">
-                                    <colgroup>
-                                        <col style="width: 18%;">
-                                        <col style="width: 32%;">
-                                        <col style="width: 18%;">
-                                        <col style="width: auto;">
-                                    </colgroup>
-                                    <tbody>
-                                    <tr>
-                                        <input type="hidden" id="ticketId" th:field="*{ticketId}">
-                                        <!--진행사항 progress bar-->
-                                        <div class="step-progress">
-                                            <div class="step">
-                                                <div class="step-number"></div>
-                                                <div class="step-status">OPEN</div>
-                                                <div class="step-label">등록</div>
-                                            </div>
-                                            <div class="separator"></div>
-                                            <div class="step">
-                                                <div class="step-number"></div>
-                                                <div class="step-status">RECEIPT</div>
-                                                <div class="step-label">접수</div>
-                                            </div>
-                                            <div class="separator"></div>
-                                            <div class="step">
-                                                <div class="step-number"></div>
-                                                <div class="step-status">PROGRESS</div>
-                                                <div class="step-label">진행</div>
-                                            </div>
-                                            <div class="separator"></div>
-                                            <div class="step">
-                                                <div class="step-number"></div>
-                                                <div class="step-status">REVIEW</div>
-                                                <div class="step-label">검토</div>
-                                            </div>
-                                            <div class="separator"></div>
-                                            <div class="step">
-                                                <div class="step-number"></div>
-                                                <div class="step-status">CLOSED</div>
-                                                <div class="step-label">완료</div>
-                                            </div>
+        <!-- 컨텐츠 영역 -->
+        <div class="main-area">
+            <!-- 내용 영역 -->
+            <main class="form-content">
+                <div class="container">
+                    <!--왼쪽화면-->
+                    <div class="main-widget-wrap">
+                        <div class="content">
+                            <!-- 헤더 영역 -->
+                            <div class="search--box">
+                                <div class="content-header">
+                                    <h2 class="text-body1">
+                                        <div class="flex flex-align_center gap--8">
+                                            <b>요청 정보 상세</b>
                                         </div>
-                                    </tr>
-                                    <tr>
-                                        <th>제목</th>
-                                        <td colspan="3">
-                                            <span id="title" th:text="*{title}"></span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>요청자</th>
-                                        <td>
-                                            <span id="createName" th:text="*{createName}"></span>
-                                        </td>
-                                        <th>고객사</th>
-                                        <td>
-                                            <span id="companyName" th:text="*{companyName}"></span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>담당자</th>
-                                        <td>
-                                            <span id="managerName" th:text="*{managerName}"></span>
-                                            <input type="hidden" id="managerId" th:field="*{managerId}">
-                                        </td>
-                                        <th>중요도</th>
-                                        <td>
-                                            <span th:switch="*{priorityYn}">
-                                                <span th:case="'Y'">긴급</span>
-                                                <span th:case="'N'">일반</span>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>작업구분</th>
-                                        <td>
-                                            <span th:switch="*{requestTypeCd}">
-                                                <span th:case="'QA'">문의답변</span>
-                                                <span th:case="'ERR'">오류수정</span>
-                                                <span th:case="'ADD'">기능추가</span>
-                                                <span th:case="'CH'">기능변경</span>
-                                                <span th:case="'SP'">기술지원</span>
-                                                <span th:case="'OP'">운영작업</span>
-                                                <span th:case="'ETC'">기타</span>
-                                            </span>
-                                        </td>
-                                        <th>지원범위</th>
-                                        <td>
-                                            <span th:switch="*{supportCd}">
-                                                <span th:case="'ST'">기본</span>
-                                                <span th:case="'ADD'">추가</span>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-
-                                        <th>희망완료일</th>
-                                        <td>
-                                            <span id="expectedCompleteDt" name="expectedCompleteDt" th:text="*{expectedCompleteDt}"></span>
-                                        </td>
-                                        <th>진행상태</th>
-                                        <td>
-                                            <div style="display: flex; align-items: center; gap: 5px;">
-                                                <div class="dropdown dropdown--s wd130" aria-expanded="false"
-                                                     tabindex="0">
-                                                    <select class="dropdown__selected" id="statusCd" name="statusCd"
-                                                            th:field="*{statusCd}" th:disabled="${user.userClass == 'USER'}">
-                                                        <option th:each="op : ${statusCd}"
-                                                                th:value="${op.key}"
-                                                                th:text="${op.value}"
-                                                                th:attr="style=${user.userClass == 'USER' and (op.key == 'OPEN' or op.key == 'RECEIPT' or op.key == 'PROGRESS')} ? 'display: none;' : null">
-                                                        </option>
-                                                    </select>
+                                    </h2>
+                                </div>
+                            </div>
+                            <!-- //헤더 영역 -->
+                            <!-- form 영역 -->
+                            <form action="/ticketModify" method="post" enctype="multipart/form-data" th:object="${ticketinfo}" onsubmit="return preventEnterSubmit(event)">
+                                <div>
+                                    <!--사용자 입력 영역-->
+                                    <table class="table table03 table--h table--xs">
+                                        <colgroup>
+                                            <col style="width: 18%;">
+                                            <col style="width: 32%;">
+                                            <col style="width: 18%;">
+                                            <col style="width: auto;">
+                                        </colgroup>
+                                        <tbody>
+                                            <tr>
+                                                <input type="hidden" id="ticketId" th:field="*{ticketId}">
+                                                <!--진행사항 progress bar-->
+                                                <div class="step-progress">
+                                                    <div class="step">
+                                                        <div class="step-number"></div>
+                                                        <div class="step-status">OPEN</div>
+                                                        <div class="step-label">등록</div>
+                                                    </div>
+                                                    <div class="separator"></div>
+                                                    <div class="step">
+                                                        <div class="step-number"></div>
+                                                        <div class="step-status">RECEIPT</div>
+                                                        <div class="step-label">접수</div>
+                                                    </div>
+                                                    <div class="separator"></div>
+                                                    <div class="step">
+                                                        <div class="step-number"></div>
+                                                        <div class="step-status">PROGRESS</div>
+                                                        <div class="step-label">진행</div>
+                                                    </div>
+                                                    <div class="separator"></div>
+                                                    <div class="step">
+                                                        <div class="step-number"></div>
+                                                        <div class="step-status">REVIEW</div>
+                                                        <div class="step-label">검토</div>
+                                                    </div>
+                                                    <div class="separator"></div>
+                                                    <div class="step">
+                                                        <div class="step-number"></div>
+                                                        <div class="step-status">CLOSED</div>
+                                                        <div class="step-label">완료</div>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <button type="button" class="btn btn--s primary-btn"
-                                                            onclick="changeStatus()" th:style="${user.userClass == 'USER'} ? 'display: none;' : ''">상태저장
-                                                    </button>
-                                                    <button type="button" class="btn btn--s primary-btn"
-                                                            onclick="changeStatus('CLOSED')"
-                                                             th:style="${user.userClass == 'USER' AND ticketinfo.statusCd == 'REVIEW'} ? '' : 'display: none;'">
-                                                        완료처리
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-
-                                        <th>연관요청</th>
-                                        <td>
-                                            <span id="parentTicketCd" name="parentTicketCd" th:text="*{parentTicketCd}"></span>
-                                        </td>
-
-                                        <th>등록일</th>
-                                        <td>
-                                            <span id="createDt" th:text="*{createDt}"></span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <th>완료일</th>
-                                        <td>
-                                            <span id="completeDt" th:text="*{completeDt}"></span>
-                                        </td>
-                                        <th>처리일수</th>
-                                        <td>
-                                            <input type="text" class="input--s input01" id="md"
-                                                   th:field="*{md}"
-                                                   onchange="validatemd()"
-                                                   onkeypress="return event.keyCode !== 13;"
-                                                   th:attr="disabled=${user.userClass == 'USER' ? 'disabled' : null}" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4">
-                                            <div class="editor-wrap">
-                                                <div class="editor-wrap">
-                                                    <div id="editorContent"></div>
-                                                    <input type="hidden" name="content" id="content"
-                                                           th:field="*{content}">
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr th:if="${uploadFiles != null and not uploadFiles.isEmpty()}">
-                                        <th>첨부파일</th>
-                                        <td colspan="3">
-                                            <div class="attachment-wrapper">
-                                                <div class="attachment-file">
-                                                    <!--기존에 있었던 첨부파일-->
-                                                    <ul id="fileAttach" class="list01">
-                                                        <li class="list__item" th:each="file : ${uploadFiles}">
-                                                            <div class="item__title">
-                                                                <svg class="icon icon--20 color-gray700">
-                                                                    <use href="/assets/images/icon/sprite-sheet.svg#attachment"></use>
-                                                                </svg>
-                                                                <a th:href="@{/fileDownload(fileName=${file.fileName})}"
-                                                                   th:text="${file.originFileName}"
-                                                                   class="file-link">파일 이름 sample</a>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                    <!--//기존에 있었던 첨부파일-->
-                                                    <!--추가하는 첨부파일-->
-                                                    <ul id="addfileAttach" class="list01">
-                                                    </ul>
-                                                    <!--//추가하는 첨부파일-->
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <!--//사용자 입력 영역-->
-                                <!--댓글 영역-->
-                                <!--의견 영역-->
-                                <div class="comment__write" th:style="${commentList == null or commentList.size() == 0 ? 'display:none;' : ''}">
-                                    <div>
-                                        <h2>피드백</h2>
-                                    </div>
-                                    <div th:if="${commentList != null and commentList.size() > 0}">
-                                        <div class="message_box" th:each="comment : ${commentList}">
-                                            <div class="message_info">
-                                                <div class="user_name" th:text="${comment.createName}">작성자</div>
-                                                <div th:class="${comment.userClass == 'USER' ? 'message' : 'sendmessage'}">
-                                                    <p style="display:inline-block; white-space: pre-wrap;" th:text="${comment.content}"></p>
-                                                </div>
-                                                <div class="message_time">
-                                                    <span th:text="${comment.createDt}"></span>
-                                                    <!--<button type="button" class="btn btn&#45;&#45;xs mono-ghost-btn" onclick="delComment(this)"
+                                            </tr>
+                                            <tr>
+                                                <th>제목</th>
+                                                <td colspan="3">
+                                                    <span id="title" th:text="*{title}"></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>요청자</th>
+                                                <td>
+                                                    <span id="createName" th:text="*{createName}"></span>
+                                                </td>
+                                                <th>고객사</th>
+                                                <td>
+                                                    <span id="companyName" th:text="*{companyName}"></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>희망완료일</th>
+                                                <td>
+                                                    <span id="expectedCompleteDt" name="expectedCompleteDt" th:text="*{expectedCompleteDt}"></span>
+                                                </td>
+                                                <th>등록일</th>
+                                                <td>
+                                                    <span id="createDt" th:text="*{createDt}"></span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>연관요청</th>
+                                                <td>
+                                                    <span id="parentTicketCd" name="parentTicketCd" th:text="*{parentTicketCd}"></span>
+                                                </td>
+                                                <th>중요도</th>
+                                                <td>
+                                                    <span th:switch="*{priorityYn}">
+                                                        <span th:case="'Y'">긴급</span>
+                                                        <span th:case="'N'">일반</span>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>작업구분</th>
+                                                <td>
+                                                    <span th:switch="*{requestTypeCd}">
+                                                        <span th:case="'QA'">문의답변</span>
+                                                        <span th:case="'ERR'">오류수정</span>
+                                                        <span th:case="'ADD'">기능추가</span>
+                                                        <span th:case="'CH'">기능변경</span>
+                                                        <span th:case="'SP'">기술지원</span>
+                                                        <span th:case="'OP'">운영작업</span>
+                                                        <span th:case="'ETC'">기타</span>
+                                                    </span>
+                                                </td>
+                                                <th>지원범위</th>
+                                                <td>
+                                                    <span th:switch="*{supportCd}">
+                                                        <span th:case="'ST'">기본</span>
+                                                        <span th:case="'ADD'">추가</span>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>담당자</th>
+                                                <td>
+                                                    <span id="managerName" th:text="*{managerName}"></span>
+                                                    <input type="hidden" id="managerId" th:field="*{managerId}">
+                                                </td>
+                                                <th>진행상태</th>
+                                                <td>
+                                                    <div style="display: flex; align-items: center; gap: 5px;">
+                                                        <div class="dropdown dropdown--s wd130" aria-expanded="false" tabindex="0">
+                                                            <select class="dropdown__selected" id="statusCd" name="statusCd" th:field="*{statusCd}" th:disabled="${user.userClass == 'USER'}">
+                                                                <option th:each="op : ${statusCd}" th:value="${op.key}" th:text="${op.value}" th:attr="style=${user.userClass == 'USER' and (op.key == 'OPEN' or op.key == 'RECEIPT' or op.key == 'PROGRESS')} ? 'display: none;' : null">
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                        <div>
+                                                            <button type="button" class="btn btn--s primary-btn" onclick="changeStatus()" th:style="${user.userClass == 'USER'} ? 'display: none;' : ''">상태저장
+                                                            </button>
+                                                            <button type="button" class="btn btn--s primary-btn" onclick="changeStatus('CLOSED')" th:style="${user.userClass == 'USER' AND ticketinfo.statusCd == 'REVIEW'} ? '' : 'display: none;'">
+                                                                완료처리
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th>완료일</th>
+                                                <td>
+                                                    <span id="completeDt" th:text="*{completeDt}"></span>
+                                                </td>
+                                                <th>처리일수</th>
+                                                <td>
+                                                    <input type="text" class="input--s input01" id="md" th:field="*{md}" onchange="validatemd()" onkeypress="return event.keyCode !== 13;" th:attr="disabled=${user.userClass == 'USER' ? 'disabled' : null}" />
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="4">
+                                                    <div class="editor-wrap">
+                                                        <div class="editor-wrap">
+                                                            <div id="editorContent"></div>
+                                                            <input type="hidden" name="content" id="content" th:field="*{content}">
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr th:if="${uploadFiles != null and not uploadFiles.isEmpty()}">
+                                                <th>첨부파일</th>
+                                                <td colspan="3">
+                                                    <div class="attachment-wrapper">
+                                                        <div class="attachment-file">
+                                                            <!--기존에 있었던 첨부파일-->
+                                                            <ul id="fileAttach" class="list01">
+                                                                <li class="list__item" th:each="file : ${uploadFiles}">
+                                                                    <div class="item__title">
+                                                                        <svg class="icon icon--20 color-gray700">
+                                                                            <use href="/assets/images/icon/sprite-sheet.svg#attachment"></use>
+                                                                        </svg>
+                                                                        <a th:href="@{/fileDownload(fileName=${file.fileName})}" th:text="${file.originFileName}" class="file-link">파일 이름 sample</a>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                            <!--//기존에 있었던 첨부파일-->
+                                                            <!--추가하는 첨부파일-->
+                                                            <ul id="addfileAttach" class="list01">
+                                                            </ul>
+                                                            <!--//추가하는 첨부파일-->
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!--//사용자 입력 영역-->
+                                    <!--댓글 영역-->
+                                    <!--의견 영역-->
+                                    <div class="comment__write" th:style="${commentList == null or commentList.size() == 0 ? 'display:none;' : ''}">
+                                        <div>
+                                            <h2>피드백</h2>
+                                        </div>
+                                        <div th:if="${commentList != null and commentList.size() > 0}">
+                                            <div class="message_box" th:each="comment : ${commentList}">
+                                                <div class="message_info">
+                                                    <div class="user_name" th:text="${comment.createName}">작성자</div>
+                                                    <div th:class="${comment.userClass == 'USER' ? 'message' : 'sendmessage'}">
+                                                        <p style="display:inline-block; white-space: pre-wrap;" th:text="${comment.content}"></p>
+                                                    </div>
+                                                    <div class="message_time">
+                                                        <span th:text="${comment.createDt}"></span>
+                                                        <!--<button type="button" class="btn btn&#45;&#45;xs mono-ghost-btn" onclick="delComment(this)"
                                                             th:if="${user.userName == comment.createName}"
                                                             th:attr="data-comment-id=${comment.answerId}">삭제</button>-->
-                                                </div>
-                                                <div id="commentfile" class="file-preview-container" th:if="${comment.attachFiles != null and comment.attachFiles.size() > 0}">
-                                                    <svg class="icon icon--20 color-gray700">
-                                                        <use href="/assets/images/icon/sprite-sheet.svg#attachment"></use>
-                                                    </svg>
-                                                    <div class="file-preview-item" th:each="file : ${comment.attachFiles}">
-                                                        <a th:href="@{'/fileDownload?fileName=' + ${file.fileName}}" th:text="${file.originFileName}"></a>
+                                                    </div>
+                                                    <div id="commentfile" class="file-preview-container" th:if="${comment.attachFiles != null and comment.attachFiles.size() > 0}">
+                                                        <svg class="icon icon--20 color-gray700">
+                                                            <use href="/assets/images/icon/sprite-sheet.svg#attachment"></use>
+                                                        </svg>
+                                                        <div class="file-preview-item" th:each="file : ${comment.attachFiles}">
+                                                            <a th:href="@{'/fileDownload?fileName=' + ${file.fileName}}" th:text="${file.originFileName}"></a>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="comment__write" >
-                                    <textarea id="comment" cols="30" rows="10" class="textarea01 input--full"
-                                              placeholder="댓글을 입력해주세요"></textarea>
-                                    <div class="flex flex-justify_end mt8">
-                                        <div id="file-preview" class="file-preview-container">
-                                            <!-- 첨부 파일 미리보기 리스트가 여기에 표시됩니다. -->
+                                    <div class="comment__write">
+                                        <textarea id="comment" cols="30" rows="10" class="textarea01 input--full" placeholder="댓글을 입력해주세요"></textarea>
+                                        <div class="flex flex-justify_end mt8">
+                                            <div id="file-preview" class="file-preview-container">
+                                                <!-- 첨부 파일 미리보기 리스트가 여기에 표시됩니다. -->
+                                            </div>
+                                            <svg class="icon icon--20 color-gray700" style="margin-right: 10px;margin-top: 8px;cursor:pointer" onclick="addAttachComment();">
+                                                <use href="/assets/images/icon/sprite-sheet.svg#attachment"></use>
+                                            </svg>
+                                            <input type="file" multiple="multiple" id="commnetFileInput" name="commnetFileInput" class="file_attach_input" onchange="previewFiles()">
+                                            <button type="button" class="btn btn--s primary-btn" onclick="addComment()">댓글 작성</button>
                                         </div>
-                                        <svg class="icon icon--20 color-gray700" style="margin-right: 10px;margin-top: 8px;cursor:pointer" onclick="addAttachComment();">
-                                            <use href="/assets/images/icon/sprite-sheet.svg#attachment"></use>
-                                        </svg>
-                                        <input type="file" multiple="multiple" id="commnetFileInput" name="commnetFileInput" class="file_attach_input" onchange="previewFiles()">
-                                        <button type="button" class="btn btn--s primary-btn" onclick="addComment()">댓글 작성</button>
                                     </div>
+                                    <!--//댓글 영역-->
+                                    <!--버튼그룹-->
+                                    <div class="button-group align-right">
+                                        <button type="submit" class="btn btn--m primary-btn" th:if="${user != null and (user.userClass == 'ADMIN' or (ticketinfo.statusCd == 'OPEN' and (user.userName == ticketinfo.createName or user.userClass != 'USER')))}">
+                                            수정
+                                        </button>
+                                        <button type="button" class="btn btn--m danger-btn" th:if="${user != null and (user.userName == ticketinfo.createName or user.userClass != 'USER')}" th:style="${user.userClass == 'USER'} ? 'display: none;' : ''" onclick="deleteTicket()">삭제</button>
+                                        <button type="button" class="btn btn--m secondary-btn" th:style="${ticketinfo.statusCd != 'CLOSED'} ? 'display: none;' : ''" onclick="goReRequest()">재요청</button>
+                                        <button type="button" class="btn btn--m secondary-btn" onclick="goBack()">목록
+                                        </button>
+                                    </div>
+                                    <!--//버튼그룹-->
                                 </div>
-                                <!--//댓글 영역-->
-                                <!--버튼그룹-->
-                                <div class="button-group align-right">
-                                    <button type="submit" class="btn btn--m primary-btn"
-                                            th:if="${user != null and (user.userClass == 'ADMIN' or (ticketinfo.statusCd == 'OPEN' and (user.userName == ticketinfo.createName or user.userClass != 'USER')))}">
-                                        수정
-                                    </button>
-                                    <button type="button" class="btn btn--m danger-btn" th:if="${user != null and (user.userName == ticketinfo.createName or user.userClass != 'USER')}" th:style="${user.userClass == 'USER'} ? 'display: none;' : ''" onclick="deleteTicket()">삭제</button>
-                                    <button type="button" class="btn btn--m secondary-btn" th:style="${ticketinfo.statusCd != 'CLOSED'} ? 'display: none;' : ''"
-                                            onclick="goReRequest()">재요청</button>
-                                    <button type="button" class="btn btn--m secondary-btn"
-                                            onclick="goBack()">목록
-                                    </button>
-                                </div>
-                                <!--//버튼그룹-->
-                            </div>
-                        </form>
-                        <!-- //form 영역 -->
+                            </form>
+                            <!-- //form 영역 -->
+                        </div>
+                    </div>
+                    <!--오른쪽화면-->
+                    <div class="main-widget-wrap">
+
                     </div>
                 </div>
-                <!--오른쪽화면-->
-                <div class="main-widget-wrap">
-
-                </div>
-            </div>
-        </main>
-        <!-- //내용 영역 -->
+            </main>
+            <!-- //내용 영역 -->
+        </div>
+        <!-- //컨텐츠 영역 -->
     </div>
-    <!-- //컨텐츠 영역 -->
-</div>
 
-<script>
-    var mode = "read";
-    var editor = common.loadOrInitializeEditor(editor , mode);
+    <script>
+        var mode = "read";
+        var editor = common.loadOrInitializeEditor(editor, mode);
 
-    //상태 progress
-    document.addEventListener("DOMContentLoaded", function () {
-       const stepProgress = document.querySelector('.step-progress');
-       const statusCd = $("#statusCd").val();
+        //상태 progress
+        document.addEventListener("DOMContentLoaded", function () {
+            const stepProgress = document.querySelector('.step-progress');
+            const statusCd = $("#statusCd").val();
 
-       const steps = stepProgress.querySelectorAll('.step');
-       const statusOrder = ['OPEN', 'RECEIPT', 'PROGRESS', 'REVIEW', 'CLOSED'];
+            const steps = stepProgress.querySelectorAll('.step');
+            const statusOrder = ['OPEN', 'RECEIPT', 'PROGRESS', 'REVIEW', 'CLOSED'];
 
-       steps.forEach((step, index) => {
-           const stepStatus = step.querySelector('.step-status').textContent;
+            steps.forEach((step, index) => {
+                const stepStatus = step.querySelector('.step-status').textContent;
 
-           if (statusOrder.indexOf(stepStatus) < statusOrder.indexOf(statusCd)) {
-               step.classList.add('completed');
-               step.classList.remove('active');
-           } else if (statusOrder.indexOf(stepStatus) === statusOrder.indexOf(statusCd)) {
-               step.classList.add('active');
-              step.classList.remove('completed');
-           } else {
-               step.classList.remove('active', 'completed');
-           }
-       });
-    });
-    var selectedFiles = []; //전송 파일 배열
-    document.getElementById('commnetFileInput').addEventListener('change', () => {
-        const fileInput = document.getElementById('commnetFileInput');
-        console.log("파일 선택 완료");
-        console.log(fileInput.files);
-        const files = Array.from(fileInput.files); // 새로운 파일 배열
-        files.forEach(file => {
-          // 동일한 파일명이 있으면 추가하지 않음
-          if (!selectedFiles.some(f => f.name === file.name)) {
-              selectedFiles.push(file);
-          }
+                if (statusOrder.indexOf(stepStatus) < statusOrder.indexOf(statusCd)) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                } else if (statusOrder.indexOf(stepStatus) === statusOrder.indexOf(statusCd)) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+            });
         });
-        fileInput.value = ''; // 파일 선택창 초기화
-    });
+        var selectedFiles = []; //전송 파일 배열
+        document.getElementById('commnetFileInput').addEventListener('change', () => {
+            const fileInput = document.getElementById('commnetFileInput');
+            console.log("파일 선택 완료");
+            console.log(fileInput.files);
+            const files = Array.from(fileInput.files); // 새로운 파일 배열
+            files.forEach(file => {
+                // 동일한 파일명이 있으면 추가하지 않음
+                if (!selectedFiles.some(f => f.name === file.name)) {
+                    selectedFiles.push(file);
+                }
+            });
+            fileInput.value = ''; // 파일 선택창 초기화
+        });
 
-    function preventEnterSubmit(event) {
-        if (event.keyCode === 13) {
-            event.preventDefault();
-            return false;
-        }
-    }
-
-    function validatemd(){
-        const md = document.getElementById("md");
-        const isNumberOrDecimal = /^\d+(\.\d+)?$/;
-        if (md!=null){
-            // 숫자만 입력 제한
-            if (md.value != '' & !isNumberOrDecimal.test(md.value) ) {
-                md.classList.add("input--error");
-                md.focus();
-                showMessage('info', '필수값', '숫자와 소수점만 입력할 수 있습니다.');
+        function preventEnterSubmit(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
                 return false;
             }
-            md.classList.remove("input--error");
         }
-    }
-    //상태변경
-    function changeStatus(status) {
-        const url = `/changeStatus`;
-        var id = $("#ticketId").val();
-        var newStatus = $("#statusCd").val();
-        validatemd();
-        var md = $("#md").val();
-        var requestData = {status: newStatus, id: id, md:md, result: '0'};
-        if (status=="CLOSED"){
-            newStatus = "CLOSED"
+
+        function validatemd() {
+            const md = document.getElementById("md");
+            const isNumberOrDecimal = /^\d+(\.\d+)?$/;
+            if (md != null) {
+                // 숫자만 입력 제한
+                if (md.value != '' & !isNumberOrDecimal.test(md.value)) {
+                    md.classList.add("input--error");
+                    md.focus();
+                    showMessage('info', '필수값', '숫자와 소수점만 입력할 수 있습니다.');
+                    return false;
+                }
+                md.classList.remove("input--error");
+            }
         }
-        if (newStatus == "CLOSED"){
-            showFeedbackConfirm(
-                '피드백을 주세요',
-                '서비스에 대해 어떻게 생각하시나요?',
-                (result) => {
-                    requestData = {status: newStatus, id: id, result: result.feedback, comment: result.comment};
-                    if (result != 'cancelled') {
-                        fetch('/chSatisfaction', {
-                            method: 'POST',
-                            headers: {
-                            'Content-Type': 'application/json',
-                        },
-                            body: JSON.stringify(requestData),
-                        })
-                        .then(response => {
-                            if (!response.ok) {
+        //상태변경
+        function changeStatus(status) {
+            const url = `/changeStatus`;
+            var id = $("#ticketId").val();
+            var newStatus = $("#statusCd").val();
+            validatemd();
+            var md = $("#md").val();
+            var requestData = { status: newStatus, id: id, md: md, result: '0' };
+            if (status == "CLOSED") {
+                newStatus = "CLOSED"
+            }
+            if (newStatus == "CLOSED") {
+                showFeedbackConfirm(
+                    '피드백을 주세요',
+                    '서비스에 대해 어떻게 생각하시나요?',
+                    (result) => {
+                        requestData = { status: newStatus, id: id, result: result.feedback, comment: result.comment };
+                        if (result != 'cancelled') {
+                            fetch('/chSatisfaction', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(requestData),
+                            })
+                                .then(response => {
+                                    if (!response.ok) {
+                                        return response.text().then(text => { throw new Error(text); });
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    showMessage('success', '성공', '피드백 감사합니다.');
+                                })
+                                .catch(error => {
+                                    console.error('Error updating status:', error);
+                                    showMessage('error', '실패', '오류가 발생했습니다:');
+                                });
+                        } else if (result === 'cancelled') {
+                            console.log('사용자가 취소했습니다.');
+                        }
+                    }
+                )
+            } else {
+                fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData),
+                })
+                    .then(response => {
+                        if (!response.ok) {
                             return response.text().then(text => { throw new Error(text); });
                         }
                         return response.json();
-                        })
-                        .then(data => {
-                            showMessage('success', '성공', '피드백 감사합니다.');
-                        })
-                        .catch(error => {
-                            console.error('Error updating status:', error);
-                            showMessage('error', '실패', '오류가 발생했습니다:');
-                        });
-                    }else if (result === 'cancelled') {
-                        console.log('사용자가 취소했습니다.');
-                    }
-                }
-            )
-        }else{
-            fetch(url, {
-                method: 'PUT',
-                headers: {
-                'Content-Type': 'application/json',
-            },
-                body: JSON.stringify(requestData),
-            })
-            .then(response => {
-                if (!response.ok) {
-                return response.text().then(text => { throw new Error(text); });
+                    })
+                    .then(data => {
+                        console.log('Status updated successfully:', data);
+                        showMessage('success', '성공', '진행상태가 변경되었습니다.');
+                        // location.reload();
+                    })
+                    .catch(error => {
+                        console.error('Error updating status:', error);
+                        showMessage('error', '실패', '상태 업데이트 중 오류가 발생했습니다:');
+                    });
             }
-            return response.json();
-            })
-            .then(data => {
-                console.log('Status updated successfully:', data);
-                showMessage('success', '성공', '진행상태가 변경되었습니다.');
-               // location.reload();
-            })
-            .catch(error => {
-                console.error('Error updating status:', error);
-                showMessage('error', '실패', '상태 업데이트 중 오류가 발생했습니다:');
+
+        }
+
+        // 댓글 작성
+        function addComment() {
+            const content = document.getElementById("comment").value;
+            var ticketId = $("#ticketId").val();
+            const statusCd = $("#statusCd").val();
+            //   const fileInput = $('#commnetFileInput')[0].files;
+            if (!content) {
+                showMessage('info', '정보', '댓글 내용을 입력하세요.');
+                document.getElementById("comment").focus();
+                return;
+            }
+            // JSON 데이터 생성
+            const jsonData = JSON.stringify({
+                content: content,
+                ticketId: ticketId,
+                statusCd: statusCd
+            });
+            // FormData 생성
+            const formData = new FormData();
+            formData.append("data", new Blob([jsonData], { type: "application/json" }));
+            // 다중 파일을 FormData에 추가
+            selectedFiles.forEach(file => {
+                formData.append("file", file);
+            });
+
+            $.ajax({
+                url: '/comments', // 서버 컨트롤러 URL
+                type: 'POST',
+                processData: false, // FormData의 기본 처리 방식을 유지
+                contentType: false, // multipart/form-data 형식 사용
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        //  showMessage('success', '성공', '댓글이 등록되었습니다.');
+                        location.reload(); // 페이지 새로고침
+                    } else {
+                        showMessage('error', '오류', response.message || '댓글 등록 중 오류가 발생했습니다.');
+                    }
+                },
+                error: function (error) {
+                    showMessage('error', '오류', '댓글 등록 중 오류가 발생했습니다.');
+                }
             });
         }
 
-    }
-
-    // 댓글 작성
-    function addComment() {
-        const content = document.getElementById("comment").value;
-        var ticketId = $("#ticketId").val();
-        const statusCd = $("#statusCd").val();
-     //   const fileInput = $('#commnetFileInput')[0].files;
-        if (!content) {
-            showMessage('info', '정보', '댓글 내용을 입력하세요.');
-            document.getElementById("comment").focus();
-            return;
-        }
-        // JSON 데이터 생성
-        const jsonData = JSON.stringify({
-            content: content,
-            ticketId: ticketId,
-            statusCd: statusCd
-        });
-        // FormData 생성
-        const formData = new FormData();
-        formData.append("data", new Blob([jsonData], { type: "application/json" }));
-        // 다중 파일을 FormData에 추가
-        selectedFiles.forEach(file => {
-            formData.append("file", file);
-        });
-
-        $.ajax({
-            url: '/comments', // 서버 컨트롤러 URL
-            type: 'POST',
-            processData: false, // FormData의 기본 처리 방식을 유지
-            contentType: false, // multipart/form-data 형식 사용
-            data: formData,
-            success: function(response) {
-                if (response.success) {
-                  //  showMessage('success', '성공', '댓글이 등록되었습니다.');
-                    location.reload(); // 페이지 새로고침
-                } else {
-                    showMessage('error', '오류', response.message || '댓글 등록 중 오류가 발생했습니다.');
-                }
-            },
-            error: function(error) {
-                showMessage('error', '오류', '댓글 등록 중 오류가 발생했습니다.');
-            }
-        });
-    }
-
-    //수정
-    function goModify(){
-        var id = $("#ticketId").val();
-        window.location.href = '/ticketCreate/'+id;
-    }
-
-
-    function deleteTicket() {
-        showConfirm("question", "삭제하시겠습니까?","", function() {
+        //수정
+        function goModify() {
             var id = $("#ticketId").val();
-            var url = `/deleteTicket`;
+            window.location.href = '/ticketCreate/' + id;
+        }
+
+
+        function deleteTicket() {
+            showConfirm("question", "삭제하시겠습니까?", "", function () {
+                var id = $("#ticketId").val();
+                var url = `/deleteTicket`;
+                fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ Id: id }),
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            showMessage('success', '삭제', '해당 요청 정보가 삭제되었습니다.');
+                        } else {
+                            response.text().then(message => {
+                                showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showMessage('error', '실패', '오류가 발생해 서버로 요청을 전송하지 못했습니다');
+                    });
+            });
+        }
+
+
+
+        function delComment(obj) {
+            var id = obj.getAttribute('data-comment-id');
+            console.log("댓글 삭제: ", id);
+            var url = `/deleteCommentId`;
             fetch(url, {
                 method: 'DELETE',
                 headers: {
@@ -495,79 +501,50 @@
                 },
                 body: JSON.stringify({ Id: id }),
             })
-            .then(response => {
-                if (response.ok) {
-                    showMessage('success', '삭제', '해당 요청 정보가 삭제되었습니다.');
-                } else {
-                    response.text().then(message => {
-                        showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showMessage('error', '실패', '오류가 발생해 서버로 요청을 전송하지 못했습니다');
-            });
-        });
-    }
-
-
-
-    function delComment(obj){
-        var id = obj.getAttribute('data-comment-id');
-        console.log("댓글 삭제: ", id);
-        var url = `/deleteCommentId`;
-        fetch(url, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ Id: id }),
-        })
-        .then(response => {
-            if (response.ok) {
-                showMessage('success', '댓글삭제', '해당 댓글이 삭제되었습니다.');
-            } else {
-                response.text().then(message => {
-                    showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
+                .then(response => {
+                    if (response.ok) {
+                        showMessage('success', '댓글삭제', '해당 댓글이 삭제되었습니다.');
+                    } else {
+                        response.text().then(message => {
+                            showMessage('error', '서버응답실패', '서버에서 오류가 발생하였습니다.');
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showMessage('error', '실패', '오류가 발생해 서버로 요청을 전송하지 못했습니다');
                 });
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showMessage('error', '실패', '오류가 발생해 서버로 요청을 전송하지 못했습니다');
-        });
-    }
-
-    //댓글 첨부파일추가
-    function addAttachComment(){
-         document.getElementById('commnetFileInput').click();
-    }
-
-    // 파일 이름 미리보기
-    function previewFiles() {
-        const fileInput = document.getElementById('commnetFileInput');
-        const previewContainer = document.getElementById('file-preview');
-        previewContainer.innerHTML = ''; // 미리보기 초기화
-
-        const files = fileInput.files;
-        if (selectedFiles.length === 0) {
-            // selectedFiles가 비어 있으면 새로운 파일 배열을 할당
-            selectedFiles = Array.from(files);
-        } else {
-            // selectedFiles가 비어 있지 않으면, fileInput의 파일을 selectedFiles에 추가
-            Array.from(files).forEach(file => {
-                // 이미 selectedFiles에 동일한 파일명이 있는지 확인하고 추가
-                if (!selectedFiles.some(f => f.name === file.name)) {
-                    selectedFiles.push(file);
-                }
-            });
         }
 
-        let previewText = ''; // 콤마로 구분될 미리보기 텍스트
+        //댓글 첨부파일추가
+        function addAttachComment() {
+            document.getElementById('commnetFileInput').click();
+        }
 
-        selectedFiles.forEach((file, index) => {
-            previewText += `
+        // 파일 이름 미리보기
+        function previewFiles() {
+            const fileInput = document.getElementById('commnetFileInput');
+            const previewContainer = document.getElementById('file-preview');
+            previewContainer.innerHTML = ''; // 미리보기 초기화
+
+            const files = fileInput.files;
+            if (selectedFiles.length === 0) {
+                // selectedFiles가 비어 있으면 새로운 파일 배열을 할당
+                selectedFiles = Array.from(files);
+            } else {
+                // selectedFiles가 비어 있지 않으면, fileInput의 파일을 selectedFiles에 추가
+                Array.from(files).forEach(file => {
+                    // 이미 selectedFiles에 동일한 파일명이 있는지 확인하고 추가
+                    if (!selectedFiles.some(f => f.name === file.name)) {
+                        selectedFiles.push(file);
+                    }
+                });
+            }
+
+            let previewText = ''; // 콤마로 구분될 미리보기 텍스트
+
+            selectedFiles.forEach((file, index) => {
+                previewText += `
                 <div class="file-preview-item">
                     ${file.name}
                     <span class="delete-file" onclick="removeFile(${index})">
@@ -580,33 +557,33 @@
                     </span>
                 </div>
             `;
-        });
+            });
 
-        // 미리보기 텍스트를 콤마로 구분하여 표시
-        if (previewText) {
-            previewText = previewText.slice(0, -2); // 마지막 콤마 제거
-            previewContainer.innerHTML = previewText; // 텍스트만 표시
+            // 미리보기 텍스트를 콤마로 구분하여 표시
+            if (previewText) {
+                previewText = previewText.slice(0, -2); // 마지막 콤마 제거
+                previewContainer.innerHTML = previewText; // 텍스트만 표시
+            }
         }
-    }
 
-    // 파일 삭제 기능
-    function removeFile(index) {
-        // 선택한 파일을 삭제
-        selectedFiles.splice(index, 1);
-        previewFiles();  // 파일 목록 갱신
-    }
+        // 파일 삭제 기능
+        function removeFile(index) {
+            // 선택한 파일을 삭제
+            selectedFiles.splice(index, 1);
+            previewFiles();  // 파일 목록 갱신
+        }
 
-    //재요청
-    function goReRequest(){
-        var ticketId = $("#ticketId").val()
-        location.href = '/ticketCreate?id=' + ticketId;
-    }
+        //재요청
+        function goReRequest() {
+            var ticketId = $("#ticketId").val()
+            location.href = '/ticketCreate?id=' + ticketId;
+        }
 
-    function goBack(){
-        sessionStorage.setItem("fromTicketView", "true");
-        // location.href = "/ticketList"
-        window.history.back();
-    }
-</script>
+        function goBack() {
+            sessionStorage.setItem("fromTicketView", "true");
+            // location.href = "/ticketList"
+            window.history.back();
+        }
+    </script>
 </body>
 </html>
