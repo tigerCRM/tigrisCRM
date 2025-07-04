@@ -94,7 +94,7 @@ public class CommonService {
         // 헤더 생성
         if (Objects.equals(location, "ticketList")){
             // 헤더 컬럼명 지정 (고정값)
-            String[] headerColumns = {"요청번호", "고객사", "제목", "분류", "상태", "범위", "담당", "MD", "등록일", "완료일","만족도","만족도의견"};
+            String[] headerColumns = {"요청번호", "고객사", "제목", "분류", "상태", "범위","요청자", "담당", "MD", "등록일", "완료일","만족도","만족도의견"};
             Row headerRow = sheet.createRow(0);
             int headerIndex = 0;
             for (String columnName : headerColumns) {
@@ -127,6 +127,7 @@ public class CommonService {
                 row.createCell(cellIndex++).setCellValue(displayRequestTypeCd);
                 row.createCell(cellIndex++).setCellValue(displayProcessCd);
                 row.createCell(cellIndex++).setCellValue(displaySupportCd);
+                row.createCell(cellIndex++).setCellValue(data.get("CREATE_NAME") != null ? data.get("CREATE_NAME").toString() : "");
                 row.createCell(cellIndex++).setCellValue(data.get("USER_NAME") != null ? data.get("USER_NAME").toString() : "");
                 row.createCell(cellIndex++).setCellValue(data.get("MD") != null ? data.get("MD").toString() : "");
                 row.createCell(cellIndex++).setCellValue(data.get("CREATE_DT") != null ? data.get("CREATE_DT").toString() : "");

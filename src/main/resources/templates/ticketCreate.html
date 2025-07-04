@@ -284,6 +284,7 @@
             // hidden 필드에 선택된 회사명 설정
             document.getElementById("companyId").value = companyId;
             document.getElementById("companyName").value = companyName;
+            getCreateUser();
         }
 
         function updateManagerName(selectElement) {
@@ -340,6 +341,35 @@
         function goBack() {
             window.history.back();
         }
+
+        function getCreateUser() {
+            var id = $("#companyId").val();
+            $.ajax({
+                url: "/getCreateUser",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({ id: id }),
+                success: function(data) {
+                    const $select = $("#companyOptions");
+                    $select.empty(); // 기존 옵션 제거
+                    $select.append('<option value=""></option>');
+
+                    data.forEach(function(user) {
+                        $select.append(
+                            $("<option>")
+                                .val(user.userId) // 또는 user.clientId 등 필드명 확인
+                                .attr("data-name", user.userName)
+                                .text(user.userName)
+                        );
+                    });
+                },
+                error: function(xhr) {
+                    alert("사용자 정보를 불러오는 데 실패했습니다.");
+                    console.error(xhr);
+                }
+            });
+        }
+
     </script>
 </body>
 </html>
